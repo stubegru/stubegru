@@ -1,0 +1,73 @@
+<div class='row'>
+    <div class='col-md-10'>
+        <h2><a href="#" class="permission-wiki_autor permission-required" title="Artikel bearbeiten" id="articleEditButton"> <i class="fas fa-pencil-alt"></i></a> <span id="articleHeading"></span> </h2>
+    </div>
+    <div class='col-md-2 text-right' id="articleDate">Letzte Änderung: <b>null</b></div>
+</div>
+
+<div class="row">
+    <div class='col-md-12 text-right'>
+        <button id="favoriteButton" type="button" class="btn btn-default" onclick="toggleFavorite()"><i class="fa fa-star fa-fw"></i>Favorit</button>
+        <button id="reportButton" type="button" class="btn btn-danger" onclick="showReportModal()"><i class="fa fa-exclamation fa-fw"></i>Melden</button>
+    </div>
+</div>
+
+<hr>
+<div class='row'>
+    <div class='col-md-12 wikiText' id="articleText"></div>
+</div>
+<br>
+<hr>
+<div class='row'>
+    <div class='col-md-12' id="articleTags">
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="reportModal" class="modal fade" style="display: none;">
+    <form action="javascript:sendReportForm();">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button" onclick="resetReportForm()">×</button>
+                    <h3 class="modal-title">Artikel melden</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <h2 id="report_article_name">Ueberschrift</h2>
+                    </div>
+
+                    <input type="hidden" id="report_article_id">
+
+                    <div class="form-group">
+                        <label>Grund:</label>
+                        <select class="form-control" id="report_reason">
+                            <option>Falsche Informationen</option>
+                            <option>Rechtschreibfehler</option>
+                            <option>Technischer Bug</option>
+                            <option>Sonstiges</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Anmerkungen</label>
+                        <textarea class="form-control" id="report_notes"></textarea>
+                    </div>
+
+                    <span>Es werden alle Personen benachrichtigt, die Wiki Reports abboniert haben. Dein Name wird mit übermittelt.</span>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button data-dismiss="modal" class="btn btn-default" type="button" onclick="resetReportForm()">Abbrechen</button>
+                    <input class="btn btn-danger" type="submit" value="Artikel melden">
+                </div>
+
+
+
+            </div>
+        </div>
+    </form>
+</div>
+<!-- End of Report Modal -->

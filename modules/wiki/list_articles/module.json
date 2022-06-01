@@ -1,0 +1,18 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/list_articles",
+    "description": "Get a full list of all wiki articles",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies" : {
+        "blocking" : [],
+        "nonBlocking" : []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "list_articles.js"
+    ],
+    "css": []
+}

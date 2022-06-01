@@ -1,0 +1,17 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/nav",
+    "description": "Add a navigation sidebar to the wiki",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies" : {
+        "blocking" : ["wiki/utils"],
+        "nonBlocking" : [],
+        "backend": ["wiki/show_article"]
+    },
+    "html": [],
+    "js": [
+        "nav.js"
+    ],
+    "css": []
+}

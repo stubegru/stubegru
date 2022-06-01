@@ -1,0 +1,18 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/favorites",
+    "description": "Add wiki articles to your favorites",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies" : {
+        "blocking" : [],
+        "nonBlocking" : []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "favorites.js"
+    ],
+    "css": []
+}

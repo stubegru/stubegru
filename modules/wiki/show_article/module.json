@@ -1,0 +1,22 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/show_article",
+    "description": "Display a wiki article",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "wiki/utils"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "wiki_show_article.js"
+    ],
+    "css": [],
+    "cronjob" : ["unlink_broken_wikiwords_cronjob.php"]
+}

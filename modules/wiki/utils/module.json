@@ -1,0 +1,24 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/utils",
+    "description": "Utility functions for all wiki modules",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "html": [],
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "menubar"
+        ],
+        "nonBlocking": []
+    },
+    "js": [
+        "wiki_utils.js"
+    ],
+    "css": [
+        "wiki.css"
+    ],
+    "cronjob": [
+        "trigger_reminder.php"
+    ]
+}

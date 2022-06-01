@@ -1,0 +1,15 @@
+{
+    "type" : "stubegruModule",
+    "name" : "menubar",
+    "description" : "Global menubar",
+    "author" : "Johannes Schnirring",
+    "license" : "MIT",
+    "dependencies" : {
+        "blocking" : [],
+        "nonBlocking" : [],
+        "backend" : ["login"]
+    },
+    "html" : ["module.html"],
+    "js" : ["menubar.js"],
+    "css" : ["menubar.css"]
+}

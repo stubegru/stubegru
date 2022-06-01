@@ -1,0 +1,16 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/tag_cloud",
+    "description": "Add a tag cloud to the wiki",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies" : {
+        "blocking" : [],
+        "nonBlocking" : []
+    },
+    "html": [],
+    "js": [
+        "tag_cloud.js"
+    ],
+    "css": []
+}

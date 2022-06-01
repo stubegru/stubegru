@@ -1,0 +1,20 @@
+{
+    "type": "stubegruModule",
+    "name": "login",
+    "description": "Login interface for user accounts",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": ["alerts"],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "login_page.html"
+    ],
+    "js": [
+        "login.js"
+    ],
+    "css": [],
+    "cronjob": []
+}

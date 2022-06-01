@@ -1,0 +1,21 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/tag_view",
+    "description": "Show all wiki articles for a specific tag",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts"
+        ],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "tag.js"
+    ],
+    "css": []
+}

@@ -1,0 +1,16 @@
+SetEnv BASE_URL "https://localhost"
+SetEnv BASE_PATH "/home/user1/html"
+SetEnv DB_SERVER "localhost"
+SetEnv DB_USER "user123"
+SetEnv DB_PASSWORD "s3cr3t"
+SetEnv DB_NAME "DBNAME"
+
+SetEnv APPLICATION_ID "stubegru-test-environment"
+SetEnv APPLICATION_NAME "Stubegru Test"
+SetEnv INSTITUTION_MAIL_ADDRESS "StuBeGru <stubegru@example.com>"
+SetEnv INSTITUTION_NAME "Stubegru Company"
+SetEnv INSTITUTION_MAIL_POSTFIX "Comany Name<br>Company Address"
+SetEnv ADMIN_MAIL "admin@example.com"
+SetEnv EVALUATION_SURVEY_ID "1"
+
+SetEnv LOGO "/assets/images/favicon.png"

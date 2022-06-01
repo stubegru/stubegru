@@ -1,0 +1,21 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/edit_article",
+    "description": "Edit or Create a wiki article",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "wiki/utils"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "wiki_edit_article.js"
+    ],
+    "css": []
+}

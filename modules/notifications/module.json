@@ -1,0 +1,23 @@
+{
+    "type": "stubegruModule",
+    "name": "notifications",
+    "description": "Add a global notification system",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "menubar"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "notifications.js"
+    ],
+    "css": [
+        "notifications.css"
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "type": "stubegruModule",
+    "name": "daily_news",
+    "description": "Short infos with very current character",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "wiki/utils",
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": [],
+        "backend": [
+            "wiki/show_article"
+        ]
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "daily_news.js"
+    ],
+    "css": [],
+    "cronjob": [
+        "unlink_broken_wikiwords_cronjob.php"
+    ]
+}

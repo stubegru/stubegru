@@ -1,0 +1,17 @@
+{
+    "type": "stubegruModule",
+    "name": "evaluation",
+    "description": "Evaluation of consultation meetings",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": ["survey"],
+        "nonBlocking": []
+    },
+    "html": ["module.html"],
+    "js": ["evaluation.js"],
+    "css": [],
+    "cronjob": [
+        "send_feedback_mails.php"
+    ]
+}

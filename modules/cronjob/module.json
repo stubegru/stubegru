@@ -1,0 +1,16 @@
+{
+    "type": "stubegruModule",
+    "name": "cronjob",
+    "description": "Module for triggering cronjob scripts defined in other module's json files",
+    "note" : "Make sure to register a cronjob at your system that calls cronjob.php in this folder. The cronjob.php will call all other cronjobs defined in module.josn files automatically.",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": []
+    },
+    "html": [],
+    "js": [],
+    "css": [],
+    "cronjob": []
+}

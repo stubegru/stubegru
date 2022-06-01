@@ -1,0 +1,18 @@
+{
+    "type": "stubegruModule",
+    "name": "wiki/unread",
+    "description": "Show a list of all unread wiki articles",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies" : {
+        "blocking" : [],
+        "nonBlocking" : []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "unread.js"
+    ],
+    "css": []
+}

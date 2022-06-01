@@ -1,0 +1,21 @@
+{
+    "type": "externalLibrary",
+    "name": "alerts/libs/sweetalert",
+    "description": "Library for displaying pretty alerts",
+    "author": "Tristan Edwards",
+    "license": "MIT",
+    "url" : "https://github.com/t4t5/sweetalert",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": [],
+        "backend":[]
+    },
+    "html": [],
+    "js": [
+        "sweetalert.min.js",
+        "sweetalert_utils.js"
+    ],
+    "css": [
+        "sweetalert.css"
+    ]
+}

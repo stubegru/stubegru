@@ -1,0 +1,22 @@
+{
+    "type": "stubegruModule",
+    "name": "user_management",
+    "description": "Administrate users and theire permissions",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "menubar",
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "user_management.js"
+    ],
+    "css": []
+}

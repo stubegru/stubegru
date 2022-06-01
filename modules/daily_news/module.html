@@ -1,0 +1,86 @@
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a href="#collapseActualInfos" data-toggle="collapse" aria-expanded="true">Aktuelles</a></h4>
+        </div>
+        <div class="panel-collapse collapse in" id="collapseActualInfos" aria-expanded="false">
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-6"><button class="btn btn-success btn-lg btn-block  permission-beratung permission-required" style="margin-bottom: 15px; display:block;" type="button" id="newmessage" onclick="showMessageModal('new')"><i class="fas fa-plus"></i>&nbsp;Neue Nachricht</button></div>
+                    <div class="col-md-6"><button class="btn btn-info btn-lg btn-block  permission-beratung permission-required" style="margin-bottom: 15px; display:block;" type="button" onclick="toggleMessageView()" id="toggleMessageButton"><i class="fas far fa-eye"></i>&nbsp; Alle anzeigen</button></div>
+
+                </div>
+
+
+
+                <!-- Neue Nachricht modal start-->
+                <div aria-hidden="true" role="dialog" tabindex="-1" id="meditor" class="modal fade" style="display: none;">
+                    <form action="javascript:sendMessage();">
+                        <input id="nachricht_id" type="hidden">
+                        <div class="modal-dialog" style="min-width:70%;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                    <h4 id="myModalLabel" class="modal-title">Nachricht bearbeiten</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Titel</label>
+                                        <input autocomplete="off" class="form-control" id="nachricht_titel" required>
+                                    </div>
+                                    <div id="nachricht_inhalt" style="display:block; margin-bottom:32px;">
+                                        <textarea id="dailyNewsEditor"></textarea>
+                                        <!-- txtEditor wird im Javascript zu RichTextEditor -->
+                                    </div>
+
+                                    <div class="row">
+                                        <div class='col-sm-6'>
+                                            <div class="form-group">
+                                                <label>Beginn der Anzeige</label>
+                                                <input autocomplete="off" type='date' id="beginn_nachricht" class="form-control" required />
+                                            </div>
+                                        </div>
+                                        <div class='col-sm-6'>
+                                            <div class="form-group">
+                                                <label>Ende der Anzeige</label>
+                                                <input autocomplete="off" id="ende_nachricht" type='date' class="form-control" required />
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="pull-left">
+                                        <span><b>Priorität:&nbsp;</b></span>
+                                        <input type="checkbox" data-toggle="toggle" id="nachricht_prioritaet" data-on="Wichtig" data-off="Normal" data-width="100px" data-onstyle="danger">
+                                    </div>
+                                    <button class="btn btn-default" data-dismiss="modal" type="button"><i class="fas fa-times"></i>&nbsp; Abbrechen</button>
+                                    <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i>&nbsp; Speichern</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </form>
+                </div>
+                <!--Ende des Neue-Nachricht Modals -->
+
+                <div id="message_container" class="panel-group">
+
+
+                    <!-- Here are generated all the messages with an AJAX call -->
+
+
+                </div>
+                <div id="future_message_container" class="panel-group" style="display:none;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Ende der NACHRICHTEN Box -->

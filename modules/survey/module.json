@@ -1,0 +1,17 @@
+{
+    "type": "stubegruModule",
+    "name": "survey",
+    "description": "Create dynamic surveys",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": [],
+        "backend": [
+            "user_utils"
+        ]
+    },
+    "html": [],
+    "js": ["survey.js"],
+    "css": ["survey.css"]
+}

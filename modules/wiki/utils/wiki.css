@@ -1,0 +1,195 @@
+.wikiCustomTable td{
+    line-height: 100% !important;
+    text-align: left !important;
+    padding: 10px !important;
+}
+
+.wikiCustomTable td a{
+    line-height: 100% !important;
+    text-align: left !important;
+}
+
+
+
+.mySidebar {
+    min-height: 100%;
+    border-left: 3px dashed #E7E7E7;
+    padding: 15px;
+    position: fixed;
+    right: 0px;
+}
+
+.mainContainer {
+    padding: 15px;
+}
+
+
+.cke_top {
+    zoom: 1.5 !important;
+}
+
+.wikiText {
+    text-align: justify;
+    line-height: 150%;
+    font-family: serif;
+    font-size: 120%;
+}
+
+
+
+#wikiSearchResult {
+    width: 70%;
+    background-color: whitesmoke;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid gray;
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+#wiki_tag_input {
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.assignedTag{
+    margin: 3px;
+}
+
+.tagSearchResult{
+    margin: 3px;
+}
+
+.wikiword-exists {
+    border-bottom: 1px solid #11cc3c;
+}
+
+.wikiword-exists:hover {
+    text-decoration: none;
+    border-bottom: 2px solid #11cc3c;
+}
+
+.wikiword-exists-not {
+    border-bottom: 1px solid #a32414;
+}
+
+.wikiword-exists-not:hover {
+    text-decoration: none;
+    border-bottom: 2px solid #a32414;
+
+}
+
+#wikiWordAutoSuggestWindow {
+    color: white;
+    background-color: #474747;
+    padding: 5px;
+    padding-bottom: 0px;
+}
+
+.autoSuggestList {
+    list-style-type: none;
+    padding: 0px;
+
+}
+
+.autoSuggestList > li {
+    color: #eaeaea;
+    padding: 2px;
+}
+
+.wwasliActive {
+    background-color: dodgerblue !important;
+}
+
+.wwasli-create-new{
+    background: linear-gradient(180deg, #8bc34a, transparent);
+}
+
+.wwasli-info {
+    font-size: 80%;
+}
+
+.wwasli-info-close {
+    font-size: 80%;
+    text-align: right;
+    color: #6fb8f6 !important;
+}
+
+/*styling Classes für Wiki Seperation*/
+.allgemein {
+    padding: 10px;
+
+}
+
+.erstinformation {
+    background-color: rgba(139, 195, 74, 0.55);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.sachbearbeiter {
+    background-color: rgba(33, 150, 243, 0.5);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.keyuser {
+    background-color: rgba(255, 0, 0, 0.23);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/*styling Classes for TOC*/
+.allgemein-toc {
+    padding: 3px;
+    margin: 2px 0px;
+
+}
+
+.erstinformation-toc {
+    background-color: rgba(139, 195, 74, 0.55);
+    padding: 3px;
+    margin: 2px 0px;
+}
+
+.sachbearbeiter-toc {
+    background-color: rgba(33, 150, 243, 0.5);
+    padding: 3px;
+    margin: 2px 0px;
+}
+
+.keyuser-toc {
+    background-color: rgba(255, 0, 0, 0.23);
+    padding: 3px;
+    margin: 2px 0px;
+}
+
+/* Nested Lists*/
+li > ol {
+  list-style-type: lower-alpha;
+}
+
+li > ol > li > ol{
+  list-style-type: lower-roman;
+}
+
+li > ul {
+  list-style-type: circle;
+}
+
+li > ul > li > ul{
+  list-style-type: square;
+}
+
+li > ol > li > ul{
+  list-style-type: square;
+}
+
+li > ul > li > ol{
+  list-style-type: lower-roman;
+}
+
+
+

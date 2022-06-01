@@ -1,0 +1,52 @@
+<stubegruAttribute hidden data-name="title" data-value="Wiki"></stubegruAttribute>
+<stubegruAttribute hidden data-name="access" data-value="user"></stubegruAttribute>
+
+<stubegruModule data-name="menubar"></stubegruModule>
+<stubegruModule data-name="alerts/libs/sweetalert"></stubegruModule>
+<stubegruModule data-name="alerts"></stubegruModule>
+<stubegruModule data-name="user_utils"></stubegruModule>
+ 
+<stubegruModule data-name="survey"></stubegruModule>
+<stubegruModule data-name="evaluation/evaluation_download"></stubegruModule>
+<stubegruModule data-name="monitoring" data-template-path="custom/monitoring_template.html"></stubegruModule>
+<stubegruModule data-name="notifications"></stubegruModule>
+<stubegruModule data-name="wiki/utils"></stubegruModule>
+
+<div class="mainContainer">
+    <div class="row">
+        <div class="col-md-9">
+            <!-- Wiki main content starts here-->
+
+            <div class="row">
+                <div class="col-md-6">
+                    <stubegruModule data-name="wiki/unread"></stubegruModule>
+                </div>
+                <div class="col-md-6">
+                    <stubegruModule data-name="wiki/favorites"></stubegruModule>
+                </div>
+            </div>
+
+            <!-- Wiki main content ends here-->
+        </div>
+
+        <div class="col-md-3 mySidebar">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul id="sideBarNav">
+                        <!--Nav-->
+                        <stubegruModule data-name="wiki/nav"></stubegruModule>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-12" id="tagCloud">
+                    <!-- Tag cloud-->
+                    <stubegruModule data-name="wiki/tag_cloud"></stubegruModule>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

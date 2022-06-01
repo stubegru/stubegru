@@ -1,0 +1,23 @@
+{
+    "type": "stubegruModule",
+    "name": "user_utils",
+    "description": "Get info about currently logged in user",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "menubar"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "user_utils.js"
+    ],
+    "css": [
+        "user_utils.css"
+    ]
+}

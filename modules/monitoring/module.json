@@ -1,0 +1,23 @@
+{
+    "type": "stubegruModule",
+    "name": "monitoring",
+    "description": "Add a monitoring button with monitoring modal to the menubar",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "menubar",
+            "alerts",
+            "user_utils",
+            "survey"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "monitoring.js"
+    ],
+    "css": []
+}

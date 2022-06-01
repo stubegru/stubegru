@@ -1,0 +1,107 @@
+<!-- Modal für Artikelerinnerungen start-->
+<div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="reminderModal" class="modal fade" style="display: none;">
+    <form action="javascript:addReminder();">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button" onclick="resetReminderForm()">×</button>
+                    <h4 class="modal-title">Erinnerung hinzufügen</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Text der Erinnerung</label>
+                        <input class="form-control" id="reminderText" value="Diesen Artikel bitte nochmals überarbeiten" required>
+                    </div>
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            <div class="form-group">
+                                <label>Datum der Erinnerung</label>
+                                <input id="reminderDate" type='date' class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class='col-sm-12'>
+                            Es werden alle Personen informiert, die <i>"Wiki überarbeiten"</i> abboniert haben.
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-danger pull-left" type="button" onclick="deleteReminder()">Erinerung löschen</button>
+                    <input class="btn btn-primary" type="submit" value="Erinnerung speichern">
+                </div>
+
+
+
+            </div>
+        </div>
+    </form>
+</div>
+<!-- modal end -->
+
+
+<!-- ****************************************   Hier Startet der Seiteninhalt  ******************************************** -->
+
+<div class="mainContainer permission-wiki_autor permission-required">
+    <div class="row">
+        <div class="col-md-12">
+            <div class='row'>
+                <div class='col-md-12'>
+                    <h2 id="ueberschrift">Wiki Artikel bearbeiten</h2>
+                </div>
+            </div>
+            <br>
+
+            <form>
+                <div class="form-group">
+                    <input type="text" class="form-control input-lg" placeholder="Titel des Artikels" id="newArticleHeading">
+                </div>
+                <div class="form-group">
+                    <textarea id="wikiArticleEditor"></textarea>
+                </div>
+
+                <div id="wiki_tag_container"></div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <input type="text" id="wiki_tag_input" placeholder="Neuen Tag zuordnen">
+                        <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Um einen Tag hinzuzufügen geben sie hier ein Suchbegriff ein. Mit dem grünen Button können Sie einen neuen Tag erstellen und dem Artikel hinzufügen. Blau markierte Suchergebnisse sind bereits existierende Tags. Sie können mit einem Klick hinzugefügt werden. Drücken Sie 'Enter' um den ersten Tag in der Liste hinzuzufügen." style="color:#4fafd3; cursor:help"></i>
+                        <div id="tag_search_result"></div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <div class="row">
+                            <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Erstellen Sie eine Erinnerung um benachrichtigt zu werden, wenn dieser Artikel überarbeitet werden muss" style="color:#4fafd3; cursor:help"></i> <button class="btn btn-default" onclick='showReminderModal()' type="button" id="reminderButton">Erinnerung erstellen</button>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Wählen Sie aus, ob der Artikel in der Sidebar rechts auf jeder Wiki-Seite im Volltext angezeigt werden soll." style="color:#4fafd3; cursor:help"></i> Diesen Artikel in der Sidebar anzeigen:
+                                <input type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nein" id="wiki_show_in_sidebar">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Wählen Sie aus, ob der Artikel wieder als ungelesen angezeigt werden soll und ob eine Benachrichtigung über die Änderung verschickt wird." style="color:#4fafd3; cursor:help"></i> Über die Änderung informieren:
+                                <input type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nein" id="wiki_mark_as_unread">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr>
+
+                <button type="button" class="btn btn-success pull-right" onclick="saveArticle()">Speichern</button>
+                <button type="button" class="btn btn-danger pull-right" onclick="deleteArticle()" style="margin-right:8px;">Artikel löschen</button>
+                <a class="btn btn-default" id="cancel_button">Abbrechen</a>
+            </form>
+
+
+        </div>
+    </div>
+
+</div>
+<!-- ****************************************   Hier endet der Seiteninhalt  ******************************************** -->

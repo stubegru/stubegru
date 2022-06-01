@@ -1,0 +1,21 @@
+{
+    "type": "stubegruModule",
+    "name": "quicklinks",
+    "description": "Add tile with quicklinks",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts"
+        ],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "quicklinks.js"
+    ],
+    "css": []
+}
