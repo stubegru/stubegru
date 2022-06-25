@@ -1,0 +1,22 @@
+{
+    "type": "stubegruModule",
+    "name": "absence",
+    "description": "Manage your employees' absence",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": []
+    },
+    "html": [
+        "absence.html"
+    ],
+    "js": [
+        "absence.js"
+    ],
+    "css": [],
+    "cronjob": []
+}

@@ -1,0 +1,138 @@
+<!-- Start der abwesenheits Box -->
+<div class="col-sm-6">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title"><a class="collapsed" href="#collapseAbsence" data-toggle="collapse"
+                        aria-expanded="false">Abwesenheitsübersicht Hauptangestellte</a>
+                </h4>
+            </div>
+
+            <div class="panel-collapse collapse" id="collapseAbsence" aria-expanded="false">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-sm-6"><button class="btn btn-success admin"
+                                style="margin-bottom: 15px; display:block;" type="button"
+                                onclick="showAbsenceModal('new')"><span class='glyphicon glyphicon-plus'></span> Neuer
+                                Eintrag</button></div>
+                        <div class="col-sm-6"><button class="btn btn-info pull-right"
+                                style="margin-bottom: 15px; display:block;" type="button"
+                                onclick="toggleAbsenceView()"><span class='glyphicon glyphicon-eye-open'></span><span
+                                    id="toggleAbsenceButton"> Alle anzeigen</span></button></div>
+                    </div>
+
+
+
+
+                    <!-- Abwesenheits Modal start-->
+                    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="absenceModal"
+                        class="modal fade" style="display: none;">
+                        <form action="javascript:saveAbsence();">
+
+                            <div class="modal-dialog" style="min-width:70%;">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button"
+                                            onclick="resetAbsenceForm()">×</button>
+                                        <h4 class="modal-title">Abwesenheit</h4>
+                                    </div>
+                                    <input autocomplete="off" type="hidden" id="absence_id">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Name</label>
+                                            <input autocomplete="on" class="form-control" id="absence_name" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Anmerkungen</label>
+                                            <input autocomplete="off" class="form-control" id="absence_notes">
+                                        </div>
+
+                                        <div class="row">
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <label>Beginn der Abwesenheit</label>
+                                                    <div class='input-group date' id='datePickAbsence1'>
+                                                        <input autocomplete="off" type='text' id="absence_start"
+                                                            class="form-control" placeholder="dd.mm.yyyy" required />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <label>Ende der Abwesenheit</label>
+                                                    <div class='input-group date' id='datePickAbsence2'>
+                                                        <input autocomplete="off" id="absence_end" type='text'
+                                                            class="form-control" placeholder="dd.mm.yyyy" required />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button data-dismiss="modal" class="btn btn-default" type="button"
+                                            onclick="resetAbsenceForm()">Abbrechen</button>
+                                        <input class="btn btn-primary" type="submit" value="Eintrag speichern">
+                                    </div>
+
+
+
+                                </div>
+                                <!-- /.modal-content -->
+                            </div>
+                            <!-- /.modal-dialog -->
+                        </form>
+                    </div>
+                    <!-- Abesenheit modal end -->
+
+                    <div class="panel-group">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Notiz</th>
+                                    <th>Von</th>
+                                    <th>Bis</th>
+                                    <th class="admin"></th>
+                                    <th class="admin"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="absence_table_today">
+
+
+                                <!-- Here are generated all the Absence Entries with an AJAX call -->
+                            </tbody>
+                            <tbody id="absence_table_future" style="display:none;">
+
+
+                                <!-- Here are generated all the Absence Entries with an AJAX call -->
+                            </tbody>
+                        </table>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Ende der ABWESENHEIT Box-->
