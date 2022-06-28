@@ -25,3 +25,6 @@ Stay on top of things with Stubegru, the open source groupware for academic advi
 - Create `.htaccess` file (use .`htaccess.example` as template)
 - Create `.version` file with random version number (e.g. `version1`)
 - Open the project in browser and login with user "test" and password "test"
+
+Necessary custom files:
+- `custom/monitoring_template.html` with at least this content: `<survey data-survey-id="1"></survey>` see: https://github.com/stubegru/stubegru/wiki/Survey-Module

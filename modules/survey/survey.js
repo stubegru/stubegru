@@ -23,6 +23,7 @@ async function initSurvey(path, selector, uniqueKey) {
 
     //Extract survey id
     const surveyId = $(`#surveyContainer${pathHash}>survey`).attr("data-survey-id");
+    if(!surveyId){throw new Error(`Could not load survey from template at "${path}" because surveyId is "${surveyId}"`)}
     stubegru.modules.survey.pathToId[path] = surveyId;
 
     //Load survey data via ajax
