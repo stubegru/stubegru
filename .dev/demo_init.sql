@@ -16,7 +16,7 @@ INSERT INTO `Rechte` (`id`, `description`) VALUES
 ('wiki_autor', 'Erlaubnis um Wiki Artikel zu bearbeiten, zu erstellen und zu löschen.');
 
 -- Create dummy survey
-INSERT INTO `survey_survey` (`id`, `title`, `auth`, `uniqueKey`) VALUES (1, 'Dummy Survey', 'anybody', 0);
+INSERT INTO `survey_survey`(`id`, `title`, `auth`, `adminAuth`, `uniqueKey`) VALUES (1, 'Dummy Survey', 'anybody', 'admin', 0);
 
 -- Create dummy user with username "test" and password "test"
 INSERT INTO `Nutzer` (`id`, `name`, `mail`, `account`, `role`, `erfassungsdatum`, `erfasser`, `passwort`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES (NULL, 'test', 'dummy@example.com', 'test', '1', '', '', '$2y$10$fLgGmGWibrtZjtvc3rst7ujFZGuQvEdox53wv5bWItxKKEQd3j/Da', '0', '0', '0', '0', '0', '0')
