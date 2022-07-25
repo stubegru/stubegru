@@ -1,4 +1,35 @@
 //**************************************Abwesenheit*********************************************
+$("#absence_whole_day_toggle").on("change", function () {
+    if ($(this).prop('checked')) {
+        $(".absence-whole-day-inputs").hide();
+        $(".absence-time-inputs").show();
+    }
+    else {
+        $(".absence-time-inputs").hide();
+        $(".absence-whole-day-inputs").show();
+    }
+});
+
+$("#absence_recurring_toggle").on("change", function () {
+    if ($(this).prop('checked')) {
+        $(".absence-recurring-inputs").show();
+    }
+    else {
+        $(".absence-recurring-inputs").hide();
+    }
+});
+
+$("#absence_recurring_rhythm").on("change", function () {
+    switch ($(this).val()) {
+        case "daily":
+            $(".absence-recurring-weekly-select").hide();
+            break;
+        case "weekly":
+            $(".absence-recurring-weekly-select").show();
+            break;
+    }
+});
+
 function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form-action
     //Datumsformat an DB anpassen
     var startdate = changeDateOrder($('#absence_start').val(), ".");
