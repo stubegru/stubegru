@@ -46,7 +46,7 @@ if ($mode == "create") {
     $updateStatement->bindValue(':name', $name);
     $updateStatement->bindValue(':description', $description);
     $updateStatement->bindValue(':start', $start);
-    $updateStatement->bindValue(':end', $enendde);
+    $updateStatement->bindValue(':end', $end);
     $updateStatement->bindValue(':recurring', $recurring);
     $updateStatement->execute();
 
