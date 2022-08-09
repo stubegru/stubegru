@@ -1,4 +1,6 @@
 //**************************************Abwesenheit*********************************************
+
+//Show/hide Elements on toggle change in modal
 $("#absence_whole_day_toggle").on("change", function () {
     if ($(this).prop('checked')) {
         $(".absence-whole-day-inputs").hide();
@@ -31,26 +33,47 @@ $("#absence_recurring_rhythm").on("change", function () {
 });
 
 function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form-action
-    //Datumsformat an DB anpassen
-    var startdate = changeDateOrder($('#absence_start').val(), ".");
-    var enddate = changeDateOrder($('#absence_end').val(), ".");
+    let absence = {};
+
+    if($("#absence_id").val() == "new"){
+        absence.mode = "create";
+    }else{
+        absence.mode = "update";
+        absence.id = $("#absence_id").val();
+    }
+
+    absence.name = $("#absence_name").val();
+    absence.description = $("#absence_description").val();
+
+    if($("#absence_whole_day_toggle").prop("checked")){
+        //with time
+        const startTimestampString = `${$("#absence_date").val()} ${$("#absence_start_time").val()}`;
+        const endTimestampString = `${$("#absence_date").val()} ${$("#absence_end_time").val()}`;
+        absence.start = new Date(startTimestampString).toISOString();
+        absence.end = new Date(endTimestampString).toISOString();
+    }
+    else{
+        //only date
+        absence.start = new Date($("#absence_start_date").val()).toISOString();
+        absence.end = new Date($("#absence_end_date").val()).toISOString();
+    }
+
+    //recurring rule
+    if($("#absence_recurring_toggle").prop("checked")){
+        absence.recurring = $("#absence_recurring_rhythm").val();
+    }
+    else{
+        absence.recurring = null;
+    }
+
+
     $.ajax({
         type: "POST",
-        async: false,
-        url: "../php/save_absence.php",
-        data: {
-            name: $('#absence_name').val(),
-            notice: $('#absence_notes').val(),
-            startdate: startdate,
-            enddate: enddate,
-            id: $('#absence_id').val()
-        },
+        dataType: "json",
+        data: absence,
+        url: `${stubegru.constants.BASE_URL}/modules/absence/save_absence.php`,
         success: function (data) {
-            data = JSON.parse(data);
-            swal("Abwesenheiten", data.message, data.state);
-            getAbsence();
-            $("#absenceModal").modal('hide');
-            resetAbsenceForm();
+
         }
     });
 }
