@@ -62,6 +62,8 @@ function resetAbsenceForm() {
     document.getElementById("absenceForm").reset();
     $('#absence_whole_day_toggle').bootstrapToggle('off');
     $('#absence_recurring_toggle').bootstrapToggle('off');
+    $("#absence_recurring_day_label").html("");
+
 }
 
 function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form-action
