@@ -47,6 +47,14 @@ $("#absence_recurring_rhythm").on("change", function () {
     }
 });
 
+$('#absenceModal').on('hidden.bs.modal', resetAbsenceForm);
+
+function resetAbsenceForm() {
+    document.getElementById("absenceForm").reset();
+    $('#absence_whole_day_toggle').bootstrapToggle('off');
+    $('#absence_recurring_toggle').bootstrapToggle('off');
+}
+
 function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form-action
     let absence = {};
 
@@ -155,13 +163,6 @@ function getAbsence() { //Abwesenheitsdaten aus der DB holen
     });
 }
 
-function resetAbsenceForm() {
-    $('#absence_name').val("");
-    $('#absence_notes').val("");
-    $('#absence_start').val("");
-    $('#absence_end').val("");
-    $('#absence_id').val("");
-}
 
 function deleteAbsence(id) {
     deleteConfirm("Abwesenheit löschen", "Soll der Eintrag wirklich gelöscht werden?", function () {
