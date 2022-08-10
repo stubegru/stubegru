@@ -3,12 +3,26 @@
 //Show/hide Elements on toggle change in modal
 $("#absence_whole_day_toggle").on("change", function () {
     if ($(this).prop('checked')) {
+        //show time inputs
         $(".absence-whole-day-inputs").hide();
+        $("#absence_start_date").prop("required",false);
+        $("#absence_end_date").prop("required",false);
+        
         $(".absence-time-inputs").show();
+        $("#absence_date").prop("required",true);
+        $("#absence_start_time").prop("required",true);
+        $("#absence_end_time").prop("required",true);
     }
     else {
+        //show date inputs
         $(".absence-time-inputs").hide();
+        $("#absence_date").prop("required",false);
+        $("#absence_start_time").prop("required",false);
+        $("#absence_end_time").prop("required",false);
+
         $(".absence-whole-day-inputs").show();
+        $("#absence_start_date").prop("required",true);
+        $("#absence_end_date").prop("required",true);
     }
 });
 
@@ -22,6 +36,7 @@ $("#absence_recurring_toggle").on("change", function () {
 });
 
 $("#absence_recurring_rhythm").on("change", function () {
+    //ÜBERARBEITEN!!!!
     switch ($(this).val()) {
         case "daily":
             $(".absence-recurring-weekly-select").hide();
@@ -35,9 +50,9 @@ $("#absence_recurring_rhythm").on("change", function () {
 function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form-action
     let absence = {};
 
-    if($("#absence_id").val() == "new"){
+    if ($("#absence_id").val() == "new") {
         absence.mode = "create";
-    }else{
+    } else {
         absence.mode = "update";
         absence.id = $("#absence_id").val();
     }
@@ -45,24 +60,24 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
     absence.name = $("#absence_name").val();
     absence.description = $("#absence_description").val();
 
-    if($("#absence_whole_day_toggle").prop("checked")){
+    if ($("#absence_whole_day_toggle").prop("checked")) {
         //with time
         const startTimestampString = `${$("#absence_date").val()} ${$("#absence_start_time").val()}`;
         const endTimestampString = `${$("#absence_date").val()} ${$("#absence_end_time").val()}`;
         absence.start = new Date(startTimestampString).toISOString();
         absence.end = new Date(endTimestampString).toISOString();
     }
-    else{
+    else {
         //only date
         absence.start = new Date($("#absence_start_date").val()).toISOString();
         absence.end = new Date($("#absence_end_date").val()).toISOString();
     }
 
     //recurring rule
-    if($("#absence_recurring_toggle").prop("checked")){
+    if ($("#absence_recurring_toggle").prop("checked")) {
         absence.recurring = $("#absence_recurring_rhythm").val();
     }
-    else{
+    else {
         absence.recurring = null;
     }
 
@@ -73,7 +88,12 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
         data: absence,
         url: `${stubegru.constants.BASE_URL}/modules/absence/save_absence.php`,
         success: function (data) {
-
+            stubegru.modules.alerts.alert({
+                title: "Abwesenheit speichern",
+                text: data.message,
+                type: data.status
+            });
+            if (data.status == "success") { $("#absenceModal").modal("hide"); }
         }
     });
 }

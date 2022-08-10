@@ -51,7 +51,7 @@
             <div class="modal-dialog" style="min-width:70%;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button" onclick="resetAbsenceForm()">×</button>
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                         <h4 class="modal-title">Abwesenheit bearbeiten</h4>
                     </div>
                     <div class="modal-body">
@@ -102,21 +102,21 @@
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Datum</label>
-                                        <input autocomplete="off" type='date' id="absence_date" class="form-control" required />
+                                        <input autocomplete="off" type='date' id="absence_date" class="form-control" />
                                     </div>
                                 </div>
 
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Beginn</label>
-                                        <input autocomplete="off" id="absence_start_time" type='time' class="form-control" required />
+                                        <input autocomplete="off" id="absence_start_time" type='time' class="form-control" />
                                     </div>
                                 </div>
 
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Ende</label>
-                                        <input autocomplete="off" id="absence_end_time" type='time' class="form-control" required />
+                                        <input autocomplete="off" id="absence_end_time" type='time' class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -142,22 +142,6 @@
                                     </div>
                                 </div>
 
-                                <div class="absence-recurring-weekly-select" style="display: none;">
-                                    <div class='col-sm-3'>
-                                        <div class="form-group">
-                                            <label>Wochentag</label>
-                                            <select class="form-control">
-                                                <option value="0">Montag</option>
-                                                <option value="1">Dienstag</option>
-                                                <option value="2">Mittwoch</option>
-                                                <option value="3">Donnerstag</option>
-                                                <option value="4">Freitag</option>
-                                                <option value="5">Samstag</option>
-                                                <option value="6">Sonntag</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>
@@ -165,7 +149,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button data-dismiss="modal" class="btn btn-default" type="button" onclick="resetAbsenceForm()">Abbrechen</button>
+                        <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
                         <input class="btn btn-primary" type="submit" value="Eintrag speichern">
                     </div>
 
