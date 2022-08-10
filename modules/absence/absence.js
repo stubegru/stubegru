@@ -113,6 +113,13 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
                 type: data.status
             });
             if (data.status == "success") { $("#absenceModal").modal("hide"); }
+        },
+        error: function(data){
+            stubegru.modules.alerts.alert({
+                title: "Es ist ein Fehler aufgetreten",
+                text: "Der Eintrag zur Abwesenheit konnte nicht gespeichert werden",
+                type: "error"
+            });
         }
     });
 }
