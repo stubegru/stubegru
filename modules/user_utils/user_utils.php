@@ -51,14 +51,11 @@ function getUserAttribute($userId, $attribute)
     $selectStatement = $dbPdo->prepare("SELECT `$attribute` FROM `Nutzer` WHERE `ID`=:userId;");
     $selectStatement->bindValue(':userId', $userId);
     $selectStatement->execute();
-    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-    foreach ($resultList as $row) {
-        $ergebnis = $row[0];
-    }
-    if (isset($ergebnis)) {
-        return ($ergebnis);
+    $result = $selectStatement->fetchColumn();
+    
+    if (isset($result)) {
+        return $result;
     } else {
-        return (null);
+        return null;
     }
 }
