@@ -82,30 +82,25 @@
                                 </div>
                             </div>
 
-                            <div class="absence-whole-day-inputs">
-                                <div class='col-sm-3'>
-                                    <div class="form-group">
-                                        <label>Beginn</label>
-                                        <input autocomplete="off" type='date' id="absence_start_date" class="form-control" required />
-                                    </div>
+                            <div class='col-sm-3'>
+                                <div class="form-group">
+                                    <label>Datum</label>
+                                    <input autocomplete="off" type='date' id="absence_date" class="form-control" required />
                                 </div>
+                            </div>
 
+                            <div class="absence-whole-day-inputs">
                                 <div class='col-sm-6'>
                                     <div class="form-group">
-                                        <label>Ende</label>
+                                        <label>Datum Ende</label>
                                         <input autocomplete="off" id="absence_end_date" type='date' class="form-control" required />
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="absence-time-inputs" style="display:none;">
-                                <div class='col-sm-3'>
-                                    <div class="form-group">
-                                        <label>Datum</label>
-                                        <input autocomplete="off" type='date' id="absence_date" class="form-control" />
-                                    </div>
-                                </div>
 
+
+                            <div class="absence-time-inputs" style="display:none;">
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Beginn</label>
@@ -140,6 +135,10 @@
                                             <option value="weekly">wöchentlich</option>
                                         </select>
                                     </div>
+                                </div>
+
+                                <div class='col-sm-6'>
+                                    <div id="absence_recurring_day_label" style="margin-top: 30px; display:none;"></div>
                                 </div>
 
                             </div>

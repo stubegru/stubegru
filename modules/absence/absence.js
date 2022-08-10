@@ -5,24 +5,20 @@ $("#absence_whole_day_toggle").on("change", function () {
     if ($(this).prop('checked')) {
         //show time inputs
         $(".absence-whole-day-inputs").hide();
-        $("#absence_start_date").prop("required",false);
-        $("#absence_end_date").prop("required",false);
-        
+        $("#absence_end_date").prop("required", false);
+
         $(".absence-time-inputs").show();
-        $("#absence_date").prop("required",true);
-        $("#absence_start_time").prop("required",true);
-        $("#absence_end_time").prop("required",true);
+        $("#absence_start_time").prop("required", true);
+        $("#absence_end_time").prop("required", true);
     }
     else {
         //show date inputs
         $(".absence-time-inputs").hide();
-        $("#absence_date").prop("required",false);
-        $("#absence_start_time").prop("required",false);
-        $("#absence_end_time").prop("required",false);
+        $("#absence_start_time").prop("required", false);
+        $("#absence_end_time").prop("required", false);
 
         $(".absence-whole-day-inputs").show();
-        $("#absence_start_date").prop("required",true);
-        $("#absence_end_date").prop("required",true);
+        $("#absence_end_date").prop("required", true);
     }
 });
 
@@ -36,17 +32,30 @@ $("#absence_recurring_toggle").on("change", function () {
 });
 
 $("#absence_recurring_rhythm").on("change", function () {
-    //ÜBERARBEITEN!!!!
     switch ($(this).val()) {
         case "daily":
-            $(".absence-recurring-weekly-select").hide();
+            $("#absence_recurring_day_label").hide();
             break;
         case "weekly":
-            $(".absence-recurring-weekly-select").show();
+            $("#absence_recurring_day_label").show();
             break;
     }
 });
 
+//show recurring day of the week
+$("#absence_date").on("change", function () {
+    const input = $(this).val();
+    if (input == "") {
+        $("#absence_recurring_day_label").html("Bitte Datum wählen...");
+    } else {
+        let dayIndex = new Date(input).getDay();
+        const dayNames = ["Sonntag","Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+        let weekDay = dayNames[dayIndex];
+        $("#absence_recurring_day_label").html(`Wiederholung jeden <b class="text-primary">${weekDay}</b>`);
+    }
+});
+
+//Reset modal on hide
 $('#absenceModal').on('hidden.bs.modal', resetAbsenceForm);
 
 function resetAbsenceForm() {
@@ -77,7 +86,7 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
     }
     else {
         //only date
-        absence.start = new Date($("#absence_start_date").val()).toISOString();
+        absence.start = new Date($("#absence_date").val()).toISOString();
         absence.end = new Date($("#absence_end_date").val()).toISOString();
     }
 
