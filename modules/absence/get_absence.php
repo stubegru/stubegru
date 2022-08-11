@@ -1,49 +1,31 @@
 <?php
+$BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/utils/auth_and_database.php";
+$ownId = $_SESSION["id"];
 
-// Dieses Script generiert html Text für die Abwesenheitseinträge | Erst die Aktuellen, dann die Bevorstehenden
-
-
-
-require("connect.php");
-require("functions.php");
-$user=$_SESSION["id"];
-$now=date("Y-m-d");
-
-if (isset($_POST["absenceId"])){
+if (isset($_POST["absenceId"])) {
     $absenceId = $_POST["absenceId"]; //"all" => alle
-}
-else{
-     echo json_encode(array("state" => "error", "message" => "Bitte eine id oder \"all\" als absenceId uebergeben"));
+} else {
+    echo json_encode(array("status" => "error", "message" => "Abwesenheit mit der id $absenceId konnte nicht abgerufen werden."));
     exit;
 }
 
+//TODO Wie vergangene abwesenheiten löschen???
+//mysqli_query($mysqli, "DELETE FROM `Abwesenheit` WHERE enddate < '$now' ;"); //Lösche alle abgelaufenen abwesenheiten
 
-mysqli_query($mysqli, "DELETE FROM `Abwesenheit` WHERE enddate < '$now' ;"); //Lösche alle abgelaufenen abwesenheiten
-
-$toReturn = array();
 
 //Prüfen, ob alle oder ein bestimmter Datensatz geholt werden soll
-if ($absenceId == "all"){
-    $result=mysqli_query($mysqli, "SELECT * FROM `Abwesenheit` ORDER BY startdate ASC;");
-}
-else if (is_numeric($absenceId)){
-    $result=mysqli_query($mysqli, "SELECT * FROM `Abwesenheit` WHERE id = '$absenceId' ORDER BY startdate ASC;");
-}
-else{
-    echo json_encode(array("state" => "error", "message" => "Bitte eine id oder \"all\" als absenceId uebergeben"));
+if ($absenceId == "all") {
+    $selectStatement = $dbPdo->query("SELECT * FROM `Abwesenheiten` ORDER BY `start` ASC;");
+    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+} else if (is_numeric($absenceId)) {
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `Abwesenheiten` WHERE id = :absenceId ORDER BY `start` ASC;");
+    $selectStatement->bindValue(':absenceId', $absenceId);
+    $selectStatement->execute();
+    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    echo json_encode(array("status" => "error", "message" => "Abwesenheit mit der id $absenceId konnte nicht abgerufen werden."));
     exit;
 }
 
-//Daten abarbeiten
-while($row=mysqli_fetch_object($result)){
-    $tempArray = array();
-	$tempArray["id"]=$row->id;
-    $tempArray["name"]=$row->name;
-    $tempArray["notice"]=$row->notice;
-    $tempArray["startdate"]=$row->startdate;
-    $tempArray["enddate"]=$row->enddate;
-    $toReturn[] = $tempArray;
-}
-
-echo json_encode($toReturn);
-?>
+echo json_encode($resultList);
