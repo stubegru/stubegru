@@ -49,7 +49,7 @@ $("#absence_date").on("change", function () {
         $("#absence_recurring_day_label").html("Bitte Datum wählen...");
     } else {
         let dayIndex = new Date(input).getDay();
-        const dayNames = ["Sonntag","Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+        const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
         let weekDay = dayNames[dayIndex];
         $("#absence_recurring_day_label").html(`Wiederholung jeden <b class="text-primary">${weekDay}</b>`);
     }
@@ -116,7 +116,7 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
             });
             if (data.status == "success") { $("#absenceModal").modal("hide"); }
         },
-        error: function(data){
+        error: function (data) {
             stubegru.modules.alerts.alert({
                 title: "Es ist ein Fehler aufgetreten",
                 text: "Der Eintrag zur Abwesenheit konnte nicht gespeichert werden",
@@ -151,36 +151,45 @@ function showAbsenceModal(id) {
     $("#absenceModal").modal("show");
 }
 
-function getAbsence() { //Abwesenheitsdaten aus der DB holen
-    //Für die Hauptangestellten Daten
+function getAbsence() {
+
     $.ajax({
         type: "POST",
-        async: false,
-        url: "../php/get_absence.php",
-        data: {
-            absenceId: "all"
-        },
+        dataType: "json",
+        data: { absenceId: "all" },
+        url: `${stubegru.constants.BASE_URL}/modules/absence/get_absence.php`,
         success: function (data) {
-            data = JSON.parse(data);
-            var nowDateObject = new Date();
-            $('#absence_table_future').html("");
-            $('#absence_table_today').html("");
-            for (var i in data) {
-                var startDateObject = new Date(data[i].startdate);
-                var box;
-                //Prüfen, in welche Box der Eintrag sortiert werden soll
-                if (nowDateObject.getTime() < startDateObject.getTime()) {
-                    box = "#absence_table_future";
-                } else {
-                    box = "#absence_table_today";
-                }
-                var startdate = changeDateOrder(data[i].startdate, "-");
-                var enddate = changeDateOrder(data[i].enddate, "-");
-                $(box).append(" <tr><td>" + data[i].name + "</td><td>" + data[i].notice + "</td><td>" + startdate + "</td><td>" + enddate + "</td><td><button class='btn btn-default admin' onclick='showAbsenceModal(" + data[i].id + ")'><span class='glyphicon glyphicon-pencil'></span></button></td><td><button class='btn btn-danger admin' onclick='deleteAbsence(" + data[i].id + ")'><span class='glyphicon glyphicon-remove'></span></button></td></tr>");
+            for(let absence of data){
+                absence.start = new Date(`${absence.start}Z`); //Add trailing "Z" to interpret as UTC time
+                absence.end = new Date(`${absence.end}Z`); //Add trailing "Z" to interpret as UTC time
+                console.log(absence);
             }
-            checkAdminLevel();
+
         }
     });
+
+
+    
+        // success: function (data) {
+        //     data = JSON.parse(data);
+        //     var nowDateObject = new Date();
+        //     $('#absence_table_future').html("");
+        //     $('#absence_table_today').html("");
+        //     for (var i in data) {
+        //         var startDateObject = new Date(data[i].startdate);
+        //         var box;
+        //         //Prüfen, in welche Box der Eintrag sortiert werden soll
+        //         if (nowDateObject.getTime() < startDateObject.getTime()) {
+        //             box = "#absence_table_future";
+        //         } else {
+        //             box = "#absence_table_today";
+        //         }
+        //         var startdate = changeDateOrder(data[i].startdate, "-");
+        //         var enddate = changeDateOrder(data[i].enddate, "-");
+        //         $(box).append(" <tr><td>" + data[i].name + "</td><td>" + data[i].notice + "</td><td>" + startdate + "</td><td>" + enddate + "</td><td><button class='btn btn-default admin' onclick='showAbsenceModal(" + data[i].id + ")'><span class='glyphicon glyphicon-pencil'></span></button></td><td><button class='btn btn-danger admin' onclick='deleteAbsence(" + data[i].id + ")'><span class='glyphicon glyphicon-remove'></span></button></td></tr>");
+        //     }
+        //     checkAdminLevel();
+        // }
 }
 
 

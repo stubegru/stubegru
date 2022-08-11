@@ -19,6 +19,12 @@ $end = $_POST["end"];
 $recurring = $_POST["recurring"];
 $wholeDay = $_POST["wholeDay"];
 
+//set timestamps to correct format
+$start = substr($start,0,-1); //cut off trailing "Z" from JS-ISO-String
+$end = substr($end,0,-1); //cut off trailing "Z" from JS-ISO-String
+$dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
+
+
 $toReturn = array();
 
 
