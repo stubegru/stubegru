@@ -85,11 +85,13 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
         const endTimestampString = `${$("#absence_date").val()} ${$("#absence_end_time").val()}`;
         absence.start = new Date(startTimestampString).toISOString();
         absence.end = new Date(endTimestampString).toISOString();
+        absence.wholeDay = 0;
     }
     else {
         //only date
         absence.start = new Date($("#absence_date").val()).toISOString();
         absence.end = new Date($("#absence_end_date").val()).toISOString();
+        absence.wholeDay = 1;
     }
 
     //recurring rule

@@ -17,18 +17,20 @@ $description = $_POST["description"];
 $start = $_POST["start"];
 $end = $_POST["end"];
 $recurring = $_POST["recurring"];
+$wholeDay = $_POST["wholeDay"];
 
 $toReturn = array();
 
 
 if ($mode == "create") {
 
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Abwesenheiten`(`name`, `description`, `start`, `end`, `recurring`) VALUES (:name,:description,:start,:end,:recurring);");
+    $insertStatement = $dbPdo->prepare("INSERT INTO `Abwesenheiten`(`name`, `description`, `start`, `end`, `recurring`, `wholeDay`) VALUES (:name,:description,:start,:end,:recurring,:wholeDay);");
     $insertStatement->bindValue(':name', $name);
     $insertStatement->bindValue(':description', $description);
     $insertStatement->bindValue(':start', $start);
     $insertStatement->bindValue(':end', $end);
     $insertStatement->bindValue(':recurring', $recurring);
+    $insertStatement->bindValue(':wholeDay', $wholeDay);
     $insertStatement->execute();
     $newAbsenceId = $dbPdo->lastInsertId();
 
@@ -41,13 +43,14 @@ if ($mode == "create") {
 
 } else if (is_numeric($absenceId)) {
 
-    $updateStatement = $dbPdo->prepare("UPDATE `Abwesenheiten` SET `name`=:name,`description`=:description,`start`=:start,`end`=:end,`recurring`=:recurring WHERE id=:absenceId;");
+    $updateStatement = $dbPdo->prepare("UPDATE `Abwesenheiten` SET `name`=:name,`description`=:description,`start`=:start,`end`=:end,`recurring`=:recurring,`wholeDay`=:wholeDay WHERE id=:absenceId;");
     $updateStatement->bindValue(':absenceId', $absenceId);
     $updateStatement->bindValue(':name', $name);
     $updateStatement->bindValue(':description', $description);
     $updateStatement->bindValue(':start', $start);
     $updateStatement->bindValue(':end', $end);
     $updateStatement->bindValue(':recurring', $recurring);
+    $updateStatement->bindValue(':wholeDay', $wholeDay);
     $updateStatement->execute();
 
     //Notification versenden

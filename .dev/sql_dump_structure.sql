@@ -1,8 +1,8 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 21. Apr 2022 um 12:26
+-- Erstellungszeit: 11. Aug 2022 um 09:27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -10,6 +10,22 @@ SET time_zone = "+00:00";
 
 --
 --
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `Abwesenheiten`
+--
+
+CREATE TABLE `Abwesenheiten` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `end` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `recurring` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `wholeDay` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -376,6 +392,12 @@ CREATE TABLE `wiki_tags` (
 --
 
 --
+-- Indizes für die Tabelle `Abwesenheiten`
+--
+ALTER TABLE `Abwesenheiten`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `Benachrichtigungen`
 --
 ALTER TABLE `Benachrichtigungen`
@@ -524,6 +546,12 @@ ALTER TABLE `wiki_tags`
 --
 -- AUTO_INCREMENT für exportierte Tabellen
 --
+
+--
+-- AUTO_INCREMENT für Tabelle `Abwesenheiten`
+--
+ALTER TABLE `Abwesenheiten`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT für Tabelle `Benachrichtigungen`
