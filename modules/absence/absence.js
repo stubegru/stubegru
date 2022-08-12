@@ -174,40 +174,118 @@ async function refreshAbsenceView() {
     $("#absence_table_today").html("");
 
     for (let absence of absenceList) {
-        let start = new Date(absence.start);
-        let end = new Date(absence.end);
-        let wholeDay = absence.wholeDay == "1";
+        absence.start = new Date(absence.start);
+        absence.end = new Date(absence.end);
+        absence.wholeDay = absence.wholeDay == "1";
 
-        if (absence.recurring != "") {
-            const now = new Date();
-            if (absence.recurring == "daily") {
-                start.setDate(now.getDate());
-                start.setMonth(now.getMonth());
-                start.setFullYear(now.getFullYear());
-                absence.description += `<span class="label label-info">Täglich</span>`;
+        absence.startString = formatDate(absence.start, "DD.MM.YYYY");
+        absence.endString = formatDate(absence.end, "DD.MM.YYYY");
+        absence.recurringString = "";
+        absence.table = "present";
+
+        const now = new Date();
+        now.setHours(0);
+        now.setMinutes(0);
+        now.setSeconds(0);
+        now.setMilliseconds(0);
+        absence.epoch = "present";
+        if (absence.end < now) { absence.epoch = "past"; }
+        if (absence.start > now) { absence.epoch = "future"; }
+
+        //No recurring
+        if (absence.recurring == "") {
+
+            if (absence.epoch == "past") {
+                console.warn(`Not recurring absence from the past. Ignoring...`);
+                console.warn(absence);
+                continue;
             }
 
-            if (absence.recurring == "weekly") {
-                let dayOfWeek = start.getDay();
-                let currentDayOfWeek = now.getDay();
-                if (dayOfWeek = currentDayOfWeek) {
+            //if not in the past just add to the corresponding table
+            absence.table = absence.epoch;
 
+            if (!absence.wholeDay) {
+                if (absence.epoch == "future") {
+                    absence.startString = formatDate(absence.start, "DD.MM.YYYY hh:mm");
+                    absence.endString = formatDate(absence.end, "DD.MM.YYYY hh:mm");
+                } else {
+                    absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                    absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
                 }
-                start.setDate(now.getDate());
-                start.setMonth(now.getMonth());
-                start.setFullYear(now.getFullYear());
-                absence.description += `<span class="label label-info">Jeden ${dayNames[dayOfWeek]}</span>`;
+            }
+
+
+        }
+
+        //daily recurring
+        if (absence.recurring == "daily") {
+            absence.recurringString = `<span class="label label-info">Täglich</span>`;
+
+            if (absence.epoch == "present" || absence.epoch == "past") {
+                if (absence.wholeDay) {
+                    absence.startString = "Heute";
+                    absence.endString = "Heute";
+                } else {
+                    absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                    absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+                }
+            }
+
+            if (absence.epoch == "future") {
+                absence.table = "future";
+                if (absence.wholeDay) {
+                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY");
+                    absence.endString = "";
+                } else {
+                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
+                    absence.endString = formatDate(absence.end, "hh:mm");
+                }
             }
         }
 
-        const startString = wholeDay ? formatDate(start, "DD.MM.YYYY") : `${formatDate(start, "hh:mm")} Uhr`;
-        const endString = wholeDay ? formatDate(end, "DD.MM.YYYY") : `${formatDate(end, "hh:mm")} Uhr`;
+        //weekly recurring
+        if (absence.recurring == "weekly") {
+            let dayOfWeek = absence.start.getDay();
+            let currentDayOfWeek = now.getDay();
+            absence.recurringString = `<span class="label label-info">Jeden ${dayNames[dayOfWeek]}</span>`;
 
-        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${startString}</td><td>${endString}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
+            if (absence.epoch == "present" || absence.epoch == "past") {
 
-        $("#absence_table_today").append(absenceHtml);
-        stubegru.modules.userUtils.updateAdminElements()
+                //check if weekly recurring is today or not (set corresponding table)
+                if (dayOfWeek != currentDayOfWeek) {
+                    absence.table = "future";
+                }
+
+
+                if (absence.wholeDay) {
+                    absence.startString = `Jeden ${dayNames[dayOfWeek]}`;
+                    absence.endString = `Jeden ${dayNames[dayOfWeek]}`;
+                } else {
+                    absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                    absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+                }
+            }
+
+            if (absence.epoch == "future") {
+                absence.table = future;
+                if (absence.wholeDay) {
+                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY");
+                    absence.endString = "";
+                } else {
+                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
+                    absence.endString = formatDate(absence.end, "hh:mm");
+                }
+            }
+        }
+
+
+
+        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${absence.startString}</td><td>${absence.endString}</td><td>${absence.recurringString}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
+
+        $(`#absence_table_${absence.table}`).append(absenceHtml);
+        //console.log(absence);
     }
+    stubegru.modules.userUtils.updateAdminElements()
 }
 
 
