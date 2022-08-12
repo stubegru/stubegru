@@ -1,5 +1,7 @@
 //**************************************Abwesenheit*********************************************
 
+refreshAbsenceView(); //Init absence view
+
 //Show/hide Elements on toggle change in modal
 $("#absence_whole_day_toggle").on("change", function () {
     if ($(this).prop('checked')) {
@@ -115,6 +117,7 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
                 type: data.status
             });
             if (data.status == "success") { $("#absenceModal").modal("hide"); }
+            refreshAbsenceView();
         },
         error: function (data) {
             stubegru.modules.alerts.alert({
@@ -167,30 +170,18 @@ async function getAbsence(absenceId) {
 
 async function refreshAbsenceView() {
 
+    let absenceList = await getAbsence("all");
+    $("#absence_table_today").html("");
 
+    for (let absence of absenceList) {
+        let start = new Date(absence.start);
+        let end = new Date(absence.end);
 
+        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${formatDate(start, "DD.MM.YYYY")}</td><td>${formatDate(end, "DD.MM.YYYY")}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
 
-
-    // success: function (data) {
-    //     data = JSON.parse(data);
-    //     var nowDateObject = new Date();
-    //     $('#absence_table_future').html("");
-    //     $('#absence_table_today').html("");
-    //     for (var i in data) {
-    //         var startDateObject = new Date(data[i].startdate);
-    //         var box;
-    //         //Prüfen, in welche Box der Eintrag sortiert werden soll
-    //         if (nowDateObject.getTime() < startDateObject.getTime()) {
-    //             box = "#absence_table_future";
-    //         } else {
-    //             box = "#absence_table_today";
-    //         }
-    //         var startdate = changeDateOrder(data[i].startdate, "-");
-    //         var enddate = changeDateOrder(data[i].enddate, "-");
-    //         $(box).append(" <tr><td>" + data[i].name + "</td><td>" + data[i].notice + "</td><td>" + startdate + "</td><td>" + enddate + "</td><td><button class='btn btn-default admin' onclick='showAbsenceModal(" + data[i].id + ")'><span class='glyphicon glyphicon-pencil'></span></button></td><td><button class='btn btn-danger admin' onclick='deleteAbsence(" + data[i].id + ")'><span class='glyphicon glyphicon-remove'></span></button></td></tr>");
-    //     }
-    //     checkAdminLevel();
-    // }
+        $("#absence_table_today").append(absenceHtml);
+        stubegru.modules.userUtils.updateAdminElements()
+    }
 }
 
 
