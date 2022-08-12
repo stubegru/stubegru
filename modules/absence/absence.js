@@ -1,4 +1,5 @@
 //**************************************Abwesenheit*********************************************
+const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
 refreshAbsenceView(); //Init absence view
 
@@ -51,7 +52,6 @@ $("#absence_date").on("change", function () {
         $("#absence_recurring_day_label").html("Bitte Datum wählen...");
     } else {
         let dayIndex = new Date(input).getDay();
-        const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
         let weekDay = dayNames[dayIndex];
         $("#absence_recurring_day_label").html(`Wiederholung jeden <b class="text-primary">${weekDay}</b>`);
     }
@@ -176,8 +176,34 @@ async function refreshAbsenceView() {
     for (let absence of absenceList) {
         let start = new Date(absence.start);
         let end = new Date(absence.end);
+        let wholeDay = absence.wholeDay == "1";
 
-        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${formatDate(start, "DD.MM.YYYY")}</td><td>${formatDate(end, "DD.MM.YYYY")}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
+        if (absence.recurring != "") {
+            const now = new Date();
+            if (absence.recurring == "daily") {
+                start.setDate(now.getDate());
+                start.setMonth(now.getMonth());
+                start.setFullYear(now.getFullYear());
+                absence.description += `<span class="label label-info">Täglich</span>`;
+            }
+
+            if (absence.recurring == "weekly") {
+                let dayOfWeek = start.getDay();
+                let currentDayOfWeek = now.getDay();
+                if (dayOfWeek = currentDayOfWeek) {
+
+                }
+                start.setDate(now.getDate());
+                start.setMonth(now.getMonth());
+                start.setFullYear(now.getFullYear());
+                absence.description += `<span class="label label-info">Jeden ${dayNames[dayOfWeek]}</span>`;
+            }
+        }
+
+        const startString = wholeDay ? formatDate(start, "DD.MM.YYYY") : `${formatDate(start, "hh:mm")} Uhr`;
+        const endString = wholeDay ? formatDate(end, "DD.MM.YYYY") : `${formatDate(end, "hh:mm")} Uhr`;
+
+        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${startString}</td><td>${endString}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
 
         $("#absence_table_today").append(absenceHtml);
         stubegru.modules.userUtils.updateAdminElements()
