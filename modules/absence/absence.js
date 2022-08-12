@@ -151,45 +151,46 @@ function showAbsenceModal(id) {
     $("#absenceModal").modal("show");
 }
 
-function getAbsence() {
-
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        data: { absenceId: "all" },
-        url: `${stubegru.constants.BASE_URL}/modules/absence/get_absence.php`,
-        success: function (data) {
-            for(let absence of data){
-                absence.start = new Date(`${absence.start}Z`); //Add trailing "Z" to interpret as UTC time
-                absence.end = new Date(`${absence.end}Z`); //Add trailing "Z" to interpret as UTC time
-                console.log(absence);
-            }
-
-        }
+async function getAbsence(absenceId) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            data: { absenceId: absenceId },
+            url: `${stubegru.constants.BASE_URL}/modules/absence/get_absence.php`,
+            success: resolve,
+            error: reject
+        });
     });
 
+}
 
-    
-        // success: function (data) {
-        //     data = JSON.parse(data);
-        //     var nowDateObject = new Date();
-        //     $('#absence_table_future').html("");
-        //     $('#absence_table_today').html("");
-        //     for (var i in data) {
-        //         var startDateObject = new Date(data[i].startdate);
-        //         var box;
-        //         //Prüfen, in welche Box der Eintrag sortiert werden soll
-        //         if (nowDateObject.getTime() < startDateObject.getTime()) {
-        //             box = "#absence_table_future";
-        //         } else {
-        //             box = "#absence_table_today";
-        //         }
-        //         var startdate = changeDateOrder(data[i].startdate, "-");
-        //         var enddate = changeDateOrder(data[i].enddate, "-");
-        //         $(box).append(" <tr><td>" + data[i].name + "</td><td>" + data[i].notice + "</td><td>" + startdate + "</td><td>" + enddate + "</td><td><button class='btn btn-default admin' onclick='showAbsenceModal(" + data[i].id + ")'><span class='glyphicon glyphicon-pencil'></span></button></td><td><button class='btn btn-danger admin' onclick='deleteAbsence(" + data[i].id + ")'><span class='glyphicon glyphicon-remove'></span></button></td></tr>");
-        //     }
-        //     checkAdminLevel();
-        // }
+async function refreshAbsenceView() {
+
+
+
+
+
+    // success: function (data) {
+    //     data = JSON.parse(data);
+    //     var nowDateObject = new Date();
+    //     $('#absence_table_future').html("");
+    //     $('#absence_table_today').html("");
+    //     for (var i in data) {
+    //         var startDateObject = new Date(data[i].startdate);
+    //         var box;
+    //         //Prüfen, in welche Box der Eintrag sortiert werden soll
+    //         if (nowDateObject.getTime() < startDateObject.getTime()) {
+    //             box = "#absence_table_future";
+    //         } else {
+    //             box = "#absence_table_today";
+    //         }
+    //         var startdate = changeDateOrder(data[i].startdate, "-");
+    //         var enddate = changeDateOrder(data[i].enddate, "-");
+    //         $(box).append(" <tr><td>" + data[i].name + "</td><td>" + data[i].notice + "</td><td>" + startdate + "</td><td>" + enddate + "</td><td><button class='btn btn-default admin' onclick='showAbsenceModal(" + data[i].id + ")'><span class='glyphicon glyphicon-pencil'></span></button></td><td><button class='btn btn-danger admin' onclick='deleteAbsence(" + data[i].id + ")'><span class='glyphicon glyphicon-remove'></span></button></td></tr>");
+    //     }
+    //     checkAdminLevel();
+    // }
 }
 
 

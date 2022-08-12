@@ -19,14 +19,23 @@ $dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 if ($absenceId == "all") {
     $selectStatement = $dbPdo->query("SELECT * FROM `Abwesenheiten` ORDER BY `start` ASC;");
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($resultList as $index => $resultItem) {
+        $resultItem["start"] = $resultItem["start"] . "Z"; //Add trailing "Z" to match ISO UTC Strings
+        $resultItem["end"] = $resultItem["end"] . "Z"; //Add trailing "Z" to match ISO UTC Strings
+        $resultList[$index] = $resultItem;
+    }
+    echo json_encode($resultList);
+
 } else if (is_numeric($absenceId)) {
     $selectStatement = $dbPdo->prepare("SELECT * FROM `Abwesenheiten` WHERE id = :absenceId ORDER BY `start` ASC;");
     $selectStatement->bindValue(':absenceId', $absenceId);
     $selectStatement->execute();
-    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+    $resultItem = $selectStatement->fetch(PDO::FETCH_ASSOC);
+    $resultItem["start"] = $resultItem["start"] . "Z"; //Add trailing "Z" to match ISO UTC Strings
+    $resultItem["end"] = $resultItem["end"] . "Z"; //Add trailing "Z" to match ISO UTC Strings
+    echo json_encode($resultItem);
+
 } else {
     echo json_encode(array("status" => "error", "message" => "Abwesenheit mit der id $absenceId konnte nicht abgerufen werden."));
     exit;
 }
-
-echo json_encode($resultList);
