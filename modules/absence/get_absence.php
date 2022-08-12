@@ -10,8 +10,8 @@ if (isset($_POST["absenceId"])) {
     exit;
 }
 
-//TODO Wie vergangene abwesenheiten löschen???
-//mysqli_query($mysqli, "DELETE FROM `Abwesenheit` WHERE enddate < '$now' ;"); //Lösche alle abgelaufenen abwesenheiten
+$today = date("Y-m-d");
+$dbPdo->query("DELETE FROM `Abwesenheiten` WHERE end < '$today';"); //Delete past absence entries
 
 $dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 
