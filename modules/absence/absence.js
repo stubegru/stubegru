@@ -303,6 +303,13 @@ async function refreshAbsenceView() {
         $(`#absence_table_${absence.table}`).append(absenceHtml);
         //console.log(absence);
     }
+
+    //register delete button actions
+    $(".absence-delete-button").on("click",function(){
+        let absenceId = $(this).attr("data-absence-id");
+        deleteAbsence(absenceId);
+    })
+
     stubegru.modules.userUtils.updateAdminElements()
 }
 
@@ -332,36 +339,21 @@ function setAbsenceEpoch(absence) {
     return absence;
 }
 
-function deleteAbsence(id) {
-    deleteConfirm("Abwesenheit löschen", "Soll der Eintrag wirklich gelöscht werden?", function () {
+function deleteAbsence(absenceId) {
+    deleteConfirm("Abwesenheit löschen", "Soll diese Abwesenheit wirklich gelöscht werden?", function () {
         $.ajax({
             type: "POST",
-            async: false,
-            url: "../php/delete_absence.php",
-            data: {
-                id: id
-            },
+            dataType: "json",
+            data: { absenceId: absenceId },
+            url: `${stubegru.constants.BASE_URL}/modules/absence/delete_absence.php`,
             success: function (data) {
-                data = JSON.parse(data);
-                swal({
+                stubegru.modules.alerts.alert({
                     title: "Abwesenheit löschen",
                     text: data.message,
-                    type: data.state,
-                    timer: 4000
+                    type: data.status
                 });
+                refreshAbsenceView();
             }
         });
-        getAbsence();
     });
-}
-
-function toggleAbsenceView() {
-    if (showOnlyCurrentAbsences) {
-        $("#toggleAbsenceButton").html(" Nur aktuelle anzeigen");
-        showOnlyCurrentAbsences = false;
-    } else {
-        $("#toggleAbsenceButton").html(" Alle anzeigen");
-        showOnlyCurrentAbsences = true;
-    }
-    $("#absence_table_future").fadeToggle();
 }
