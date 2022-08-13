@@ -168,6 +168,114 @@ async function getAbsence(absenceId) {
 
 }
 
+function generateAbsenceStrings(absence) {
+    absence.startString = formatDate(absence.start, "DD.MM.YYYY");
+    absence.endString = formatDate(absence.end, "DD.MM.YYYY");
+    absence.recurringString = "";
+    absence.table = "present";
+
+    //No recurring
+    if (absence.recurring == "") {
+
+        if (absence.epoch == "past") {
+            console.warn(`Not recurring absence from the past. Ignoring...`);
+            console.warn(absence);
+            return;
+        }
+
+        //if not in the past just add to the corresponding table
+        absence.table = absence.epoch;
+
+        if (!absence.wholeDay) {
+            if (absence.epoch == "future") {
+                if (formatDate(absence.start, "YYYY-MM-DD") == formatDate(new Date(), "YYYY-MM-DD")) {
+                    //Today, but the time is in the future
+                    absence.startString = `Heute ${formatDate(absence.start, "hh:mm")}`;
+                    absence.endString = `Heute ${formatDate(absence.end, "hh:mm")}`;
+                } else {
+                    absence.startString = formatDate(absence.start, "DD.MM.YYYY hh:mm");
+                    absence.endString = formatDate(absence.end, "DD.MM.YYYY hh:mm");
+                }
+            } else {
+                absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+            }
+        }
+
+
+    }
+
+    //daily recurring
+    if (absence.recurring == "daily") {
+        absence.recurringString = `<span class="label label-info">Täglich</span>`;
+
+        if (absence.epoch == "present" || absence.epoch == "past") {
+            if (absence.wholeDay) {
+                absence.startString = "Heute";
+                absence.endString = "Heute";
+            } else {
+                absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+            }
+
+            //check if the time of the absence is in the past or future
+            const now = new Date();
+            if (!absence.wholeDay && (absence.end < now || absence.start > now)) { absence.table = "future"; }
+        }
+
+        if (absence.epoch == "future") {
+            absence.table = "future";
+            if (absence.wholeDay) {
+                absence.startString = formatDate(absence.start, "ab DD.MM.YYYY");
+                absence.endString = "";
+            } else {
+                absence.startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
+                absence.endString = formatDate(absence.end, "hh:mm");
+            }
+        }
+    }
+
+    //weekly recurring
+    if (absence.recurring == "weekly") {
+        let dayOfWeek = absence.start.getDay();
+        let currentDayOfWeek = new Date().getDay();
+        absence.recurringString = `<span class="label label-info">Jeden ${dayNames[dayOfWeek]}</span>`;
+
+        if (absence.epoch == "present" || absence.epoch == "past") {
+
+            //check if weekly recurring is today or not (set corresponding table)
+            if (dayOfWeek != currentDayOfWeek) {
+                absence.table = "future";
+            }
+
+            //check if the time of the absence is in the past or future
+            const now = new Date();
+            if (!absence.wholeDay && (absence.end < now || absence.start > now)) { absence.table = "future"; }
+
+
+            if (absence.wholeDay) {
+                absence.startString = `Jeden ${dayNames[dayOfWeek]}`;
+                absence.endString = `Jeden ${dayNames[dayOfWeek]}`;
+            } else {
+                absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+            }
+        }
+
+        if (absence.epoch == "future") {
+            absence.table = "future";
+            if (absence.wholeDay) {
+                absence.startString = formatDate(absence.start, "ab DD.MM.YYYY");
+                absence.endString = "";
+            } else {
+                absence.startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
+                absence.endString = formatDate(absence.end, "hh:mm");
+            }
+        }
+    }
+    return absence;
+}
+
 async function refreshAbsenceView() {
 
     let absenceList = await getAbsence("all");
@@ -178,107 +286,10 @@ async function refreshAbsenceView() {
         absence.end = new Date(absence.end);
         absence.wholeDay = absence.wholeDay == "1";
 
-        absence.startString = formatDate(absence.start, "DD.MM.YYYY");
-        absence.endString = formatDate(absence.end, "DD.MM.YYYY");
-        absence.recurringString = "";
-        absence.table = "present";
+        absence = setAbsenceEpoch(absence);
+        absence = generateAbsenceStrings(absence);
 
-        const now = new Date();
-        now.setHours(0);
-        now.setMinutes(0);
-        now.setSeconds(0);
-        now.setMilliseconds(0);
-        absence.epoch = "present";
-        if (absence.end < now) { absence.epoch = "past"; }
-        if (absence.start > now) { absence.epoch = "future"; }
-
-        //No recurring
-        if (absence.recurring == "") {
-
-            if (absence.epoch == "past") {
-                console.warn(`Not recurring absence from the past. Ignoring...`);
-                console.warn(absence);
-                continue;
-            }
-
-            //if not in the past just add to the corresponding table
-            absence.table = absence.epoch;
-
-            if (!absence.wholeDay) {
-                if (absence.epoch == "future") {
-                    absence.startString = formatDate(absence.start, "DD.MM.YYYY hh:mm");
-                    absence.endString = formatDate(absence.end, "DD.MM.YYYY hh:mm");
-                } else {
-                    absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
-                    absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
-                }
-            }
-
-
-        }
-
-        //daily recurring
-        if (absence.recurring == "daily") {
-            absence.recurringString = `<span class="label label-info">Täglich</span>`;
-
-            if (absence.epoch == "present" || absence.epoch == "past") {
-                if (absence.wholeDay) {
-                    absence.startString = "Heute";
-                    absence.endString = "Heute";
-                } else {
-                    absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
-                    absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
-                }
-            }
-
-            if (absence.epoch == "future") {
-                absence.table = "future";
-                if (absence.wholeDay) {
-                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY");
-                    absence.endString = "";
-                } else {
-                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
-                    absence.endString = formatDate(absence.end, "hh:mm");
-                }
-            }
-        }
-
-        //weekly recurring
-        if (absence.recurring == "weekly") {
-            let dayOfWeek = absence.start.getDay();
-            let currentDayOfWeek = now.getDay();
-            absence.recurringString = `<span class="label label-info">Jeden ${dayNames[dayOfWeek]}</span>`;
-
-            if (absence.epoch == "present" || absence.epoch == "past") {
-
-                //check if weekly recurring is today or not (set corresponding table)
-                if (dayOfWeek != currentDayOfWeek) {
-                    absence.table = "future";
-                }
-
-
-                if (absence.wholeDay) {
-                    absence.startString = `Jeden ${dayNames[dayOfWeek]}`;
-                    absence.endString = `Jeden ${dayNames[dayOfWeek]}`;
-                } else {
-                    absence.startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
-                    absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
-                }
-            }
-
-            if (absence.epoch == "future") {
-                absence.table = future;
-                if (absence.wholeDay) {
-                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY");
-                    absence.endString = "";
-                } else {
-                    absence.startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
-                    absence.endString = formatDate(absence.end, "hh:mm");
-                }
-            }
-        }
-
-
+        if (!absence) { continue; }
 
         let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${absence.startString}</td><td>${absence.endString}</td><td>${absence.recurringString}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
 
@@ -288,6 +299,31 @@ async function refreshAbsenceView() {
     stubegru.modules.userUtils.updateAdminElements()
 }
 
+
+function setAbsenceEpoch(absence) {
+    const now = new Date();
+
+    const todayStart = new Date();
+    todayStart.setHours(0);
+    todayStart.setMinutes(0);
+    todayStart.setSeconds(0);
+    todayStart.setMilliseconds(0);
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23);
+    todayEnd.setMinutes(59);
+    todayEnd.setSeconds(59);
+    todayEnd.setMilliseconds(9999);
+
+    absence.epoch = "present";
+    if (absence.end < todayStart) { absence.epoch = "past"; }
+    if (absence.start > todayEnd) { absence.epoch = "future"; }
+    if (!absence.wholeDay && absence.epoch == "present") {
+        if (absence.end < now) { absence.epoch = "past"; }
+        if (absence.start > now) { absence.epoch = "future"; }
+    }
+    return absence;
+}
 
 function deleteAbsence(id) {
     deleteConfirm("Abwesenheit löschen", "Soll der Eintrag wirklich gelöscht werden?", function () {
