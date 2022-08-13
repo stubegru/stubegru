@@ -3,6 +3,12 @@ const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Fr
 
 refreshAbsenceView(); //Init absence view
 
+//toggle future table
+$("#absence_view_future_toggle").on("change", function () {
+    if ($(this).prop('checked')) { $("#absence_table_future").show(); }
+    else { $("#absence_table_future").hide(); }
+});
+
 //Show/hide Elements on toggle change in modal
 $("#absence_whole_day_toggle").on("change", function () {
     if ($(this).prop('checked')) {
@@ -279,7 +285,8 @@ function generateAbsenceStrings(absence) {
 async function refreshAbsenceView() {
 
     let absenceList = await getAbsence("all");
-    $("#absence_table_today").html("");
+    $("#absence_table_present").html("");
+    $("#absence_table_future").html("");
 
     for (let absence of absenceList) {
         absence.start = new Date(absence.start);

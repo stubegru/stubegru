@@ -12,7 +12,10 @@
                 <div class="row">
                     <div class="col-sm-6"><button class="btn btn-success permission-beratung permission-required" style="margin-bottom: 15px; display:block;" type="button" onclick="showAbsenceModal('new')"><i class="fas fa-plus-circle"></i> Neuer
                             Eintrag</button></div>
-                    <div class="col-sm-6"><button class="btn btn-info pull-right" style="margin-bottom: 15px; display:block;" type="button" onclick="toggleAbsenceView()"><i class="far fa-eye"></i><span id="toggleAbsenceButton"> Alle anzeigen</span></button>
+                    <div class="col-sm-6 text-right">
+                        <div class="form-group">
+                            <input type="checkbox" data-toggle="toggle" class="absence-toggle pull-right" id="absence_view_future_toggle" data-on="<i class='fas fa-check-double'></i>&nbsp; Alle anzeigen" data-off="<i class='fas fa-clock'></i>&nbsp; Nur aktuelle" data-width="150px">
+                        </div>
                     </div>
                 </div>
 
@@ -34,16 +37,8 @@
 
                             <!-- Here are generated all the Absence Entries with an AJAX call -->
                         </tbody>
-                        <tr>
-                            <th>Name</th>
-                            <th>Notiz</th>
-                            <th>Von</th>
-                            <th>Bis</th>
-                            <th></th>
-                            <th class="permission-beratung permission-required"></th>
-                            <th class="permission-beratung permission-required"></th>
-                        </tr>
-                        <tbody id="absence_table_future">
+
+                        <tbody id="absence_table_future" style="display: none;">
 
 
                             <!-- Here are generated all the Absence Entries with an AJAX call -->
