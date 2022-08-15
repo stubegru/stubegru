@@ -22,7 +22,7 @@ $selectStatement->execute();
 $absenceData = $selectStatement->fetch(PDO::FETCH_ASSOC);
 
 //Notification versenden
-newNotification($constants["absence"], $absenceId, $absenceData["name"], $absenceData["description"], "", $ownId, $constants["delete"]);
+//newNotification($constants["absence"], $absenceId, $absenceData["name"], $absenceData["description"], "", $ownId, $constants["delete"]);
 
 $deleteStatement = $dbPdo->prepare("DELETE FROM Abwesenheiten WHERE id = :absenceId;");
 $deleteStatement->bindValue(':absenceId', $absenceId);

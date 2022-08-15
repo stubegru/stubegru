@@ -18,10 +18,11 @@ $start = $_POST["start"];
 $end = $_POST["end"];
 $recurring = $_POST["recurring"];
 $wholeDay = $_POST["wholeDay"];
+$notification = $_POST["notification"];
 
 //set timestamps to correct format
-$start = substr($start,0,-1); //cut off trailing "Z" from JS-ISO-String
-$end = substr($end,0,-1); //cut off trailing "Z" from JS-ISO-String
+$start = substr($start, 0, -1); //cut off trailing "Z" from JS-ISO-String
+$end = substr($end, 0, -1); //cut off trailing "Z" from JS-ISO-String
 $dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 
 
@@ -41,12 +42,13 @@ if ($mode == "create") {
     $newAbsenceId = $dbPdo->lastInsertId();
 
     //Notification versenden
-    newNotification($constants["absence"], $newAbsenceId, $name, $description, "", $ownId, $constants["new"]);
+    if ($notification == "1") {
+        newNotification($constants["absence"], $newAbsenceId, $name, $description, "", $ownId, $constants["new"]);
+    }
 
     $toReturn["message"] = "Neue Abwesenheit hinzugefügt";
     $toReturn["id"] = $newAbsenceId;
     $toReturn["status"] = "success";
-
 } else if (is_numeric($absenceId)) {
 
     $updateStatement = $dbPdo->prepare("UPDATE `Abwesenheiten` SET `name`=:name,`description`=:description,`start`=:start,`end`=:end,`recurring`=:recurring,`wholeDay`=:wholeDay WHERE id=:absenceId;");
@@ -60,7 +62,9 @@ if ($mode == "create") {
     $updateStatement->execute();
 
     //Notification versenden
-    newNotification($constants["news"], $absenceId, $name, $description, "", $ownId, $constants["update"]);
+    if ($notification == "1") {
+        newNotification($constants["absence"], $absenceId, $name, $description, "", $ownId, $constants["update"]);
+    }
 
     $toReturn["message"] = "Änderungen der Abwesenheit gespeichert";
     $toReturn["status"] = "success";

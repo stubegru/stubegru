@@ -2,7 +2,9 @@
 const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
 refreshAbsenceView(); //Init absence view
-setInterval(refreshAbsenceView,1000*60*15); //Refresh view every 15 minutes
+setInterval(refreshAbsenceView, 1000 * 60 * 15); //Refresh view every 15 minutes
+
+$('[data-toggle="tooltip"]').tooltip();
 
 //toggle future table
 $("#absence_view_future_toggle").on("change", function () {
@@ -71,6 +73,7 @@ function resetAbsenceForm() {
     document.getElementById("absenceForm").reset();
     $('#absence_whole_day_toggle').bootstrapToggle('off');
     $('#absence_recurring_toggle').bootstrapToggle('off');
+    $('#absence_notification_toggle').bootstrapToggle('off');
     $("#absence_recurring_day_label").html("");
 
 }
@@ -110,6 +113,9 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
     else {
         absence.recurring = null;
     }
+
+    //notification
+    absence.notification = $("#absence_notification_toggle").prop("checked") ? 1 : 0;
 
 
     $.ajax({

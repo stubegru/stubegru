@@ -153,8 +153,17 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
-                        <input class="btn btn-primary" type="submit" value="Eintrag speichern">
+                        <div class="row">
+                            <div class="col-sm-6 text-left">
+                                <input type="checkbox" data-toggle="toggle" class="absence-toggle pull-left" id="absence_notification_toggle" data-on="<i class='fas fa-bell'></i>&nbsp; Mit Info" data-off="<i class='far far fa-bell-slash'></i>&nbsp; Ohne Info" data-width="135px">
+                                &nbsp;<i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Wähle aus, ob eine Benachrichtigung erstellt werden soll um über diese Änderung zu informieren. Die Benachrichtigung wird nur Personen angezeigt, die Benachrichtigungen für 'Abwesenheiten' abonniert haben." style="color:#4fafd3; cursor:help"></i>
+                            </div>
+                            <div class="col-sm-6 text-rigth"> <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
+                                <input class="btn btn-primary" type="submit" value="Eintrag speichern">
+                            </div>
+                        </div>
+
+
                     </div>
 
                 </div>
