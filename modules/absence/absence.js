@@ -2,6 +2,7 @@
 const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
 refreshAbsenceView(); //Init absence view
+setInterval(refreshAbsenceView,1000*60*15); //Refresh view every 15 minutes
 
 //toggle future table
 $("#absence_view_future_toggle").on("change", function () {
@@ -153,7 +154,7 @@ async function editAbsence(absenceId) {
         $("#absence_recurring_toggle").bootstrapToggle(isRecurring ? 'on' : 'off');
         $("#absence_recurring_rhythm").val(isRecurring ? absence.recurring : "daily").trigger("change");
     }
-    
+
     $("#absenceModal").modal("show");
 }
 
