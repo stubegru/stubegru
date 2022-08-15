@@ -180,6 +180,11 @@ function generateAbsenceStrings(absence) {
     absence.recurringString = "";
     absence.table = "present";
 
+    const now = new Date();
+    const startTimeMillis = absence.start.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+    const endTimeMillis = absence.end.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+    const nowTimeMillis = now.getTime() % (1000 * 60 * 60 * 24);
+
     //No recurring
     if (absence.recurring == "") {
 
@@ -225,8 +230,7 @@ function generateAbsenceStrings(absence) {
             }
 
             //check if the time of the absence is in the past or future
-            const now = new Date();
-            if (!absence.wholeDay && (absence.end < now || absence.start > now)) { absence.table = "future"; }
+            if (!absence.wholeDay && (endTimeMillis < nowTimeMillis || startTimeMillis > nowTimeMillis)) { absence.table = "future"; }
         }
 
         if (absence.epoch == "future") {
@@ -252,12 +256,10 @@ function generateAbsenceStrings(absence) {
             //check if weekly recurring is today or not (set corresponding table)
             if (dayOfWeek != currentDayOfWeek) {
                 absence.table = "future";
+            } else {
+                //check if the time of the absence is in the past or future
+                if (!absence.wholeDay && (endTimeMillis < nowTimeMillis || startTimeMillis > nowTimeMillis)) { absence.table = "future"; }
             }
-
-            //check if the time of the absence is in the past or future
-            const now = new Date();
-            if (!absence.wholeDay && (absence.end < now || absence.start > now)) { absence.table = "future"; }
-
 
             if (absence.wholeDay) {
                 absence.startString = `Jeden ${dayNames[dayOfWeek]}`;
@@ -305,7 +307,7 @@ async function refreshAbsenceView() {
     }
 
     //register delete button actions
-    $(".absence-delete-button").on("click",function(){
+    $(".absence-delete-button").on("click", function () {
         let absenceId = $(this).attr("data-absence-id");
         deleteAbsence(absenceId);
     })
@@ -318,16 +320,10 @@ function setAbsenceEpoch(absence) {
     const now = new Date();
 
     const todayStart = new Date();
-    todayStart.setHours(0);
-    todayStart.setMinutes(0);
-    todayStart.setSeconds(0);
-    todayStart.setMilliseconds(0);
+    todayStart.setHours(0, 0, 0, 0);
 
     const todayEnd = new Date();
-    todayEnd.setHours(23);
-    todayEnd.setMinutes(59);
-    todayEnd.setSeconds(59);
-    todayEnd.setMilliseconds(9999);
+    todayEnd.setHours(23, 59, 59, 9999);
 
     absence.epoch = "present";
     if (absence.end < todayStart) { absence.epoch = "past"; }
