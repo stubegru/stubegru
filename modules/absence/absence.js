@@ -135,28 +135,25 @@ function saveAbsence() { //Abwesenheit an DB senden | wird aufgerufen über form
     });
 }
 
-function showAbsenceModal(id) {
-    if (isNaN(id) == false) { //Wenn die id eine Nummer ist
-        $.ajax({
-            type: "POST",
-            async: false,
-            url: "../php/get_absence.php",
-            data: {
-                absenceId: id
-            },
-            success: function (data) {
-                data = JSON.parse(data);
-                var absence = data[0];
-                $('#absence_name').val(absence.name);
-                $('#absence_notes').val(absence.notice);
-                var startdate = changeDateOrder(absence.startdate, "-");
-                var enddate = changeDateOrder(absence.enddate, "-");
-                $('#absence_start').val(startdate);
-                $('#absence_end').val(enddate);
-            }
-        });
+async function editAbsence(absenceId) {
+    $("#absence_id").val(absenceId);
+
+    if (absenceId != "new") {
+        let absence = await getAbsence(absenceId);
+        absence.wholeDay = absence.wholeDay == "1";
+        let isRecurring = absence.recurring != "";
+
+        $("#absence_name").val(absence.name);
+        $("#absence_description").val(absence.description);
+        $("#absence_whole_day_toggle").bootstrapToggle(absence.wholeDay ? 'off' : 'on');
+        $("#absence_date").val(formatDate(absence.start, "YYYY-MM-DD")).trigger("change");
+        if (absence.wholeDay) { $("#absence_end_date").val(formatDate(absence.end, "YYYY-MM-DD")); }
+        if (!absence.wholeDay) { $("#absence_start_time").val(formatDate(absence.start, "hh:mm")); }
+        if (!absence.wholeDay) { $("#absence_end_time").val(formatDate(absence.end, "hh:mm")); }
+        $("#absence_recurring_toggle").bootstrapToggle(isRecurring ? 'on' : 'off');
+        $("#absence_recurring_rhythm").val(isRecurring ? absence.recurring : "daily").trigger("change");
     }
-    $("#absence_id").val(id);
+    
     $("#absenceModal").modal("show");
 }
 
@@ -310,6 +307,12 @@ async function refreshAbsenceView() {
     $(".absence-delete-button").on("click", function () {
         let absenceId = $(this).attr("data-absence-id");
         deleteAbsence(absenceId);
+    })
+
+    //register edit button actions
+    $(".absence-edit-button").on("click", function () {
+        let absenceId = $(this).attr("data-absence-id");
+        editAbsence(absenceId);
     })
 
     stubegru.modules.userUtils.updateAdminElements()
