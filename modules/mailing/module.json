@@ -1,0 +1,15 @@
+{
+    "type" : "stubegruModule",
+    "name" : "mailing",
+    "description" : "Backend module to handle email sending. Provides an abstract interface (similar to PHP's mail() function) to send mails from PHP scripts without caring about technical details",
+    "author" : "Johannes Schnirring",
+    "license" : "MIT",
+    "dependencies" : {
+        "blocking" : [],
+        "nonBlocking" : [],
+        "backend" : []
+    },
+    "html" : [],
+    "js" : [],
+    "css" : []
+}
