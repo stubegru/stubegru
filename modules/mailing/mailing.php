@@ -81,4 +81,3 @@ function initPHPMailer()
     return $myPHPMailer;
 }
 
-stubegruMail("nobody@example.com","Hello World","Whats up???");
