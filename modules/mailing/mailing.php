@@ -15,14 +15,14 @@ require "$BASE_PATH/modules/mailing/PHPMailer/src/SMTP.php";
  * @param string $to Recipient of the mail. Following RFC2822 (http://www.faqs.org/rfcs/rfc2822)
  * @param string $subject Subject of the mail
  * @param string $message Content of the mail (plain text or HTML)
- * @param array|string $additional_headers see https://www.php.net/manual/de/function.mail.php
- * @param string $additional_params see https://www.php.net/manual/de/function.mail.php
  * @param array $options stubegru specific options
- *      - "postfix"     : use custom postfix instead of INSTITUTION_MAIL_POSTFIX, use empty string here for no postfix
+ *      - "postfix"             : use custom postfix instead of INSTITUTION_MAIL_POSTFIX, use empty string here for no postfix
+ *      - "additional_headers"  : additional headers array for using the PHP mail() function
+ *      - "additional_params"   : additional params string for using the PHP mail() function
  * 
  * @return boolean Wether sending the mail was successful or not
  */
-function stubegruMail($to, $subject, $message, $additional_headers = [], $additional_params = "", $options = [])
+function stubegruMail($to, $subject, $message, $options = [])
 {
     //Add postfix
     if (isset($options["postfix"])) {
@@ -34,45 +34,30 @@ function stubegruMail($to, $subject, $message, $additional_headers = [], $additi
     $mailMethod = getenv(("MAIL_METHOD"));
     switch ($mailMethod) {
         case 'phpmail':
+
+            $additional_headers = "";
+            if (isset($options["additional_headers"])) {
+                $additional_headers = $options["additional_headers"];
+            }
+
+            $additional_params = "";
+            if (isset($options["additional_params"])) {
+                $additional_params = $options["additional_params"];
+            }
+
             return mail($to, $subject, $message, $additional_headers, $additional_params);
             break;
 
         case 'smtp':
-            echo "send mail using PHPMailer";
-            //Create an instance; passing `true` enables exceptions
-            $myPHPMailer = new PHPMailer(true);
-
-            try {
-                //Server settings
-                //$myPHPMailer->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-                $myPHPMailer->isSMTP();                                            //Send using SMTP
-
-                $myPHPMailer->Host       = getenv("SMTP_HOST");                     //Set the SMTP server to send through
-                $myPHPMailer->SMTPAuth   = true;                                   //Enable SMTP authentication
-                $myPHPMailer->Username   = getenv("SMTP_USERNAME");                    //SMTP username
-                $myPHPMailer->Password   = getenv("SMTP_PASSWORD");                             //SMTP password
-                $myPHPMailer->SMTPSecure = getenv("SMTP_SECURE");           //Enable implicit TLS encryption
-                $myPHPMailer->Port       = getenv("SMTP_PORT");                                   //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-                //Recipients
-                $myPHPMailer->setFrom('from@example.com', 'Mailer');
-                $myPHPMailer->addAddress('joe@example.net', 'Joe User');     //Add a recipient
-                $myPHPMailer->addAddress('ellen@example.com');               //Name is optional
-                $myPHPMailer->addReplyTo('info@example.com', 'Information');
-                $myPHPMailer->addCC('cc@example.com');
-                $myPHPMailer->addBCC('bcc@example.com');
-
-                //Content
-                $myPHPMailer->isHTML(true);                                  //Set email format to HTML
-                $myPHPMailer->Subject = 'Here is the subject';
-                $myPHPMailer->Body    = 'This is the HTML message body <b>in bold!</b>';
-                $myPHPMailer->AltBody = 'This is the body in plain text for non-HTML mail clients';
-
-                $myPHPMailer->send();
-                echo 'Message has been sent';
-            } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$myPHPMailer->ErrorInfo}";
-            }
+            $myPHPMailer = initPHPMailer();
+            //Recipients
+            $myPHPMailer->setFrom(getenv("INSTITUTION_MAIL_ADDRESS"), getenv("INSTITUTION_NAME"));
+            $myPHPMailer->addAddress($to);
+            //Content
+            $myPHPMailer->isHTML(true);
+            $myPHPMailer->Subject = $subject;
+            $myPHPMailer->Body    = $message;
+            $myPHPMailer->send();
             break;
 
         default:
@@ -81,4 +66,19 @@ function stubegruMail($to, $subject, $message, $additional_headers = [], $additi
     }
 }
 
-stubegruMail("","","");
+function initPHPMailer()
+{
+    $myPHPMailer = new PHPMailer(true);
+    //$myPHPMailer->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+    $myPHPMailer->isSMTP();                                            //Send using SMTP
+    $myPHPMailer->Host       = getenv("SMTP_HOST");                     //Set the SMTP server to send through
+    $myPHPMailer->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $myPHPMailer->Username   = getenv("SMTP_USERNAME");                    //SMTP username
+    $myPHPMailer->Password   = getenv("SMTP_PASSWORD");                             //SMTP password
+    $myPHPMailer->SMTPSecure = getenv("SMTP_SECURE");           //Enable implicit TLS encryption
+    $myPHPMailer->Port = getenv("SMTP_PORT");           //Enable implicit TLS encryption
+
+    return $myPHPMailer;
+}
+
+stubegruMail("nobody@example.com","Hello World","Whats up???");
