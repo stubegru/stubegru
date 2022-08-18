@@ -2,11 +2,11 @@
 -- DONT USE THIS ON PRDUCTION SYSTEMS!!!
 
 -- Create example roles
-INSERT INTO `Rollen` (`id`, `name`, `permission_admin`, `permission_beratung`, `permission_monitoring`, `permission_wiki_autor`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES
-(1, 'Studiservice', 0, 0, 0, 1, 0, 0, 1, 0, 0, 0),
-(2, 'Hiflskraft', 0, 0, 1, 0, 0, 0, 0, 1, 0, 0),
-(3, 'Beratung', 0, 1, 1, 1, 1, 0, 1, 1, 0, 0),
-(4, 'Admin', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1);
+INSERT INTO `Rollen` (`id`, `name`, `permission_admin`, `permission_beratung`, `permission_monitoring`, `permission_wiki_autor`, `permission_telefonnotiz`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES
+(1, 'Studiservice', 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),
+(2, 'Hiflskraft', 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0),
+(3, 'Beratung', 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0),
+(4, 'Admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1);
 
 -- Create default permissions
 INSERT INTO `Rechte` (`id`, `description`) VALUES
@@ -14,6 +14,7 @@ INSERT INTO `Rechte` (`id`, `description`) VALUES
 ('beratung', 'Beratungsaufgaben: Beratungstermine anlegen, Monitorin/Evaluation Download, Tagesaktuelle Infos bearbeiten'),
 ('monitoring', 'Berechtigung um das Monitoring zu benutzen'),
 ('wiki_autor', 'Erlaubnis um Wiki Artikel zu bearbeiten, zu erstellen und zu löschen.');
+('telefonnotiz', 'Jede Person mit dieser Berechtigung wird in der Liste der Empfänger für Telefonnotizen angezeigt.');
 
 -- Create dummy survey
 INSERT INTO `survey_survey`(`id`, `title`, `auth`, `adminAuth`, `uniqueKey`) VALUES (1, 'Dummy Survey', 'anybody', 'admin', 0);

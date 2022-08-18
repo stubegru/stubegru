@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 11. Aug 2022 um 09:27
+-- Erstellungszeit: 18. Aug 2022 um 09:00
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -21,8 +21,8 @@ CREATE TABLE `Abwesenheiten` (
   `id` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `start` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `end` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start` timestamp NULL DEFAULT NULL,
+  `end` timestamp NULL DEFAULT NULL,
   `recurring` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `wholeDay` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -197,6 +197,7 @@ CREATE TABLE `Rollen` (
   `permission_beratung` tinyint(1) NOT NULL,
   `permission_monitoring` tinyint(1) NOT NULL,
   `permission_wiki_autor` tinyint(1) NOT NULL,
+  `permission_telefonnotiz` tinyint(1) NOT NULL,
   `notification_reminder` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
   `notification_report` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
   `notification_article` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
