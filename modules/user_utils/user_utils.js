@@ -9,6 +9,15 @@ stubegru.modules.userUtils.getUserInfo = async function (userId) {
     return userData;
 }
 
+/**
+ * @param {string} permission id of the permission
+ */
+stubegru.modules.userUtils.getUserByPermission = async function (permission) {
+    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_user_by_permission.php?permission=${permission}`)
+    const userData = await resp.json();
+    return userData;
+}
+
 async function initUserManagement() {
     userUtilsModalReset();
     const userData = await stubegru.modules.userUtils.getUserInfo();
