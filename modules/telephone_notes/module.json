@@ -1,0 +1,15 @@
+{
+    "type" : "stubegruModule",
+    "name" : "telephone_notes",
+    "description" : "Module to easily send mails to configured users",
+    "author" : "Johannes Schnirring",
+    "license" : "MIT",
+    "dependencies" : {
+        "blocking" : ["user_utils"],
+        "nonBlocking" : [],
+        "backend" : ["mailing"]
+    },
+    "html" : ["telephone_notes.html"],
+    "js" : ["telephone_notes.js"],
+    "css" : []
+}

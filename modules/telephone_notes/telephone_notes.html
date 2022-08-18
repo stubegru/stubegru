@@ -1,0 +1,78 @@
+<div class="col-sm-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="collapsed" href="#collapseTelephoneNotes" data-toggle="collapse" aria-expanded="false">Telefonnotiz</a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse" id="collapseTelephoneNotes" aria-expanded="false">
+            <form action="javascript:sendTelephoneNote()" id="telephonenote_form">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Name des Anrufenden</label>
+                                <input autocomplete="off" type="text" id="telephonenote_name" placeholder="Vorname Nachname" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Matrikelnummer</label>
+                                <input autocomplete="off" type="text" id="telephonenote_mnumber" placeholder="Matrikelnummer" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Telefonnummer</label>
+                                <input autocomplete="off" type="tel" id="telephonenote_phone" placeholder="Telefonnummer" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>E-Mail</label>
+                                <input autocomplete="off" type="email" id="telephonenote_mail" placeholder="E-Mail" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notiz</label>
+                        <textarea id="telephonenote_note" rows="3" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Empfänger</label>
+                                <select class="form-control" id="telephonenote_recipients" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>Anliegen</label>
+                                <select class="form-control" id="telephonenote_issue" required>
+                                    <option value="">Bitte wählen...</option>
+                                    <option>Rückruf erbeten</option>
+                                    <option>zur Kenntnisnahme</option>
+                                    <option>Hiwi kontaktieren</option>
+                                    <option>Siehe Notiz</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left" style="color:#4fafd3; cursor:help; margin-top: 5px;" data-toggle="tooltip" title="Um einen Nutzer in dieser Liste als Empfänger hinzuzufügen, muss die Berechtigung 'telefonnotiz' über die Nutzerverwaltung für jenen Nutzer aktiviert werden."><i class="fa fa-info-circle"></i>&nbsp;Wie kann ich Empfänger hinzufügen? </div>
+                    <button type="reset" class="btn btn-default"><i class="fas fa-trash-alt"></i>&nbsp;Reset</button>
+                    <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i>&nbsp;Telefonnotiz senden</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
