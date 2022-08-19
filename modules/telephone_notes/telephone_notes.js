@@ -31,7 +31,7 @@ function sendTelephoneNote() {
         url: `${stubegru.constants.BASE_URL}/modules/telephone_notes/send_telephone_note.php`,
         success: function (data) {
             stubegru.modules.alerts.alert({
-                title: "Telefonnotiz senden",
+                title: "Telefonnotiz",
                 text: data.message,
                 type: data.status
             });
