@@ -307,15 +307,22 @@ function deleteDate(meetingId) { //Löscht den termin
 }
 
 //********************************************************Berater**********************************************
-function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown auswahl
+async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown auswahl
 
-    $.ajax({
-        type: "POST",
-        url: `${stubegru.constants.BASE_URL}/modules/user_utils/get_berater.php`,
-        success: function (data) {
-            $("#calendarOwner").html(data);
+    let myself = await stubegru.modules.userUtils.getUserInfo();
+    let ownId = myself.id;
+
+    let userList = await stubegru.modules.userUtils.getUserByPermission("beratung");
+    let selectHtml = "";
+    for (const user of userList) {
+        if (ownId == user.id) { //Add own entry at top (default)
+            selectHtml = `<option value="${user.id}">${user.name}</option>` + selectHtml;
+        } else {
+            selectHtml += `<option value="${user.id}">${user.name}</option>`;
         }
-    });
+    }
+
+    $("#calendarOwner").html(selectHtml);
 
 }
 
@@ -508,7 +515,7 @@ function saveTemplate() { //speichert Template in DB
             if (json.status.indexOf("success") != -1) {
                 getTemplates();
                 stubegru.modules.alerts.alert({
-                    text : json.message,
+                    text: json.message,
                     type: "success"
                 });
                 $("#calendarTemplate option[id='templateSelectOption" + json.optionId + "']").attr("selected", "selected"); //Gespeichertes Template wird wieder ausgewählt
