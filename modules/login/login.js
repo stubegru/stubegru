@@ -1,10 +1,10 @@
 $("#institutionName").html(stubegru.constants.APPLICATION_NAME);
 let logoPath = stubegru.constants["BASE_URL"] + stubegru.constants["LOGO"];
-$("#loginLogo").attr("src",logoPath);
+$("#loginLogo").attr("src", logoPath);
 
 
 const logoutParam = getParam("logout");
-if(logoutParam == "true"){
+if (logoutParam == "true") {
     stubegru.modules.alerts.alert({
         title: "Logout erfolgreich!",
         type: "success"
@@ -38,6 +38,13 @@ function doLogin() {
                     mode: "toast"
                 });
             }
+        },
+        error: function (data) {
+            stubegru.modules.alerts.alert({
+                title: "Fehler beim Anmelden",
+                text: "Es ist ein Serverfehler aufgetreten. Bitte wende dich an den Administrator",
+                type: "error"
+            });
         }
     });
 }
