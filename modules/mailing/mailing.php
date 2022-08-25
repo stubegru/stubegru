@@ -5,7 +5,6 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/utils/auth_and_database.php";
 
 require "$BASE_PATH/modules/mailing/PHPMailer/src/Exception.php";
 require "$BASE_PATH/modules/mailing/PHPMailer/src/PHPMailer.php";
