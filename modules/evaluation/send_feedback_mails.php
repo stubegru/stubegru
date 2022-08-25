@@ -38,12 +38,6 @@ foreach ($resultList as $row) {
     $INSTITUTION_NAME = getenv("INSTITUTION_NAME");
     $mail_betreff = "$INSTITUTION_NAME | Umfrage zu Ihrer Erfahrung";
 
-    $clientMailHeader[] = 'MIME-Version: 1.0';
-    $clientMailHeader[] = "From: " . getenv("INSTITUTION_MAIL_ADDRESS");
-    $clientMailHeader[] = 'Content-type: text/html; charset="utf-8"';
-    $clientMailHeader[] = 'X-Mailer: PHP/' . phpversion();
-    $mail_header = implode("\r\n", $clientMailHeader);
-
     $mail_text = "Guten Tag,
     <br><br>
     Wir möchten Sie bitten sich einen kurzen Moment Zeit zu nehmen und uns ein paar Fragen zu unserer Leistung zu beantworten. Damit helfen Sie uns unseren Service zu verbessern.
@@ -62,7 +56,8 @@ foreach ($resultList as $row) {
     $mail_text = str_replace(array("{{evaluationLink}}"), array($surveyLink), $mail_text);
     $mail_text .= getenv("INSTITUTION_MAIL_POSTFIX");
 
-    mail($empfaenger, $mail_betreff, $mail_text, $mail_header);
+    //stubegruMail() is imported by cronjob.php
+    stubegruMail($empfaenger, $mail_betreff, $mail_text);
 
     //Eintrag löschen
     $deleteStatement = $dbPdo->prepare("DELETE FROM Feedback_Mails WHERE id=:id;");
