@@ -4,7 +4,7 @@
 $vorEinemTag = date("Y-m-d", strtotime("-1 days"));
 
 //Teilnehmer suchen
-$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE date <= ':vorEinemTag';");
+$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE date <= :vorEinemTag;");
 $selectStatement->bindValue(':vorEinemTag', $vorEinemTag);
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -26,7 +26,7 @@ foreach ($resultList as $row) {
     }
 }
 
-$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE date <= ':vorEinemTag';");
+$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE date <= :vorEinemTag;");
 $selectStatement->bindValue(':vorEinemTag', $vorEinemTag);
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -48,7 +48,7 @@ foreach ($resultList as $row) {
     }
 }
 //termine löschen
-$deleteStatement = $dbPdo->prepare("DELETE FROM `Termine` WHERE date <= ':vorEinemTag';");
+$deleteStatement = $dbPdo->prepare("DELETE FROM `Termine` WHERE date <= :vorEinemTag;");
 $deleteStatement->bindValue(':vorEinemTag', $vorEinemTag);
 $deleteStatement->execute();
 
