@@ -1,6 +1,8 @@
 <?php
 
 // Dieses Script wird per Cronjob einmal täglich nachts ausgeführt und triggert ein Notification für alle fälligen Reminder
+$BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
 require_once "$BASE_PATH/modules/notifications/notification_system.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";

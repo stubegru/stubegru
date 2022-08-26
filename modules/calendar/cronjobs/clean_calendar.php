@@ -1,4 +1,6 @@
 <?php
+$BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
 
 // Dieses Script wird per Cronjob einmal täglich nachts ausgeführt und löscht Kalender Termine, die älter sind als 1 Tag
 $vorEinemTag = date("Y-m-d", strtotime("-1 days"));

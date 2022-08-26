@@ -21,3 +21,5 @@ SetEnv SMTP_USERNAME "username"
 SetEnv SMTP_PASSWORD "s3cr3t"
 SetEnv SMTP_SECURE "tls"
 SetEnv SMTP_PORT "587"
+
+SetEnv DEV_MODE 0

@@ -4,6 +4,7 @@
 $BASE_URL = getenv("BASE_URL");
 $BASE_PATH = getenv("BASE_PATH");
 $surveyId = getenv("EVALUATION_SURVEY_ID");
+require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
 $EVALUATION_MAIL_TEXT_PATH = "$BASE_PATH/custom/evaluation_mail_text.html";
 
 $beforeXDays = date("Y-m-d", strtotime("-2 days")); //Datum vor x=2 Tagen

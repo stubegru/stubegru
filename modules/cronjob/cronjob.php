@@ -1,6 +1,7 @@
 <?php
 
 $BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
 require_once "$BASE_PATH/utils/database_without_auth.php"; //Database access without login
 require_once "$BASE_PATH/modules/mailing/mailing.php";
 $MODULES_PATH = "$BASE_PATH/modules/";
