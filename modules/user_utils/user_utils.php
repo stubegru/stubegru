@@ -29,7 +29,7 @@ function permission_required($permission)
     //Check for specific permission
     global $dbPdo;
     $own_id = $_SESSION["id"];
-    $testStatement = $dbPdo->prepare("SELECT Rechte.id FROM Nutzer, Rechte, Link_Nutzer_Rechte WHERE Nutzer.id = Link_Nutzer_Rechte.userId AND Rechte.id = Link_Nutzer_Rechte.permissionId AND Rechte.id = :permission AND Nutzer.id = :own_id;");
+    $testStatement = $dbPdo->prepare("SELECT count(*) FROM Nutzer, Rechte, Link_Nutzer_Rechte WHERE Nutzer.id = Link_Nutzer_Rechte.userId AND Rechte.id = Link_Nutzer_Rechte.permissionId AND Rechte.id = :permission AND Nutzer.id = :own_id;");
     $testStatement->bindValue(':permission', $permission);
     $testStatement->bindValue(':own_id', $own_id);
     $testStatement->execute();
