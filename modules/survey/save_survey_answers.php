@@ -10,7 +10,7 @@ $uniqueKey = $_POST["uniqueKey"];
 $answers = $_POST["answers"];
 
 //Get survey data from DB
-$testStatement = $dbPdo->prepare("SELECT * FROM survey_survey WHERE id =':surveyId';");
+$testStatement = $dbPdo->prepare("SELECT * FROM survey_survey WHERE id =:surveyId;");
 $testStatement->bindValue(':surveyId', $surveyId);
 $testStatement->execute();
 $rowNumbers = $testStatement->fetchColumn();
@@ -27,7 +27,8 @@ permission_required($permission); //Exit with 401 if permission is not fullfille
 
 //Check for unique key
 if ($surveyData["uniqueKey"] == "1") {
-    $testStatement = $dbPdo->prepare("SELECT * FROM survey_keys WHERE surveyId ='$surveyId' AND uniqueKey = ':uniqueKey';");
+    $testStatement = $dbPdo->prepare("SELECT * FROM survey_keys WHERE surveyId =:surveyId AND uniqueKey = :uniqueKey;");
+    $testStatement->bindValue(':surveyId', $surveyId);
     $testStatement->bindValue(':uniqueKey', $uniqueKey);
     $testStatement->execute();
     $rowNumbers = $testStatement->fetchColumn();
