@@ -6,6 +6,8 @@ require_once "$BASE_PATH/utils/database_without_auth.php"; //Database access wit
 require_once "$BASE_PATH/modules/mailing/mailing.php";
 $MODULES_PATH = "$BASE_PATH/modules/";
 $MODULE_FILE_NAME = "module.json";
+$CONFIG_PATH = "$BASE_PATH/custom/";
+$CONFIG_FILE_NAME = "config.json";
 
 $cronjobList = array();
 
@@ -17,15 +19,27 @@ foreach ($jsonList as $jsonPath) {
     //print_r($json);
     if (isset($json["cronjob"])) {
         foreach ($json["cronjob"] as $cronjobName) {
-            $cronPath = substr($jsonPath,0, -strlen($MODULE_FILE_NAME)) . $cronjobName;
+            $cronPath = substr($jsonPath, 0, -strlen($MODULE_FILE_NAME)) . $cronjobName;
             $cronInfo = array("name" => $cronjobName, "path" => $cronPath);
             $cronjobList[] = $cronInfo;
         }
     }
 }
 
+//scan for config file
+if (file_exists($CONFIG_PATH . $CONFIG_FILE_NAME)) {
+    $configContent = file_get_contents($CONFIG_PATH . $CONFIG_FILE_NAME); //WHAT if not exists????
+    $configJson = json_decode($configContent, true); // decode the JSON into an associative array
+    if (isset($configJson["cronjob"])) {
+        foreach ($configJson["cronjob"] as $cronjobName) {
+            $cronInfo = array("name" => "$cronjobName (loaded by $CONFIG_FILE_NAME)", "path" => $CONFIG_PATH . $cronjobName);
+            $cronjobList[] = $cronInfo;
+        }
+    }
+}
+
 //Execute cronjobs
-foreach($cronjobList as $cronInfo){
+foreach ($cronjobList as $cronInfo) {
     $cronName = $cronInfo["name"];
     $cronPath = $cronInfo["path"];
     echo "<br><br>Load Cronjob: <b>$cronName</b><br>";
