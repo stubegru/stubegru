@@ -13,13 +13,12 @@ $answers = $_POST["answers"];
 $testStatement = $dbPdo->prepare("SELECT * FROM survey_survey WHERE id =:surveyId;");
 $testStatement->bindValue(':surveyId', $surveyId);
 $testStatement->execute();
-$rowNumbers = $testStatement->fetchColumn();
-if ($rowNumbers < 1) {
+$surveyData = $testStatement->fetch(PDO::FETCH_ASSOC);
+if ($surveyData == false) {
     header("HTTP/1.1 404 The requested resource was not found");
     echo json_encode(array("status" => "error", "message" => "Could not find any survey with id $surveyId"));
     exit;
 }
-$surveyData = $testStatement->fetch(PDO::FETCH_ASSOC);
 
 //Check for survey's auth permission
 $permission = $surveyData["auth"];
