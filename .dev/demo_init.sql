@@ -13,7 +13,7 @@ INSERT INTO `Rechte` (`id`, `description`) VALUES
 ('admin', 'Administrative Aufgaben: Nutzerverwaltung, Quicklinks editieren'),
 ('beratung', 'Beratungsaufgaben: Beratungstermine anlegen, Monitorin/Evaluation Download, Tagesaktuelle Infos bearbeiten'),
 ('monitoring', 'Berechtigung um das Monitoring zu benutzen'),
-('wiki_autor', 'Erlaubnis um Wiki Artikel zu bearbeiten, zu erstellen und zu löschen.');
+('wiki_autor', 'Erlaubnis um Wiki Artikel zu bearbeiten, zu erstellen und zu löschen.'),
 ('telefonnotiz', 'Jede Person mit dieser Berechtigung wird in der Liste der Empfänger für Telefonnotizen angezeigt.');
 
 -- Create dummy survey
