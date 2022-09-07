@@ -22,6 +22,7 @@ Stay on top of things with Stubegru, the open source groupware for academic advi
 
 - Init Database (`.dev/sql_dump`)
 - Insert basic data (`.dev/demo_init.sql`)
+> **WARNING** Inserting basic data via `.dev/demo_init.sql` will create a dummy user with an unsecure password and admin privileges. Make sure to delete this user in productive systems.
 - Create `.htaccess` file (use .`htaccess.example` as template)
 - Create `.version` file with random version number (e.g. `version1`)
 - Open the project in browser and login with user "test" and password "test"

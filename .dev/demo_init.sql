@@ -21,3 +21,6 @@ INSERT INTO `survey_survey`(`id`, `title`, `auth`, `adminAuth`, `uniqueKey`) VAL
 
 -- Create dummy user with username "test" and password "test"
 INSERT INTO `Nutzer` (`id`, `name`, `mail`, `account`, `role`, `erfassungsdatum`, `erfasser`, `passwort`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES (NULL, 'test', 'dummy@example.com', 'test', '1', '', '', '$2y$10$fLgGmGWibrtZjtvc3rst7ujFZGuQvEdox53wv5bWItxKKEQd3j/Da', '0', '0', '0', '0', '0', '0')
+
+-- Give admin access to test user
+INSERT INTO `Link_Nutzer_Rechte`(`userId`, `permissionId`) VALUES (1,'wiki_autor'),(1,'admin'),(1,'beratung'),(1,'monitoring'),(1,'telefonnotiz')
