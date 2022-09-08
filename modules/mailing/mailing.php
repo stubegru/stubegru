@@ -33,7 +33,6 @@ function stubegruMail($to, $subject, $message, $options = [])
     $mailMethod = getenv(("MAIL_METHOD"));
     switch ($mailMethod) {
         case 'nomail':
-            return;
             break;
 
         case 'phpmail':
