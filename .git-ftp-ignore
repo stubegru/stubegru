@@ -1,4 +1,3 @@
-.dev/*
 .gitignore
 .git-ftp-ignore
 .git-ftp-include
