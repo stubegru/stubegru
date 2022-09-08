@@ -32,6 +32,10 @@ function stubegruMail($to, $subject, $message, $options = [])
 
     $mailMethod = getenv(("MAIL_METHOD"));
     switch ($mailMethod) {
+        case 'nomail':
+            return;
+            break;
+
         case 'phpmail':
 
             $additional_headers = "";
@@ -79,4 +83,3 @@ function initPHPMailer()
 
     return $myPHPMailer;
 }
-
