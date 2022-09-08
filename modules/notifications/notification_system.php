@@ -209,10 +209,8 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
     $absender_name = $constants["APPLICATION_NAME"];
     $absender_adresse = $constants["INSTITUTION_MAIL_ADDRESS"];
     $reply_to = $constants["ADMIN_MAIL"];
-    $server_name = $constants["SERVER_NAME"];
 
-    $mail_header = "From: $absender_name <notifications@$server_name>\r\n" .
-        "Reply-To: $reply_to \r\n" .
+    $mail_header = "Reply-To: $reply_to \r\n" .
         'Content-type: text/html; charset="utf-8" \r\n' .
         'X-Mailer: PHP/' . phpversion();
 

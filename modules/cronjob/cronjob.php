@@ -1,5 +1,22 @@
 <?php
 
+// Serve Env variables when called from CLI
+if (php_sapi_name() == "cli") {
+    //read .htaccess
+    echo "Restore ENV Variables manually from .htaccess file\n";
+    $currentPath = dirname(__FILE__);
+    $htaccess = file($currentPath . '/../../.htaccess');
+    foreach ($htaccess as $line) {
+        $line = preg_replace('/[ \t]+/', ' ', trim($line)); // Trim left/right spaces
+        if (substr($line, 0, 7) === 'SetEnv ') {
+            $tmp = explode(' ', substr($line, 7), 2);
+            $envName = $tmp[0];
+            $envValue = str_replace('"', '', $tmp[1]);
+            putenv("$envName=$envValue");
+        }
+    }
+}
+
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
 require_once "$BASE_PATH/utils/database_without_auth.php"; //Database access without login
