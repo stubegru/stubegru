@@ -309,8 +309,7 @@ function deleteDate(meetingId) { //Löscht den termin
 //********************************************************Berater**********************************************
 async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown auswahl
 
-    let myself = await stubegru.modules.userUtils.getUserInfo();
-    let ownId = myself.id;
+    let ownId = stubegru.ownId;
 
     let userList = await stubegru.modules.userUtils.getUserByPermission("beratung");
     let selectHtml = "";
@@ -341,9 +340,28 @@ function getRooms() { //Lädt die Räume in die Dropdown auswahl
 
     $.ajax({
         type: "POST",
+        dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`,
         success: function (data) {
-            $("#calendarRoom").html(data);
+
+            let ownId = stubegru.ownId;
+            const channelDescriptions = {
+                "personally": "Persönlich",
+                "phone": "Telefon",
+                "webmeeting": "Webmeeting"
+            };
+
+
+            let selectHtml = "<option value=''>Bitte wählen...</option>"
+            for (const room of data) {
+                const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
+                if (ownId == room.owner) { //Add own entry at top
+                    selectHtml = optionString + selectHtml;
+                } else {
+                    selectHtml += optionString;
+                }
+            }
+            $("#calendarRoom").html(selectHtml);
         }
     });
 
