@@ -548,19 +548,20 @@ function saveTemplate() { //speichert Template in DB
 
 function deleteTemplate() { //löscht ein Template
     deleteConfirm("Vorlage löschen", "Soll diese Vorlage wirklich gelöscht werden?", function () {
-
-        var uebergabe = [];
-        uebergabe.push($("#templateId").val());
-
-
+        const templateId = $("#templateId").val();
         $.ajax({
             type: "POST",
+            dataType : "json",
             url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/delete_template.php`,
             data: {
-                get_Data: uebergabe
+                templateId: templateId
             },
             success: function (data) {
-                stubegru.modules.alerts.alert(data);
+                stubegru.modules.alerts.alert({
+                    title: "Template löschen",
+                    text: data.message,
+                    type: data.status
+                });
                 getTemplates();
                 resetTemplateForm();
             }
