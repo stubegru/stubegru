@@ -524,31 +524,29 @@ function getTemplates() { //Lädt templates aus der Db ins Dropdown
 
 function saveTemplate() { //speichert Template in DB
 
-    var uebergabe = [];
-    uebergabe.push($("#templateTitle").val());
-    uebergabe.push($("#templateSubject").val());
-    uebergabe.push(CKEDITOR.instances.mailTemplateEditor.getData());
-    uebergabe.push($("#templateId").val());
+    let templateData = {};
+    templateData.title = $("#templateTitle").val();
+    templateData.subject = $("#templateSubject").val();
+    templateData.text = CKEDITOR.instances.mailTemplateEditor.getData();
+    templateData.templateId = $("#templateId").val();
 
 
     $.ajax({
         type: "POST",
+        dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/save_template.php`,
-        data: {
-            get_Data: uebergabe
-        },
+        data: templateData,
         success: function (data) {
-            var json = JSON.parse(data); //Rückgabe ist ein JSON Objekt mit einem status (sollte "success" sein) | einer Nachricht zum Ausgeben | der Id des Templates
-            if (json.status.indexOf("success") != -1) {
+            stubegru.modules.alerts.alert({
+                title: "Template speichern",
+                text: data.message,
+                type: data.status
+            });
+            if (data.status == "success") {
                 getTemplates();
-                stubegru.modules.alerts.alert({
-                    text: json.message,
-                    type: "success"
-                });
-                $("#calendarTemplate option[id='templateSelectOption" + json.optionId + "']").attr("selected", "selected"); //Gespeichertes Template wird wieder ausgewählt
+                $("#calendarTemplate option[id='templateSelectOption" + data.optionId + "']").attr("selected", "selected"); //Gespeichertes Template wird wieder ausgewählt
+                resetTemplateForm();
             }
-            resetTemplateForm();
-
         }
     });
 
