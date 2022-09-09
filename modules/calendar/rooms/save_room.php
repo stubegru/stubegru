@@ -21,7 +21,7 @@ $telefon = $_POST["telefon"];
 
 if ($raumId == "new") {
     //Neuer Raum
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Raeume` (`kanal`, `titel`, `besitzer`, `raumnummer`, `strasse`, `hausnummer`, `plz`, `ort`, `etage`, `link`, `passwort`, `telefon`) VALUES (':kanal',':titel',':ownUserId',':raumnummer',':strasse',':hausnummer',':plz',':ort',':etage',':link',':passwort',':telefon');");
+    $insertStatement = $dbPdo->prepare("INSERT INTO `Raeume` (`kanal`, `titel`, `besitzer`, `raumnummer`, `strasse`, `hausnummer`, `plz`, `ort`, `etage`, `link`, `passwort`, `telefon`) VALUES (:kanal,:titel,:ownUserId,:raumnummer,:strasse,:hausnummer,:plz,:ort,:etage,:link,:passwort,:telefon);");
     $insertStatement->bindValue(':kanal', $kanal);
     $insertStatement->bindValue(':titel', $titel);
     $insertStatement->bindValue(':ownUserId', $ownUserId);
@@ -38,7 +38,7 @@ if ($raumId == "new") {
     $raumId = $dbPdo->lastInsertId();   // Id des neuen Raums ermitteln
 } else {
     //Bestehenden Raum bearbeiten
-    $updateStatement = $dbPdo->prepare("UPDATE `Raeume` SET `kanal`='$kanal', `titel`='$titel',`raumnummer`='$raumnummer',`strasse`='$strasse',`hausnummer`='$hausnummer',`plz`='$plz',`ort`='$ort',`etage`='$etage',`link`='$link', `passwort`='$passwort', `telefon`='$telefon' WHERE id=$raumId;");
+    $updateStatement = $dbPdo->prepare("UPDATE `Raeume` SET `kanal`=:kanal, `titel`=:titel,`raumnummer`=:raumnummer,`strasse`=:strasse,`hausnummer`=:hausnummer,`plz`=:plz,`ort`=:ort,`etage`=:etage,`link`=:link, `passwort`=:passwort, `telefon`=:telefon WHERE id=:raumId;");
     $updateStatement->bindValue(':kanal', $kanal);
     $updateStatement->bindValue(':titel', $titel);
     $updateStatement->bindValue(':ownUserId', $ownUserId);
@@ -51,6 +51,7 @@ if ($raumId == "new") {
     $updateStatement->bindValue(':link', $link);
     $updateStatement->bindValue(':passwort', $passwort);
     $updateStatement->bindValue(':telefon', $telefon);
+    $updateStatement->bindValue(':raumId', $raumId);
     $updateStatement->execute();
 }
 

@@ -9,7 +9,7 @@ $own_id = $_SESSION['id'];
 $kanalBeschreibungen = array("personally" => "Persönlich", "phone" => "Telefon", "webmeeting" => "Webmeeting");
 
 //Get the own id first
-$selectStatement = $dbPdo->prepare("SELECT `titel`,`id`,`kanal` FROM `Raeume` WHERE `aktiv`='1' AND `besitzer`=':own_id';");
+$selectStatement = $dbPdo->prepare("SELECT `titel`,`id`,`kanal` FROM `Raeume` WHERE `aktiv`='1' AND `besitzer`=:own_id;");
 $selectStatement->bindValue(':own_id', $own_id);
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -24,7 +24,6 @@ foreach ($resultList as $row) {
 echo "<option disabled='disabled'>----</option>";
 
 $selectStatement = $dbPdo->prepare("SELECT `titel`,`id`,`kanal` FROM `Raeume` WHERE `aktiv`='1';");
-$selectStatement->bindValue(':newsId', $id);
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
