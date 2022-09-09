@@ -551,7 +551,7 @@ function deleteTemplate() { //löscht ein Template
         const templateId = $("#templateId").val();
         $.ajax({
             type: "POST",
-            dataType : "json",
+            dataType: "json",
             url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/delete_template.php`,
             data: {
                 templateId: templateId
@@ -582,7 +582,7 @@ function resetTemplateForm() {
     $("#newmail").slideUp();
 }
 
-function openTemplateForm(mode) { //Öffnet die Template Vorschue zum bearbeiten
+function openTemplateForm(mode) { //Öffnet die Template Vorschau zum bearbeiten
     if (mode == "modify") {
         let templateId = $("#calendarTemplate").val();
         if (templateId == null) {
@@ -596,20 +596,17 @@ function openTemplateForm(mode) { //Öffnet die Template Vorschue zum bearbeiten
         }
 
         $('#templateId').val(templateId);
-        var uebergabe = [];
-        uebergabe.push(templateId);
         $.ajax({
             type: "POST",
+            dataType: "json",
             url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/get_template_data.php`,
             data: {
-                get_Data: uebergabe
+                templateId: templateId
             },
             success: function (data) {
-                var json = JSON.parse(data);
-                json = json[0];
-                $("#templateTitle").val(json.titel);
-                $("#templateSubject").val(json.betreff);
-                CKEDITOR.instances.mailTemplateEditor.setData(json.text);
+                $("#templateTitle").val(data.titel);
+                $("#templateSubject").val(data.betreff);
+                CKEDITOR.instances.mailTemplateEditor.setData(data.text);
             }
         });
     } else {
