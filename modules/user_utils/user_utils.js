@@ -21,6 +21,7 @@ stubegru.modules.userUtils.getUserByPermission = async function (permission) {
 async function initUserManagement() {
     userUtilsModalReset();
     const userData = await stubegru.modules.userUtils.getUserInfo();
+    stubegru.ownId = userData.id;
     stubegru.modules.menubar.addItem("secondary", `<li><a style="cursor:default;"><i class="fas fa-user"></i>&nbsp;Nutzer: <b>${userData.name}</b></a></li>`, -1000);
     stubegru.modules.menubar.addItem("secondary", `<li><a data-toggle="modal" data-target="#userUtilsModal" title="Name, Mailadresse und Passwort konfigurieren"><i class="fas fa-cog"></i>&nbsp;Eigenen Account bearbeiten</a></li>`, -999);
     stubegru.modules.menubar.addDivider("secondary", -900);
