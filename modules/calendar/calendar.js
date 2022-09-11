@@ -352,16 +352,17 @@ function getRooms() { //Lädt die Räume in die Dropdown auswahl
             };
 
 
-            let selectHtml = "<option value=''>Bitte wählen...</option>"
+            let selectHtml = "<option value=''>Bitte wählen...</option>";
+            let postHtml;
             for (const room of data) {
                 const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
-                if (ownId == room.owner) { //Add own entry at top
-                    selectHtml = optionString + selectHtml;
-                } else {
+                if (ownId == room.besitzer) { //Add own entry at top
                     selectHtml += optionString;
+                } else {
+                    postHtml += optionString;
                 }
             }
-            $("#calendarRoom").html(selectHtml);
+            $("#calendarRoom").html(selectHtml + postHtml);
         }
     });
 
