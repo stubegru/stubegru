@@ -1,7 +1,9 @@
 ![Stubegru Logo](assets/images/logo.svg)
-Stay on top of things with Stubegru, the open source groupware for academic advising centers.   
-For more information what stubegru really is and which features are included see [the official website](https://stubegru.org)   
-For technical information take a look at the [Wiki on Github](https://github.com/stubegru/stubegru/wiki)
+Stay on top of things with Stubegru, the open source groupware for academic advising centers.    
+     
+- For **more information** what stubegru really is and which features are included see [the official website](https://stubegru.org) (in german)   
+- For **technical information** take a look at the [Wiki on Github](https://github.com/stubegru/stubegru/wiki)   
+- If you have any **questions or improvements**, feel free to [open an issue](https://github.com/stubegru/stubegru/issues/new)
 
 # Installation
 
@@ -35,5 +37,5 @@ For more information see: [wiki/survey-module](https://github.com/stubegru/stube
 
 # Deployment
 
-Stubegru itself does not offer any built in tools for deploying the software on a server. I use [git-ftp](https://git-ftp.github.io/) for deployment, so you can find `.git-ftp-ignore` and `.git-ftp-include` files in the repo's root folder. You can read more about [our git-ftp deploy workflow](https://gist.github.com/superjojo140/97d06c4c46f8d50f251a83cc2397b68c).
+Stubegru itself does not offer any built in tools for deploying the software on a server. We use [git-ftp](https://git-ftp.github.io/) for deployment, so you can find `.git-ftp-ignore` and `.git-ftp-include` files in the repo's root folder. You can read more about [our git-ftp deploy workflow](https://gist.github.com/superjojo140/97d06c4c46f8d50f251a83cc2397b68c).
 
