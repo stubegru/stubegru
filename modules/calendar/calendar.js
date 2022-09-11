@@ -2,13 +2,6 @@ var liveSearchTimer;
 $("#terminmodal").on('hidden.bs.modal', resetCalendarForm); //Reset terminmodal wenn es ausgeblendet wird
 $('#collapseCalendar').on('shown.bs.collapse', () => { fullCalendarInstance.render(); })
 
-//Zuordnung der Standardmailtemplates zu den Kontaktkanälen. Wenn ein Raum ausgewählt wird, wird standardmäßig das Mailtemplate mit der hier zugeorneten TemplateId ausgewählt.
-let roomTemplateAssignment = {
-    personally: 1,
-    phone: 2,
-    webmeeting: 3
-}
-
 
 const fullcalendarConfig = {
     initialView: 'dayGridMonth',
@@ -328,10 +321,17 @@ async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown au
 
 
 //********************************************************Räume**********************************************
+
+
 //Verknüpfung Raumkanal zu Mailtemplates
 $("#calendarRoom").on("change", function () {
     let channel = $(this).find(':selected').attr("data-channel");
-    $("#calendarTemplate").val(roomTemplateAssignment[channel]).change();
+
+    let roomTemplateAssignment = stubegru.constants.CUSTOM_CONFIG.roomTemplateAssignment;
+    if (roomTemplateAssignment && roomTemplateAssignment[channel]) {
+        const templateId = roomTemplateAssignment[channel];
+        $("#calendarTemplate").val(templateId).change();
+    }
 })
 
 
