@@ -505,16 +505,18 @@ function getTemplates() { //Lädt templates aus der Db ins Dropdown
         dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/get_templates.php`,
         success: function (data) {
-            let selectHtml = "<option value=''>Bitte wählen...</option>"
+            let selectHtml = "<option value=''>Bitte wählen...</option>";
+            let postHtml;
             for (const template of data) {
                 const ownId = stubegru.ownId;
                 const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
                 if (ownId == template.ersteller) { //Add own entry at top
-                    selectHtml = optionString + selectHtml;
-                } else {
                     selectHtml += optionString;
+                } else {
+                    postHtml += optionString;
                 }
             }
+            selectHtml += postHtml;
             $("#calendarTemplate").html(selectHtml);
         }
     });
