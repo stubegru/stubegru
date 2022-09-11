@@ -16,6 +16,12 @@ $LOGO = getenv("LOGO");
 
 $APPLICATION_VERSION = file_get_contents("$BASE_PATH/.version");
 
+$CUSTOM_CONFIG = array();
+if (file_exists("$BASE_PATH/custom/config.json")) {
+    $configJson = file_get_contents("$BASE_PATH/custom/config.json");
+    $CUSTOM_CONFIG = json_decode($configJson);
+}
+
 $constants = array();
 $constants["BASE_URL"] = $BASE_URL;
 $constants["APPLICATION_ID"] = $APPLICATION_ID;
@@ -27,6 +33,7 @@ $constants["EVALUATION_SURVEY_ID"] = $EVALUATION_SURVEY_ID;
 $constants["LOGO"] = $LOGO;
 
 $constants["APPLICATION_VERSION"] = $APPLICATION_VERSION;
+$constants["CUSTOM_CONFIG"] = $CUSTOM_CONFIG;
 
 $constants["all"] = "all";
 $constants["currentUser"] = "currentUser";
