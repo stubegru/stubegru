@@ -433,7 +433,7 @@ function openRoomForm(mode) { //Öffnet die Raum Vorschau zum bearbeiten
     if (mode == "modify") {
         //Bestehenden Raum überarbeiten
         let raumId = $("#calendarRoom").val(); //Id des zu Raumes aus dem select auslesen
-        if (raumId == null) {
+        if (raumId == null || raumId == "") {
             stubegru.modules.alerts.alert({
                 title: "Raum bearbeiten:",
                 text: "Bitte erst einen Raum auswählen",
@@ -595,7 +595,7 @@ function resetTemplateForm() {
 function openTemplateForm(mode) { //Öffnet die Template Vorschau zum bearbeiten
     if (mode == "modify") {
         let templateId = $("#calendarTemplate").val();
-        if (templateId == null) {
+        if (templateId == null || templateId == "") {
             stubegru.modules.alerts.alert({
                 title: "Vorlage bearbeiten:",
                 text: "Bitte erst eine Vorlage auswählen",
