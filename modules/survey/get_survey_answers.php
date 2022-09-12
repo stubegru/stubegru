@@ -5,18 +5,17 @@ require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 
 $surveyId = $_GET["surveyId"];
 
-$testStatement = $dbPdo->prepare("SELECT * FROM survey_survey WHERE id =':surveyId'");
+$testStatement = $dbPdo->prepare("SELECT * FROM survey_survey WHERE id =:surveyId");
 $testStatement->bindValue(':surveyId', $surveyId);
 $testStatement->execute();
-$rowNumbers = $testStatement->fetchColumn();
+$surveyData = $testStatement->fetch(PDO::FETCH_ASSOC);
 //Check if there is valid survey data
-if ($rowNumbers < 1) {
+if (!$surveyData) {
     header("HTTP/1.1 404 The requested resource was not found");
     echo json_encode(array("status" => "error", "message" => "Could not find any survey with id $surveyId"));
     exit;
 }
 
-$surveyData = $testStatement->fetch(PDO::FETCH_ASSOC);
 $surveyName = $surveyData["title"];
 
 //Check for auth (defined in survey data)
@@ -30,7 +29,7 @@ $csvHeaderListIndex = 1;
 
 //get list of all questions connected to this survey
 $questionObjectList = array();
-$selectStatement = $dbPdo->prepare("SELECT * FROM `survey_questions` WHERE `surveyId` = ':surveyId'");
+$selectStatement = $dbPdo->prepare("SELECT * FROM `survey_questions` WHERE `surveyId` = :surveyId");
 $selectStatement->bindValue(':surveyId', $surveyId);
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
