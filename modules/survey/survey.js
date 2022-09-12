@@ -15,6 +15,10 @@ async function initSurvey(path, selector, uniqueKey) {
     
     //read templatefile from path
     let templateRequestResponse = await fetch(`${stubegru.constants.BASE_URL}/${path}`);
+    if(templateRequestResponse.status != 200){
+        console.warn(`[Survey] Could not load survey because template can't be found at "${path}"`);
+        return;
+    }
     let templateData = await templateRequestResponse.text();
 
     //add template html to selector
