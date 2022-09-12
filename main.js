@@ -26,11 +26,10 @@ async function initStubegruObject() {
 async function loadView() {
     let view = getParam("view") || DEFAULT_VIEW;
     stubegru.currentView = view;
-    let resp;
 
-    resp = await fetch(`${stubegru.constants.BASE_URL}/utils/load_view.php?view=${view}`);
+    let resp = await fetch(`${stubegru.constants.BASE_URL}/utils/load_view.php?view=${view}`);
     let data = await resp.text();
-    
+
     $("body").append(data); //Add view content to page
     setTitle();
     setFavicon();
