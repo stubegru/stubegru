@@ -157,7 +157,6 @@ function getArticleByName(articleName) {
 */
 
 function toggleFavorite() {
-    var uebergabe = [];
     let action = currentArticleIsFavorite ? "remove" : "add";
 
     $.ajax({
