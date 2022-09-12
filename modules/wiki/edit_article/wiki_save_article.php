@@ -98,21 +98,19 @@ if ($articleId == "create") {
     $articleId = $dbPdo->lastInsertId();
 
     //Tag Verknüpfungen setzen
+    $insertTagStatement = $dbPdo->prepare("INSERT IGNORE INTO `wiki_link_artikel_tags` (`artikelId`,`tagId`) VALUES (:artikelId,:tagId);");
     foreach ($tagsArray as $tagId) {
-        $insertStatement = $dbPdo->prepare("INSERT IGNORE INTO `wiki_artikel` (`artikelId`,`tagId`) VALUES (:artikelId,:tagId);");
-        $insertStatement->bindValue(':tagId', $tagId);
-        $insertStatement->bindValue(':artikelId', $artikelId);
-        $insertStatement->execute();
-        $articleId = $dbPdo->lastInsertId();
+        $insertTagStatement->bindValue(':tagId', $tagId);
+        $insertTagStatement->bindValue(':artikelId', $articleId);
+        $insertTagStatement->execute();
     }
 
     //Gelesen Verknüpfungen setzen
     if ($markAsUnread == 0) {
         //Gelesen Verknüpfung für jeden Nutzer setzen
-        $insertStatement = $dbPdo->prepare("INSERT IGNORE INTO wiki_link_gelesen (`nutzerId`,`artikelId`) SELECT ID, :articleId AS artikelId FROM Nutzer;");
+        $insertStatement = $dbPdo->prepare("INSERT IGNORE INTO wiki_link_gelesen (`nutzerId`,`artikelId`) SELECT id, :articleId AS artikelId FROM Nutzer;");
         $insertStatement->bindValue(':articleId', $articleId);
         $insertStatement->execute();
-        $articleId = $dbPdo->lastInsertId();
     } else {
         //Notification versenden. wenn der Artikel als ungelesen angezeigt werden soll
         newNotification($constants["article"], $articleId, $heading, "", "", $own_id, $constants["new"]);
@@ -121,13 +119,11 @@ if ($articleId == "create") {
     $toReturn["status"] = "success";
     $toReturn["message"] = "Der Artikel wurde erfolgreich hinzugefügt";
     $toReturn["articleId"] = $articleId;
-
 }
 
 /*
 Artikel Updaten
- */
-else {
+ */ else {
     if (!is_numeric($articleId)) {
         $toReturn["status"] = "error";
         $toReturn["message"] = "Die Artikel Id ist in einem ungültigen Format";
@@ -152,12 +148,11 @@ else {
     $deleteStatement->execute();
 
     //Dann alle übergebenen Verknüpfungen setzen
+    $insertStatement = $dbPdo->prepare("INSERT IGNORE INTO `wiki_link_artikel_tags` (`artikelId`,`tagId`) VALUES (:artikelId,:tagId);");
     foreach ($tagsArray as $tagId) {
-        $insertStatement = $dbPdo->prepare("INSERT IGNORE INTO `wiki_link_artikel_tags` (`artikelId`,`tagId`) VALUES (:artikelId,:tagId);");
         $insertStatement->bindValue(':artikelId', $articleId);
         $insertStatement->bindValue(':tagId', $tagId);
         $insertStatement->execute();
-        $articleId = $dbPdo->lastInsertId();
     }
 
     //Gelesen Verknüpfungen löschen und Notification senden
