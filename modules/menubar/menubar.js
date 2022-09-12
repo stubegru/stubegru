@@ -169,7 +169,7 @@ function wikiSearch() {
     $.ajax({
         type: "POST",
         async: true,
-        url: `${stubegru.constants.BASE_URL}/modules/menubar/wiki_search.php`,
+        url: `${stubegru.constants.BASE_URL}/modules/wiki/utils/wiki_search.php`,
         data: {
             searchQuery: aktuelleEingabe
         },

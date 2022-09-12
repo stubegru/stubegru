@@ -7,7 +7,7 @@
     "dependencies" : {
         "blocking" : [],
         "nonBlocking" : [],
-        "backend" : ["login"]
+        "backend" : ["login","wiki/utils"]
     },
     "html" : ["module.html"],
     "js" : ["menubar.js"],
