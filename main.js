@@ -28,10 +28,9 @@ async function loadView() {
     stubegru.currentView = view;
     let resp;
 
-    //check for custom view
     resp = await fetch(`${stubegru.constants.BASE_URL}/utils/load_view.php?view=${view}`);
-
     let data = await resp.text();
+    
     $("body").append(data); //Add view content to page
     setTitle();
     setFavicon();
