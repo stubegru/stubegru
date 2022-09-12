@@ -29,9 +29,7 @@ async function loadView() {
     let resp;
 
     //check for custom view
-    resp = await fetch(`${stubegru.constants.BASE_URL}/custom/views/${view}.html`);
-    //if not found use default view
-    if (!resp.ok) { resp = await fetch(`${stubegru.constants.BASE_URL}/views/${view}.html`); }
+    resp = await fetch(`${stubegru.constants.BASE_URL}/utils/load_view.php?view=${view}`);
 
     let data = await resp.text();
     $("body").append(data); //Add view content to page
