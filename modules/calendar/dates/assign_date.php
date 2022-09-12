@@ -101,7 +101,7 @@ if ($clientWantsFormular == "yes") {
 $selectStatement = $dbPdo->prepare("SELECT * FROM `Raeume` WHERE `id`=:dateRoomId;");
 $selectStatement->bindValue(':dateRoomId', $dateRoomId);
 $selectStatement->execute();
-$roomObject = $selectStatement->fetch(PDO::FETCH_ASSOC);
+$roomObject = $selectStatement->fetch(PDO::FETCH_OBJ);
 
 //Mailadresse des Beraters abrufen
 $dateOwnerMailAdress = getUserAttribute($dateOwnerId, "mail");

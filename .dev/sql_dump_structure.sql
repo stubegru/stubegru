@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 18. Aug 2022 um 09:00
+-- Erstellungszeit: 12. Sep 2022 um 09:08
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -54,10 +54,10 @@ CREATE TABLE `Benachrichtigungen` (
 CREATE TABLE `Beratene` (
   `id` int(11) NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `gender` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `mail` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `channel` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `channel` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `formular` tinyint(1) NOT NULL,
   `description` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `dateId` int(11) NOT NULL
@@ -323,7 +323,7 @@ CREATE TABLE `Termine` (
   `end` time NOT NULL,
   `title` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `channel` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'all',
-  `teilnehmer` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `teilnehmer` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `template` int(11) NOT NULL COMMENT 'Id des mail templates das bei terminvergabe an den zu Beratenden versendet wird',
   `blocked` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

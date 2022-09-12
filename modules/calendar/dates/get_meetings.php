@@ -21,18 +21,18 @@ function getStubegruMeetings($startTime, $endTime)
     $selectStatement->execute();
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($resultList as $row) {
+    foreach ($resultList as $meetingData) {
         //Teilnehmer Informationen sammeln
         $clientId = $meetingData["teilnehmer"];
         if ($clientId != "") {
-            $selectStatement->bindValue(':newsId', $id);
+            $selectStatement = $dbPdo->prepare("SELECT * FROM `Beratene` WHERE id = :clientId");
+            $selectStatement->bindValue(':clientId', $clientId);
             $selectStatement->execute();
             $clientData = $selectStatement->fetch(PDO::FETCH_ASSOC);;
-            $meetingData["teilnehmer"] = $clientData;}
+            $meetingData["teilnehmer"] = $clientData;
+        }
 
         $finalArray[] = $meetingData;
     }
     return $finalArray;
 }
-
-

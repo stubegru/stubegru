@@ -49,29 +49,31 @@ $dateId = $_POST["id"];
 $selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE `id`=:dateId;");
 $selectStatement->bindValue(':dateId', $dateId);
 $selectStatement->execute();
-$resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+$meetingData = $selectStatement->fetch(PDO::FETCH_ASSOC);
 
-foreach ($resultList as $row) {
-    $dateDateAmericanFormat = $row->date;
-    $dateDate = changeDateOrder($dateDateAmericanFormat, "-");
-    $dateStartTime = substr($row->start, 0, -3); //schneidet die letzten drei Zeichen (Die Sekunden Angaben der Uhrzeit) ab
-    $dateEndTime = substr($row->end, 0, -3); //schneidet die letzten drei Zeichen (Die Sekunden Angaben der Uhrzeit) ab
-    $dateTitle = $row["title"];
-    $dateOwnerId = $row["ownerId"];
-    $dateOwnerName = $row["owner"];
-    $dateRoomId = $row["room"];
-    $dateTemplateId = $row["template"];
-    $clientId = $row["teilnehmer"];
+if (!$meetingData) {
+    echo json_encode(array("status" => "error", "message" => "Löschen des Termins fehlgeschlagen. Der Termin konnte nicht gefunden werden. Vermutlich wurde er bereits gelöscht."));
+    exit;
 }
+
+$dateDateAmericanFormat = $meetingData["date"];
+$dateDate = changeDateOrder($dateDateAmericanFormat, "-");
+$dateStartTime = substr($meetingData["start"], 0, -3); //schneidet die letzten drei Zeichen (Die Sekunden Angaben der Uhrzeit) ab
+$dateEndTime = substr($meetingData["end"], 0, -3); //schneidet die letzten drei Zeichen (Die Sekunden Angaben der Uhrzeit) ab
+$dateTitle = $meetingData["title"];
+$dateOwnerId = $meetingData["ownerId"];
+$dateOwnerName = $meetingData["owner"];
+$dateRoomId = $meetingData["room"];
+$dateTemplateId = $meetingData["template"];
+$clientId = $meetingData["teilnehmer"];
+
 //Mailadresse des Beraters abrufen
 $dateOwnerMailAdress = getUserAttribute($dateOwnerId, "mail");
 //Mailadresse des Teilnehmers abrufen
-$selectStatement = $dbPdo->prepare("SELECT * FROM `Nachrichten` WHERE id = :newsId;");
-$selectStatement->bindValue(':newsId', $id);
+$selectStatement = $dbPdo->prepare("SELECT mail FROM `Beratene` WHERE id = :clientId;");
+$selectStatement->bindValue(':clientId', $clientId);
 $selectStatement->execute();
-$resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-foreach ($resultList as $row) {$clientMailAdress = $row["mail"];}
+$clientMailAdress = $selectStatement->fetchColumn();
 
 //***************ICS EVENT GENERIEREN*****************************
 $eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$dateId";

@@ -290,9 +290,12 @@ function deleteDate(meetingId) { //Löscht den termin
                     title: "Termin löschen",
                     text: data.message,
                     type: data.status,
+                    mode: "toast"
                 });
-                loadDates();
-                $("#terminmodal").modal("hide"); //hides the modal
+                if (data.status == "success") {
+                    loadDates();
+                    $("#terminmodal").modal("hide"); //hides the modal
+                }
             }
         });
     });
