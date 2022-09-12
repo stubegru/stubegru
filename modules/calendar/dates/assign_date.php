@@ -181,8 +181,7 @@ $AdvisorMailText = "<p>Guten Tag</p>
         </table>
         </span>
         <p>&nbsp;</p>
-        <p>Viele Gr&uuml;&szlig;e</p>
-        <p>Information Studium</p>";
+        <p>Viele Gr&uuml;&szlig;e</p>";
 
 $AdvisorMailSubject = "Termin vergeben am $dateDate";
 $AdvisorMailSubject = "=?utf-8?b?" . base64_encode($AdvisorMailSubject) . "?=";
