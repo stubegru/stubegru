@@ -74,7 +74,6 @@ function initFullcalendarView() {
 
 
 async function resetCalendarForm() {
-    let userData = await stubegru.modules.userUtils.getUserInfo();
     let calendarTitle = "Beratungstermin";
     $('#calendarDate').val("");
     $('#calendarStart').val("");
@@ -157,8 +156,7 @@ function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus d
 
 async function addStubegruMeetingsToFullcalendar(datesArray) {
     //Generate events for fullcalendar
-    let userData = await stubegru.modules.userUtils.getUserInfo();
-    let ownUserId = userData.id;
+    let ownUserId = stubegru.currentUser.id;
     let ownEvents = [];
     let othersEvents = [];
 
@@ -305,7 +303,7 @@ function deleteDate(meetingId) { //Löscht den termin
 //********************************************************Berater**********************************************
 async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown auswahl
 
-    let ownId = stubegru.ownId;
+    let ownId = stubegru.currentUser.id;
 
     let userList = await stubegru.modules.userUtils.getUserByPermission("beratung");
     let selectHtml = "";
@@ -347,7 +345,7 @@ function getRooms() { //Lädt die Räume in die Dropdown auswahl
         url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`,
         success: function (data) {
 
-            let ownId = stubegru.ownId;
+            let ownId = stubegru.currentUser.id;
             const channelDescriptions = {
                 "personally": "Persönlich",
                 "phone": "Telefon",
@@ -512,7 +510,7 @@ function getTemplates() { //Lädt templates aus der Db ins Dropdown
             let selectHtml = "<option value=''>Bitte wählen...</option>";
             let postHtml;
             for (const template of data) {
-                const ownId = stubegru.ownId;
+                const ownId = stubegru.currentUser.id;
                 const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
                 if (ownId == template.ersteller) { //Add own entry at top
                     selectHtml += optionString;
