@@ -337,35 +337,29 @@ $("#calendarRoom").on("change", function () {
 
 
 
-function getRooms() { //Lädt die Räume in die Dropdown auswahl
+async function getRooms() { //Lädt die Räume in die Dropdown auswahl
 
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`,
-        success: function (data) {
+    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`);
+    let data = await resp.json();
 
-            let ownId = stubegru.currentUser.id;
-            const channelDescriptions = {
-                "personally": "Persönlich",
-                "phone": "Telefon",
-                "webmeeting": "Webmeeting"
-            };
+    let ownId = stubegru.currentUser.id;
+    const channelDescriptions = {
+        "personally": "Persönlich",
+        "phone": "Telefon",
+        "webmeeting": "Webmeeting"
+    };
 
-
-            let selectHtml = "<option value=''>Bitte wählen...</option>";
-            let postHtml;
-            for (const room of data) {
-                const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
-                if (ownId == room.besitzer) { //Add own entry at top
-                    selectHtml += optionString;
-                } else {
-                    postHtml += optionString;
-                }
-            }
-            $("#calendarRoom").html(selectHtml + postHtml);
+    let selectHtml = "<option value=''>Bitte wählen...</option>";
+    let postHtml;
+    for (const room of data) {
+        const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
+        if (ownId == room.besitzer) { //Add own entry at top
+            selectHtml += optionString;
+        } else {
+            postHtml += optionString;
         }
-    });
+    }
+    $("#calendarRoom").html(selectHtml + postHtml);
 
 }
 
@@ -391,14 +385,14 @@ function saveRoom() { //speichert einen neuen Raum in die DB
         url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`,
         data: raum,
         dataType: "json",
-        success: function (resp) {
+        success: async function (resp) {
             if (resp.status == "success") {
                 stubegru.modules.alerts.alert({
                     title: "Raum gespeichert!",
                     text: resp.message,
                     type: "success"
                 });
-                getRooms(); //Reload room to select
+                await getRooms(); //Reload room to select
                 $("#calendarRoom option[id='roomSelectOption" + resp.roomId + "']").attr("selected", "selected"); //Gespeicherter Raum wird ausgewählt
                 resetRoomForm();
             }
@@ -500,28 +494,24 @@ function deleteRoom() { //löscht einen Raum
 
 //***********************************************Mail Templates**************************************************
 
-function getTemplates() { //Lädt templates aus der Db ins Dropdown
+async function getTemplates() { //Lädt templates aus der Db ins Dropdown
 
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/get_templates.php`,
-        success: function (data) {
-            let selectHtml = "<option value=''>Bitte wählen...</option>";
-            let postHtml;
-            for (const template of data) {
-                const ownId = stubegru.currentUser.id;
-                const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
-                if (ownId == template.ersteller) { //Add own entry at top
-                    selectHtml += optionString;
-                } else {
-                    postHtml += optionString;
-                }
-            }
-            selectHtml += postHtml;
-            $("#calendarTemplate").html(selectHtml);
+    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/templates/get_templates.php`);
+    let data = await resp.json();
+
+    let selectHtml = "<option value=''>Bitte wählen...</option>";
+    let postHtml;
+    for (const template of data) {
+        const ownId = stubegru.currentUser.id;
+        const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
+        if (ownId == template.ersteller) { //Add own entry at top
+            selectHtml += optionString;
+        } else {
+            postHtml += optionString;
         }
-    });
+    }
+    selectHtml += postHtml;
+    $("#calendarTemplate").html(selectHtml);
 
 }
 
@@ -540,14 +530,14 @@ function saveTemplate() { //speichert Template in DB
         dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/save_template.php`,
         data: templateData,
-        success: function (data) {
+        success: async function (data) {
             stubegru.modules.alerts.alert({
                 title: "Template speichern",
                 text: data.message,
                 type: data.status
             });
             if (data.status == "success") {
-                getTemplates();
+                await getTemplates();
                 $("#calendarTemplate option[id='templateSelectOption" + data.optionId + "']").attr("selected", "selected"); //Gespeichertes Template wird wieder ausgewählt
                 resetTemplateForm();
             }
