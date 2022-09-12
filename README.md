@@ -27,15 +27,10 @@ Stubegru is based on **PHP** and **MySQL** databases. For access via a browser, 
 - Clone this repo
 - Make sure the stubegru root folder is accessible by your webserver to deliver the files to your browser
 - Create `.htaccess` file (use .`htaccess.example` as template). For more information see [the wiki article](https://github.com/stubegru/stubegru/wiki/htaccess)
-- Create `.version` file with random version number (e.g. `version1`)
 - You can personalize and configure stubegru with some files in [the `custom` folder](https://github.com/stubegru/stubegru/wiki/The-%22custom%22-folder)
 - If you want to use the `monitoring` module (enabled by default) you need to add this file: `custom/monitoring_template.html` with at least this content: `<survey data-survey-id="1"></survey>`    
 For more information see: [wiki/survey-module](https://github.com/stubegru/stubegru/wiki/Survey-Module)
 
 ## Ready, steady, go!
 - Open the project in browser and login with **user "test"** and **password "test"**
-
-# Deployment
-
-Stubegru itself does not offer any built in tools for deploying the software on a server. We use [git-ftp](https://git-ftp.github.io/) for deployment, so you can find `.git-ftp-ignore` and `.git-ftp-include` files in the repo's root folder. You can read more about [our git-ftp deploy workflow](https://gist.github.com/superjojo140/97d06c4c46f8d50f251a83cc2397b68c).
 

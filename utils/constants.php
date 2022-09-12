@@ -14,7 +14,11 @@ $ADMIN_MAIL = getenv("ADMIN_MAIL");
 $EVALUATION_SURVEY_ID = getenv("EVALUATION_SURVEY_ID");
 $LOGO = getenv("LOGO");
 
-$APPLICATION_VERSION = file_get_contents("$BASE_PATH/.version");
+
+$APPLICATION_VERSION = "NOVERSION";
+if (file_exists("$BASE_PATH/.version")) {
+    $APPLICATION_VERSION = file_get_contents("$BASE_PATH/.version");
+}
 
 $CUSTOM_CONFIG = array();
 if (file_exists("$BASE_PATH/custom/config.json")) {
