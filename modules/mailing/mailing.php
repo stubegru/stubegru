@@ -15,9 +15,12 @@ require "$BASE_PATH/modules/mailing/PHPMailer/src/SMTP.php";
  * @param string $subject Subject of the mail
  * @param string $message Content of the mail (plain text or HTML)
  * @param array $options stubegru specific options
- *      - "postfix"             : use custom postfix instead of INSTITUTION_MAIL_POSTFIX, use empty string here for no postfix
- *      - "additional_headers"  : additional headers array for using the PHP mail() function
- *      - "additional_params"   : additional params string for using the PHP mail() function
+ *      - "postfix"                     : use custom postfix instead of INSTITUTION_MAIL_POSTFIX, use empty string here for no postfix
+ *      - "additional_headers"          : additional headers array for using the PHP mail() function
+ *      - "additional_params"           : additional params string for using the PHP mail() function
+ *      - "attachment"                  : array with information to add an attachment to the mail
+ *          - "attachment['name']"      : filename that should be set for the attachment
+ *          - "attachment['content']"   : a string containing the file content
  * 
  * @return boolean Wether sending the mail was successful or not
  */
@@ -59,6 +62,19 @@ function stubegruMail($to, $subject, $message, $options = [])
             $myPHPMailer->isHTML(true);
             $myPHPMailer->Subject = $subject;
             $myPHPMailer->Body    = $message;
+
+            //attachment
+            if (isset($options) && isset($options["attachment"])) {
+                if (empty($options["attachment"]["name"]) || empty($options["attachment"]["content"])) {
+                    trigger_error("[stubegruMail] Attachment can't be processed because 'name' or 'content' property was not set. Continue sending mail without attachment!", E_USER_WARNING);
+                } else {
+                    $fileName = $options["attachment"]["name"];
+                    $content = $options["attachment"]["content"];
+                    $myPHPMailer->addStringAttachment($content, $fileName);
+                }
+            }
+
+
             $myPHPMailer->send();
             break;
 
