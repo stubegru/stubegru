@@ -71,14 +71,16 @@ function stubegruMail($to, $subject, $message, $options = [])
 function initPHPMailer()
 {
     $myPHPMailer = new PHPMailer(true);
-    //$myPHPMailer->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
-    $myPHPMailer->isSMTP();                                            //Send using SMTP
-    $myPHPMailer->Host       = getenv("SMTP_HOST");                     //Set the SMTP server to send through
-    $myPHPMailer->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $myPHPMailer->Username   = getenv("SMTP_USERNAME");                    //SMTP username
-    $myPHPMailer->Password   = getenv("SMTP_PASSWORD");                             //SMTP password
-    $myPHPMailer->SMTPSecure = getenv("SMTP_SECURE");           //Enable implicit TLS encryption
-    $myPHPMailer->Port = getenv("SMTP_PORT");           //Enable implicit TLS encryption
+    //$myPHPMailer->SMTPDebug = SMTP::DEBUG_SERVER; //Enable verbose debug output
+    $myPHPMailer->isSMTP();
+    $myPHPMailer->Host       = getenv("SMTP_HOST");
+    $myPHPMailer->SMTPAuth   = true;
+    $myPHPMailer->Username   = getenv("SMTP_USERNAME");
+    $myPHPMailer->Password   = getenv("SMTP_PASSWORD");
+    $myPHPMailer->SMTPSecure = getenv("SMTP_SECURE"); //Enable implicit TLS encryption
+    $myPHPMailer->Port       = getenv("SMTP_PORT");
+    $myPHPMailer->CharSet    = 'UTF-8';
+    $myPHPMailer->Encoding   = 'base64';
 
     return $myPHPMailer;
 }
