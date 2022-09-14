@@ -7,41 +7,11 @@ function changeDateOrder($date, $seperator)
     return $sep[2] . "." . $sep[1] . "." . $sep[0];
 }
 
-function sendMailWithAttachment($from, $to, $subject, $message, $filename, $attachment)
-{
-
-    $content = chunk_split(base64_encode($attachment));
-
-    // a random hash will be necessary to send mixed content
-    $uid = md5(time());
-    // carriage return type (RFC)
-    $eol = "\r\n";
-
-    // header
-    $header = "From: $from\r\n";
-    $header .= "MIME-Version: 1.0\r\n";
-    $header .= "Content-Type: multipart/mixed; boundary=\"" . $uid . "\"\r\n\r\n";
-
-// message & attachment
-    $nmessage = "--" . $uid . "\r\n";
-    $nmessage .= "Content-type:text/html; charset=utf-8\r\n";
-    $nmessage .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-    $nmessage .= $message . "\r\n\r\n";
-    $nmessage .= "--" . $uid . "\r\n";
-    $nmessage .= "Content-Type: application/octet-stream; name=\"" . $filename . "\"\r\n";
-    $nmessage .= "Content-Transfer-Encoding: base64\r\n";
-    $nmessage .= "Content-Disposition: attachment; filename=\"" . $filename . "\"\r\n\r\n";
-    $nmessage .= $content . "\r\n\r\n";
-    $nmessage .= "--" . $uid . "--";
-
-    //SEND Mail
-    return mail($to, $subject, $nmessage, $header);
-}
-
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/calendar/ical/ical_generator.php";
+require_once "$BASE_PATH/modules/mailing/mailing.php";
 permission_required("beratung");
 $loggedInUserId = $_SESSION["id"];
 
@@ -117,9 +87,6 @@ foreach ($resultList as $row) {
     $templateSubject = $row["betreff"];
 }
 
-//Standardsignatur an Mailtext anhängen
-$templateText .= getenv("INSTITUTION_MAIL_POSTFIX");
-
 //variablen in den Templates einsetzen
 $templateVariablen = array("{Termin_Titel}", "{Klient_Name}", "{Klient_Telefon}", "{Termin_Datum}", "{Termin_Uhrzeit}", "{Berater_Name}", "{Berater_Mail}", "{Raum_Kanal}", "{Raum_Nummer}", "{Raum_Etage}", "{Raum_Strasse}", "{Raum_Hausnummer}", "{Raum_PLZ}", "{Raum_Ort}", "{Raum_Link}", "{Raum_Passwort}", "{Raum_Telefon}");
 $phpVariablen = array($dateTitle, $clientName, $clientPhone, $dateDate, $dateStartTime, $dateOwnerName, $dateOwnerMailAdress, $roomObject->kanal, $roomObject->raumnummer, $roomObject->etage, $roomObject->strasse, $roomObject->hausnummer, $roomObject->plz, $roomObject->ort, $roomObject->link, $roomObject->passwort, $roomObject->telefon);
@@ -136,17 +103,10 @@ $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventS
 
 //***************Mail an den Kunden senden************************
 $clientMailSubject = str_replace($templateVariablen, $phpVariablen, $templateSubject);
-$clientMailSubject = "=?utf-8?b?" . base64_encode($clientMailSubject) . "?="; //Sonderzeichen konvertieren
 $clientMailText = str_replace($templateVariablen, $phpVariablen, $templateText);
-$clientMailHeader[] = 'MIME-Version: 1.0';
-$clientMailHeader[] = "From: " . getenv("INSTITUTION_MAIL_ADDRESS");
-$clientMailHeader[] = "Reply-To: $dateOwnerName <$dateOwnerMailAdress>";
-$clientMailHeader[] = 'Content-type: text/html; charset="utf-8"';
-$clientMailHeader[] = 'X-Mailer: PHP/' . phpversion();
-$clientMailHeaderString = implode("\r\n", $clientMailHeader);
 
-try {mail($clientMailAdress, $clientMailSubject, $clientMailText, $clientMailHeaderString);} catch (Exception $e) {
-    echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Kunden versendet werden."));
+try {stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText);} catch (Exception $e) {
+    echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Kunden und den Berater versendet werden."));
     exit;
 }
 
@@ -184,13 +144,13 @@ $AdvisorMailText = "<p>Guten Tag</p>
         <p>Viele Gr&uuml;&szlig;e</p>";
 
 $AdvisorMailSubject = "Termin vergeben am $dateDate";
-$AdvisorMailSubject = "=?utf-8?b?" . base64_encode($AdvisorMailSubject) . "?=";
-$AdvisorMailFrom = getenv("INSTITUTION_MAIL_ADDRESS");
 
-try {sendMailWithAttachment($AdvisorMailFrom, $dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, "event.ics", $eventIcsString);} catch (Exception $e) {
-    echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
-    exit;
-}
+$mailOptions = array("attachment" => array("nameee" => "event.ics", "content" => $eventIcsString));
+
+// try {stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);} catch (Exception $e) {
+//     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
+//     exit;
+// }
 
 //Erfolg melden
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erfolgreich vergeben. Es wurde eine Mail an den Berater und an den Kunden versendet."));
