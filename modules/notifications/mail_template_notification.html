@@ -8,15 +8,21 @@
 </head>
 
 <body>
-    <main style="text-align:center">
-               
-         {einleitung}
-        <br><br><br>
-        <h1 style="background-color: #ffeeda; padding: 20px 40px; display: inline; border-radius: 10px;" >{titel}</h1>
-        <br><br><br>
-        <h3>{beschreibung} </h3>
-        <br><br><hr><br>
-        <div>Diese Mail wurde automatisch durch das Benachrichtigungssystem von <b>{application_name}</b> versandt. Es wurden alle Nutzer informiert, die Mailbenachrichtigungen f&uuml;r <b>{trigger_type}</b> aktiviert haben. Bei Fragen oder Problemen wende dich bitte an die verantwortlichen Personen in deiner Abteilung. Bei technischen Problemen kannst du dich auch an den Admin dieser Installation wenden: <a style="color:#0068A5;color:#0068A5;text-decoration: underline;" href="mailto:{admin_mail}">{admin_mail}</a></div>
+    <main>
+        Guten Tag,<br>
+        es liegt eine neue Benachrichtigung von {application_name} für dich vor.<br>
+        Kategorie der Benachrichtigung: <b>{trigger_type}</b>
+        <br><br>
+        <div style="text-align:center">
+            {einleitung}
+            <br><br><br>
+            <h3 style="background-color: #ececec; padding: 10px 20px; display: inline; border-radius: 2px;">{titel}</h3>
+            <br><br><br>
+            <h4>{beschreibung}</h4>
+            <br><br>
+            <hr><br>
+            <div>Diese Mail wurde automatisch durch das Benachrichtigungssystem von <b>{application_name}</b> versandt. Es wurden alle Nutzer informiert, die Mailbenachrichtigungen f&uuml;r <b>{trigger_type}</b> aktiviert haben. Bei Fragen oder Problemen wende dich bitte an die verantwortlichen Personen in deiner Abteilung. Bei technischen Problemen kannst du dich auch an den Admin dieser Installation wenden: <a style="color:#0068A5;color:#0068A5;text-decoration: underline;" href="mailto:{admin_mail}">{admin_mail}</a></div>
+        </div>
     </main>
 
 

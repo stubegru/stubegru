@@ -3,7 +3,8 @@
 //Mit diesem Script werden Benachrichtigungen verwaltet. Sowohl Mail Benachrichtigungen als auch Online Notifications
 $BASE_PATH = getenv("BASE_PATH");
 $INCLUDED_IN_SCRIPT = true;
-require_once "$BASE_PATH/utils/database_without_auth.php"; //iclude dbconnect (without authorization.php for use in cronjob)
+require_once "$BASE_PATH/utils/database_without_auth.php"; //include dbconnect (without authorization.php for use in cronjob)
+require_once "$BASE_PATH/modules/mailing/mailing.php";
 require_once "$BASE_PATH/utils/constants.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 
@@ -194,48 +195,16 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
     $variablen_daten = array($mainLine, $introduction, $mainButtonLink, $description, $constants["APPLICATION_NAME"], $triggerTypeInWords, $constants["ADMIN_MAIL"]);
     $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
 
-    /***
-     *      __  __       _ _                   _                   _ _
-     *     |  \/  |     (_) |                 | |                 (_) |
-     *     | \  / | __ _ _| | __   _____  _ __| |__   ___ _ __ ___ _| |_ ___ _ __
-     *     | |\/| |/ _` | | | \ \ / / _ \| '__| '_ \ / _ \ '__/ _ \ | __/ _ \ '_ \
-     *     | |  | | (_| | | |  \ V / (_) | |  | |_) |  __/ | |  __/ | ||  __/ | | |
-     *     |_|  |_|\__,_|_|_|   \_/ \___/|_|  |_.__/ \___|_|  \___|_|\__\___|_| |_|
-     *
-     *
-     */
-
-    //Header
-    $absender_name = $constants["APPLICATION_NAME"];
-    $absender_adresse = $constants["INSTITUTION_MAIL_ADDRESS"];
-    $reply_to = $constants["ADMIN_MAIL"];
-
-    $mail_header = "Reply-To: $reply_to \r\n" .
-        'Content-type: text/html; charset="utf-8" \r\n' .
-        'X-Mailer: PHP/' . phpversion();
-
-    //Betreff
-    $mail_betreff = "$absender_name - $triggerTypeInWords";
-    $mail_betreff = "=?utf-8?b?" . base64_encode($mail_betreff) . "?=";
-
-    /***
-     *      ______                  __ _   _                                           _____  ____    _           _     _
-     *     |  ____|                / _(_) (_)                                         |  __ \|  _ \  | |         | |   | |
-     *     | |__   _ __ ___  _ __ | |_  __ _ _ __   __ _  ___ _ __    __ _ _   _ ___  | |  | | |_) | | |__   ___ | |__ | | ___ _ __
-     *     |  __| | '_ ` _ \| '_ \|  _|/ _` | '_ \ / _` |/ _ \ '__|  / _` | | | / __| | |  | |  _ <  | '_ \ / _ \| '_ \| |/ _ \ '_ \
-     *     | |____| | | | | | |_) | | | (_| | | | | (_| |  __/ |    | (_| | |_| \__ \ | |__| | |_) | | | | | (_) | | | | |  __/ | | |
-     *     |______|_| |_| |_| .__/|_|  \__,_|_| |_|\__, |\___|_|     \__,_|\__,_|___/ |_____/|____/  |_| |_|\___/|_| |_|_|\___|_| |_|
-     *                      | |                     __/ |
-     *                      |_|                    |___/
-     */
     //Hole alle Nutzer, die diesen trigger als Mail abonniert haben
     //Notification Level: 0:nichts 1:nur Online 2:nur Mail 3:Mail und Online
     $selectStatement = $dbPdo->query("SELECT * FROM `Nutzer` WHERE notification_$trigger='2' OR notification_$trigger='3';");
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    $mail_betreff = $constants["APPLICATION_NAME"] . " - $triggerTypeInWords";
+
     foreach ($resultList as $row) {
         $recipientUserMail = $row["mail"];
-        mail($recipientUserMail, $mail_betreff, $mail_text, $mail_header);
+        stubegruMail($recipientUserMail, $mail_betreff, $mail_text);
         //echo "Sending Mail to $recipientUserMail";
     }
 }
