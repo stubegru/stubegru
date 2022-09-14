@@ -55,7 +55,6 @@ foreach ($resultList as $row) {
 
     $surveyLink = "$BASE_URL/?view=evaluation&uniqueKey=$uniqueKey";
     $mail_text = str_replace(array("{{evaluationLink}}"), array($surveyLink), $mail_text);
-    $mail_text .= getenv("INSTITUTION_MAIL_POSTFIX");
 
     //stubegruMail() is imported by cronjob.php
     stubegruMail($empfaenger, $mail_betreff, $mail_text);

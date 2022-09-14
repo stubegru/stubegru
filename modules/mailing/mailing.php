@@ -25,9 +25,9 @@ function stubegruMail($to, $subject, $message, $options = [])
 {
     //Add postfix
     if (isset($options["postfix"])) {
-        $message .= $options["postfix"];
+        $message .= "<br>" . $options["postfix"];
     } else {
-        $message .= getenv("INSTITUTION_MAIL_POSTFIX");
+        $message .= "<br>" . getenv("INSTITUTION_MAIL_POSTFIX");
     }
 
     $mailMethod = getenv(("MAIL_METHOD"));
