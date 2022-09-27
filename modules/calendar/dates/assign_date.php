@@ -145,12 +145,12 @@ $AdvisorMailText = "<p>Guten Tag</p>
 
 $AdvisorMailSubject = "Termin vergeben am $dateDate";
 
-$mailOptions = array("attachment" => array("nameee" => "event.ics", "content" => $eventIcsString));
+$mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
 
-// try {stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);} catch (Exception $e) {
-//     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
-//     exit;
-// }
+ try {stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);} catch (Exception $e) {
+     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
+     exit;
+ }
 
 //Erfolg melden
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erfolgreich vergeben. Es wurde eine Mail an den Berater und an den Kunden versendet."));
