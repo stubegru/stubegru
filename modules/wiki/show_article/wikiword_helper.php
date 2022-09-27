@@ -5,7 +5,9 @@
  * Wird von mehreren Funktionen (dieser Datei) genutzt
  */
 $changesMade = false;
-$regexLinkedWikiwords = "/\[wikiword\|[0-9]+\|(\w|ä|Ä|ü|Ü|ö|Ö|ß|\"|\'|\§|\/|\€|\?|\!|\-|\(|\)|\,|\.|\ )*\]/mi";
+$regexTemplate = "/\[wikiword\|%%ARTICLE_ID%%\|(\w|ä|Ä|ü|Ü|ö|Ö|ß|\"|\'|\§|\/|\€|\?|\!|\-|\(|\)|\,|\.|:|\ )*\]/mi";
+$regexLinkedWikiwords = str_replace("%%ARTICLE_ID%%", "[0-9]+", $regexTemplate);
+$regexUnlinkedWikiwords = str_replace("%%ARTICLE_ID%%", "null", $regexTemplate);
 
 
 
@@ -18,7 +20,7 @@ $regexLinkedWikiwords = "/\[wikiword\|[0-9]+\|(\w|ä|Ä|ü|Ü|ö|Ö|ß|\"|\'|\§
  */
 function autolinkWikiwords($dataId, $text, $type)
 {
-    global $dbPdo, $changesMade;
+    global $dbPdo, $changesMade, $regexUnlinkedWikiwords;
     //Prüfen, ob null-wikiwords mit einer articleId verknüpft werden können
     $changesMade = false;
     $replace_wikiword = function ($matches) {
@@ -38,7 +40,7 @@ function autolinkWikiwords($dataId, $text, $type)
         }
         return $match;
     };
-    $regex = "/\[wikiword\|null\|(\w|ä|Ä|ü|Ü|ö|Ö|ß|\"|\'|\§|\/|\€|\?|\!|\-|\(|\)|\,|\.|\ )*\]/mi";
+    $regex = $regexUnlinkedWikiwords;
     $text = preg_replace_callback($regex, $replace_wikiword, $text);
 
     //If changes were made, save this changes to DB
@@ -119,7 +121,7 @@ function unlinkBrokenWikiwordsArticle()
             $updateStatement = $dbPdo->prepare("UPDATE `wiki_artikel` SET `text`=:newText WHERE `id` = :articleId;");
             $updateStatement->bindValue(':newText', $newText);
             $updateStatement->bindValue(':articleId', $articleId);
-            $updateStatement->execute();        
+            $updateStatement->execute();
         }
     }
 
@@ -150,7 +152,8 @@ function unlinkBrokenWikiwordsNews()
             $updateStatement = $dbPdo->prepare("UPDATE `Nachrichten` SET `inhalt`=:newText WHERE `id` = :newsId;");
             $updateStatement->bindValue(':newText', $newText);
             $updateStatement->bindValue(':newsId', $newsId);
-            $updateStatement->execute();        }
+            $updateStatement->execute();
+        }
     }
 
     echo "Checked all Daily News for broken wikiwords";

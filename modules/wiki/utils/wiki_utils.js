@@ -27,7 +27,7 @@ async function handleWikiWords(text) {
     //const allHeadings = await (await fetch(`${stubegru.constants.BASE_URL}/modules/wiki/utils/wiki_get_all_article_headings.php`)).json();
 
     //The Regular Expression to find Strings between the Brackets
-    var findWikiwordsRegEx = /\[wikiword((\w|ä|Ä|ü|Ü|ö|Ö|ß|\"|\'|\§|\/|\€|\?|\!|\-|\(|\)|\,|\.|\|)*(\ )*)+]/g;
+    var findWikiwordsRegEx = /\[wikiword((\w|ä|Ä|ü|Ü|ö|Ö|ß|\"|\'|\§|\/|\€|\?|\!|\-|\(|\)|\,|\.|:|\|)*(\ )*)+]/g;
 
     //Replace the Wikiwords with Links
     text = text.replace(findWikiwordsRegEx, function (wikiword) {
