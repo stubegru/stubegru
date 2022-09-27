@@ -210,6 +210,9 @@ function setDateEndTime() {
 }
 
 async function saveMeeting() {
+    //show spinner    
+    $("#saveMeetingButton").html(`Termin wird gespeichert &nbsp;<i class="fas fa-circle-notch fa-spin"></i>`);
+    $("#saveMeetingButton").attr("disabled",true);
     //Save Meeting
     let meeting = new FormData();
     meeting.append("date", $('#calendarDate').val());
@@ -268,6 +271,8 @@ async function saveMeeting() {
         loadDates();
         $("#terminmodal").modal("hide");
     }
+    $("#saveMeetingButton").attr("disabled",false);
+    $("#saveMeetingButton").html(`Termin speichern`);
 
 }
 
