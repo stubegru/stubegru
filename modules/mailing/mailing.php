@@ -54,7 +54,9 @@ function stubegruMail($to, $subject, $message, $options = [])
             break;
 
         case 'smtp':
-            $myPHPMailer = initPHPMailer();
+            if (empty($myPHPMailer)) {
+                $myPHPMailer = initPHPMailer();
+            }
             //Recipients
             $myPHPMailer->setFrom(getenv("INSTITUTION_MAIL_ADDRESS"), getenv("INSTITUTION_NAME"));
             $myPHPMailer->addAddress($to);
