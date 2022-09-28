@@ -74,6 +74,7 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
     $mainButtonLink = "";
     $triggerUserName = getUserAttribute($userId, "name");
 
+
     /***
      *                   _   _              __      __       _
      *         /\       | | (_)             \ \    / /      | |
@@ -130,6 +131,9 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
         case $constants["error"]:
             $triggerTypeInWords = "Technisches Problem";
             break;
+        default:
+            echo json_encode(array("status" => "error", "message" => "[Notification System] Cant create notification for trigger type '$trigger'."));
+            exit;
     }
     /***
      *      _______        _                                    _
