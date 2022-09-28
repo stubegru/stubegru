@@ -55,7 +55,7 @@ function loadArticleData() {
                 var articleText = json.text;
 
                 //Wikiword Links generieren
-                articleText = await handleWikiWords(articleText);
+                articleText = await stubegru.modules.wiki.wikiUtils.handleWikiWords(articleText);
 
                 //Inhaltstext anzeigen
                 $('#articleText').html(articleText);
@@ -88,7 +88,7 @@ function loadArticleData() {
                 $("#articleTags").html(ausgabe);
 
                 //Artikel als gelesen markieren
-                setReadState(currentArticleId, stubegru.constants.read, stubegru.constants.currentUser);
+                stubegru.modules.wiki.wikiUtils.setReadState(currentArticleId, stubegru.constants.read, stubegru.constants.currentUser);
 
             } else { //Fehler bei der Db Abfrage
                 $("#articleText").html("Dieser Artikel existiert nicht...");

@@ -6,7 +6,7 @@ function showSidebarNav() {
         success: async function (data) {
             var json = JSON.parse(data);
             for (var i in json) {
-                let text = await handleWikiWords(json[i])
+                let text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(json[i])
                 $("#sideBarNav").append(text);
             }
         }

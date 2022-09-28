@@ -1,7 +1,11 @@
 stubegru.modules.menubar.addDivider("secondary", 100);
 stubegru.modules.menubar.addItem("secondary", `<li><a title="Liste mit allen Wiki Artikeln aufrufen" href="${stubegru.constants.BASE_URL}?view=wiki_list_articles"><i class="fas fa-list"></i>&nbsp;Liste aller Artikel</a></li>`, 101);
-stubegru.modules.menubar.addItem("secondary", `<li><a title="Alle Wiki Artikel als gelesen markieren" onclick="markAllAsRead()"><i class="fas fa-eye"></i>&nbsp;Alle Artikel gelesen</a></li>`, 102);
+stubegru.modules.menubar.addItem("secondary", `<li><a title="Alle Wiki Artikel als gelesen markieren" onclick="stubegru.modules.wiki.wikiUtils.markAllAsRead()"><i class="fas fa-eye"></i>&nbsp;Alle Artikel gelesen</a></li>`, 102);
 stubegru.modules.menubar.addItem("primary", `<li class="permission-wiki_autor permission-required"><a title="Einen neuen Wiki Artikel erstellen" href="${stubegru.constants.BASE_URL}?view=wiki_edit_article&mode=create"><i class="fas fa-pencil-alt"></i>&nbsp;Neuer Artikel</a></li>`, 52);
+
+//init modules object
+if (!stubegru.modules.wiki) { stubegru.modules.wiki = {}; }
+stubegru.modules.wiki.wikiUtils = {};
 
 /*
 
@@ -22,7 +26,7 @@ stubegru.modules.menubar.addItem("primary", `<li class="permission-wiki_autor pe
 //Adds hyperlinks to all wikiwords, returns the changed string
 //Wikiword syntax: [wikiword|<articleID>|<title>]
 //e.g. [wikiword|583|Übersicht Hunderassen] will generate <a href="path/to/wiki.php?artikel=583" class="wikiword wikiword-exists">Übersicht Hunderassen</a>"
-async function handleWikiWords(text) {
+stubegru.modules.wiki.wikiUtils.handleWikiWords = async function (text) {
 
     //const allHeadings = await (await fetch(`${stubegru.constants.BASE_URL}/modules/wiki/utils/wiki_get_all_article_headings.php`)).json();
 
@@ -66,7 +70,7 @@ async function handleWikiWords(text) {
  *@param mode constants.read um als gelesen zu markieren, constants.unread um als ungelesen zu markieren
  *@param userId Für welchen Nutzer die Verknüpfung angepasst werden soll. Nutze constants.all um verknüpfung für alle Nutzer anzupassen. Nutze constants.currentUser um verknüpfung für den angemeldeten Nutzer anzupassen
  */
-async function setReadState(articleId, mode, userId) {
+ stubegru.modules.wiki.wikiUtils.setReadState = async function (articleId, mode, userId) {
     return new Promise(function (resolve, reject) {
         $.ajax({
             type: "POST",
@@ -82,8 +86,8 @@ async function setReadState(articleId, mode, userId) {
     });
 }
 
-async function markAllAsRead() {
-    await setReadState(stubegru.constants.all, stubegru.constants.read, stubegru.constants.currentUser);
+stubegru.modules.wiki.wikiUtils.markAllAsRead = async function () {
+    await stubegru.modules.wiki.wikiUtils.setReadState(stubegru.constants.all, stubegru.constants.read, stubegru.constants.currentUser);
     stubegru.modules.alerts.alert({
         title: "Alles gelesen",
         text: "Alle Artikel wurden als gelesen markiert.",

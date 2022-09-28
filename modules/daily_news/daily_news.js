@@ -82,7 +82,7 @@ function getMessages() { //Nachrichten aus der DB anzeigen
                 let priorityClass = currentMessage.prioritaet == 1 ? "panel-danger" : "panel-default";
                 let container = new Date(currentMessage.beginn).getTime() > new Date().getTime() ? "#future_message_container" : "#message_container";
                 let currentEnd = formatDate(currentMessage.ende, "DD.MM.YYYY");
-                const text = await handleWikiWords(currentMessage.inhalt);
+                const text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentMessage.inhalt);
 
                 $(container).append(`
                 <div class="panel ${priorityClass}">
