@@ -88,7 +88,7 @@ function updateNotifications() {
                 tempIdsFromCurrentRequest.push(notificationId);
                 //Check wether this id is allready known in the notificationIdsFromLastRequest Array
                 if (notificationIdsFromLastRequest.indexOf(notificationId) < 0 && firstNotificationRequest == false) {
-                    triggerPushNotification(notificationId, triggerName + " " + actionVerb, triggerInfoHeadline);
+                    //triggerPushNotification(notificationId, triggerName + " " + actionVerb, triggerInfoHeadline);
                 }
 
 
@@ -183,18 +183,6 @@ function getTriggerName(triggerType) {
     }
 }
 
-function triggerPushNotification(notificationId, title, body) {
-    Push.create(title, {
-        body: body,
-        icon: '/icon.png',
-        timeout: 8000,
-        onClick: function () {
-            window.focus();
-            this.close();
-            showNotificationDetailView(notificationId);
-        }
-    });
-}
 
 function deleteNotificationAndStopEventPropagation(event, notificationId) {
     event.preventDefault();
