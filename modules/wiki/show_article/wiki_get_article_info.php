@@ -20,6 +20,7 @@ $row = $selectStatement->fetch(PDO::FETCH_ASSOC);
 if ($row == false) {
     $myReturnArray["status"] = "error";
     $myReturnArray["error"] = "Article $artikelId not found";
+    echo json_encode($myReturnArray);
     exit;
 }
 

@@ -12,7 +12,12 @@ if (getParam("artikel")) {
 else if (getParam("name")) {
     getArticleByName(getParam("name"));
 } else {
-    $("#showArticleContainer").html("<h2>Diese Seite wurde im Wiki leider nicht gefunden</h2>");
+    $("#articleText").html("Dieser Artikel exisitert nicht...");
+    stubegru.modules.alerts.alert({
+        title: "Artikel nicht gefunden",
+        text: `Es wurde kein Name und keine ID übergeben. Der Artikel kann nicht aufgerufen werden.`,
+        type: "error"
+    });
 }
 
 
