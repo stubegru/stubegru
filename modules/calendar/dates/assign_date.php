@@ -59,7 +59,7 @@ foreach ($resultList as $row) {
 }
 
 //Eintrag in der Feedback_mails DB hinzufügen, falls Feedback Formular gewünscht
-if ($clientWantsFormular == "yes") {
+if ($clientWantsFormular == "1") {
     $insertStatement = $dbPdo->prepare("INSERT INTO `Feedback_Mails` (`date`, `mail`) VALUES (:dateDateAmericanFormat , :clientMailAdress);");
     $insertStatement->bindValue(':dateDateAmericanFormat', $dateDateAmericanFormat);
     $insertStatement->bindValue(':clientMailAdress', $clientMailAdress);
