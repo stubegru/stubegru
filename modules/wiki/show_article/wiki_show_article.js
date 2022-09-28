@@ -12,7 +12,7 @@ if (getParam("artikel")) {
 else if (getParam("name")) {
     getArticleByName(getParam("name"));
 } else {
-    $("#articleText").html("Dieser Artikel exisitert nicht...");
+    $("#articleText").html("Dieser Artikel existiert nicht...");
     stubegru.modules.alerts.alert({
         title: "Artikel nicht gefunden",
         text: `Es wurde kein Name und keine ID übergeben. Der Artikel kann nicht aufgerufen werden.`,
@@ -91,7 +91,7 @@ function loadArticleData() {
                 setReadState(currentArticleId, stubegru.constants.read, stubegru.constants.currentUser);
 
             } else { //Fehler bei der Db Abfrage
-                $("#articleText").html("Dieser Artikel exisitert nicht...");
+                $("#articleText").html("Dieser Artikel existiert nicht...");
                 stubegru.modules.alerts.alert({
                     title: "Artikel existiert nicht",
                     text: `Dieser Wiki Artikel (ID ${currentArticleId}) konnte nicht gefunden werden.`,
