@@ -16,8 +16,6 @@ require "$BASE_PATH/modules/mailing/PHPMailer/src/SMTP.php";
  * @param string $message Content of the mail (plain text or HTML)
  * @param array $options stubegru specific options
  *      - "postfix"                     : use custom postfix instead of INSTITUTION_MAIL_POSTFIX, use empty string here for no postfix
- *      - "additional_headers"          : additional headers array for using the PHP mail() function
- *      - "additional_params"           : additional params string for using the PHP mail() function
  *      - "attachment"                  : array with information to add an attachment to the mail
  *          - "attachment['name']"      : filename that should be set for the attachment
  *          - "attachment['content']"   : a string containing the file content
@@ -40,17 +38,39 @@ function stubegruMail($to, $subject, $message, $options = [])
 
         case 'phpmail':
 
-            $additional_headers = "";
-            if (isset($options["additional_headers"])) {
-                $additional_headers = $options["additional_headers"];
+            $additional_headers = array(); //Additional headers are handled as array
+            $additional_headers["From"] = getenv("INSTITUTION_NAME") . " <" . getenv("INSTITUTION_MAIL_ADDRESS") . ">";
+
+            //Attachment
+            if (isset($options) && isset($options["attachment"])) {
+                if (empty($options["attachment"]["name"]) || empty($options["attachment"]["content"])) {
+                    trigger_error("[stubegruMail] Attachment can't be processed because 'name' or 'content' property was not set. Continue sending mail without attachment!", E_USER_WARNING);
+                } else {
+                    $fileName = $options["attachment"]["name"];
+                    $content = $options["attachment"]["content"];
+                    $content = chunk_split(base64_encode($content));
+                    $uid = md5(time()); // a random hash will be necessary to send mixed content
+
+                    // header
+                    $additional_headers["MIME-Version"] = "1.0";
+                    $additional_headers["Content-Type"] = "multipart/mixed; boundary=\"$uid\"";
+
+                    // message & attachment
+                    $tempMessage = "--" . $uid . "\r\n";
+                    $tempMessage .= "Content-type:text/html; charset=utf-8\r\n";
+                    $tempMessage .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
+                    $tempMessage .= $message . "\r\n\r\n";
+                    $tempMessage .= "--" . $uid . "\r\n";
+                    $tempMessage .= "Content-Type: application/octet-stream; name=\"" . $fileName . "\"\r\n";
+                    $tempMessage .= "Content-Transfer-Encoding: base64\r\n";
+                    $tempMessage .= "Content-Disposition: attachment; filename=\"" . $fileName . "\"\r\n\r\n";
+                    $tempMessage .= $content . "\r\n\r\n";
+                    $tempMessage .= "--" . $uid . "--";
+                    $message = $tempMessage;
+                }
             }
 
-            $additional_params = "";
-            if (isset($options["additional_params"])) {
-                $additional_params = $options["additional_params"];
-            }
-
-            return mail($to, $subject, $message, $additional_headers, $additional_params);
+            return mail($to, $subject, $message, $additional_headers);
             break;
 
         case 'smtp':
