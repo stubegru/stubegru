@@ -35,8 +35,8 @@ INSERT INTO `Nachrichten` (`id`, `inhalt`, `titel`, `prioritaet`, `erfasser`, `e
 -- Daten für Tabelle `Nutzer`
 --
 
-INSERT INTO `Nutzer` (`id`, `name`, `mail`, `account`, `role`, `erfassungsdatum`, `erfasser`, `passwort`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES
-(1, 'test', 'dummy@example.com', 'test', 1, '', '', '$2y$10$fLgGmGWibrtZjtvc3rst7ujFZGuQvEdox53wv5bWItxKKEQd3j/Da', 0, 0, 0, 0, 0, 0);
+INSERT INTO `Nutzer` (`id`, `name`, `mail`, `account`, `role`, `erfassungsdatum`, `erfasser`, `passwort`) VALUES
+(1, 'test', 'dummy@example.com', 'test', 1, '', '', '$2y$10$fLgGmGWibrtZjtvc3rst7ujFZGuQvEdox53wv5bWItxKKEQd3j/Da');
 
 --
 -- Daten für Tabelle `Quicklinks`
@@ -65,14 +65,82 @@ INSERT INTO `Rechte` (`id`, `description`) VALUES
 ('wiki_autor', 'Erlaubnis um Wiki Artikel zu bearbeiten, zu erstellen und zu löschen.');
 
 --
--- Daten für Tabelle `Rollen`
+-- Daten für Tabelle `notification_types`
 --
 
-INSERT INTO `Rollen` (`id`, `name`, `permission_admin`, `permission_beratung`, `permission_monitoring`, `permission_wiki_autor`, `permission_telefonnotiz`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES
-(1, 'Studiservice', 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0),
-(2, 'Hiflskraft', 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0),
-(3, 'Beratung', 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0),
-(4, 'Admin', 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1);
+INSERT INTO `notification_types` (`id`, `description`) VALUES
+('absence', 'Benachrichtigungen über Änderungen bzw neue Abwesenheiten'),
+('article', 'Benachrichtigung über Änderungen bzw neue Wiki Artikel'),
+('error', 'Benachrichtigungen über technische Probleme'),
+('news', 'Benachrichtigung über Änderungen bzw neue tagesaktuelle Infos'),
+('reminder', 'Automatische Benachrichtigung über Wiki Artikel, die überarbeitet werden müssen. Reminder müssen manuell erstellt werden.'),
+('report', 'Benachrichtigung, wenn Nutzende einen Fehler in Wiki Artikeln melden.');
+
+--
+-- Daten für Tabelle `roles`
+--
+
+INSERT INTO `roles` (`id`, `name`, `description`) VALUES
+(1, 'Hilfskraft', 'Hilfskräfte mit eingeschränkten Berechtigungen'),
+(2, 'Studienberatung', 'Studienberater:innen mit umfassenden Berechtigungen'),
+(3, 'Admin', 'Alle Berechtigungen, insbesondere Nutzerverwaltung');
+
+--
+-- Daten für Tabelle `role_presets`
+--
+
+INSERT INTO `role_presets` (`roleId`, `type`, `subjectId`, `value`) VALUES
+(1, 'notification_mail', 'absence', 0),
+(1, 'notification_mail', 'article', 0),
+(1, 'notification_mail', 'error', 0),
+(1, 'notification_mail', 'news', 0),
+(1, 'notification_mail', 'reminder', 0),
+(1, 'notification_mail', 'report', 0),
+(1, 'notification_online', 'absence', 1),
+(1, 'notification_online', 'article', 1),
+(1, 'notification_online', 'error', 0),
+(1, 'notification_online', 'news', 1),
+(1, 'notification_online', 'reminder', 0),
+(1, 'notification_online', 'report', 0),
+(1, 'permisson', 'admin', 0),
+(1, 'permisson', 'beratung', 0),
+(1, 'permisson', 'monitoring', 1),
+(1, 'permisson', 'telefonnotiz', 0),
+(1, 'permisson', 'wiki_autor', 0),
+(2, 'notification_mail', 'absence', 0),
+(2, 'notification_mail', 'article', 0),
+(2, 'notification_mail', 'error', 0),
+(2, 'notification_mail', 'news', 0),
+(2, 'notification_mail', 'reminder', 0),
+(2, 'notification_mail', 'report', 0),
+(2, 'notification_online', 'absence', 1),
+(2, 'notification_online', 'article', 1),
+(2, 'notification_online', 'error', 0),
+(2, 'notification_online', 'news', 1),
+(2, 'notification_online', 'reminder', 0),
+(2, 'notification_online', 'report', 0),
+(2, 'permisson', 'admin', 0),
+(2, 'permisson', 'beratung', 1),
+(2, 'permisson', 'monitoring', 1),
+(2, 'permisson', 'telefonnotiz', 1),
+(2, 'permisson', 'wiki_autor', 1),
+(3, 'notification_mail', 'absence', 0),
+(3, 'notification_mail', 'article', 0),
+(3, 'notification_mail', 'error', 0),
+(3, 'notification_mail', 'news', 0),
+(3, 'notification_mail', 'reminder', 0),
+(3, 'notification_mail', 'report', 0),
+(3, 'notification_online', 'absence', 1),
+(3, 'notification_online', 'article', 1),
+(3, 'notification_online', 'error', 1),
+(3, 'notification_online', 'news', 1),
+(3, 'notification_online', 'reminder', 1),
+(3, 'notification_online', 'report', 1),
+(3, 'permisson', 'admin', 1),
+(3, 'permisson', 'beratung', 1),
+(3, 'permisson', 'monitoring', 1),
+(3, 'permisson', 'telefonnotiz', 1),
+(3, 'permisson', 'wiki_autor', 1);
 
 --
 -- Daten für Tabelle `survey_questions`

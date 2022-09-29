@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 12. Sep 2022 um 09:08
+-- Erstellungszeit: 29. Sep 2022 um 10:20
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -118,6 +118,30 @@ CREATE TABLE `Nachrichten` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `notification_types`
+--
+
+CREATE TABLE `notification_types` (
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `notification_type_user`
+--
+
+CREATE TABLE `notification_type_user` (
+  `userId` int(11) NOT NULL,
+  `notificationType` int(11) NOT NULL,
+  `online` tinyint(1) NOT NULL DEFAULT 0,
+  `mail` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `Nutzer`
 --
 
@@ -129,13 +153,7 @@ CREATE TABLE `Nutzer` (
   `role` int(11) NOT NULL COMMENT 'See table Rollen',
   `erfassungsdatum` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `erfasser` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `passwort` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notification_reminder` int(11) NOT NULL DEFAULT 3 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Online',
-  `notification_report` int(11) NOT NULL DEFAULT 3 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Online',
-  `notification_article` int(11) NOT NULL DEFAULT 3 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Online',
-  `notification_news` int(11) NOT NULL DEFAULT 3 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Online',
-  `notification_absence` int(11) NOT NULL DEFAULT 3 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Online',
-  `notification_error` int(11) DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Online'
+  `passwort` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -187,23 +205,26 @@ CREATE TABLE `Rechte` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Rollen`
+-- Tabellenstruktur für Tabelle `roles`
 --
 
-CREATE TABLE `Rollen` (
+CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
-  `name` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `permission_admin` tinyint(1) NOT NULL,
-  `permission_beratung` tinyint(1) NOT NULL,
-  `permission_monitoring` tinyint(1) NOT NULL,
-  `permission_wiki_autor` tinyint(1) NOT NULL,
-  `permission_telefonnotiz` tinyint(1) NOT NULL,
-  `notification_reminder` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
-  `notification_report` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
-  `notification_article` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
-  `notification_news` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
-  `notification_absence` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine',
-  `notification_error` int(11) NOT NULL DEFAULT 0 COMMENT '0:nichts 1:nur Online 2:nur Mail 3:Mail und Onliine'
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `role_presets`
+--
+
+CREATE TABLE `role_presets` (
+  `roleId` int(11) NOT NULL,
+  `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subjectId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -435,6 +456,18 @@ ALTER TABLE `Nachrichten`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `notification_types`
+--
+ALTER TABLE `notification_types`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `notification_type_user`
+--
+ALTER TABLE `notification_type_user`
+  ADD PRIMARY KEY (`userId`,`notificationType`);
+
+--
 -- Indizes für die Tabelle `Nutzer`
 --
 ALTER TABLE `Nutzer`
@@ -459,10 +492,16 @@ ALTER TABLE `Rechte`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `Rollen`
+-- Indizes für die Tabelle `roles`
 --
-ALTER TABLE `Rollen`
+ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `role_presets`
+--
+ALTER TABLE `role_presets`
+  ADD PRIMARY KEY (`roleId`,`type`,`subjectId`);
 
 --
 -- Indizes für die Tabelle `Studiengaenge`
@@ -597,9 +636,9 @@ ALTER TABLE `Raeume`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Rollen`
+-- AUTO_INCREMENT für Tabelle `roles`
 --
-ALTER TABLE `Rollen`
+ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
