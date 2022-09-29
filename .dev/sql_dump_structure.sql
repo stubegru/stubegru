@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 29. Sep 2022 um 10:20
+-- Erstellungszeit: 29. Sep 2022 um 14:28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -90,17 +90,6 @@ CREATE TABLE `Link_Benachrichtigungen_Nutzer` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Link_Nutzer_Rechte`
---
-
-CREATE TABLE `Link_Nutzer_Rechte` (
-  `userId` int(11) NOT NULL,
-  `permissionId` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `Nachrichten`
 --
 
@@ -113,6 +102,17 @@ CREATE TABLE `Nachrichten` (
   `erfassungsdatum` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `beginn` date NOT NULL,
   `ende` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `notification_emitter`
+--
+
+CREATE TABLE `notification_emitter` (
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notificationTypeId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -159,6 +159,39 @@ CREATE TABLE `Nutzer` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `permissions`
+--
+
+CREATE TABLE `permissions` (
+  `id` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `permissions_user`
+--
+
+CREATE TABLE `permissions_user` (
+  `userId` int(11) NOT NULL,
+  `permissionId` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `permission_requests`
+--
+
+CREATE TABLE `permission_requests` (
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `permissionId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `Quicklinks`
 --
 
@@ -189,17 +222,6 @@ CREATE TABLE `Raeume` (
   `passwort` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `telefon` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `aktiv` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `Rechte`
---
-
-CREATE TABLE `Rechte` (
-  `id` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -444,16 +466,16 @@ ALTER TABLE `Link_Benachrichtigungen_Nutzer`
   ADD PRIMARY KEY (`notificationId`,`userId`);
 
 --
--- Indizes für die Tabelle `Link_Nutzer_Rechte`
---
-ALTER TABLE `Link_Nutzer_Rechte`
-  ADD PRIMARY KEY (`userId`,`permissionId`);
-
---
 -- Indizes für die Tabelle `Nachrichten`
 --
 ALTER TABLE `Nachrichten`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `notification_emitter`
+--
+ALTER TABLE `notification_emitter`
+  ADD PRIMARY KEY (`name`,`notificationTypeId`);
 
 --
 -- Indizes für die Tabelle `notification_types`
@@ -474,6 +496,24 @@ ALTER TABLE `Nutzer`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `permissions_user`
+--
+ALTER TABLE `permissions_user`
+  ADD PRIMARY KEY (`userId`,`permissionId`);
+
+--
+-- Indizes für die Tabelle `permission_requests`
+--
+ALTER TABLE `permission_requests`
+  ADD PRIMARY KEY (`name`,`permissionId`);
+
+--
 -- Indizes für die Tabelle `Quicklinks`
 --
 ALTER TABLE `Quicklinks`
@@ -483,12 +523,6 @@ ALTER TABLE `Quicklinks`
 -- Indizes für die Tabelle `Raeume`
 --
 ALTER TABLE `Raeume`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indizes für die Tabelle `Rechte`
---
-ALTER TABLE `Rechte`
   ADD PRIMARY KEY (`id`);
 
 --
