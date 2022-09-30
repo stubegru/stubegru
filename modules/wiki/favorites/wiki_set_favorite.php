@@ -2,6 +2,7 @@
 
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("WIKI_READ");
 
 $userId = $_SESSION["id"];
 $articleId = $_POST["articleId"];

@@ -2,6 +2,7 @@
 // Dieses Script gibt alle Termine in einem großen JSON Array zurück
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("MEETINGS_READ");
 $own_id = $_SESSION['id'];
 
 $startTime = $_POST["start"];

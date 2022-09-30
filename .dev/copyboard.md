@@ -5,7 +5,7 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 $loggedInUserId = $_SESSION["id"];
 
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
-permission_required("perm_id");
+permissionRequest("perm_id");
 
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 getUserAttribute($userId, "name");

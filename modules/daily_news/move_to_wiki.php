@@ -3,8 +3,7 @@
 // Dieses Script löscht einen Nachricht und erstellt stattdessen einen Wiki Artikel mit diesem Inhalt
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
-require_once "$BASE_PATH/modules/user_utils/user_utils.php";
-permission_required("beratung");
+permissionRequest("MOVE_TO_WIKI");
 require_once "$BASE_PATH/modules/notifications/notification_system.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";

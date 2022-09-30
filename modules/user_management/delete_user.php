@@ -3,8 +3,7 @@
 
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
-require_once "$BASE_PATH/modules/user_utils/user_utils.php";
-permission_required("admin");
+permissionRequest("USER_WRITE");
 
 $userId = $_POST["id"]; //Id des zu löschenden Nutzers
 

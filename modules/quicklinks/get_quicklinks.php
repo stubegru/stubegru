@@ -3,6 +3,7 @@
 // Dieses Script gibt html Text, mit den Quicklinks zurück
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("QUICKLINK_READ");
 $own_id = $_SESSION['id'];
 
 $selectStatement = $dbPdo->query("SELECT * FROM `Quicklinks`;");

@@ -11,3 +11,4 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/authorization.php"; //Check if user is logged in
 require_once "$BASE_PATH/utils/database_without_auth.php"; //Provide database access
+require_once "$BASE_PATH/utils/permission_request.php"; //Provide permissionRequest function

@@ -2,6 +2,7 @@
 // Dieses Script gibt eine Liste mit allen Tagesaktuellen Infos zurück
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("DAILY_NEWS_READ");
 require_once "$BASE_PATH/modules/wiki/show_article/wikiword_helper.php";
 
 $user = $_SESSION["id"];

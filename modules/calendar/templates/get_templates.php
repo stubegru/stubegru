@@ -1,6 +1,7 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("MEETINGS_READ");
 $own_id = $_SESSION['id'];
 
 $selectStatement = $dbPdo->query("SELECT * FROM `Templates` ORDER BY titel ASC;");

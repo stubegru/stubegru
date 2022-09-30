@@ -4,6 +4,7 @@
 
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("WIKI_READ");
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/notifications/notification_system.php";
 $userId = $_SESSION["id"];

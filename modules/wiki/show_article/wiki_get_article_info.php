@@ -3,6 +3,7 @@
 
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("WIKI_READ");
 require_once "$BASE_PATH/modules/wiki/show_article/wikiword_helper.php";
 
 $own_id = $_SESSION['id'];

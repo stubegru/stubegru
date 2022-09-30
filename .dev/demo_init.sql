@@ -12,16 +12,6 @@ INSERT INTO `Abwesenheiten` (`id`, `name`, `description`, `start`, `end`, `recur
 (3, 'Martina Meeting', 'Dienstrunde', '2020-01-01 07:00:00', '2020-01-01 17:00:00', 'daily', 0),
 (4, 'Marcel Mittwoch', 'Homeoffice', '2022-09-07 00:00:00', '2030-12-31 00:00:00', 'weekly', 1);
 
---
--- Daten für Tabelle `Link_Nutzer_Rechte`
---
-
-INSERT INTO `Link_Nutzer_Rechte` (`userId`, `permissionId`) VALUES
-(1, 'admin'),
-(1, 'beratung'),
-(1, 'monitoring'),
-(1, 'telefonnotiz'),
-(1, 'wiki_autor');
 
 --
 -- Daten für Tabelle `Nachrichten`
@@ -54,15 +44,48 @@ INSERT INTO `Raeume` (`id`, `kanal`, `titel`, `besitzer`, `raumnummer`, `strasse
 (1, 'personally', 'Testbüro', 0, ':raumnummer', ':strasse', ':hausnummer', ':plz', ':ort', ':etage', ':link', ':passwort', ':telefon', 1);
 
 --
--- Daten für Tabelle `Rechte`
+-- Daten für Tabelle `permissions`
 --
 
-INSERT INTO `Rechte` (`id`, `description`) VALUES
+INSERT INTO `permissions` (`id`, `description`) VALUES
 ('admin', 'Administrative Aufgaben: Nutzerverwaltung, Quicklinks editieren'),
 ('beratung', 'Beratungsaufgaben: Beratungstermine anlegen, Monitorin/Evaluation Download, Tagesaktuelle Infos bearbeiten'),
 ('monitoring', 'Berechtigung um das Monitoring zu benutzen'),
 ('telefonnotiz', 'Jede Person mit dieser Berechtigung wird in der Liste der Empfänger für Telefonnotizen angezeigt.'),
 ('wiki_autor', 'Erlaubnis um Wiki Artikel zu bearbeiten, zu erstellen und zu löschen.');
+
+--
+-- Daten für Tabelle `permissions_user`
+--
+
+INSERT INTO `permissions_user` (`userId`, `permissionId`) VALUES
+(1, 'admin'),
+(1, 'beratung'),
+(1, 'monitoring'),
+(1, 'telefonnotiz'),
+(1, 'wiki_autor');
+
+--
+-- Daten für Tabelle `permission_requests`
+--
+
+INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
+('ABSENCE_READ', 'user'),
+('ABSENCE_WRITE', 'admin'),
+('ASSIGN_DATE', 'beratung'),
+('DAILY_NEWS_READ', 'user'),
+('DAILY_NEWS_WRITE', 'admin'),
+('MEETINGS_READ', 'beratung'),
+('MEETINGS_WRITE', 'beratung'),
+('MOVE_TO_WIKI', 'admin'),
+('MOVE_TO_WIKI', 'wiki_autor'),
+('QUICKLINK_READ', 'user'),
+('QUICKLINK_WRITE', 'admin'),
+('SEND_TELEPHONE_NOTE', 'user'),
+('USER_READ', 'admin'),
+('USER_WRITE', 'admin'),
+('WIKI_READ', 'user'),
+('WIKI_WRITE', 'wiki_autor');
 
 --
 -- Daten für Tabelle `notification_types`

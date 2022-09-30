@@ -3,6 +3,7 @@
 
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("WIKI_READ");
 
 $selectStatement = $dbPdo->prepare("SELECT heading,lastChanged,id FROM wiki_artikel ORDER BY heading ASC;");
 $selectStatement->execute();
