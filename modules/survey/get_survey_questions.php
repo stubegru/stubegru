@@ -6,6 +6,7 @@
 //Init SQL Connection
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/database_without_auth.php"; //Dont use this normally!!!
+require_once "$BASE_PATH/utils/permission_request.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 
 // 2 ---Read parameter---
@@ -33,7 +34,7 @@ if ($surveyData == false) {
 
 //Check for auth (defined in survey data)
 $permission = $surveyData["auth"];
-permission_required($permission);
+permissionRequest($permission);
 //=> if not: exit and return 401 Unauthorized
 //=> if yes: (check for unique key)
 $uniqueKeyRequired = $surveyData["uniqueKey"];

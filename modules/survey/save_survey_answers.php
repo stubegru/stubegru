@@ -2,6 +2,7 @@
 
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/database_without_auth.php"; //Dont use this without auth normally!!!
+require_once "$BASE_PATH/utils/permission_request.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 
 $surveyId = $_POST["surveyId"];
@@ -22,7 +23,7 @@ if ($surveyData == false) {
 
 //Check for survey's auth permission
 $permission = $surveyData["auth"];
-permission_required($permission); //Exit with 401 if permission is not fullfilled
+permissionRequest($permission); //Exit with 401 if permission is not fulfilled
 
 //Check for unique key
 if ($surveyData["uniqueKey"] == "1") {

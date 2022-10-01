@@ -20,7 +20,7 @@ $surveyName = $surveyData["title"];
 
 //Check for auth (defined in survey data)
 $permission = $surveyData["adminAuth"];
-permission_required($permission);
+permissionRequest($permission);
 
 //init questionArrayList
 $csvHeaderList = array();

@@ -84,6 +84,10 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('SEND_TELEPHONE_NOTE', 'user'),
 ('USER_READ', 'admin'),
 ('USER_WRITE', 'admin'),
+('EVALUATION_READ','admin'),
+('EVALUATION_WRITE','anybody'),
+('MONITORING_READ','admin'), 
+('MONITORING_WRITE','beratung'),
 ('WIKI_READ', 'user'),
 ('WIKI_WRITE', 'wiki_autor');
 
@@ -177,7 +181,7 @@ INSERT INTO `survey_questions` (`id`, `title`, `text`, `type`, `questionGroup`, 
 --
 
 INSERT INTO `survey_survey` (`id`, `title`, `auth`, `adminAuth`, `uniqueKey`) VALUES
-(1, 'Dummy Survey', 'anybody', 'admin', 0);
+(1, 'Dummy Survey', 'EVALUATION_WRITE', 'EVALUATION_READ', 0);
 
 --
 -- Daten für Tabelle `Templates`
