@@ -98,13 +98,13 @@ function getMessages() { //Nachrichten aus der DB anzeigen
                             <p>${text}</p>
                             <hr>
                             <span class="pull-right">
-                                <button class="btn btn-default permission-beratung permission-required" onclick="moveToWiki(${currentMessage.id})">
+                                <button class="btn btn-default permission-DAILY_NEWS_WRITE permission-required" onclick="moveToWiki(${currentMessage.id})">
                                     <i class="fas fa-share-square"></i>&nbsp; Ins Wiki schieben
                                 </button>
-                                <button class="btn btn-primary permission-beratung permission-required" onclick="showMessageModal(${currentMessage.id})">
+                                <button class="btn btn-primary permission-DAILY_NEWS_WRITE permission-required" onclick="showMessageModal(${currentMessage.id})">
                                     <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
                                 </button>
-                                <button class="btn btn-danger permission-beratung permission-required" onclick="deleteMessage(${currentMessage.id})">
+                                <button class="btn btn-danger permission-DAILY_NEWS_WRITE permission-required" onclick="deleteMessage(${currentMessage.id})">
                                     <i class="fas fa-times"></i>&nbsp; Löschen
                                 </button>
                             </span>

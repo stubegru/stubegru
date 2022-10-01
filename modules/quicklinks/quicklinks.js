@@ -14,7 +14,7 @@ function showQuicklinks() { //Quicklinks aus DB laden
         success: function (data) {
             let html = "";
             for (let item of data) {
-                html += `<li><button class='btn btn-danger edit-mode permission-admin permission-required' style="margin:5px;" onclick='deleteQuicklink(${item.id})'><i class="fas fa-times"></i></button>
+                html += `<li><button class='btn btn-danger edit-mode permission-QUICKLINK_WRITE permission-required' style="margin:5px;" onclick='deleteQuicklink(${item.id})'><i class="fas fa-times"></i></button>
                 <a href='${item.link}' target='_blank'>${item.text}</a>`;
             }
             $("#quicklinks").html(html);

@@ -24,20 +24,17 @@ async function initUserManagement() {
     stubegru.modules.menubar.addItem("secondary", `<li><a style="cursor:default;"><i class="fas fa-user"></i>&nbsp;Nutzer: <b>${userData.name}</b></a></li>`, -1000);
     stubegru.modules.menubar.addItem("secondary", `<li><a data-toggle="modal" data-target="#userUtilsModal" title="Name, Mailadresse und Passwort konfigurieren"><i class="fas fa-cog"></i>&nbsp;Eigenen Account bearbeiten</a></li>`, -999);
     stubegru.modules.menubar.addDivider("secondary", -900);
-    stubegru.modules.menubar.addItem("secondary", `<li class="permission-admin permission-required"><a href="${stubegru.constants.BASE_URL}?view=user_management" title="Alle Benutzer verwalten"><i class="fas fa-users-cog"></i>&nbsp;Nutzerverwaltung</a></li>`, 10);
+    stubegru.modules.menubar.addItem("secondary", `<li class="permission-USER_WRITE permission-required"><a href="${stubegru.constants.BASE_URL}?view=user_management" title="Alle Benutzer verwalten"><i class="fas fa-users-cog"></i>&nbsp;Nutzerverwaltung</a></li>`, 10);
     userUtilsModalReset();
 };
 initUserManagement();
 
 stubegru.modules.userUtils.updateAdminElements = async function () {
-    let userData = stubegru.currentUser;
     const permissionList = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_permissions.php`)).json();
     for (let perm of permissionList) {
-        $(`.permission-${perm.id}`).hide(); //Hide all
-        for (let userPerm of userData.permissions) {
-            if (userPerm.id == perm.id) {
-                $(`.permission-${perm.id}`).show(); //then show allowed
-            }
+        $(`.permission-${perm.name}`).hide(); //Hide all
+        if (perm.access) {
+            $(`.permission-${perm.name}`).show(); //then show allowed
         }
     }
 }
@@ -63,7 +60,7 @@ function userUtilsModalSubmit() {
                 title: "Accountdaten speichern",
                 text: data.message,
                 type: data.status,
-                mode:"alert"
+                mode: "alert"
             });
             $("#userUtilsModal").modal("hide");
         }

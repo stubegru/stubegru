@@ -304,7 +304,7 @@ async function refreshAbsenceView() {
 
         if (!absence) { continue; }
 
-        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${absence.startString}</td><td>${absence.endString}</td><td>${absence.recurringString}</td><td><button class='absence-edit-button btn btn-default permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-beratung permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
+        let absenceHtml = `<tr><td>${absence.name}</td><td>${absence.description}</td><td>${absence.startString}</td><td>${absence.endString}</td><td>${absence.recurringString}</td><td><button class='absence-edit-button btn btn-default permission-ABSENCE_WRITE permission-required' data-absence-id='${absence.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='absence-delete-button btn btn-danger permission-ABSENCE_WRITE permission-required' data-absence-id='${absence.id}'><i class='fa fa-times'></i></button></td></tr>`;
 
         $(`#absence_table_${absence.table}`).append(absenceHtml);
         //console.log(absence);
