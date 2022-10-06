@@ -1,16 +1,26 @@
 <?php
-// Dieses Script gibt eine Liste aller Voreinstellungen für Benutzergruppen / Rollen zurück
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("USER_READ");
 
-$roles = array();
-$selectStatement = $dbPdo->prepare("SELECT * FROM Rollen;");
-$selectStatement->execute();
-$resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+$selectStatement = $dbPdo->query("SELECT * FROM roles;");
+$roleList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($resultList as $row) {
-    $roles[$row["id"]] = $row;
+$rolePresetStatement = $dbPdo->prepare("SELECT * FROM `role_presets` WHERE roleId = :roleId;");
+foreach ($roleList as &$role) { //use "&" to have a reference and not a copy of the role item
+    $roleId = $role["id"];
+    $rolePresetStatement->bindValue(':roleId', $roleId);
+    $rolePresetStatement->execute();
+    $resultList = $rolePresetStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    foreach ($resultList as $row) {
+        $presetType = $row["type"];
+        $presetSubjectId = $row["subjectId"];
+        if (!isset($role[$presetType])) {
+            $role[$presetType] = array();
+        }
+        $role[$presetType][] = $presetSubjectId;
+    }
 }
 
-echo json_encode($roles);
+echo json_encode($roleList);

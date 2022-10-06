@@ -26,9 +26,8 @@ async function getRolePresets() {
     const presets = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_management/get_role_presets.php`)).json();
     //Generate selectable role option for userEditModal's userEditRole input
     let html = `<option value="" disabled selected>Bitte wählen</option>`;
-    for (const roleIndex in presets) {
-        const role = presets[roleIndex];
-        html += `<option value="${role.id}">${role.name}</option>`;
+    for (const role of presets) {
+        html += `<option value="${role.id}" title="${role.description}">${role.name}</option>`;
     }
     $("#userEditRole").html(html);
     return presets;
