@@ -30,7 +30,7 @@ async function initUserManagement() {
 initUserManagement();
 
 stubegru.modules.userUtils.updateAdminElements = async function () {
-    const permissionList = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_permissions.php`)).json();
+    const permissionList = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_users_permission_requests.php`)).json();
     for (let perm of permissionList) {
         $(`.permission-${perm.name}`).hide(); //Hide all
         if (perm.access) {

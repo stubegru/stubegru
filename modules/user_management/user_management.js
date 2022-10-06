@@ -100,7 +100,7 @@ async function showUserModal(id) {
 
 async function generatePermissionToggles(userPermissions) {
     //Generate Permission toggles
-    const permissionData = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_permissions.php`);
+    const permissionData = await fetch(`${stubegru.constants.BASE_URL}/modules/user_management/get_all_permissions.php`);
     let permissionList = await permissionData.json();
     let html = "";
     for (let perm of permissionList) {
