@@ -7,4 +7,4 @@ permissionRequest("USER_READ");
 $selectStatement = $dbPdo->query("SELECT `id`, `name`, `mail`, `account`, `role`, `erfassungsdatum`, `erfasser` FROM `Nutzer`;");
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-echo json_encode($resultLists);
+echo json_encode($resultList);

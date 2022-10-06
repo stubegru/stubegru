@@ -24,13 +24,15 @@ async function initUserManagement() {
 
 async function getRolePresets() {
     const presets = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_management/get_role_presets.php`)).json();
+    let presetsObject = {};
     //Generate selectable role option for userEditModal's userEditRole input
     let html = `<option value="" disabled selected>Bitte wählen</option>`;
     for (const role of presets) {
+        presetsObject[role.id] = role;
         html += `<option value="${role.id}" title="${role.description}">${role.name}</option>`;
     }
     $("#userEditRole").html(html);
-    return presets;
+    return presetsObject;
 }
 
 function updateUserManagement() { //Tabelle mit den Nutzern updaten
@@ -172,25 +174,21 @@ function updateUser() { //Nutzerdaten speichern in DB
 }
 
 $('#userEditRole').on('change', onRoleSelect);
-//Wird aufgerufen, wenn die Rolle im oOdal Dropdown geändert wird um default Berechtigungen zu setzen
+//Wird aufgerufen, wenn die Rolle im Modal Dropdown geändert wird um default Berechtigungen zu setzen
 function onRoleSelect() {
-    const selectedRole = $("#userEditRole").val();
-    const roleProps = rolePresets[selectedRole];
+    const roleId = $("#userEditRole").val();
+    const roleProps = rolePresets[roleId];
     if (roleProps == undefined) {
-        console.error(`Selected role has id ${selectedRole}. But this role has no presets.`);
+        console.error(`Selected role has id ${roleId}. But this role has no presets.`);
         return;
     }
-    for (const propName in roleProps) {
-        let firstUnderscorePos = propName.indexOf("_");
-        if (propName.substring(0, firstUnderscorePos) == "permission") {
-            let permId = propName.substring(firstUnderscorePos + 1);
-            if (roleProps[propName] == "1") {
-                $(`#permissionToggle${permId}`).bootstrapToggle('on');
-            }
-            else {
-                $(`#permissionToggle${permId}`).bootstrapToggle('off');
-            }
-        }
+
+    //Set all toggles to off
+    $(`.permissionsToggle`).bootstrapToggle('off');
+    //Enable all toggles where user have permission
+    let rolePermissions = roleProps.permission;
+    for (const permId of rolePermissions) {
+        $(`#permissionToggle${permId}`).bootstrapToggle('on');
     }
 
 }
