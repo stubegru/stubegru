@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 29. Sep 2022 um 14:28
+-- Erstellungszeit: 06. Okt 2022 um 11:01
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -245,8 +245,7 @@ CREATE TABLE `roles` (
 CREATE TABLE `role_presets` (
   `roleId` int(11) NOT NULL,
   `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subjectId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` tinyint(1) NOT NULL
+  `subjectId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
