@@ -48,7 +48,7 @@ async function checkViewAccess() {
         return true
     } //Allow access for anybody views (no check here)
 
-    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_user_info.php?userId=currentUser`, XHR_DEFAULT_OPTIONS);
+    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_users_permission_requests.php`, XHR_DEFAULT_OPTIONS);
     if (resp.status >= 300) {
         console.log(`Access denied, because response status is ${resp.status}`);
         document.location.href = `${stubegru.constants.BASE_URL}?view=login`;
@@ -60,9 +60,9 @@ async function checkViewAccess() {
         return true
     } //allow access for any logged in user (check for valid session, not for any permission)
 
-    const userData = await resp.json();
-    for (let perm of userData.permissions) {
-        if (accessValue == perm.id) {
+    const permRequestList = await resp.json();
+    for (let permRequest of permRequestList) {
+        if (accessValue == permRequest.name && permRequest.access) {
             console.log(`Access granted because view-access is '${accessValue}'`);
             return true
         } //allow access for user with required permission
