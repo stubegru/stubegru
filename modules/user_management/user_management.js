@@ -150,11 +150,11 @@ function updateUser() { //Nutzerdaten speichern in DB
 
     //Nur wenn in das Passwort Input etwas eingetragen wurde, wird das Passwort geändert und gehasht in der DB gespeichert
     if ($("#userEditPasswort").val() != "") {
-        userData.passwort = $("#userEditPasswort").val();
-        userData.passwortGeaendert = "pwdChanged";
+        userData.password = $("#userEditPasswort").val();
+        userData.pwdChanged = 1;
     } else {
-        userData.passwort = "notChanged";
-        userData.passwortGeaendert = "pwdNotChanged";
+        userData.password = "notChanged";
+        userData.pwdChanged = 0;
     }
 
     $.ajax({

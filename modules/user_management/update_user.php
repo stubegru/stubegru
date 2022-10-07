@@ -1,7 +1,7 @@
 <?php
-// Dieses Script speichert einen neuen Nutzer oder speichert die Änderungen eines bestehenden Nutzers
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+require_once "$BASE_PATH/modules/user_management/update_user_helper.php";
 permissionRequest("USER_WRITE");
 $erfasser = $_SESSION["id"];
 $erstellungsdatum = date("d.m.Y");
@@ -11,42 +11,18 @@ $name = $_POST["name"];
 $mail = $_POST["mail"];
 $account = $_POST["account"];
 $role = $_POST["role"];
-$passwort = $_POST["passwort"];
-$passwortGeaendert = $_POST["passwortGeaendert"];
+$password = $_POST["password"];
+$pwdChanged = $_POST["pwdChanged"]; // 0 or 1
 $permissions = isset($_POST["permissions"]) ? $_POST["permissions"] : array();
 
 //Passwort hashen
-$hashedPassword = password_hash($passwort, PASSWORD_DEFAULT);
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
 if ($id == 0) { //Neuer Nutzer
 
-    //Prüfen, ob bereits ein Account mit diesem username existiert
-    $testStatement = $dbPdo->prepare("SELECT * from `Nutzer` WHERE account=:account;");
-    $testStatement->bindValue(':account', $account);
-    $testStatement->execute();
-    $rowNumbers = $testStatement->fetchColumn();
-    if ($rowNumbers > 0) {
-        echo json_encode(array("status" => "error", "message" => "Es exisitert bereits ein Account mit dem Nutzernamen '$account'. Für einen neuen Account bitte einen anderen Nutzernamen wählen."));
-        exit;
-    }
+    checkIfUsernameExists($account);
 
-    //Benachrichtigungsvoreinstellungen aus Db hohlen
-    $selectStatement = $dbPdo->prepare("SELECT * from `Rollen` WHERE id=:role;");
-    $selectStatement->bindValue(':role', $role);
-    $selectStatement->execute();
-    $result = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-    //Daten abarbeiten
-    foreach ($result as $row) {
-        $notification_reminder = $row["notification_reminder"];
-        $notification_report = $row["notification_report"];
-        $notification_article = $row["notification_article"];
-        $notification_news = $row["notification_news"];
-        $notification_absence = $row["notification_absence"];
-        $notification_error = $row["notification_error"];
-    }
-
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Nutzer` (`name`,`mail`,`account`,`role`,`erfassungsdatum`,`erfasser`,`passwort`, `notification_reminder`, `notification_report`, `notification_article`, `notification_news`, `notification_absence`, `notification_error`) VALUES (:name,:mail,:account,:role,:erstellungsdatum,:erfasser,:hashedPassword,:notification_reminder,:notification_report,:notification_article,:notification_news,:notification_absence,:notification_error);");
+    $insertStatement = $dbPdo->prepare("INSERT INTO `Nutzer` (`name`,`mail`,`account`,`role`,`erfassungsdatum`,`erfasser`,`passwort`) VALUES (:name,:mail,:account,:role,:erstellungsdatum,:erfasser,:hashedPassword);");
     $insertStatement->bindValue(':name', $name);
     $insertStatement->bindValue(':mail', $mail);
     $insertStatement->bindValue(':account', $account);
@@ -54,56 +30,29 @@ if ($id == 0) { //Neuer Nutzer
     $insertStatement->bindValue(':erstellungsdatum', $erstellungsdatum);
     $insertStatement->bindValue(':erfasser', $erfasser);
     $insertStatement->bindValue(':hashedPassword', $hashedPassword);
-    $insertStatement->bindValue(':notification_reminder', $notification_reminder);
-    $insertStatement->bindValue(':notification_report', $notification_report);
-    $insertStatement->bindValue(':notification_article', $notification_article);
-    $insertStatement->bindValue(':notification_news', $notification_news);
-    $insertStatement->bindValue(':notification_absence', $notification_absence);
-    $insertStatement->bindValue(':notification_error', $notification_error);
     $insertStatement->execute();
     $id = $dbPdo->lastInsertId();
-    set_permissions($id, $permissions);
+
+    setRolePresetNotifications($id, $role);
+    setPermissions($id, $permissions);
+
     echo json_encode(array("status" => "success", "message" => "Neuer Nutzer $name wurde erfolgreich angelegt.", "id" => $id));
-} else if ($id > 0) { //Bereits registrierter Nutzer
+} else if ($id > 0) { //Update user not create
 
-    if ($passwortGeaendert == "pwdChanged") {
+    if ($pwdChanged == "1") {
         $updateStatement = $dbPdo->prepare("UPDATE `Nutzer` SET name=:name, mail=:mail, account=:account, role=:role,  passwort=:hashedPassword WHERE id=:id;");
-        $updateStatement->bindValue(':name', $name);
-        $updateStatement->bindValue(':mail', $mail);
-        $updateStatement->bindValue(':account', $account);
-        $updateStatement->bindValue(':role', $role);
         $updateStatement->bindValue(':hashedPassword', $hashedPassword);
-        $updateStatement->bindValue(':id', $id);
-        $updateStatement->execute();
-    } else { //Passwort nicht geändert
+    } else { //Password not changed
         $updateStatement = $dbPdo->prepare("UPDATE `Nutzer` SET name=:name, mail=:mail, account=:account, role=:role WHERE id=:id;");
-        $updateStatement->bindValue(':name', $name);
-        $updateStatement->bindValue(':mail', $mail);
-        $updateStatement->bindValue(':account', $account);
-        $updateStatement->bindValue(':role', $role);
-        $updateStatement->bindValue(':id', $id);
-        $updateStatement->execute();
     }
+    $updateStatement->bindValue(':name', $name);
+    $updateStatement->bindValue(':mail', $mail);
+    $updateStatement->bindValue(':account', $account);
+    $updateStatement->bindValue(':role', $role);
+    $updateStatement->bindValue(':id', $id);
+    $updateStatement->execute();
 
-    set_permissions($id, $permissions);
+    setPermissions($id, $permissions);
 
     echo json_encode(array("status" => "success", "message" => "Nutzerdaten wurden erfolgreich gespeichert."));
-}
-
-function set_permissions($userId, $permissions)
-{
-    global $dbPdo;
-    //Delete all existing permission links
-    $deleteStatement = $dbPdo->prepare("DELETE FROM `Link_Nutzer_Rechte` WHERE `userId` = :userId;");
-    $deleteStatement->bindValue(':userId', $userId);
-    $deleteStatement->execute();
-
-    //set new permission links
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Link_Nutzer_Rechte`(`userId`, `permissionId`) VALUES (:userId,:permissionId);");
-
-    foreach ($permissions as $perm) {
-        $insertStatement->bindValue(':userId', $userId);
-        $insertStatement->bindValue(':permissionId', $perm);
-        $insertStatement->execute();
-    }
 }
