@@ -8,8 +8,13 @@ permissionRequest("USER_WRITE");
 $userId = $_POST["id"]; //Id des zu löschenden Nutzers
 
 
+//Verknüpfung zwischen aktuellem User und Berechtigungen aufheben
+$deleteStatement = $dbPdo->prepare("DELETE FROM `permissions_user` WHERE userId=:userId;");
+$deleteStatement->bindValue(':userId', $userId);
+$deleteStatement->execute();
+
 //Verknüpfung zwischen aktuellem User und Benachrichtigung aufheben
-$deleteStatement = $dbPdo->prepare("DELETE FROM `Link_Benachrichtigungen_Nutzer` WHERE userId=:userId;");
+$deleteStatement = $dbPdo->prepare("DELETE FROM `notification_type_user` WHERE userId=:userId;");
 $deleteStatement->bindValue(':userId', $userId);
 $deleteStatement->execute();
 
@@ -24,7 +29,7 @@ $deleteStatement->bindValue(':userId', $userId);
 $deleteStatement->execute();
 
 //Nun tatsächlich den Nutzer löschen
-$deleteStatement = $dbPdo->prepare("DELETE FROM Nutzer WHERE ID=:userId;");
+$deleteStatement = $dbPdo->prepare("DELETE FROM Nutzer WHERE id=:userId;");
 $deleteStatement->bindValue(':userId', $userId);
 $deleteStatement->execute();
 
