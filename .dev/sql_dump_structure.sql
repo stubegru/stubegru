@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 06. Okt 2022 um 11:01
+-- Erstellungszeit: 08. Okt 2022 um 11:01
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,24 +25,6 @@ CREATE TABLE `Abwesenheiten` (
   `end` timestamp NULL DEFAULT NULL,
   `recurring` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `wholeDay` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `Benachrichtigungen`
---
-
-CREATE TABLE `Benachrichtigungen` (
-  `id` int(11) NOT NULL,
-  `triggerType` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `triggerId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL COMMENT 'Vom wem wurde diese Notification ausgelöst',
-  `action` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
-  `triggerInfoHeadline` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `triggerInfoText` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `triggerExtraInfo` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Wird genutzt, um bei einem report, die report Kategorie zu speichern'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -78,18 +60,6 @@ CREATE TABLE `Feedback_Mails` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Link_Benachrichtigungen_Nutzer`
---
-
-CREATE TABLE `Link_Benachrichtigungen_Nutzer` (
-  `notificationId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `read` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Tabellenstruktur für Tabelle `Nachrichten`
 --
 
@@ -102,6 +72,23 @@ CREATE TABLE `Nachrichten` (
   `erfassungsdatum` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `beginn` date NOT NULL,
   `ende` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `emitterId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `userId` int(11) NOT NULL,
+  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `title` tinytext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -134,9 +121,21 @@ CREATE TABLE `notification_types` (
 
 CREATE TABLE `notification_type_user` (
   `userId` int(11) NOT NULL,
-  `notificationType` int(11) NOT NULL,
+  `notificationType` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `online` tinyint(1) NOT NULL DEFAULT 0,
   `mail` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `notification_user`
+--
+
+CREATE TABLE `notification_user` (
+  `notificationId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `read` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -441,12 +440,6 @@ ALTER TABLE `Abwesenheiten`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `Benachrichtigungen`
---
-ALTER TABLE `Benachrichtigungen`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indizes für die Tabelle `Beratene`
 --
 ALTER TABLE `Beratene`
@@ -459,15 +452,15 @@ ALTER TABLE `Feedback_Mails`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `Link_Benachrichtigungen_Nutzer`
---
-ALTER TABLE `Link_Benachrichtigungen_Nutzer`
-  ADD PRIMARY KEY (`notificationId`,`userId`);
-
---
 -- Indizes für die Tabelle `Nachrichten`
 --
 ALTER TABLE `Nachrichten`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `notifications`
+--
+ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -487,6 +480,12 @@ ALTER TABLE `notification_types`
 --
 ALTER TABLE `notification_type_user`
   ADD PRIMARY KEY (`userId`,`notificationType`);
+
+--
+-- Indizes für die Tabelle `notification_user`
+--
+ALTER TABLE `notification_user`
+  ADD PRIMARY KEY (`notificationId`,`userId`);
 
 --
 -- Indizes für die Tabelle `Nutzer`
@@ -627,12 +626,6 @@ ALTER TABLE `Abwesenheiten`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Benachrichtigungen`
---
-ALTER TABLE `Benachrichtigungen`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT für Tabelle `Beratene`
 --
 ALTER TABLE `Beratene`
@@ -648,6 +641,12 @@ ALTER TABLE `Feedback_Mails`
 -- AUTO_INCREMENT für Tabelle `Nachrichten`
 --
 ALTER TABLE `Nachrichten`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `notifications`
+--
+ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
