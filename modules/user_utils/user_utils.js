@@ -13,14 +13,19 @@ stubegru.modules.userUtils.getUserInfo = async function (userId) {
  * @param {string} permission id of the permission
  */
 stubegru.modules.userUtils.getUserByPermission = async function (permission) {
-    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_user_by_permission.php?permission=${permission}`)
-    const userData = await resp.json();
+    const userData = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_user_by_permission.php?permission=${permission}`)).json();
     return userData;
+}
+
+stubegru.modules.userUtils.getUserPermissionRequests = async function () {
+    const permissionList = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_users_permission_requests.php`)).json();
+    return permissionList;
 }
 
 async function initUserManagement() {
     const userData = await stubegru.modules.userUtils.getUserInfo();
     stubegru.currentUser = userData;
+    stubegru.currentUser.permissionRequests = await stubegru.modules.userUtils.getUserPermissionRequests();
     stubegru.modules.menubar.addItem("secondary", `<li><a style="cursor:default;"><i class="fas fa-user"></i>&nbsp;Nutzer: <b>${userData.name}</b></a></li>`, -1000);
     stubegru.modules.menubar.addItem("secondary", `<li><a data-toggle="modal" data-target="#userUtilsModal" title="Name, Mailadresse und Passwort konfigurieren"><i class="fas fa-cog"></i>&nbsp;Eigenen Account bearbeiten</a></li>`, -999);
     stubegru.modules.menubar.addDivider("secondary", -900);
@@ -30,9 +35,8 @@ async function initUserManagement() {
 initUserManagement();
 
 stubegru.modules.userUtils.updateAdminElements = async function () {
-    const permissionList = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_users_permission_requests.php`)).json();
-    for (let perm of permissionList) {
-        $(`.permission-${perm.name}`).hide(); //Hide all
+    $(`.permission-required`).hide(); //Hide all
+    for (let perm of stubegru.currentUser.permissionRequests) {
         if (perm.access) {
             $(`.permission-${perm.name}`).show(); //then show allowed
         }
