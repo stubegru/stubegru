@@ -230,7 +230,7 @@ function sendNotificationMails($emitterChannel, $emitterId, $title, $text, $extr
 }
 
 //TEST!!!
-echo json_encode(newNotification("WIKI_REPORT", 0, "Das ist die Überschrift", "<h1>Das ist ein Titel</h1><br>Könnt ihr auch html?", 1, "INFO"));
+//echo json_encode(newNotification("WIKI_REPORT", 0, "Das ist die Überschrift", "<h1>Das ist ein Titel</h1><br>Könnt ihr auch html?", 1, "INFO"));
 /*
 newNotification($constants["reminder"],32,"Testartikel","Diesen Artikel bitte nochmal überarbeiten","",$loggedInUserId,$constants["info"]);
 newNotification($constants["article"],32,"Testartikel","Dieser Artikel wurde überarbeitet","",$loggedInUserId,$constants["update"]);

@@ -66,7 +66,7 @@ function permissionRequest($permChannel)
         $rowNumbers = $testStatement->fetchColumn();
         if ($rowNumbers <= 0) {
             header("HTTP/1.1 401 Unauthorized");
-            echo json_encode(array("status" => "error", "message" => "401 Unauthorized", "permission" => $permission));
+            echo json_encode(array("status" => "error", "message" => "You have no permission to access this resource or action. Required permission: $permission", "permission" => $permission));
             exit;
         }
     }

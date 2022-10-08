@@ -168,14 +168,23 @@ function moveToWiki(id) { //Nachricht löschen
                     }
 
                     stubegru.modules.alerts.alert({
-                        title: "Umwandlung",
+                        title: "Umwandlung in Wiki Artikel",
                         type: data.status,
                         text: data.message,
                         html: true,
-                        mode:"alert"
+                        mode: "alert"
                     });
 
                     if (data.status == "success") { getMessages(); }
+                }, 500);
+            },
+            error: function (data) {
+                data = data.responseJSON;
+                setTimeout(() => {
+                    stubegru.modules.alerts.alert({
+                        type: data.status,
+                        text: data.message,
+                    });
                 }, 500);
             }
         });
