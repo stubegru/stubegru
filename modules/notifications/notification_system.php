@@ -2,56 +2,72 @@
 
 //Mit diesem Script werden Benachrichtigungen verwaltet. Sowohl Mail Benachrichtigungen als auch Online Notifications
 $BASE_PATH = getenv("BASE_PATH");
-$INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/database_without_auth.php"; //include dbconnect (without authorization.php for use in cronjob)
 require_once "$BASE_PATH/modules/mailing/mailing.php";
+$INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 
-function newNotification($trigger, $triggerId, $triggerInfoHeadline, $triggerInfoText, $triggerExtraInfo, $userId, $action)
+/**
+ * Create a new global notification and deliver to all subscribers via mail or online notification
+ * @param $emitterChannel Channel this notification is emitted to. Relations in `notification_emitter` table assign notification types to each channel
+ * @param $emitterId Id of the object emitting this notification
+ * @param $action CREATE|UPDATE|DELETE|INFO
+ * @param $title title of the notification
+ * @param $text content of the notification. HTML may be used here
+ * @param $userId the user that triggered this notification
+ */
+function newNotification($emitterChannel, $emitterId, $title, $text, $userId, $action)
 {
-    //Mails versenden
-    sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $triggerInfoText, $triggerExtraInfo, $userId, $action);
-    //Online Notifications in DB speichern
-    createOnlineNotifications($trigger, $triggerId, $triggerInfoHeadline, $triggerInfoText, $triggerExtraInfo, $userId, $action);
+    $toReturn = array();
+    //$toReturn[] = sendNotificationMails($emitterChannel, $emitterId, $title, $text, $userId, $action);
+    $toReturn[] = createOnlineNotifications($emitterChannel, $emitterId, $title, $text, $userId, $action);
+    return $toReturn;
 }
 
-function createOnlineNotifications($trigger, $triggerId, $triggerInfoHeadline, $triggerInfoText, $triggerExtraInfo, $userId, $action)
+
+function createOnlineNotifications($emitterChannel, $emitterId, $title, $text, $userId, $action)
 {
-    //SQL Connection bereit stellen
     global $dbPdo;
 
-    //Füge Online Notifications in Benachrichtigungen Tabelle ein
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Benachrichtigungen`(`triggerType`, `triggerId`,`triggerInfoHeadline`, `triggerInfotext`,`triggerExtraInfo`, `userId`, `action`) VALUES (:trigger,:triggerId,:triggerInfoHeadline,:triggerInfoText,:triggerExtraInfo,:userId,:action);");
-    $insertStatement->bindValue(':trigger', $trigger);
-    $insertStatement->bindValue(':triggerId', $triggerId);
-    $insertStatement->bindValue(':triggerInfoHeadline', $triggerInfoHeadline);
-    $insertStatement->bindValue(':triggerInfoText', $triggerInfoText);
-    $insertStatement->bindValue(':triggerExtraInfo', $triggerExtraInfo);
-    $insertStatement->bindValue(':userId', $userId);
-    $insertStatement->bindValue(':action', $action);
-    $insertStatement->execute();
-    // Id der eingefügten Notification auslesen
-    $notificationId = $dbPdo->lastInsertId();
-
-    //Hole alle Nutzer, die diesen trigger als Online Notification abonniert haben
-    //Notification Level: 0:nichts 1:nur Online 2:nur Mail 3:Mail und Online
-    $selectStatement = $dbPdo->query("SELECT * FROM `Nutzer` WHERE notification_$trigger='1' OR notification_$trigger='3';");
+    //Get assigned notification types by emitter channel
+    $selectStatement = $dbPdo->prepare("SELECT notificationTypeId FROM `notification_emitter` WHERE name = :emitterChannel;");
+    $selectStatement->bindValue(':emitterChannel', $emitterChannel);
     $selectStatement->execute();
-    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Link_Benachrichtigungen_Nutzer`(`notificationId`, `userId`, `read`) VALUES (:notificationId,:recipientUserId,'0');");
-
-    foreach ($resultList as $row) {
-        $recipientUserId = $row["id"];
-        //Füge Benachrichtigungen <=> Nutzer <=> Gelesen Verknüpfung in Link_Benachrichtigungen_Nutzer ein
-        $insertStatement->bindValue(':notificationId', $notificationId);
-        $insertStatement->bindValue(':recipientUserId', $recipientUserId);
-        $insertStatement->execute();
+    $typeList = $selectStatement->fetchAll(PDO::FETCH_COLUMN);
+    if (empty($typeList)) {
+        return array("status" => "warning", "message" => "No assigned notification type found for emitter channel: '$emitterChannel'");
     }
+
+
+    $notificationInsert = $dbPdo->prepare("INSERT INTO `notifications`(`type`, `emitterId`, `userId`, `action`, `title`, `text`) VALUES  (:type,:emitterId,:userId,:action,:title,:text);");
+
+    foreach ($typeList as $type) {
+        $notificationInsert->bindValue(':type', $type);
+        $notificationInsert->bindValue(':emitterId', $emitterId);
+        $notificationInsert->bindValue(':userId', $userId);
+        $notificationInsert->bindValue(':action', $action);
+        $notificationInsert->bindValue(':title', $title);
+        $notificationInsert->bindValue(':text', $text);
+        $notificationInsert->execute();
+        $notificationId = $dbPdo->lastInsertId();
+
+        $selectRecipients = $dbPdo->prepare("SELECT userId FROM `notification_type_user` WHERE  notificationType = :notificationType AND `online`='1';");
+        $selectRecipients->bindValue(':notificationType', $type);
+        $selectRecipients->execute();
+        $recipientList = $selectRecipients->fetchAll(PDO::FETCH_COLUMN);
+
+        $insertStatement = $dbPdo->prepare("INSERT INTO `notification_user`(`notificationId`, `userId`) VALUES (:notificationId,:recipientId);");
+        foreach ($recipientList as $recipientId) {
+            $insertStatement->bindValue(':notificationId', $notificationId);
+            $insertStatement->bindValue(':recipientId', $recipientId);
+            $insertStatement->execute();
+        }
+    }
+    return array("status" => "success", "message" => "Created online notification with id $notificationId and assigned to subscribers");
 }
 
-function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $triggerInfoText, $triggerExtraInfo, $userId, $action)
+function sendNotificationMails($emitterChannel, $emitterId, $title, $text, $extraInfo, $userId, $action)
 {
 
     /***
@@ -72,7 +88,7 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
     $mainLine = "";
     $description = "";
     $mainButtonLink = "";
-    $triggerUserName = getUserAttribute($userId, "name");
+    $emitterChannelUserName = getUserAttribute($userId, "name");
 
 
     /***
@@ -112,27 +128,27 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
      *                  |___/ |___/                  |___/|_|
      */
 
-    switch ($trigger) {
+    switch ($emitterChannel) {
         case $constants["reminder"]:
-            $triggerTypeInWords = "Erinnerung Wiki Artikel";
+            $emitterChannelTypeInWords = "Erinnerung Wiki Artikel";
             break;
         case $constants["report"]:
-            $triggerTypeInWords = "Feedback";
+            $emitterChannelTypeInWords = "Feedback";
             break;
         case $constants["article"]:
-            $triggerTypeInWords = "Wiki Artikel";
+            $emitterChannelTypeInWords = "Wiki Artikel";
             break;
         case $constants["news"]:
-            $triggerTypeInWords = "Tagesaktuelle Info";
+            $emitterChannelTypeInWords = "Tagesaktuelle Info";
             break;
         case $constants["absence"]:
-            $triggerTypeInWords = "Abwesenheit";
+            $emitterChannelTypeInWords = "Abwesenheit";
             break;
         case $constants["error"]:
-            $triggerTypeInWords = "Technisches Problem";
+            $emitterChannelTypeInWords = "Technisches Problem";
             break;
         default:
-            echo json_encode(array("status" => "error", "message" => "[Notification System] Cant create notification for trigger type '$trigger'."));
+            echo json_encode(array("status" => "error", "message" => "[Notification System] Cant create notification for trigger type '$emitterChannel'."));
             exit;
     }
     /***
@@ -146,39 +162,39 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
      *                               |___/
      */
 
-    switch ($trigger) {
+    switch ($emitterChannel) {
         case $constants["reminder"]:
             $introduction = "<h4>Folgender Artikel hat eine Erinnerung ausgel&ouml;st:</h4>";
-            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$triggerId";
-            $mainLine = "<a href='$mainButtonLink'> $triggerInfoHeadline</a>";
-            $description = $triggerInfoText;
+            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$emitterId";
+            $mainLine = "<a href='$mainButtonLink'> $title</a>";
+            $description = $text;
             break;
         case $constants["report"]:
-            $introduction = " <h4><span class='label label-warning'>" . $triggerExtraInfo . "</span></h4><i>" . $triggerUserName . "</i> hat ein Problem mit einem Wiki Artikel festgestellt.<br>Es geht um folgenden Artikel:";
-            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$triggerId";
-            $mainLine = "<a href='$mainButtonLink'> $triggerInfoHeadline</a>";
-            $description = $triggerInfoText;
+            $introduction = " <h4><span class='label label-warning'>" . $extraInfo . "</span></h4><i>" . $emitterChannelUserName . "</i> hat ein Problem mit einem Wiki Artikel festgestellt.<br>Es geht um folgenden Artikel:";
+            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$emitterId";
+            $mainLine = "<a href='$mainButtonLink'> $title</a>";
+            $description = $text;
             break;
         case $constants["article"]:
             $introduction = "<h4>Folgener Artikel im Wiki wurde " . $actionVerb . ":</h4>";
-            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$triggerId";
-            $mainLine = "<a href='$mainButtonLink'> $triggerInfoHeadline</a>";
+            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$emitterId";
+            $mainLine = "<a href='$mainButtonLink'> $title</a>";
             $description = "";
             break;
         case $constants["news"]:
             $introduction = "<h4>Folgende Tagesaktuelle Info wurde " . $actionVerb . ":</h4>";
-            $mainLine = $triggerInfoHeadline;
-            $description = $triggerInfoText;
+            $mainLine = $title;
+            $description = $text;
             break;
         case $constants["absence"]:
             $introduction = "<h4>Folgende Abwesenheitsnotiz wurde " . $actionVerb . ":</h4>";
-            $mainLine = $triggerInfoHeadline;
-            $description = $triggerInfoText;
+            $mainLine = $title;
+            $description = $text;
             break;
         case $constants["error"]:
             $introduction = "<h4>Es ist folgender Fehler aufgetreten:</h4>";
-            $mainLine = "<h2>" . $triggerInfoHeadline . "</h2>";
-            $description = $triggerInfoText;
+            $mainLine = "<h2>" . $title . "</h2>";
+            $description = $text;
             break;
     }
 
@@ -196,15 +212,15 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
     $mail_text = file_get_contents("$BASE_PATH/modules/notifications/mail_template_notification.html");
     //Variblen im Template mit Daten füllen
     $variablen_im_text = array("{titel}", "{einleitung}", "{artikelUrl}", "{beschreibung}", "{application_name}", "{trigger_type}", "{admin_mail}");
-    $variablen_daten = array($mainLine, $introduction, $mainButtonLink, $description, $constants["APPLICATION_NAME"], $triggerTypeInWords, $constants["ADMIN_MAIL"]);
+    $variablen_daten = array($mainLine, $introduction, $mainButtonLink, $description, $constants["APPLICATION_NAME"], $emitterChannelTypeInWords, $constants["ADMIN_MAIL"]);
     $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
 
     //Hole alle Nutzer, die diesen trigger als Mail abonniert haben
     //Notification Level: 0:nichts 1:nur Online 2:nur Mail 3:Mail und Online
-    $selectStatement = $dbPdo->query("SELECT * FROM `Nutzer` WHERE notification_$trigger='2' OR notification_$trigger='3';");
+    $selectStatement = $dbPdo->query("SELECT * FROM `Nutzer` WHERE notification_$emitterChannel='2' OR notification_$emitterChannel='3';");
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-    $mail_betreff = $constants["APPLICATION_NAME"] . " - $triggerTypeInWords";
+    $mail_betreff = $constants["APPLICATION_NAME"] . " - $emitterChannelTypeInWords";
 
     foreach ($resultList as $row) {
         $recipientUserMail = $row["mail"];
@@ -214,8 +230,8 @@ function sendNotificationMails($trigger, $triggerId, $triggerInfoHeadline, $trig
 }
 
 //TEST!!!
-/*$loggedInUserId = $_SESSION["id"];
-newNotification($constants["report"],0,"Das ist die Überschrift","<h1>Das ist ein Titel</h1><br>Könnt ihr auch html?","Technischer Bug",$loggedInUserId,$constants["info"]);
+echo json_encode(newNotification("WIKI_REPORT", 0, "Das ist die Überschrift", "<h1>Das ist ein Titel</h1><br>Könnt ihr auch html?", 1, "INFO"));
+/*
 newNotification($constants["reminder"],32,"Testartikel","Diesen Artikel bitte nochmal überarbeiten","",$loggedInUserId,$constants["info"]);
 newNotification($constants["article"],32,"Testartikel","Dieser Artikel wurde überarbeitet","",$loggedInUserId,$constants["update"]);
 newNotification($constants["news"],3,"zukünftig","Dieses seht ihr erst in der Zukunft.","",$loggedInUserId,$constants["new"]);
