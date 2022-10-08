@@ -38,7 +38,6 @@ stubegru.modules.menubar.addItem = function (level, html, index) {
         }
         stubegru.modules.menubar.entries[level].push(entry);
         stubegru.modules.menubar.render();
-
     }
     catch (e) {
         throw new Error(`[Menubar] Can't add item with level ${level}. Use "primary" or "secondary" as level.`)
@@ -64,7 +63,6 @@ $("#menubarLogoImg").attr("title",stubegru.constants["APPLICATION_NAME"]);
 stubegru.modules.menubar.addDivider("secondary", 999);
 stubegru.modules.menubar.addItem("secondary", `<li><a onclick='doUserLogout()'><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</a></li>`, 1000);
 stubegru.modules.menubar.addItem("primary", `<li><a title="Dashboard aufrufen" href="${stubegru.constants.BASE_URL}?view=dashboard"><i class="fas fa-tasks"></i>&nbsp;Dashboard</a></li>`, 50);
-stubegru.modules.menubar.addItem("primary", `<li><a title="Wiki aufrufen" href="${stubegru.constants.BASE_URL}?view=wiki_start"><i class="fab fa-wikipedia-w"></i>&nbsp;Wiki</a></li>`, 51);
 
 
 function doUserLogout() {

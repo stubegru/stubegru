@@ -98,7 +98,7 @@ function getMessages() { //Nachrichten aus der DB anzeigen
                             <p>${text}</p>
                             <hr>
                             <span class="pull-right">
-                                <button class="btn btn-default permission-DAILY_NEWS_WRITE permission-required" onclick="moveToWiki(${currentMessage.id})">
+                                <button class="btn btn-default permission-MOVE_TO_WIKI permission-required" onclick="moveToWiki(${currentMessage.id})">
                                     <i class="fas fa-share-square"></i>&nbsp; Ins Wiki schieben
                                 </button>
                                 <button class="btn btn-primary permission-DAILY_NEWS_WRITE permission-required" onclick="showMessageModal(${currentMessage.id})">

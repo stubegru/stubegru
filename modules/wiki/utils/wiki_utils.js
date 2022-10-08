@@ -1,7 +1,8 @@
 stubegru.modules.menubar.addDivider("secondary", 100);
-stubegru.modules.menubar.addItem("secondary", `<li><a title="Liste mit allen Wiki Artikeln aufrufen" href="${stubegru.constants.BASE_URL}?view=wiki_list_articles"><i class="fas fa-list"></i>&nbsp;Liste aller Artikel</a></li>`, 101);
-stubegru.modules.menubar.addItem("secondary", `<li><a title="Alle Wiki Artikel als gelesen markieren" onclick="stubegru.modules.wiki.wikiUtils.markAllAsRead()"><i class="fas fa-eye"></i>&nbsp;Alle Artikel gelesen</a></li>`, 102);
-stubegru.modules.menubar.addItem("primary", `<li class="permission-WIKI_WRITE permission-required"><a title="Einen neuen Wiki Artikel erstellen" href="${stubegru.constants.BASE_URL}?view=wiki_edit_article&mode=create"><i class="fas fa-pencil-alt"></i>&nbsp;Neuer Artikel</a></li>`, 52);
+stubegru.modules.menubar.addItem("secondary", `<li class="permission-WIKI_READ permission-required"><a title="Liste mit allen Wiki Artikeln aufrufen" href="${stubegru.constants.BASE_URL}?view=wiki_list_articles"><i class="fas fa-list"></i>&nbsp;Liste aller Artikel</a></li>`, 101);
+stubegru.modules.menubar.addItem("secondary", `<li class="permission-WIKI_READ permission-required"><a title="Alle Wiki Artikel als gelesen markieren" onclick="stubegru.modules.wiki.wikiUtils.markAllAsRead()"><i class="fas fa-eye"></i>&nbsp;Alle Artikel gelesen</a></li>`, 102);
+stubegru.modules.menubar.addItem("primary", `<li style="display:none" class="permission-WIKI_WRITE permission-required"><a title="Einen neuen Wiki Artikel erstellen" href="${stubegru.constants.BASE_URL}?view=wiki_edit_article&mode=create"><i class="fas fa-pencil-alt"></i>&nbsp;Neuer Artikel</a></li>`, 52);
+stubegru.modules.menubar.addItem("primary", `<li class="permission-WIKI_READ permission-required"><a title="Wiki aufrufen" href="${stubegru.constants.BASE_URL}?view=wiki_start"><i class="fab fa-wikipedia-w"></i>&nbsp;Wiki</a></li>`, 51);
 
 //init modules object
 if (!stubegru.modules.wiki) { stubegru.modules.wiki = {}; }
