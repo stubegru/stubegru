@@ -19,15 +19,6 @@ require_once "$BASE_PATH/modules/user_utils/user_utils.php";
  */
 function newNotification($emitterChannel, $emitterId, $title, $text, $userId, $action)
 {
-    $toReturn = array();
-    //$toReturn[] = sendNotificationMails($emitterChannel, $emitterId, $title, $text, $userId, $action);
-    $toReturn[] = createOnlineNotifications($emitterChannel, $emitterId, $title, $text, $userId, $action);
-    return $toReturn;
-}
-
-
-function createOnlineNotifications($emitterChannel, $emitterId, $title, $text, $userId, $action)
-{
     global $dbPdo;
 
     //Get assigned notification types by emitter channel
@@ -39,6 +30,16 @@ function createOnlineNotifications($emitterChannel, $emitterId, $title, $text, $
         return array("status" => "warning", "message" => "No assigned notification type found for emitter channel: '$emitterChannel'");
     }
 
+    $toReturn = array();
+    $toReturn[] = sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $action);
+    $toReturn[] = createOnlineNotifications($typeList, $emitterId, $title, $text, $userId, $action);
+    return $toReturn;
+}
+
+
+function createOnlineNotifications($typeList, $emitterId, $title, $text, $userId, $action)
+{
+    global $dbPdo;
 
     $notificationInsert = $dbPdo->prepare("INSERT INTO `notifications`(`type`, `emitterId`, `userId`, `action`, `title`, `text`) VALUES  (:type,:emitterId,:userId,:action,:title,:text);");
 
@@ -67,170 +68,42 @@ function createOnlineNotifications($emitterChannel, $emitterId, $title, $text, $
     return array("status" => "success", "message" => "Created online notification with id $notificationId and assigned to subscribers");
 }
 
-function sendNotificationMails($emitterChannel, $emitterId, $title, $text, $extraInfo, $userId, $action)
+function sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $action)
 {
+    global $dbPdo, $BASE_PATH;
+    $emitterUserName = getUserAttribute($userId, "name");
+    $selectStatement = $dbPdo->prepare("SELECT `description` FROM `notification_types` WHERE id = :type;");
 
-    /***
-     *     __      __        _       _     _              _       _ _   _       _ _     _
-     *     \ \    / /       (_)     | |   | |            (_)     (_) | (_)     | (_)   (_)
-     *      \ \  / /_ _ _ __ _  __ _| |__ | | ___ _ __    _ _ __  _| |_ _  __ _| |_ ___ _  ___ _ __ ___ _ __
-     *       \ \/ / _` | '__| |/ _` | '_ \| |/ _ \ '_ \  | | '_ \| | __| |/ _` | | / __| |/ _ \ '__/ _ \ '_ \
-     *        \  / (_| | |  | | (_| | |_) | |  __/ | | | | | | | | | |_| | (_| | | \__ \ |  __/ | |  __/ | | |
-     *         \/ \__,_|_|  |_|\__,_|_.__/|_|\___|_| |_| |_|_| |_|_|\__|_|\__,_|_|_|___/_|\___|_|  \___|_| |_|
-     *
-     *
-     */
-    global $dbPdo;
-    global $constants;
-    global $BASE_PATH;
-    $actionVerb = "";
-    $introduction = "";
-    $mainLine = "";
-    $description = "";
-    $mainButtonLink = "";
-    $emitterChannelUserName = getUserAttribute($userId, "name");
+    foreach ($typeList as $type) {
+        //get notification type description
+        $selectStatement->bindValue(':type', $type);
+        $selectStatement->execute();
+        $typeDescription = $selectStatement->fetch(PDO::FETCH_COLUMN);
 
+        //load mail template and replace variables
+        $mail_text = file_get_contents("$BASE_PATH/modules/notifications/mail_template_notification.html");
+        $variablen_im_text = array("{title}", "{text}", "{user_name}", "{trigger_type}", "{trigger_description}", "{application_name}", "{application_url}");
+        $variablen_daten = array($title, $text, $emitterUserName, $type, $typeDescription, getenv("APPLICATION_NAME"), getenv("BASE_URL"));
+        $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
+        
+        $mail_betreff = getenv("APPLICATION_NAME") . " - Benachrichtigung";
 
-    /***
-     *                   _   _              __      __       _
-     *         /\       | | (_)             \ \    / /      | |
-     *        /  \   ___| |_ _  ___  _ __    \ \  / /__ _ __| |__
-     *       / /\ \ / __| __| |/ _ \| '_ \    \ \/ / _ \ '__| '_ \
-     *      / ____ \ (__| |_| | (_) | | | |    \  /  __/ |  | |_) |
-     *     /_/    \_\___|\__|_|\___/|_| |_|     \/ \___|_|  |_.__/
-     *
-     *
-     */
-
-    switch ($action) {
-        case $constants["new"]:
-            $actionVerb = "neu erstellt";
-            break;
-        case $constants["update"]:
-            $actionVerb = "ge&auml;ndert";
-            break;
-        case $constants["delete"]:
-            $actionVerb = "gel&ouml;scht";
-            break;
-        case $constants["info"]:
-            $actionVerb = "";
-            break;
-    }
-
-    /***
-     *      _______   _                         _______
-     *     |__   __| (_)                       |__   __|
-     *        | |_ __ _  __ _  __ _  ___ _ __     | |_   _ _ __   ___  ___
-     *        | | '__| |/ _` |/ _` |/ _ \ '__|    | | | | | '_ \ / _ \/ __|
-     *        | | |  | | (_| | (_| |  __/ |       | | |_| | |_) |  __/\__ \
-     *        |_|_|  |_|\__, |\__, |\___|_|       |_|\__, | .__/ \___||___/
-     *                   __/ | __/ |                  __/ | |
-     *                  |___/ |___/                  |___/|_|
-     */
-
-    switch ($emitterChannel) {
-        case $constants["reminder"]:
-            $emitterChannelTypeInWords = "Erinnerung Wiki Artikel";
-            break;
-        case $constants["report"]:
-            $emitterChannelTypeInWords = "Feedback";
-            break;
-        case $constants["article"]:
-            $emitterChannelTypeInWords = "Wiki Artikel";
-            break;
-        case $constants["news"]:
-            $emitterChannelTypeInWords = "Tagesaktuelle Info";
-            break;
-        case $constants["absence"]:
-            $emitterChannelTypeInWords = "Abwesenheit";
-            break;
-        case $constants["error"]:
-            $emitterChannelTypeInWords = "Technisches Problem";
-            break;
-        default:
-            echo json_encode(array("status" => "error", "message" => "[Notification System] Cant create notification for trigger type '$emitterChannel'."));
-            exit;
-    }
-    /***
-     *      _______        _                                    _
-     *     |__   __|      | |                                  (_)
-     *        | | _____  _| |_ ___    __ _  ___ _ __   ___ _ __ _  ___ _ __ ___ _ __
-     *        | |/ _ \ \/ / __/ _ \  / _` |/ _ \ '_ \ / _ \ '__| |/ _ \ '__/ _ \ '_ \
-     *        | |  __/>  <| ||  __/ | (_| |  __/ | | |  __/ |  | |  __/ | |  __/ | | |
-     *        |_|\___/_/\_\\__\___|  \__, |\___|_| |_|\___|_|  |_|\___|_|  \___|_| |_|
-     *                                __/ |
-     *                               |___/
-     */
-
-    switch ($emitterChannel) {
-        case $constants["reminder"]:
-            $introduction = "<h4>Folgender Artikel hat eine Erinnerung ausgel&ouml;st:</h4>";
-            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$emitterId";
-            $mainLine = "<a href='$mainButtonLink'> $title</a>";
-            $description = $text;
-            break;
-        case $constants["report"]:
-            $introduction = " <h4><span class='label label-warning'>" . $extraInfo . "</span></h4><i>" . $emitterChannelUserName . "</i> hat ein Problem mit einem Wiki Artikel festgestellt.<br>Es geht um folgenden Artikel:";
-            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$emitterId";
-            $mainLine = "<a href='$mainButtonLink'> $title</a>";
-            $description = $text;
-            break;
-        case $constants["article"]:
-            $introduction = "<h4>Folgener Artikel im Wiki wurde " . $actionVerb . ":</h4>";
-            $mainButtonLink = $constants['BASE_URL'] . "?view=wiki_show_article&artikel=$emitterId";
-            $mainLine = "<a href='$mainButtonLink'> $title</a>";
-            $description = "";
-            break;
-        case $constants["news"]:
-            $introduction = "<h4>Folgende Tagesaktuelle Info wurde " . $actionVerb . ":</h4>";
-            $mainLine = $title;
-            $description = $text;
-            break;
-        case $constants["absence"]:
-            $introduction = "<h4>Folgende Abwesenheitsnotiz wurde " . $actionVerb . ":</h4>";
-            $mainLine = $title;
-            $description = $text;
-            break;
-        case $constants["error"]:
-            $introduction = "<h4>Es ist folgender Fehler aufgetreten:</h4>";
-            $mainLine = "<h2>" . $title . "</h2>";
-            $description = $text;
-            break;
-    }
-
-    /***
-     *      _______                   _       _         _           _
-     *     |__   __|                 | |     | |       | |         | |
-     *        | | ___ _ __ ___  _ __ | | __ _| |_ ___  | | __ _  __| | ___ _ __
-     *        | |/ _ \ '_ ` _ \| '_ \| |/ _` | __/ _ \ | |/ _` |/ _` |/ _ \ '_ \
-     *        | |  __/ | | | | | |_) | | (_| | ||  __/ | | (_| | (_| |  __/ | | |
-     *        |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|\__,_|\__,_|\___|_| |_|
-     *                         | |
-     *                         |_|
-     */
-
-    $mail_text = file_get_contents("$BASE_PATH/modules/notifications/mail_template_notification.html");
-    //Variblen im Template mit Daten füllen
-    $variablen_im_text = array("{titel}", "{einleitung}", "{artikelUrl}", "{beschreibung}", "{application_name}", "{trigger_type}", "{admin_mail}");
-    $variablen_daten = array($mainLine, $introduction, $mainButtonLink, $description, $constants["APPLICATION_NAME"], $emitterChannelTypeInWords, $constants["ADMIN_MAIL"]);
-    $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
-
-    //Hole alle Nutzer, die diesen trigger als Mail abonniert haben
-    //Notification Level: 0:nichts 1:nur Online 2:nur Mail 3:Mail und Online
-    $selectStatement = $dbPdo->query("SELECT * FROM `Nutzer` WHERE notification_$emitterChannel='2' OR notification_$emitterChannel='3';");
-    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
-
-    $mail_betreff = $constants["APPLICATION_NAME"] . " - $emitterChannelTypeInWords";
-
-    foreach ($resultList as $row) {
-        $recipientUserMail = $row["mail"];
-        stubegruMail($recipientUserMail, $mail_betreff, $mail_text);
-        //echo "Sending Mail to $recipientUserMail";
+        //select recipients
+        $selectRecipients = $dbPdo->prepare("SELECT mail FROM Nutzer WHERE id IN (SELECT userId FROM `notification_type_user` WHERE  notificationType = :notificationType AND `mail`='1');");
+        $selectRecipients->bindValue(':notificationType', $type);
+        $selectRecipients->execute();
+        $recipientMailAdressList = $selectRecipients->fetchAll(PDO::FETCH_COLUMN);
+        $subCount = count($recipientMailAdressList);
+        
+        foreach ($recipientMailAdressList as $address) {
+            stubegruMail($address, $mail_betreff, $mail_text);
+        }
+        return array("status" => "success", "message" => "Created mail notification and sent to $subCount subscribers");
     }
 }
 
 //TEST!!!
-//echo json_encode(newNotification("WIKI_REPORT", 0, "Das ist die Überschrift", "<h1>Das ist ein Titel</h1><br>Könnt ihr auch html?", 1, "INFO"));
+echo json_encode(newNotification("WIKI_REPORT", 0, "Das ist die Überschrift", "<h1>Das ist ein Titel</h1><br>Könnt ihr auch html?", 1, "INFO"));
 /*
 newNotification($constants["reminder"],32,"Testartikel","Diesen Artikel bitte nochmal überarbeiten","",$loggedInUserId,$constants["info"]);
 newNotification($constants["article"],32,"Testartikel","Dieser Artikel wurde überarbeitet","",$loggedInUserId,$constants["update"]);
