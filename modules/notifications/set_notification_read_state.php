@@ -15,7 +15,7 @@ $markAs = $_POST["markAs"];
 $markAsBoolean = ($markAs == $constants["read"]) ? 1 : 0;
 
 //Verknüpfung zwischen aktuellem User und Benachrichtigung aufheben
-$updateStatement = $dbPdo->prepare("UPDATE `Link_Benachrichtigungen_Nutzer` SET `read`=:markAsBoolean WHERE userId=:ownId AND notificationId=:notificationId;");
+$updateStatement = $dbPdo->prepare("UPDATE `notification_user` SET `read`=:markAsBoolean WHERE userId=:ownId AND notificationId=:notificationId;");
 $updateStatement->bindValue(':markAsBoolean', $markAsBoolean);
 $updateStatement->bindValue(':ownId', $own_id);
 $updateStatement->bindValue(':notificationId', $notificationId);

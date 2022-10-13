@@ -26,14 +26,14 @@ $toReturn = array();
 //Prüfen, ob alle oder ein bestimmter Datensatz geholt werden soll
 if ($notificationId == "all"){
     //hohle alle Benachrichtigungen
-    $selectStatement = $dbPdo->prepare("SELECT Benachrichtigungen . * , Link_Benachrichtigungen_Nutzer.read FROM Benachrichtigungen, Link_Benachrichtigungen_Nutzer WHERE Benachrichtigungen.id = Link_Benachrichtigungen_Nutzer.notificationId AND Link_Benachrichtigungen_Nutzer.userId = :ownId ORDER BY `timestamp` DESC;");
+    $selectStatement = $dbPdo->prepare("SELECT notifications . * , notification_user.read FROM notifications, notification_user WHERE notifications.id = notification_user.notificationId AND notification_user.userId = :ownId ORDER BY `timestamp` DESC;");
     $selectStatement->bindValue(':ownId', $own_id);
     $selectStatement->execute();
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 }
 else if (is_numeric($notificationId)){
     //hohle eine spezielle Benachrichtigung
-    $selectStatement = $dbPdo->prepare("SELECT Benachrichtigungen.* , Link_Benachrichtigungen_Nutzer.read FROM Benachrichtigungen, Link_Benachrichtigungen_Nutzer WHERE Benachrichtigungen.id=:notificationId AND Link_Benachrichtigungen_Nutzer.userId = :ownId LIMIT 1;");
+    $selectStatement = $dbPdo->prepare("SELECT notifications.* , notification_user.read FROM notifications, notification_user WHERE notifications.id=:notificationId AND notification_user.userId = :ownId LIMIT 1;");
     $selectStatement->bindValue(':ownId', $own_id);
     $selectStatement->bindValue(':notificationId', $notificationId);
     $selectStatement->execute();
