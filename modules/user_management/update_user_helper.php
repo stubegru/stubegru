@@ -13,21 +13,17 @@ function setRolePresetNotifications($userId, $roleId)
     $presetData = array();
     foreach ($result as $row) {
         $notificationTypeId = $row["subjectId"];
-        $channel = $row["type"];
-        $channel = substr($channel, strpos($channel, "_") + 1);
 
-        if ($channel == "online") {
-            if (!isset($presetData[$notificationTypeId])) {
-                $presetData[$notificationTypeId] = array("online" => 1, "mail" => 0);
-            } else {
-                $presetData[$notificationTypeId]["online"] = 1;
-            }
-        } else if ($channel == "mail") {
-            if (!isset($presetData[$notificationTypeId])) {
-                $presetData[$notificationTypeId] = array("online" => 0, "mail" => 1);
-            } else {
-                $presetData[$notificationTypeId]["mail"] = 1;
-            }
+        //if no entry exists for this notification type, create one
+        if (!isset($presetData[$notificationTypeId])) {
+            $presetData[$notificationTypeId] = array("online" => 0, "mail" => 0);
+        }
+
+        $channel = $row["type"];
+        if ($channel == "notification_online") {
+            $presetData[$notificationTypeId]["online"] = 1;
+        } else if ($channel == "notification_mail") {
+            $presetData[$notificationTypeId]["mail"] = 1;
         }
     }
 
@@ -46,7 +42,7 @@ function setRolePresetNotifications($userId, $roleId)
 /**
  * Check if theres already an account with this username
  * returns Error and exits the script if the username is already known
-*/
+ */
 function checkIfUsernameExists($username)
 {
     global $dbPdo;
