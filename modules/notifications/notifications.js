@@ -1,4 +1,5 @@
 //Global Variables
+stubegru.modules.notifications = {};
 var notificationIdsFromLastRequest = [];
 var notificationDetailViewActive = false;
 var firstNotificationRequest = true;
@@ -262,7 +263,7 @@ $('#notificationDropdown').on(
 
 
 */
-
+stubegru.modules.notifications.subscriptions = [];
 
 function showNotificationModal() {
     $.ajax({
@@ -270,25 +271,27 @@ function showNotificationModal() {
         dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/notifications/get_notification_settings.php`,
         success: function (data) {
-            for (var notificationType in data) {
-                var notificationValue = data[notificationType];
-                if (notificationValue == stubegru.constants.notification_mail) {
-                    $("#notification_toggle_mail_" + notificationType).bootstrapToggle('on');
-                    $("#notification_toggle_notification_" + notificationType).bootstrapToggle('off');
-                }
-                if (notificationValue == stubegru.constants.notification_online) {
-                    $("#notification_toggle_mail_" + notificationType).bootstrapToggle('off');
-                    $("#notification_toggle_notification_" + notificationType).bootstrapToggle('on');
-                }
-                if (notificationValue == stubegru.constants.notification_both) {
-                    $("#notification_toggle_mail_" + notificationType).bootstrapToggle('on');
-                    $("#notification_toggle_notification_" + notificationType).bootstrapToggle('on');
-                }
-                if (notificationValue == stubegru.constants.notification_none) {
-                    $("#notification_toggle_mail_" + notificationType).bootstrapToggle('off');
-                    $("#notification_toggle_notification_" + notificationType).bootstrapToggle('off');
-                }
+            stubegru.modules.notifications.subscriptions = data;
+            let titleHtml = "";
+            let onlineHtml = "";
+            let mailHtml = "";
+            for (let channel of data) {
+                titleHtml += `<th class="col-md-2 text-center">${channel.name}&nbsp;<i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip"  title="${channel.description}" style="color:#4fafd3; cursor:help"></i></th>`;
+                onlineHtml += `<td class="text-center"><input data-toggle="toggle" type="checkbox" ${channel.online ? "checked" : ""} id="notification_toggle_online_${channel.id}" class="notification-toggle notification-toggle-online"></td>`;
+                mailHtml += `<td class="text-center"><input data-toggle="toggle" type="checkbox" ${channel.mail ? "checked" : ""} id="notification_toggle_mail_${channel.id}" class="notification-toggle notification-toggle-mail"></td>`;
             }
+
+            let html = `<table class="table table-bordered" style="border-collapse:separate;">
+            <thead><tr><th class="col-md-2"></th>
+                ${titleHtml}
+            </tr></thead><tbody><tr><td><b>Info</b></td>
+                ${onlineHtml}
+            </tr><tr><td><b>Info per Mail</b></td>
+                ${mailHtml}
+            </tr></tbody></table>`;
+
+            $("#notificationCustomSettings").html(html);
+            $(".notification-toggle").bootstrapToggle();
         }
     });
     $("#notificationModal").modal("show");
@@ -297,27 +300,11 @@ function showNotificationModal() {
 
 
 function saveNotificationSettings() {
-    var notificationSettings = {
-        reminder: 0,
-        report: 0,
-        article: 0,
-        news: 0,
-        absence: 0,
-        error: 0
-    }
+    let subList = stubegru.modules.notifications.subscriptions;
 
-    for (var notificationType in notificationSettings) {
-        var notificationValue = 0;
-        if ($("#notification_toggle_notification_" + notificationType).prop("checked")) {
-            notificationValue += 1;
-        }
-        if ($("#notification_toggle_mail_" + notificationType).prop("checked")) {
-            notificationValue += 2;
-        }
-
-
-        notificationSettings[notificationType] = notificationValue;
-
+    for (let channel of subList) {
+        channel.online = $("#notification_toggle_online_" + channel.id).prop("checked");
+        channel.mail = $("#notification_toggle_mail_" + channel.id).prop("checked");
     }
 
 
@@ -325,7 +312,7 @@ function saveNotificationSettings() {
     $.ajax({
         type: "POST",
         dataType: "json",
-        data: notificationSettings,
+        data: {subList : JSON.stringify(subList)},
         url: `${stubegru.constants.BASE_URL}/modules/notifications/save_notification_settings.php`,
         success: function (data) {
             stubegru.modules.alerts.alert({
@@ -333,11 +320,9 @@ function saveNotificationSettings() {
                 text: data.message,
                 type: data.status
             });
+            $("#notificationModal").modal("hide");
         }
     });
-
-    $("#notificationModal").modal("hide");
-
 }
 
 

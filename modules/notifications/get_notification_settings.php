@@ -12,7 +12,7 @@ $subList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 $subArray = array();
 foreach ($subList as $sub) {
     $subArray[$sub["notificationType"]] = $sub;
-    echo "Added sub for " . $sub["notificationType"];
+    //echo "Added sub for " . $sub["notificationType"];
 }
 
 $selectStatement = $dbPdo->query("SELECT * FROM `notification_types`;");

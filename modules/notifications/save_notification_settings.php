@@ -1,28 +1,29 @@
 <?php
-
-// Dieses Script speichert die Notification Einstellungen des Nutzers
-
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 
-$reminder = $_POST["reminder"];
-$report = $_POST["report"];
-$article = $_POST["article"];
-$news = $_POST["news"];
-$absence = $_POST["absence"];
-$error = $_POST["error"];
-
 $own_id = $_SESSION["id"];
+$json = $_POST["subList"];
+$subList = json_decode($json,true);
 
-$updateStatement = $dbPdo->prepare("UPDATE `Nutzer` SET `notification_reminder`=:reminder,`notification_report`=:report,`notification_article`=:article,`notification_news`=:news,`notification_absence`=:absence,`notification_error`=:error WHERE id=:ownId;");
-$updateStatement->bindValue(':reminder', $reminder);
-$updateStatement->bindValue(':report', $report);
-$updateStatement->bindValue(':article', $article);
-$updateStatement->bindValue(':news', $news);
-$updateStatement->bindValue(':absence', $absence);
-$updateStatement->bindValue(':error', $error);
-$updateStatement->bindValue(':reminder', $reminder);
-$updateStatement->bindValue(':ownId', $own_id);
-$updateStatement->execute();
+//Remove all entries with current userId
+$deleteStatement = $dbPdo->prepare("DELETE FROM `notification_type_user` WHERE userId = :userId;");
+$deleteStatement->bindValue(':userId', $own_id);
+$deleteStatement->execute();
+
+//Insert new datasets
+$insertStatement = $dbPdo->prepare("INSERT INTO `notification_type_user` (`userId`,`notificationType`,`online`,`mail`) VALUES (:userId,:type,:online,:mail);");
+
+foreach ($subList as $channel) {
+    $type = $channel["id"];
+    $online = $channel["online"] ? "1" : "0";
+    $mail = $channel["mail"] ? "1" : "0";
+
+    $insertStatement->bindValue(':userId', $own_id);
+    $insertStatement->bindValue(':type', $type);
+    $insertStatement->bindValue(':online', $online);
+    $insertStatement->bindValue(':mail', $mail);
+    $insertStatement->execute();
+}
 
 echo json_encode(array("status" => "success", "message" => "Änderungen gespeichert!"));
