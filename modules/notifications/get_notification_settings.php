@@ -1,23 +1,33 @@
 <?php
-
-// Dieses Script lädt Benachrichtigungskonfigurationen aus der Db und stellt sie als JSON zur Verfügung
-
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 $own_id = $_SESSION["id"];
 
-$tempArray = array();
-
-$selectStatement = $dbPdo->prepare("SELECT * FROM `Nutzer` WHERE id=:ownId;");
-$selectStatement->bindValue(':ownId', $own_id);
+$selectStatement = $dbPdo->prepare("SELECT * FROM `notification_type_user` WHERE userId = :userId;");
+$selectStatement->bindValue(":userId", $own_id);
 $selectStatement->execute();
-$row = $selectStatement->fetch(PDO::FETCH_ASSOC);
+$subList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-$tempArray["reminder"] = $row["notification_reminder"];
-$tempArray["report"] = $row["notification_report"];
-$tempArray["article"] = $row["notification_article"];
-$tempArray["news"] = $row["notification_news"];
-$tempArray["absence"] = $row["notification_absence"];
-$tempArray["error"] = $row["notification_error"];
+//convert sublist to array with notification types as keys
+$subArray = array();
+foreach ($subList as $sub) {
+    $subArray[$sub["notificationType"]] = $sub;
+    echo "Added sub for " . $sub["notificationType"];
+}
 
-echo json_encode($tempArray);
+$selectStatement = $dbPdo->query("SELECT * FROM `notification_types`;");
+$typeList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+//add info about online/mail subscription to typeList
+foreach ($typeList as &$type) {
+    $typeId = $type["id"];
+    if (isset($subArray[$typeId])) {
+        $type["online"] = $subArray[$typeId]["online"] ? true : false;
+        $type["mail"] = $subArray[$typeId]["mail"] ? true : false;
+    } else {
+        $type["online"] = false;
+        $type["mail"] = false;
+    }
+}
+
+echo json_encode($typeList);
