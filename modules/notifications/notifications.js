@@ -13,11 +13,7 @@ stubegru.modules.menubar.addItem("primary", `<li class="dropdown" id="notificati
 </a>
 <ul class="dropdown-menu dropdown-messages" id="notificationDropdownList">
     <li>
-        <div id="heading">
-            <div class="heading-left">
-                <h6 class="heading-title notifications-list-headline">Benachrichtigungen</h6>
-            </div>
-        </div>
+        <div class="text-center notification-headline"><i class="fa fa-bell fa-fw"></i>&nbsp;<b>Benachrichtigungen</b></div>
         <ul class="notification-list" id="privateMessagesList">
         </ul>
     </li>
@@ -39,69 +35,39 @@ function updateNotifications() {
         type: "POST",
         dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/notifications/get_notifications.php`,
-        data: {
-            notificationId: "all"
-        },
-        success: function (myNotifications) {
-            var tempIdsFromCurrentRequest = [];
-            var countUnreadNotifications = 0;
+        data: { notificationId: "all" },
+        success: function (notificationList) {
+
+            let unreadCounter = 0;
 
             //Clear Notifications List
             $("#privateMessagesList").html("");
 
-            for (var i in myNotifications) {
-                var singleNotification = myNotifications[i];
-                var notificationId = singleNotification.notificationId;
-                var triggerId = singleNotification.triggerId;
-                var triggerType = singleNotification.triggerType;
-                var triggerName = getTriggerName(triggerType);
-                var userId = singleNotification.userId;
-                var userName = singleNotification.userName;
-                var action = singleNotification.action;
-                var actionVerb = getActionDetails(action).verb;
-                var actionIcon = getActionDetails(action).icon;
-                var readState = singleNotification.readState;
-                var readStateClass = (readState == 1) ? stubegru.constants.read : stubegru.constants.unread;
-                if (readStateClass == stubegru.constants.unread) {
-                    countUnreadNotifications++;
-                }
-                var timestamp = singleNotification.timestamp;
-                var dateInWords = formatDate(new Date(timestamp), "DD.MM. hh:mm");
-                var triggerInfoHeadline = singleNotification.triggerInfoHeadline;
-                var triggerInfoText = singleNotification.triggerInfoText;
-                var notificationHtml =
-                    '   <li onclick="showNotificationDetailView(' + notificationId + ',event)" class="notification-item" data-notification-id="' + notificationId + '">' +
-                    '       <div class="row">' +
-                    '           <div class="col-xs-2">' +
-                    '               <div class="notification-side-banner notification-' + readStateClass + '"></div>' +
-                    '           </div>' +
-                    '           <div class="col-xs-10">' +
-                    '               <div class="notification-user-content">' +
-                    '                   <p class="notification-user-info"><span class="label label-default">' + actionIcon + '&nbsp' + triggerName + ' ' + actionVerb + '</span><button onclick="deleteNotificationAndStopEventPropagation(event,' + notificationId + ')" id="notificationListDeleteButton' + notificationId + '" class="btn btn-danger pull-right" style="display:none;"><i class="fas fa-times"></i></button></p>' +
-                    '                   <p>' + triggerInfoHeadline + '</p>' +
-                    '                   <p class="notification-time">' + dateInWords + '</p>' +
-                    '               </div>' +
-                    '           </div>' +
-                    '       </div>' +
-                    '   </li>';
+            for (let n of notificationList) {
+                if (n.read == false) { unreadCounter++ } //count unread notifications
 
-                //Add this Notification id to temp Array
-                tempIdsFromCurrentRequest.push(notificationId);
-                //Check wether this id is allready known in the notificationIdsFromLastRequest Array
-                if (notificationIdsFromLastRequest.indexOf(notificationId) < 0 && firstNotificationRequest == false) {
-                    //triggerPushNotification(notificationId, triggerName + " " + actionVerb, triggerInfoHeadline);
-                }
-
-
+                const notificationHtml = `
+                <li class="notification-item" data-notification-id="${n.id}">
+                    <div class="row">
+                        <div class="col-xs-2">
+                            <div class="notification-side-banner notification-${n.read ? "read" : "unread"}"></div>
+                        </div>
+                        <div class="col-xs-10">
+                            <div class="notification-user-content">
+                                <p class="notification-user-info">
+                                    <span class="label label-default"> ${n.action} | ${n.type} </span>
+                                    <span class="pull-right">${formatTimespan(n.timestamp)}</span>
+                                </p>
+                                <p> ${n.title} </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>`;
                 $("#privateMessagesList").append(notificationHtml);
             }
 
-            //Temp Ids als last request ids setzen
-            notificationIdsFromLastRequest = tempIdsFromCurrentRequest;
-            firstNotificationRequest = false;
-
-            //Anzahl der Ungelesenen Notifications anzeigen
-            $("#notificationCountBadge").html(countUnreadNotifications);
+            //Show count of unread notifications in menubar
+            $("#notificationCountBadge").html(unreadCounter);
 
             //Eventlistener zum Delete Button einblenden registrieren
             $(".notification-item").mouseenter(function () {
@@ -312,7 +278,7 @@ function saveNotificationSettings() {
     $.ajax({
         type: "POST",
         dataType: "json",
-        data: {subList : JSON.stringify(subList)},
+        data: { subList: JSON.stringify(subList) },
         url: `${stubegru.constants.BASE_URL}/modules/notifications/save_notification_settings.php`,
         success: function (data) {
             stubegru.modules.alerts.alert({
@@ -455,3 +421,45 @@ setInterval(updateNotifications, 5 * 60 * 1000);
 setTimeout(updateNotifications, 3000); //refresh Notifications, sometimes direct loading failes due to unknown (and magic) reasons
 setTimeout(updateNotifications, 5000); //refresh once again (just to be really safe)
 
+
+/**
+ * Format Date to timespan-string
+ * Showing the hours (hh:mm) if timespan is lower than one day
+ * Showing number of days if they are lower than 7
+ * Showing date else
+ * @param {Date|string} date date
+ */
+function formatTimespan(date) {
+    function addZero(num) {
+        if (num < 10) { return `0${num}` }
+        return String(num);
+    }
+
+
+    let past = "vor";
+
+    if (!(date instanceof Date)) { date = new Date(date); }
+    let dateMillis = date.getTime();
+    let nowMillis = new Date().getTime();
+    let span = nowMillis - dateMillis;
+
+    if (span < 0) { span = Math.abs(span); past = "in"; } //handle future dates
+
+    if (span < 1000 * 60 * 60) { //shorter than one hour
+        let minutes = Math.floor(span / (1000 * 60));
+        return `${past} ${minutes} min`;
+    }
+
+    if (span < 1000 * 60 * 60 * 24) { //shorter than one day
+        let hours = Math.floor(span / (1000 * 60 *60));
+        return `${past} ${hours} Stunden`;
+    }
+
+    if (span < 1000 * 60 * 60 * 24 * 7) { //shorter than seven days
+        let days = Math.floor(span / (1000 * 60 * 60 * 24));
+        return `${past} ${days} Tagen`;
+    }
+
+    //more than seven days...
+    return `${addZero(date.getDate())}.${addZero(date.getMonth() + 1)}.${date.getFullYear()}`;
+}
