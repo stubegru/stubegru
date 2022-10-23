@@ -3,8 +3,6 @@ $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("ABSENCE_WRITE");
 require_once "$BASE_PATH/modules/notifications/notification_system.php";
-$INCLUDED_IN_SCRIPT = true;
-require_once "$BASE_PATH/utils/constants.php";
 $ownId = $_SESSION["id"];
 
 $mode = $_POST["mode"];
@@ -42,7 +40,11 @@ if ($mode == "create") {
 
     //Notification versenden
     if ($notification == "1") {
-        newNotification($constants["absence"], $newAbsenceId, $name, $description, "", $ownId, $constants["new"]);
+        $startDate=date_format(date_create($start,timezone_open("UTC")),"d.m.Y H:i");
+        $endDate=date_format(date_create($end),"d.m.Y H:i");
+
+        $text = "Es wurde eine neue Abwesenheit für $name erstellt.<br> Zeitraum: $startDate bis $endDate.<br> Bemerkung: $description.";
+        newNotification("ABSENCE",$newAbsenceId,"Abwesenheit $name",$text,$ownId,"CREATE");
     }
 
     $toReturn["message"] = "Neue Abwesenheit hinzugefügt";

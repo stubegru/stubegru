@@ -399,6 +399,10 @@ function formatTimespan(date) {
 
     if (span < 0) { span = Math.abs(span); past = "in"; } //handle future dates
 
+    if (span < 1000 * 60) { //shorter than one minute
+        return `jetzt`;
+    }
+    
     if (span < 1000 * 60 * 60) { //shorter than one hour
         let minutes = Math.floor(span / (1000 * 60));
         return `${past} ${minutes} min`;
