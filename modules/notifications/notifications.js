@@ -1,8 +1,5 @@
 //Global Variables
 stubegru.modules.notifications = {};
-var notificationIdsFromLastRequest = [];
-var notificationDetailViewActive = false;
-var firstNotificationRequest = true;
 
 //register menu entry for notifications
 stubegru.modules.menubar.addItem("secondary", `<li><a title="Einstellen über welche Ereignisse du informiert wirst." onclick="showNotificationModal()"><i class="fa fa-envelope"></i>&nbsp;Benachrichtigungen konfigurieren</a></li>`, -990);
@@ -126,31 +123,6 @@ function getActionDetails(action) {
     };
 }
 
-function getTriggerName(triggerType) {
-    switch (triggerType) {
-        case stubegru.constants.reminder:
-            return "Erinnerung Wiki Artikel";
-            break;
-        case stubegru.constants.report:
-            return "Feedback";
-            break;
-        case stubegru.constants.article:
-            return "Wiki Artikel";
-            break;
-        case stubegru.constants.news:
-            return "Tagesaktuelle Info";
-            break;
-        case stubegru.constants.absence:
-            return "Abwesenheit";
-            break;
-        case stubegru.constants.error:
-            return "Technisches Problem";
-            break;
-
-    }
-}
-
-
 function deleteNotificationAndStopEventPropagation(event, notificationId) {
     event.preventDefault();
     event.stopPropagation();
@@ -158,8 +130,6 @@ function deleteNotificationAndStopEventPropagation(event, notificationId) {
 }
 
 function deleteNotification(notificationId) {
-
-
     $.ajax({
         type: "POST",
         dataType: "json",
@@ -173,7 +143,6 @@ function deleteNotification(notificationId) {
             } else {
                 console.log(data.message);
             }
-
         }
 
     });
@@ -190,12 +159,9 @@ function setNotificationReadState(notificationId, markAs) {
             markAs: markAs
         },
         success: function (data) {
-            if (data.status == stubegru.constants.success) {
+            if (data.status == "success") {
                 updateNotifications();
-            } else {
-                console.log(data.message);
-            }
-
+            } else { console.log(data.message); }
         }
 
     });
@@ -292,20 +258,7 @@ function saveNotificationSettings() {
 }
 
 
-/*
 
-
-  _   _       _   _  __ _           _   _               _____       _        _ _  __      ___               
- | \ | |     | | (_)/ _(_)         | | (_)             |  __ \     | |      (_) | \ \    / (_)              
- |  \| | ___ | |_ _| |_ _  ___ __ _| |_ _  ___  _ __   | |  | | ___| |_ __ _ _| |  \ \  / / _  _____      __
- | . ` |/ _ \| __| |  _| |/ __/ _` | __| |/ _ \| '_ \  | |  | |/ _ \ __/ _` | | |   \ \/ / | |/ _ \ \ /\ / /
- | |\  | (_) | |_| | | | | (_| (_| | |_| | (_) | | | | | |__| |  __/ || (_| | | |    \  /  | |  __/\ V  V / 
- |_| \_|\___/ \__|_|_| |_|\___\__,_|\__|_|\___/|_| |_| |_____/ \___|\__\__,_|_|_|     \/   |_|\___| \_/\_/  
-                                                                                                            
-                                                                                                            
-
-
-*/
 
 
 function showNotificationDetailView(notificationId, event) {
@@ -451,7 +404,7 @@ function formatTimespan(date) {
     }
 
     if (span < 1000 * 60 * 60 * 24) { //shorter than one day
-        let hours = Math.floor(span / (1000 * 60 *60));
+        let hours = Math.floor(span / (1000 * 60 * 60));
         return `${past} ${hours} Stunden`;
     }
 
