@@ -19,13 +19,15 @@ $selectStatement = $dbPdo->prepare("SELECT * FROM `Abwesenheiten` WHERE id = :ab
 $selectStatement->bindValue(':absenceId', $absenceId);
 $selectStatement->execute();
 $absenceData = $selectStatement->fetch(PDO::FETCH_ASSOC);
+$name = $absenceData["name"];
+$description = $absenceData["description"];
 
 //Notification versenden
-//newNotification($constants["absence"], $absenceId, $absenceData["name"], $absenceData["description"], "", $ownId, $constants["delete"]);
+$text = "Es wurde eine Abwesenheit für $name gelöscht.<br> Bemerkung: $description.";
+newNotification("ABSENCE",$absenceId,"Abwesenheit $name",$text,$ownId,"DELETE");
 
 $deleteStatement = $dbPdo->prepare("DELETE FROM Abwesenheiten WHERE id = :absenceId;");
 $deleteStatement->bindValue(':absenceId', $absenceId);
 $deleteStatement->execute();
 
-$name = $absenceData["name"];
 echo json_encode(array("status" => "success", "message" => "Abwesenheit '$name' erfolgreich gelöscht"));

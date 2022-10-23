@@ -40,10 +40,7 @@ if ($mode == "create") {
 
     //Notification versenden
     if ($notification == "1") {
-        $startDate=date_format(date_create($start,timezone_open("UTC")),"d.m.Y H:i");
-        $endDate=date_format(date_create($end),"d.m.Y H:i");
-
-        $text = "Es wurde eine neue Abwesenheit für $name erstellt.<br> Zeitraum: $startDate bis $endDate.<br> Bemerkung: $description.";
+        $text = "Es wurde eine neue Abwesenheit für $name erstellt.<br> Bemerkung: $description.";
         newNotification("ABSENCE",$newAbsenceId,"Abwesenheit $name",$text,$ownId,"CREATE");
     }
 
@@ -64,7 +61,8 @@ if ($mode == "create") {
 
     //Notification versenden
     if ($notification == "1") {
-        newNotification($constants["absence"], $absenceId, $name, $description, "", $ownId, $constants["update"]);
+        $text = "Die Abwesenheit von $name wurde aktualisiert.<br> Bemerkung: $description.";
+        newNotification("ABSENCE",$absenceId,"Abwesenheit $name",$text,$ownId,"UPDATE");
     }
 
     $toReturn["message"] = "Änderungen der Abwesenheit gespeichert";

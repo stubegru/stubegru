@@ -103,7 +103,7 @@ function getActionDetails(action) {
     switch (action) {
         case "CREATE":
             actionIcon = '<i class="fas fa-plus"></i>';
-            actionVerb = "neu erstellt";
+            actionVerb = "erstellt";
             break;
         case "UPDATE":
             actionIcon = '<i class="fas fa-pencil-alt"></i>';
