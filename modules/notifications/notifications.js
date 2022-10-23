@@ -42,6 +42,7 @@ function updateNotifications() {
 
             for (let n of notificationList) {
                 if (n.read == false) { unreadCounter++ } //count unread notifications
+                const action = getActionDetails(n.action);
 
                 const notificationHtml = `
                 <li class="notification-item" data-notification-id="${n.id}">
@@ -52,7 +53,7 @@ function updateNotifications() {
                         <div class="col-xs-10">
                             <div class="notification-user-content">
                                 <p class="notification-user-info">
-                                    <span class="label label-default"> ${n.action} | ${n.type} </span>
+                                    <span class="label label-default"> ${action.icon} &nbsp; ${n.type.name} ${action.verb} </span>
                                     <span class="pull-right">${formatTimespan(n.timestamp)}</span>
                                 </p>
                                 <p> ${n.title} </p>
@@ -98,22 +99,22 @@ function updateNotifications() {
 
 
 function getActionDetails(action) {
-    var actionIcon, actionVerb;
+    let actionIcon, actionVerb;
     switch (action) {
-        case stubegru.constants.new:
+        case "CREATE":
             actionIcon = '<i class="fas fa-plus"></i>';
             actionVerb = "neu erstellt";
             break;
-        case stubegru.constants.update:
+        case "UPDATE":
             actionIcon = '<i class="fas fa-pencil-alt"></i>';
             actionVerb = "geändert";
             break;
-        case stubegru.constants.delete:
+        case "DELETE":
             actionIcon = '<i class="fas fa-times-circle"></i>';
             actionVerb = "gelöscht";
             break;
-        case stubegru.constants.info:
-            actionIcon = '<i class="fas fa-info-cricle"></i>';
+        case "INFO":
+            actionIcon = '<i class="fas fa-info-circle"></i>';
             actionVerb = "";
             break;
     }

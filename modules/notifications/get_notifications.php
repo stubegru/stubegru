@@ -27,10 +27,21 @@ if ($notificationId == "all") {
     exit;
 }
 
+//load details about notification types
+$nTypesQuery = $dbPdo->query("SELECT * FROM notification_types;");
+$nTypesList = $nTypesQuery->fetchAll(PDO::FETCH_ASSOC);
+//index by id
+$notificationTypes = array();
+foreach ($nTypesList as $row) {
+    $notificationTypes[$row["id"]] = $row;
+}
+
 $allUsers = getUserList(); //from user_utils.php
+
 foreach ($resultList as &$row) {
     $row["userName"] = $allUsers[$row["userId"]]["name"];
     $row["read"] = $row["read"] ? true : false;
+    $row["type"] = $notificationTypes[$row["type"]];
 }
 
 echo json_encode($resultList);
