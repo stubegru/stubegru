@@ -76,20 +76,16 @@ function updateNotifications() {
                 var currentNotificationId = $(this).attr("data-notification-id");
                 $("#notificationListDeleteButton" + currentNotificationId).fadeOut("fast");
             });
+
             //Toggle des ReadState initialisieren
             $(".notification-side-banner").click(function (event) {
                 //Click Event stoppen
                 event.preventDefault();
                 event.stopPropagation();
                 //Notification Id auslesen
-                var currentNotificationId = $(this).closest("li").attr("data-notification-id");
+                const currentNotificationId = $(this).closest("li").attr("data-notification-id");
                 //ReadState auslesen
-                if ($(this).hasClass("notification-read")) {
-                    var newReadState = stubegru.constants.unread;
-                } else {
-                    var newReadState = stubegru.constants.read;
-                }
-                //Readstatus setzen
+                let newReadState = $(this).hasClass("notification-read") ? "unread" : "read";
                 setNotificationReadState(currentNotificationId, newReadState);
             });
         }
@@ -402,7 +398,7 @@ function formatTimespan(date) {
     if (span < 1000 * 60) { //shorter than one minute
         return `jetzt`;
     }
-    
+
     if (span < 1000 * 60 * 60) { //shorter than one hour
         let minutes = Math.floor(span / (1000 * 60));
         return `${past} ${minutes} min`;
