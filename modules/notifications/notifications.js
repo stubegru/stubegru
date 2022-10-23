@@ -35,6 +35,7 @@ function updateNotifications() {
         data: { notificationId: "all" },
         success: function (notificationList) {
 
+            stubegru.modules.notifications.list = notificationList;
             let unreadCounter = 0;
 
             //Clear Notifications List
@@ -66,6 +67,14 @@ function updateNotifications() {
 
             //Show count of unread notifications in menubar
             $("#notificationCountBadge").html(unreadCounter);
+
+            //Eventlistener für Detailview registrieren
+            $(".notification-item").on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                const id = $(this).attr("data-notification-id");
+                showNotificationDetailView(id);
+            })
 
             //Eventlistener zum Delete Button einblenden registrieren
             $(".notification-item").mouseenter(function () {
@@ -258,96 +267,24 @@ function saveNotificationSettings() {
 
 
 
-function showNotificationDetailView(notificationId, event) {
-    notificationDetailViewActive = true;
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/notifications/get_notifications.php`,
-        data: {
-            notificationId: notificationId
-        },
-        success: function (myNotifications) {
-            var singleNotification = myNotifications[0];
+function showNotificationDetailView(notificationId) {
 
-            var notificationId = singleNotification.notificationId;
-            var triggerId = singleNotification.triggerId;
-            var triggerType = singleNotification.triggerType;
-            var triggerName = getTriggerName(triggerType);
-            var userId = singleNotification.userId;
-            var userName = singleNotification.userName;
-            var action = singleNotification.action;
-            var actionVerb = getActionDetails(action).verb;
-            var readState = stubegru.constants.unread;
-            var timestamp = singleNotification.timestamp;
-            var dateInWords = formatDate(new Date(timestamp), "DD.MM. hh:mm");
-            var triggerInfoHeadline = singleNotification.triggerInfoHeadline;
-            var triggerInfoText = singleNotification.triggerInfoText;
-            var triggerExtraInfo = singleNotification.triggerExtraInfo;
+    const n = stubegru.modules.notifications.list.find(n=>(n.id == notificationId));
+    const action = getActionDetails(n.action);
 
+    $("#ndvIcon").html(action.icon);
+    $("#ndvType").html(`${n.type.name} ${action.verb}`);
+    $("#ndvDate").html(formatTimespan(n.timestamp));
+    $("#ndvIntroduction").html(n.title);
+    $("#ndvMainLine").html(n.text);
 
-            var introduction, mainLine, description;
-
-            switch (triggerType) {
-                case stubegru.constants.reminder:
-                    introduction = "<h4>Folgender Artikel hat eine Erinnerung ausgelöst:</h4>";
-                    mainLine = `<h4><a href="${stubegru.constants.BASE_URL}?view=wiki_show_article&artikel=${triggerId}">${triggerInfoHeadline}</a></h4>`;
-                    description = triggerInfoText;
-                    break;
-                case stubegru.constants.report:
-                    introduction = " <h4><span class='label label-warning'>" + triggerExtraInfo + "</span></h4><br><br><i>" + userName + "</i> hat ein Problem mit einem Wiki Artikel festgestellt.<br>Es geht um folgenden Artikel:";
-                    mainLine = `<h4><a href="${stubegru.constants.BASE_URL}?view=wiki_show_article&artikel=${triggerId}">${triggerInfoHeadline}</a></h4>`;
-                    description = triggerInfoText;
-                    break;
-                case stubegru.constants.article:
-                    introduction = "<h4>Folgener Artikel im Wiki wurde " + actionVerb + ":</h4>";
-                    mainLine = `<h4><a href="${stubegru.constants.BASE_URL}?view=wiki_show_article&artikel=${triggerId}">${triggerInfoHeadline}</a></h4>`;
-                    if (action == stubegru.constants.delete) {
-                        mainLine = ' <h4><a onclick="openDeletedArticleAlert()">' + triggerInfoHeadline + '</a></h4>';
-                    }
-                    description = "";
-                    break;
-                case stubegru.constants.news:
-                    introduction = "<h4>Folgende Tagesaktuelle Info wurde " + actionVerb + ":</h4>";
-                    mainLine = "<h2>" + triggerInfoHeadline + "</h2>";
-                    description = triggerInfoText;
-                    break;
-                case stubegru.constants.absence:
-                    introduction = "<h4>Folgende Abwesenheitsnotiz wurde " + actionVerb + ":</h4>";
-                    mainLine = "<h2>" + triggerInfoHeadline + "</h2><br><h3><span class='label label-default'>" + triggerExtraInfo + "</span></h3>";
-                    description = triggerInfoText;
-                    break;
-                case stubegru.constants.error:
-                    introduction = "<h4>Es ist folgender Fehler aufgetreten:</h4>";
-                    mainLine = "<h2>" + triggerInfoHeadline + "</h2>";
-                    description = triggerInfoText;
-                    break;
-            }
-
-            //$("#ndvIcon").html(actionIcon);
-            $("#ndvType").html(triggerName + " " + actionVerb);
-            $("#ndvDate").html(timestamp);
-            $("#ndvIntroduction").html(introduction);
-            $("#ndvMainLine").html(mainLine);
-            $("#ndvDescription").html(description);
-
-            //Gelöscht Button initialisieren
-            $("#deleteNotificationFromModal").click(function () {
-                deleteNotification(notificationId);
-            });
-
-
-            $("#notificationDetailView").modal("show");
-
-            //Diese Notification als gelesen markieren
-            setNotificationReadState(notificationId, stubegru.constants.read);
-        }
-
+    //Gelöscht Button initialisieren
+    $("#deleteNotificationFromModal").click(function () {
+        deleteNotification(notificationId);
     });
+
+    $("#notificationDetailView").modal("show");
+    setNotificationReadState(notificationId, "read");
 }
 
 
