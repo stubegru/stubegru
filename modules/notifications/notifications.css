@@ -1,4 +1,4 @@
-.notification-headline{
+.notification-headline {
     padding: 10px;
 }
 
@@ -10,7 +10,7 @@
 
 }
 
-#notificationDropdownList{
+#notificationDropdownList {
     width: 300px;
 }
 
@@ -82,4 +82,10 @@
 .btn-half {
     width: 50%;
     border-radius: 0px;
+}
+
+.notification-list-delete-button {
+    position: absolute;
+    top: 3px;
+    right: 10px;
 }

@@ -58,6 +58,7 @@ function updateNotifications() {
                                     <span class="pull-right">${formatTimespan(n.timestamp)}</span>
                                 </p>
                                 <p> ${n.title} </p>
+                                <button class="btn btn-danger notification-list-delete-button" style="display:none" data-notification-id="${n.id}"><i class="fas fa-times"></i></button>
                             </div>
                         </div>
                     </div>
@@ -78,12 +79,16 @@ function updateNotifications() {
 
             //Eventlistener zum Delete Button einblenden registrieren
             $(".notification-item").mouseenter(function () {
-                var currentNotificationId = $(this).attr("data-notification-id");
-                $("#notificationListDeleteButton" + currentNotificationId).fadeIn("fast");
+                $(this).find(".notification-list-delete-button").fadeIn("fast");
             });
             $(".notification-item").mouseleave(function () {
-                var currentNotificationId = $(this).attr("data-notification-id");
-                $("#notificationListDeleteButton" + currentNotificationId).fadeOut("fast");
+                $(this).find(".notification-list-delete-button").fadeOut("fast");
+            });
+            $(".notification-list-delete-button").on("click", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                let id = $(this).attr("data-notification-id");
+                deleteNotification(id);
             });
 
             //Toggle des ReadState initialisieren
