@@ -11,7 +11,7 @@
 }
 
 #notificationDropdownList {
-    width: 300px;
+    width: 400px;
 }
 
 .notification-time {
@@ -24,8 +24,6 @@
     cursor: pointer;
     padding-right: 10px;
 }
-
-
 
 .notification-item:hover {
     box-shadow: inset 0 0 17px 0px #dcdcdc;

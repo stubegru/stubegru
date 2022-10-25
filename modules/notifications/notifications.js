@@ -1,5 +1,6 @@
 //Global Variables
 stubegru.modules.notifications = {};
+stubegru.modules.notifications.keepListOpen = false;
 
 //register menu entry for notifications
 stubegru.modules.menubar.addItem("secondary", `<li><a title="Einstellen über welche Ereignisse du informiert wirst." onclick="showNotificationModal()"><i class="fa fa-envelope"></i>&nbsp;Benachrichtigungen konfigurieren</a></li>`, -990);
@@ -18,12 +19,37 @@ stubegru.modules.menubar.addItem("primary", `<li class="dropdown" id="notificati
     <li class="divider"></li>
     <li>
         <div class="btn-group-full-width btn-group" role="group">
-            <button class="btn btn-half btn-danger" onclick="deleteNotificationAndStopEventPropagation(event,'all')">Alle löschen</button>
-            <button class="btn btn-half btn-danger" onclick="deleteNotificationAndStopEventPropagation(event,'all_read')">Gelesene Löschen</button>
+            <button class="btn btn-half btn-danger" id="notificationDeleteAll">Alle löschen</button>
+            <button class="btn btn-half btn-danger"  id="notificationDeleteRead">Gelesene Löschen</button>
         </div>
     </li>
 </ul>
 </li>`, 100);
+
+function initNotificationList() {
+    $('#notificationDropdown').on("hide.bs.dropdown", function () {
+        return stubegru.modules.notifications.keepListOpen ? false : true;
+    });
+    $("#notificationDetailView").on("hidden.bs.modal", function () {
+        stubegru.modules.notifications.keepListOpen = false;
+    })
+    $("#notificationDetailView").on("shown.bs.modal", function () {
+        stubegru.modules.notifications.keepListOpen = true;
+    })
+
+    $("#notificationDeleteRead").on("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        deleteNotification("all_read")
+    })
+    $("#notificationDeleteAll").on("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        deleteNotification("all")
+    })
+
+    updateNotifications();
+}
 
 
 
@@ -134,12 +160,6 @@ function getActionDetails(action) {
     };
 }
 
-function deleteNotificationAndStopEventPropagation(event, notificationId) {
-    event.preventDefault();
-    event.stopPropagation();
-    deleteNotification(notificationId);
-}
-
 function deleteNotification(notificationId) {
     $.ajax({
         type: "POST",
@@ -178,18 +198,7 @@ function setNotificationReadState(notificationId, markAs) {
 }
 
 
-$('#notificationDropdown').on(
-    "hide.bs.dropdown",
-    function (event) {
-        if (notificationDetailViewActive == true) {
-            //Lässt das Dropdown mit den Notifications offen
-            return false;
-        } else {
-            //Schließt das Dropdown mit den Notifications
-            return true;
-        }
 
-    });
 
 /*
 
@@ -289,24 +298,13 @@ function showNotificationDetailView(notificationId) {
 }
 
 
-function openDeletedArticleAlert() {
-    stubegru.modules.alerts.alert({
-        text: "Der Artikel wurde gelöscht. Wie soll der denn jetzt aufgerufen werden?",
-        title: "Ähemm...",
-        type: "warning"
-    });
-}
-
-$("#notificationDetailView").on("hidden.bs.modal", function () {
-    notificationDetailViewActive = false;
-})
 
 
 
 
 //Intervall für regelmäßiges Notification Prüfen aktivieren, alle 5 Minuten
 setInterval(updateNotifications, 5 * 60 * 1000);
-setTimeout(updateNotifications, 3000); //refresh Notifications, sometimes direct loading failes due to unknown (and magic) reasons
+setTimeout(initNotificationList, 2000); //refresh Notifications, sometimes direct loading failes due to unknown (and magic) reasons
 setTimeout(updateNotifications, 5000); //refresh once again (just to be really safe)
 
 
