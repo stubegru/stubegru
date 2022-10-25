@@ -49,24 +49,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="row">
-                    <div class="col-md-1">
-                        <h4 id="ndvIcon"><i class="fas fa-bell"></i> </h4>
+                    <div class="col-md-8">
+                        <h4>
+                            <span id="ndvIcon"><i class="fas fa-bell"></i> </span>
+                            <span id="ndvType">Benachrichtigung</span>
+                        </h4>
                     </div>
-                    <div class="col-md-6">
-                        <h4 id="ndvType">Dummy</h4>
-                        </span>
-                    </div>
-                    <div class="col-md-5 text-right">
+                    <div class="col-md-4 text-right">
                         <h4 id="ndvDate">Dummmy</h4>
-                        </span>
                     </div>
                 </div>
             </div>
             <div class="modal-body">
-                <div id="ndvIntroduction">
-                    Dummy
+                <div class="text-center">
+                    <b id="ndvIntroduction"></b>
                 </div>
-                <br><br>
+                <br>
                 <div class="text-center" id="ndvMainLine">
                     <h4>Dummy</h4>
                 </div>
@@ -74,8 +72,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger pull-left" id="deleteNotificationFromModal" data-dismiss="modal">Benachrichtigung Löschen</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-danger pull-left" id="deleteNotificationFromModal" data-dismiss="modal"> <i class="far fa-trash-alt"></i>&nbsp; Benachrichtigung entfernen</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fas fa-angle-left"></i>&nbsp; Zurück</button>
             </div>
         </div>
     </div>

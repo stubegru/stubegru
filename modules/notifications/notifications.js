@@ -272,8 +272,6 @@ function showNotificationDetailView(notificationId) {
     const n = stubegru.modules.notifications.list.find(n=>(n.id == notificationId));
     const action = getActionDetails(n.action);
 
-    $("#ndvIcon").html(action.icon);
-    $("#ndvType").html(`${n.type.name} ${action.verb}`);
     $("#ndvDate").html(formatTimespan(n.timestamp));
     $("#ndvIntroduction").html(n.title);
     $("#ndvMainLine").html(n.text);
