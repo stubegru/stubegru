@@ -144,15 +144,14 @@ function deleteNotification(notificationId) {
             notificationId: notificationId
         },
         success: function (data) {
-            if (data.status == stubegru.constants.success) {
-                updateNotifications();
-            } else {
-                console.log(data.message);
-            }
+            stubegru.modules.alerts.alert({
+                title: "Benachrichtigung entfernen",
+                text: data.message,
+                type: data.status
+            })
+            updateNotifications();
         }
-
     });
-
 }
 
 function setNotificationReadState(notificationId, markAs) {
@@ -269,7 +268,7 @@ function saveNotificationSettings() {
 
 function showNotificationDetailView(notificationId) {
 
-    const n = stubegru.modules.notifications.list.find(n=>(n.id == notificationId));
+    const n = stubegru.modules.notifications.list.find(n => (n.id == notificationId));
     const action = getActionDetails(n.action);
 
     $("#ndvDate").html(formatTimespan(n.timestamp));
@@ -277,9 +276,8 @@ function showNotificationDetailView(notificationId) {
     $("#ndvMainLine").html(n.text);
 
     //Gelöscht Button initialisieren
-    $("#deleteNotificationFromModal").click(function () {
-        deleteNotification(notificationId);
-    });
+    $("#deleteNotificationFromModal").unbind();
+    $("#deleteNotificationFromModal").click(() => { deleteNotification(notificationId); });
 
     $("#notificationDetailView").modal("show");
     setNotificationReadState(notificationId, "read");
