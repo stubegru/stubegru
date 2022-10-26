@@ -4,12 +4,39 @@ stubegru.modules.menubar = {}
 stubegru.modules.menubar.entries = {};
 stubegru.modules.menubar.entries.primary = [];
 stubegru.modules.menubar.entries.secondary = [];
+stubegru.modules.menubar.postRenderHooks = [];
 
 const menuSecondaryContainerHtml = `
 <li class="dropdown">
     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-lg fa-bars"></i></a>
     <ul class="dropdown-menu" id="menubarSecondaryItemContainer"></ul>
 </li>`;
+
+/**
+ * Adds a callback that is called every time the menubar is re-rendered
+ * Use to add dynamic content to menu items
+ * @param {string} name name of the hook
+ * @param {function} callback function to be executed
+ * @param {number} priority Order in which the hooks are executed, smaller value means higher priority, default: 0
+ */
+stubegru.modules.menubar.registerPostRenderHook = function (name, callback, priority) {
+    priority = priority || 0;
+    //add new hook
+    stubegru.modules.menubar.postRenderHooks.push({
+        name: name,
+        callback: callback,
+        priority: priority,
+    })
+    //sort list by priority
+    stubegru.modules.menubar.postRenderHooks.sort((a, b) => (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0));
+}
+
+stubegru.modules.menubar.executePostRenderHooks = function(){
+    for (const hook of stubegru.modules.menubar.postRenderHooks) {
+        //console.log(`Executing post render hook: ${hook.name}`);
+        hook.callback();
+    }
+}
 
 
 stubegru.modules.menubar.render = function () {
@@ -22,6 +49,8 @@ stubegru.modules.menubar.render = function () {
     let secondarystring = "";
     orderedSecondary.forEach((entry) => secondarystring += `<!--Secondary menu entry with index ${entry.index}-->\n${entry.html}`)
     $(`#menubarSecondaryItemContainer`).html(secondarystring);
+
+    stubegru.modules.menubar.executePostRenderHooks();
 }
 
 /**
@@ -55,9 +84,9 @@ stubegru.modules.menubar.addDivider = function (level, index) {
 
 //Set logo
 let logoPath = stubegru.constants["BASE_URL"] + stubegru.constants["LOGO"];
-$("#menubarLogoLink").attr("href",stubegru.constants["BASE_URL"]);
-$("#menubarLogoImg").attr("src",logoPath);
-$("#menubarLogoImg").attr("title",stubegru.constants["APPLICATION_NAME"]);
+$("#menubarLogoLink").attr("href", stubegru.constants["BASE_URL"]);
+$("#menubarLogoImg").attr("src", logoPath);
+$("#menubarLogoImg").attr("title", stubegru.constants["APPLICATION_NAME"]);
 
 //Add default Menu Entries
 stubegru.modules.menubar.addDivider("secondary", 999);
