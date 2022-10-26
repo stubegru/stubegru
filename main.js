@@ -102,7 +102,7 @@ function setFavicon() {
 function afterLoadView() {
     $(`[data-toggle="toggle"]`).bootstrapToggle();//Init toggles
     ckEditorModalFix();
-    if (stubegru.modules.userUtils) { stubegru.modules.userUtils.updateAdminElements() };
+    stubegru.modules.userUtils.updateAdminElements();
 }
 
 

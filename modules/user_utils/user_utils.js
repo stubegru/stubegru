@@ -25,18 +25,24 @@ stubegru.modules.userUtils.getUserPermissionRequests = async function () {
 async function initUserManagement() {
     const userData = await stubegru.modules.userUtils.getUserInfo();
     stubegru.currentUser = userData;
-    stubegru.currentUser.permissionRequests = await stubegru.modules.userUtils.getUserPermissionRequests();
     stubegru.modules.menubar.addItem("secondary", `<li><a style="cursor:default;"><i class="fas fa-user"></i>&nbsp;Nutzer: <b>${userData.name}</b></a></li>`, -1000);
     stubegru.modules.menubar.addItem("secondary", `<li><a data-toggle="modal" data-target="#userUtilsModal" title="Name, Mailadresse und Passwort konfigurieren"><i class="fas fa-cog"></i>&nbsp;Eigenen Account bearbeiten</a></li>`, -999);
     stubegru.modules.menubar.addDivider("secondary", -900);
     stubegru.modules.menubar.addItem("secondary", `<li class="permission-USER_WRITE permission-required"><a href="${stubegru.constants.BASE_URL}?view=user_management" title="Alle Benutzer verwalten"><i class="fas fa-users-cog"></i>&nbsp;Nutzerverwaltung</a></li>`, 10);
     userUtilsModalReset();
+    stubegru.modules.userUtils.updateAdminElements();
 };
 initUserManagement();
 
 stubegru.modules.userUtils.updateAdminElements = async function () {
+    let permissionRequests = stubegru.modules.userUtils.permissionRequests;
+    if (!permissionRequests) {
+        permissionRequests = await stubegru.modules.userUtils.getUserPermissionRequests();
+        stubegru.modules.userUtils.permissionRequests = permissionRequests;
+    }
+
     $(`.permission-required`).hide(); //Hide all
-    for (let perm of stubegru.currentUser.permissionRequests) {
+    for (let perm of permissionRequests) {
         if (perm.access) {
             $(`.permission-${perm.name}`).show(); //then show allowed
         }
