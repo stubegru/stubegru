@@ -29,6 +29,7 @@ async function initUserManagement() {
     stubegru.modules.menubar.addItem("secondary", `<li><a data-toggle="modal" data-target="#userUtilsModal" title="Name, Mailadresse und Passwort konfigurieren"><i class="fas fa-cog"></i>&nbsp;Eigenen Account bearbeiten</a></li>`, -999);
     stubegru.modules.menubar.addDivider("secondary", -900);
     stubegru.modules.menubar.addItem("secondary", `<li class="permission-USER_WRITE permission-required"><a href="${stubegru.constants.BASE_URL}?view=user_management" title="Alle Benutzer verwalten"><i class="fas fa-users-cog"></i>&nbsp;Nutzerverwaltung</a></li>`, 10);
+    stubegru.modules.menubar.registerPostRenderHook("-Update Admin Elements-", stubegru.modules.userUtils.updateAdminElements, 100);
     userUtilsModalReset();
     stubegru.modules.userUtils.updateAdminElements();
 };
