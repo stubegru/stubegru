@@ -17,7 +17,12 @@ foreach ($resultList as $row) {
     $articleId = $row["id"];
     $articleHeading = $row["heading"];
     $articleReminderText = $row["reminderText"];
-    newNotification($constants["reminder"], $articleId, $articleHeading, $articleReminderText, "", $constants["nobody"], $constants["info"]);
+
+    $wikiLink = getenv(("BASE_URL")) . "?view=wiki_show_article&artikel=$articleId";
+    $notificationText = "Dieser Wiki Artikel hat eine Erinnerung ausgelöst<br>
+    Hinweis: $articleReminderText<br><br>
+    Der entsprechende Wiki Artikel ist hier zu finden:<br><a href='$wikiLink'>$articleHeading</a>";
+    newNotification("WIKI_REMINDER", $articleId, $articleHeading, $notificationText, 0, "INFO");
 }
 
 //Bearbeitete reminder aus DB löschen

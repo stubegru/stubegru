@@ -39,7 +39,10 @@ foreach ($nTypesList as $row) {
 $allUsers = getUserList(); //from user_utils.php
 
 foreach ($resultList as &$row) {
-    $row["userName"] = $allUsers[$row["userId"]]["name"];
+    $row["userName"] = "unknown";
+    if (isset($allUsers[$row["userId"]])) {
+        $row["userName"] = $allUsers[$row["userId"]]["name"];
+    }
     $row["read"] = $row["read"] ? true : false;
     $row["type"] = $notificationTypes[$row["type"]];
 }
