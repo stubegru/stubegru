@@ -72,18 +72,21 @@ function sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $a
 {
     global $dbPdo, $BASE_PATH;
     $emitterUserName = getUserAttribute($userId, "name");
-    $selectStatement = $dbPdo->prepare("SELECT `description` FROM `notification_types` WHERE id = :type;");
+    $selectStatement = $dbPdo->prepare("SELECT `name`,`description` FROM `notification_types` WHERE id = :type;");
 
     foreach ($typeList as $type) {
         //get notification type description
         $selectStatement->bindValue(':type', $type);
         $selectStatement->execute();
-        $typeDescription = $selectStatement->fetch(PDO::FETCH_COLUMN);
+        $notificationTypeResult = $selectStatement->fetch(PDO::FETCH_ASSOC);
+
+        $typeDescription = $notificationTypeResult["description"];
+        $typeName = $notificationTypeResult["name"];
 
         //load mail template and replace variables
         $mail_text = file_get_contents("$BASE_PATH/modules/notifications/mail_template_notification.html");
         $variablen_im_text = array("{title}", "{text}", "{user_name}", "{trigger_type}", "{trigger_description}", "{application_name}", "{application_url}");
-        $variablen_daten = array($title, $text, $emitterUserName, $type, $typeDescription, getenv("APPLICATION_NAME"), getenv("BASE_URL"));
+        $variablen_daten = array($title, $text, $emitterUserName, $typeName, $typeDescription, getenv("APPLICATION_NAME"), getenv("BASE_URL"));
         $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
         
         $mail_betreff = getenv("APPLICATION_NAME") . " - Benachrichtigung";
