@@ -112,7 +112,9 @@ if ($articleId == "create") {
         $insertStatement->execute();
     } else {
         //Notification versenden. wenn der Artikel als ungelesen angezeigt werden soll
-        newNotification($constants["article"], $articleId, $heading, "", "", $own_id, $constants["new"]);
+        $wikiLink = getenv(("BASE_URL")) . "?view=wiki_show_article&artikel=$articleId";
+        $notificationText = "Dieser Wiki Artikel wurde neu erstellt<br>Der neue Wiki Artikel ist hier zu finden:<br><a href='$wikiLink'>$heading</a>";
+        newNotification("WIKI_ARTICLE", $articleId, $heading, $notificationText, $own_id, "CREATE");
     }
 
     $toReturn["status"] = "success";
@@ -159,7 +161,10 @@ Artikel Updaten
         $deleteStatement = $dbPdo->prepare("DELETE FROM wiki_link_gelesen WHERE artikelId = :artikelId;");
         $deleteStatement->bindValue(':artikelId', $articleId);
         $deleteStatement->execute();
-        newNotification($constants["article"], $articleId, $heading, "", "", $own_id, $constants["update"]);
+        //notification
+        $wikiLink = getenv(("BASE_URL")) . "?view=wiki_show_article&artikel=$articleId";
+        $notificationText = "Dieser Wiki Artikel wurde überarbeitet<br>Der neue Wiki Artikel ist hier zu finden:<br><a href='$wikiLink'>$heading</a>";
+        newNotification("WIKI_ARTICLE", $articleId, $heading, $notificationText, $own_id, "UPDATE");
     }
 
     $toReturn["status"] = "success";

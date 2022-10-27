@@ -38,7 +38,8 @@ if($row == false) {
     $deleteStatement->execute();
 
     //Notification versenden
-    newNotification($constants["article"], $id, $titel, "", "", $own_id, $constants["delete"]);
+    $notificationText = "Dieser Wiki Artikel wurde gelöscht.";
+    newNotification("WIKI_ARTICLE", $id, $titel, $notificationText, $own_id, "DELETE");
 
     $toReturn = array();
     $toReturn["status"] = "success";
