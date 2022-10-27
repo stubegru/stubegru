@@ -35,11 +35,11 @@ if ($newsId == "new") {
     $newMessageId = $dbPdo->lastInsertId();
 
     //Notification versenden
-    newNotification($constants["news"], $newMessageId, $titel, $inhalt, "", $erfasser, $constants["new"]);
+    $text = "Diese Tagesaktuelle Info wurde neu erstellt";
+    newNotification("DAILY_NEWS", $newMessageId, $titel, $text, $erfasser, "CREATE");
 
     $toReturn["message"] = "Neue Tagesaktuelle Info hinzugefügt";
     $toReturn["status"] = "success";
-
 } else if (is_numeric($newsId)) {
 
     $updateStatement = $dbPdo->prepare("UPDATE `Nachrichten` SET titel=:titel, inhalt=:inhalt, beginn=:beginn, ende=:ende, prioritaet=:prioritaet, erfassungsdatum=:erfassungsdatum WHERE id=:newsId;");
@@ -53,11 +53,11 @@ if ($newsId == "new") {
     $updateStatement->execute();
 
     //Notification versenden
-    newNotification($constants["news"], $newsId, $titel, $inhalt, "", $erfasser, $constants["update"]);
+    $text = "Die Tagesaktuelle Info wurde überarbeitet";
+    newNotification("DAILY_NEWS", $newsId, $titel, $text, $erfasser, "UPDATE");
 
     $toReturn["message"] = "Tagesaktuelle Info gespeichert";
     $toReturn["status"] = "success";
-
 } else {
     $toReturn["message"] = "Fehler beim speichern der Tagesaktuellen Info. Die übergebene Id '$newsId' ist ungültig.";
     $toReturn["status"] = "error";

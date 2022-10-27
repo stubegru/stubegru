@@ -39,16 +39,15 @@ if ($rowNumbers > 0) {
     $insertStatement->execute();
     $articleId = $dbPdo->lastInsertId();
 
-    //Notification für neuen Wiki artikel versenden.
-    newNotification($constants["article"], $articleId, $titel, "", "", $own_id, $constants["new"]);
-
     //Tagesaktuelle Info löschen
     $deleteStatement = $dbPdo->prepare("DELETE FROM Nachrichten WHERE id = :newsId;");
     $deleteStatement->bindValue(':newsId', $newsId);
     $deleteStatement->execute();
 
-    //Notification für tagesaktuelle Info versenden
-    newNotification($constants["news"], $newsId, $titel, $inhalt, "", $own_id, $constants["delete"]);
+    $wikiLink = getenv(("BASE_URL")) . "?view=wiki_show_article&artikel=$articleId";
+    $text = "Die Tagesaktuelle Info <b>'$titel'</b> wurde gelöscht und in einen Wiki Artikel umgewandelt.<br>Der neue Wiki Artikel ist hier zu finden:<br><a href='$wikiLink'>$titel</a>";
+    $notificationTitle = "Tagesaktuelle Info in Wiki Artikel umgewandelt";
+    newNotification("MOVE_TO_WIKI", $articleId, $notificationTitle, $text, $own_id, "UPDATE");
 
     $toReturn["status"] = "success";
     $toReturn["message"] = "Tagesaktuelle Info wurde in Artikel umgewandelt";

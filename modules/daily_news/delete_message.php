@@ -23,6 +23,7 @@ $deleteStatement->bindValue(':newsId', $id);
 $deleteStatement->execute();
 
 //Notification versenden
-newNotification($constants["news"], $id, $titel, $inhalt, "", $own_id, $constants["delete"]);
+$text = "Die Tagesaktuelle Info wurde gelöscht";
+newNotification("DAILY_NEWS", $id, $titel, $text, $own_id, "DELETE");
 
 echo json_encode(array("status" => "success", "message" => "Tagesaktuelle Info '$titel' wurde gelöscht."));
