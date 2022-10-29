@@ -315,7 +315,7 @@ function getArticleData(articleId) {
                 });
 
                 //Reminder Daten Laden
-                if (json.reminderDate == "0000-00-00") { //Wenn kein Reminder gesetzt ist gibt die DB 0000-00-00 aus
+                if (json.reminderDate == "0000-00-00" || json.reminderDate == null) {
                     currentReminder = {};
                     $("#reminderButton").html("Erinnerung erstellen");
                 } else {
