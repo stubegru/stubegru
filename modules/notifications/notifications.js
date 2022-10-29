@@ -311,6 +311,7 @@ function showNotificationDetailView(notificationId) {
     $("#ndvDate").html(formatTimespan(n.timestamp));
     $("#ndvIntroduction").html(n.title);
     $("#ndvMainLine").html(n.text);
+    $("#ndvTriggerName").html(n.userName);
 
     //Gelöscht Button initialisieren
     $("#deleteNotificationFromModal").unbind();
