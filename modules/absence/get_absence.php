@@ -10,11 +10,11 @@ if (isset($_POST["absenceId"])) {
     echo json_encode(array("status" => "error", "message" => "Abwesenheit mit der id $absenceId konnte nicht abgerufen werden."));
     exit;
 }
+$dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 
-$today = date("Y-m-d");
+$today = date("c");
 $dbPdo->query("DELETE FROM `Abwesenheiten` WHERE recurring = '' AND end < '$today';"); //Delete past absence entries
 
-$dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 
 //Prüfen, ob alle oder ein bestimmter Datensatz geholt werden soll
 if ($absenceId == "all") {
