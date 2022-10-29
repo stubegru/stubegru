@@ -31,7 +31,7 @@ stubegru.modules.menubar.registerPostRenderHook = function (name, callback, prio
     stubegru.modules.menubar.postRenderHooks.sort((a, b) => (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0));
 }
 
-stubegru.modules.menubar.executePostRenderHooks = function(){
+stubegru.modules.menubar.executePostRenderHooks = function () {
     for (const hook of stubegru.modules.menubar.postRenderHooks) {
         //console.log(`Executing post render hook: ${hook.name}`);
         hook.callback();
@@ -40,12 +40,12 @@ stubegru.modules.menubar.executePostRenderHooks = function(){
 
 
 stubegru.modules.menubar.render = function () {
-    let orderedPrimary = stubegru.modules.menubar.entries.primary.sort((a, b) => (a.index > b.index) ? 1 : ((b.index > a.index) ? -1 : 0))
+    let orderedPrimary = stubegru.modules.menubar.entries.primary.sort((a, b) => a.index - b.index)
     let primaryString = "";
     orderedPrimary.forEach((entry) => primaryString += `<!--Primary menu entry with index ${entry.index}-->\n${entry.html}`)
     $(`#menubarPrimaryItemContainer`).html(primaryString + menuSecondaryContainerHtml);
 
-    let orderedSecondary = stubegru.modules.menubar.entries.secondary.sort((a, b) => (a.index > b.index) ? 1 : ((b.index > a.index) ? -1 : 0))
+    let orderedSecondary = stubegru.modules.menubar.entries.secondary.sort((a, b) => a.index - b.index)
     let secondarystring = "";
     orderedSecondary.forEach((entry) => secondarystring += `<!--Secondary menu entry with index ${entry.index}-->\n${entry.html}`)
     $(`#menubarSecondaryItemContainer`).html(secondarystring);
