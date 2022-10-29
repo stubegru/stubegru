@@ -71,7 +71,7 @@ function createOnlineNotifications($typeList, $emitterId, $title, $text, $userId
 function sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $action)
 {
     global $dbPdo, $BASE_PATH;
-    $emitterUserName = getUserAttribute($userId, "name");
+    $emitterUserName = getUserName($userId);
     $selectStatement = $dbPdo->prepare("SELECT `name`,`description` FROM `notification_types` WHERE id = :type;");
 
     foreach ($typeList as $type) {

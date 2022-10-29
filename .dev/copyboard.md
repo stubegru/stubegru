@@ -8,7 +8,7 @@ require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 permissionRequest("perm_id");
 
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
-getUserAttribute($userId, "name");
+getUserName($userId);
 
 require_once "$BASE_PATH/modules/notifications/notification_system.php";
 

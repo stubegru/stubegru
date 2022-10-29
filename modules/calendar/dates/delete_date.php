@@ -40,7 +40,7 @@ $dateTemplateId = $meetingData["template"];
 $clientId = $meetingData["teilnehmer"];
 
 //Mailadresse des Beraters abrufen
-$dateOwnerMailAdress = getUserAttribute($dateOwnerId, "mail");
+$dateOwnerMailAdress = getUserMail($dateOwnerId);
 //Mailadresse des Teilnehmers abrufen
 $selectStatement = $dbPdo->prepare("SELECT mail FROM `Beratene` WHERE id = :clientId;");
 $selectStatement->bindValue(':clientId', $clientId);

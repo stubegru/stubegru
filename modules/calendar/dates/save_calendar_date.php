@@ -15,7 +15,7 @@ $end = $_POST["end"];
 $title = $_POST["title"];
 $template = $_POST["templateId"];
 
-$ownerName = getUserAttribute($ownerId, "name");
+$ownerName = getUserName($ownerId);
 
 $insertStatement = $dbPdo->prepare("INSERT INTO `Termine` (`date`,`owner`,`ownerId`,`room`,`start`,`end`,`title`,`template`) VALUES (:date,:ownerName,:ownerId,:room,:start,:end,:title,:template);");
 $insertStatement->bindValue(':date', $date);

@@ -2,21 +2,28 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 
-function getUserAttribute($userId, $attribute)
+function getUserName($userId)
 {
     permissionRequest("USER_READ");
     global $dbPdo;
 
-    $selectStatement = $dbPdo->prepare("SELECT `$attribute` FROM `Nutzer` WHERE `ID`=:userId;");
-    $selectStatement->bindValue(':userId', $userId);
+    $selectStatement = $dbPdo->prepare("SELECT `name` FROM `Nutzer` WHERE `id`=:userId;");
+    $selectStatement->bindValue(":userId",$userId);
     $selectStatement->execute();
-    $result = $selectStatement->fetchColumn();
+    $name = $selectStatement->fetchColumn();
+    return $name;
+}
 
-    if (isset($result)) {
-        return $result;
-    } else {
-        return null;
-    }
+function getUserMail($userId)
+{
+    permissionRequest("USER_READ");
+    global $dbPdo;
+
+    $selectStatement = $dbPdo->prepare("SELECT `mail` FROM `Nutzer` WHERE `id`=:userId;");
+    $selectStatement->bindValue(":userId",$userId);
+    $selectStatement->execute();
+    $mail = $selectStatement->fetchColumn();
+    return $mail;
 }
 
 function getUserList()

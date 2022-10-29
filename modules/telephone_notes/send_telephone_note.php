@@ -15,7 +15,7 @@ $mail = $_POST["mail"];
 $note = $_POST["note"];
 $recipient = $_POST["recipient"];
 
-$sender_name = getUserAttribute($ownId, "name");
+$sender_name = getUserName($ownId);
 $subject = "Telefonnotiz von $sender_name";
 
 $keywordList = ["{sender_name}", "{time}", "{issue}", "{name}", "{mnumber}", "{phone}", "{mail}", "{note}", "{application_name}", "{admin_mail}"];

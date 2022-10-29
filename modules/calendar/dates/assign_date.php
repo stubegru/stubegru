@@ -74,7 +74,7 @@ $selectStatement->execute();
 $roomObject = $selectStatement->fetch(PDO::FETCH_OBJ);
 
 //Mailadresse des Beraters abrufen
-$dateOwnerMailAdress = getUserAttribute($dateOwnerId, "mail");
+$dateOwnerMailAdress = getUserMail($dateOwnerId);
 
 //Mailtemplates abrufen
 $selectStatement = $dbPdo->prepare("SELECT * FROM `Templates` WHERE `id`=:dateTemplateId;");
@@ -113,8 +113,8 @@ try {stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText);} catc
 
 
 //***************Mail an Berater versenden************************
-$loggedInUserName = getUserAttribute($loggedInUserId, "name");
-$loggedInUserMailAdress = getUserAttribute($loggedInUserId, "mail");
+$loggedInUserName = getUserName($loggedInUserId);
+$loggedInUserMailAdress = getUserMail($loggedInUserId);
 
 $AdvisorMailText = "<p>Guten Tag</p>
         <p>$loggedInUserName hat einen Termin bei Ihnen vergeben</p>

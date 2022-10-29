@@ -21,7 +21,7 @@ $selectStatement->execute();
 $reportArticleName = $selectStatement->fetchColumn();
 
 //get current users name
-$own_name = getUserAttribute($own_id,"name");
+$own_name = getUserName($own_id);
 
 $wikiLink = getenv(("BASE_URL")) . "?view=wiki_show_article&artikel=$reportArticleId";
 $notificationText = "Es wurde ein Problem mit dem Wiki Artikel <b>$reportArticleName</b> gemeldet<br><br>
