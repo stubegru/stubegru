@@ -3,7 +3,6 @@
 // Dieses Script wird von get_notifcations regelmäßig aufgerufen
 
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/utils/auth_and_database.php";
 $time = strtotime("-2 month", time());
 $delete_before = date("Y-m-d", $time);
 
@@ -13,3 +12,5 @@ $dbPdo->query("DELETE FROM `notification_user` WHERE `notification_user`.`notifi
 $dbPdo->query("DELETE FROM `notifications` WHERE `timestamp` < '$delete_before'");
 //Lösche Benachrichtigungen, die vonn jedem Nutzer entfernt wurden
 $dbPdo->query("DELETE FROM `notifications` WHERE `id` NOT IN (SELECT notification_user.notificationId from notification_user);");
+
+echo "Deleted all notifications that were older than $delete_before";

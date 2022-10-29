@@ -5,9 +5,6 @@ require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 $own_id = $_SESSION['id'];
 $notificationId = $_POST["notificationId"]; //"all" => alle
 
-//[Aufräumen] Lösche alle Notifications, die älter als 2 Monate sind
-require_once "$BASE_PATH/modules/notifications/delete_old_notifications.php";
-
 //Prüfen, ob alle oder ein bestimmter Datensatz geholt werden soll
 if ($notificationId == "all") {
     //hohle alle Benachrichtigungen

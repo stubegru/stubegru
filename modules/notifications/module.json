@@ -19,5 +19,8 @@
     ],
     "css": [
         "notifications.css"
+    ],
+    "cronjob":[
+        "delete_old_notifications.php"
     ]
 }
