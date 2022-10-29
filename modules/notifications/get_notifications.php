@@ -11,7 +11,7 @@ require_once "$BASE_PATH/modules/notifications/delete_old_notifications.php";
 //Prüfen, ob alle oder ein bestimmter Datensatz geholt werden soll
 if ($notificationId == "all") {
     //hohle alle Benachrichtigungen
-    $selectStatement = $dbPdo->prepare("SELECT notifications . * , notification_user.read FROM notifications, notification_user WHERE notifications.id = notification_user.notificationId AND notification_user.userId = :ownId ORDER BY `timestamp` DESC;");
+    $selectStatement = $dbPdo->prepare("SELECT notifications . * , notification_user.read FROM notifications, notification_user WHERE notifications.id = notification_user.notificationId AND notification_user.userId = :ownId ORDER BY `timestamp` DESC LIMIT 20;");
     $selectStatement->bindValue(':ownId', $own_id);
     $selectStatement->execute();
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
