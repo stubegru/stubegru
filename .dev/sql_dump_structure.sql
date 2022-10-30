@@ -2,7 +2,7 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 13. Okt 2022 um 09:07
+-- Erstellungszeit: 30. Okt 2022 um 10:51
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -150,7 +150,7 @@ CREATE TABLE `Nutzer` (
   `name` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `mail` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `account` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` int(11) NOT NULL COMMENT 'See table Rollen',
+  `role` int(11) NOT NULL,
   `erfassungsdatum` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `erfasser` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `passwort` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
@@ -246,18 +246,6 @@ CREATE TABLE `role_presets` (
   `roleId` int(11) NOT NULL,
   `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `subjectId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `Studiengaenge`
---
-
-CREATE TABLE `Studiengaenge` (
-  `id` int(11) NOT NULL,
-  `nummer` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -537,12 +525,6 @@ ALTER TABLE `role_presets`
   ADD PRIMARY KEY (`roleId`,`type`,`subjectId`);
 
 --
--- Indizes für die Tabelle `Studiengaenge`
---
-ALTER TABLE `Studiengaenge`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indizes für die Tabelle `survey_answers`
 --
 ALTER TABLE `survey_answers`
@@ -672,12 +654,6 @@ ALTER TABLE `Raeume`
 -- AUTO_INCREMENT für Tabelle `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `Studiengaenge`
---
-ALTER TABLE `Studiengaenge`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
