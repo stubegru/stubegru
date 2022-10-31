@@ -10,10 +10,10 @@ stubegru.modules.userUtils.getUserInfo = async function (userId) {
 }
 
 /**
- * @param {string} permission id of the permission
+ * @param {string} permissionRequest name of the permissionRequest
  */
-stubegru.modules.userUtils.getUserByPermission = async function (permission) {
-    const userData = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_user_by_permission.php?permission=${permission}`)).json();
+stubegru.modules.userUtils.getUserByPermission = async function (permissionRequest) {
+    const userData = await (await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_user_by_permission.php?permissionRequest=${permissionRequest}`)).json();
     return userData;
 }
 

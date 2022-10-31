@@ -3,7 +3,7 @@ refreshTelephoneRecipientsDropdown();
 $('[data-toggle="tooltip"]').tooltip();
 
 async function refreshTelephoneRecipientsDropdown() {
-    const userList = await stubegru.modules.userUtils.getUserByPermission("telefonnotiz");
+    const userList = await stubegru.modules.userUtils.getUserByPermission("RECEIVE_TELEPHONE_NOTE");
     $("#telephonenote_recipients").html("<option value=''>Bitte wählen...</option>"); //Clear old recipients
     for (const user of userList) {
         $("#telephonenote_recipients").append($('<option>', {

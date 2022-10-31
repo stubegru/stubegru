@@ -310,7 +310,7 @@ async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown au
 
     let ownId = stubegru.currentUser.id;
 
-    let userList = await stubegru.modules.userUtils.getUserByPermission("beratung");
+    let userList = await stubegru.modules.userUtils.getUserByPermission("MEETING_ADVISOR");
     let selectHtml = "";
     for (const user of userList) {
         if (ownId == user.id) { //Add own entry at top (default)
