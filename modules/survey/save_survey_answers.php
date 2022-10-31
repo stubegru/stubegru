@@ -31,19 +31,18 @@ if ($surveyData["uniqueKey"] == "1") {
     $testStatement->bindValue(':surveyId', $surveyId);
     $testStatement->bindValue(':uniqueKey', $uniqueKey);
     $testStatement->execute();
-    $rowNumbers = $testStatement->fetchColumn();
-    if ($rowNumbers > 0) {
-        //valid key -> continue but remove this key
-        $keyData = $testStatement->fetch(PDO::FETCH_ASSOC);
-        $keyId = $keyData["id"];
-        $deleteStatement = $dbPdo->prepare("DELETE FROM survey_keys WHERE id = ':keyId';");
-        $deleteStatement->bindValue(':keyId', $keyId);
-        $deleteStatement->execute();
-    } else {
+    $keyData = $testStatement->fetch(PDO::FETCH_ASSOC);
+    if ($keyData == false) {
         //no valid key -> exit with 401
         header("HTTP/1.1 401 Unauthorized");
         echo json_encode(array("status" => "error", "message" => "401 Unauthorized - No valid unique answer key provided", "permission" => "uniqueKey"));
         exit;
+    } else {
+        //valid key -> continue but remove this key
+        $keyId = $keyData["id"];
+        $deleteStatement = $dbPdo->prepare("DELETE FROM survey_keys WHERE id = :keyId;");
+        $deleteStatement->bindValue(':keyId', $keyId);
+        $deleteStatement->execute();
     }
 }
 
@@ -57,7 +56,7 @@ foreach ($answerArray as $currentAnswer) {
     if (isset($currentAnswer["optionId"]) && $currentAnswer["optionId"] != "") {
         $optionId = $currentAnswer["optionId"];
     }
-    
+
     $insertStatement = $dbPdo->prepare("INSERT INTO `survey_answers`(`questionId`, `userHash`, `value`, `optionId`, `surveyId`) VALUES (:questionId,:userHash,:questionValue,:optionId,:surveyId);");
     $insertStatement->bindValue(':questionId', $questionId);
     $insertStatement->bindValue(':userHash', $userHash);

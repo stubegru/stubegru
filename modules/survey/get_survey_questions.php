@@ -40,7 +40,8 @@ permissionRequest($permission);
 $uniqueKeyRequired = $surveyData["uniqueKey"];
 
 if ($uniqueKeyRequired == "1") {
-    $testStatement = $dbPdo->prepare("SELECT * FROM survey_keys WHERE surveyId ='$surveyId' AND uniqueKey = ':uniqueKey'");
+    $testStatement = $dbPdo->prepare("SELECT * FROM survey_keys WHERE surveyId =:surveyId AND uniqueKey = :uniqueKey");
+    $testStatement->bindValue(':surveyId', $surveyId);
     $testStatement->bindValue(':uniqueKey', $uniqueKey);
     $testStatement->execute();
     $rowNumbers = $testStatement->fetchColumn();
