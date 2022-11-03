@@ -129,6 +129,7 @@ function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus d
 
     let startDate = new Date();
     startDate.setDate(1);
+    startDate.setTime(startDate.getTime() - 1000 * 60 * 60 * 24);
     let timestampNextYear = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
     let endDate = new Date(timestampNextYear);
     endDate.setDate(30);
@@ -138,8 +139,8 @@ function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus d
         dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`,
         data: {
-            start: formatDate(startDate, "YYYY-MM-DDThh:mm:ssZ"),
-            end: formatDate(endDate, "YYYY-MM-DDThh:mm:ssZ"),
+            start: formatDate(startDate, "YYYY-MM-DDThh:mm:ss"),
+            end: formatDate(endDate, "YYYY-MM-DDThh:mm:ss"),
         },
         success: function (data) {
             fullCalendarInstance.removeAllEvents(); //Clear calendar
@@ -212,7 +213,7 @@ function setDateEndTime() {
 async function saveMeeting() {
     //show spinner    
     $("#saveMeetingButton").html(`Termin wird gespeichert &nbsp;<i class="fas fa-circle-notch fa-spin"></i>`);
-    $("#saveMeetingButton").attr("disabled",true);
+    $("#saveMeetingButton").attr("disabled", true);
     //Save Meeting
     let meeting = new FormData();
     meeting.append("date", $('#calendarDate').val());
@@ -271,7 +272,7 @@ async function saveMeeting() {
         loadDates();
         $("#terminmodal").modal("hide");
     }
-    $("#saveMeetingButton").attr("disabled",false);
+    $("#saveMeetingButton").attr("disabled", false);
     $("#saveMeetingButton").html(`Termin speichern`);
 
 }
