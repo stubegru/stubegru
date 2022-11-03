@@ -1,0 +1,393 @@
+<!-- KALENDER Box Start-->
+<!-- Alle javascript Funktionen zum Kalender befinden sich in calendar.js. Eigenes CSS für den Kalendar ist definiert in calendar.css -->
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="#collapseCalendar" data-toggle="collapse" aria-expanded="true">Kalender</a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse in" id="collapseCalendar" aria-expanded="false">
+            <div class="panel-body">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button data-toggle="modal" data-target="#terminmodal" id="termin" type="button" class="btn btn-success btn-block permission-MEETINGS_WRITE permission-required">
+                                    <i class="far fa-calendar-plus"></i>&nbsp; Neuer Termin
+                                </button>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="input-group">
+                                    
+                                    <input type="text" class="form-control" placeholder="Suche nach Kunden" id="calendarSearchInput">
+                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="calendarSearchClearButton"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <i class="fas fa-cog"></i><i class="fas fa-caret-down"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right calendar-dropdown" id="calendarSettingsDropdown">
+                                    <li>Kalender Einstellungen</li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                Fremde Termine
+                                            </div>
+                                            <div class="col-xs-4 pull-right">
+                                                <input id="calendarSettingsForeignToggle" type="checkbox" data-toggle="toggle">
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="row">
+                                            <div class="col-xs-8">
+                                                Nur freie Termine
+                                            </div>
+                                            <div class="col-xs-4 pull-right">
+                                                <input type="checkbox" data-toggle="toggle">
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Termin</th>
+                                    <th>Kunde</th>
+                                    <th>Beratender</th>
+                                    <th>Datum</th>
+                                    <th>Uhrzeit</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td>Beratung</td>
+                                    <td>Michael Test</td>
+                                    <td>Bernd Berater</td>
+                                    <td>12.12.2022</td>
+                                    <td>13:30</td>
+                                    <td>
+                                        <button class="btn btn-secondary"><i class="far fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div id="calendarBody">
+                    <div id="calendarViewContainer"></div>
+                </div>
+
+
+
+                <div id="terminmodal" class="modal fade" style="display: none;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="min-width : 80%;">
+                        <div class="modal-content">
+                            <form action="javascript:saveMeeting()">
+                                <div class="modal-header">
+                                    <button class="close" type="button" data-dismiss="modal" aria-hidden="true">
+                                        ×
+                                    </button>
+                                    <h4 class="modal-title">Termin Details</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class='col-sm-4'>
+                                            <div class="form-group">
+                                                <label>Datum</label>
+                                                <input autocomplete="off" type='date' id="calendarDate" class="form-control terminmodal-input" required>
+                                            </div>
+                                        </div>
+                                        <div class='col-sm-4'>
+                                            <div class="form-group">
+                                                <label>Beginn</label>
+                                                <input autocomplete="off" type='time' id="calendarStart" class="form-control terminmodal-input" onChange="setDateEndTime()" required>
+                                            </div>
+                                        </div>
+                                        <div class='col-sm-4'>
+                                            <div class="form-group">
+                                                <label>Ende</label>
+                                                <input autocomplete="off" id="calendarEnd" type='time' class="form-control terminmodal-input" required>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6" style="display:block;">
+                                            <div class="form-group">
+                                                <label>Titel</label>
+                                                <input class="form-control terminmodal-input" id="calendarTitle" value="Beratungstermin" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Berater*in</label>
+                                                <select id="calendarOwner" class="form-control terminmodal-input">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class='col-lg-6'>
+                                            <label>Raum</label>
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                    <div class="form-group">
+                                                        <select id="calendarRoom" class="form-control terminmodal-input" required="">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4" style="display: flex; justify-content: space-between;">
+                                                    <button class="btn btn-info terminmodal-input" type="button" onclick="openRoomForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                    <button class="btn btn-primary terminmodal-input" type="button" onclick="openRoomForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class='col-lg-6'>
+                                            <label>Mailvorlage</label>
+                                            <div class="row">
+                                                <div class="col-lg-8">
+                                                    <div class="form-group">
+                                                        <select id="calendarTemplate" class="form-control terminmodal-input" required="">
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4" style="display: flex; justify-content: space-between;">
+                                                    <button class="btn btn-info terminmodal-input" type="button" onclick="openTemplateForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                    <button class="btn btn-primary terminmodal-input" type="button" onclick="openTemplateForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div id="newroom" class="calendarForm" style="display:none;">
+                                        <div class="row">
+                                            <div class='col-sm-12'>
+                                                <label class="lineheading">Details des Raums</label>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <input autocomplete="off" type="hidden" id="raum_id">
+                                        <div class="row">
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Kontaktkanal</label>
+                                                    <select id="raum_kanal" class="form-control">
+                                                        <option value="personally">Persönliche Beratung</option>
+                                                        <option value="phone">Telefonberatung</option>
+                                                        <option value="webmeeting">Webmeeting</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-8'>
+                                                <div class="form-group">
+                                                    <label>Titel</label>
+                                                    <input autocomplete="off" id="raum_titel" class="form-control">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class='col-sm-2'>
+                                                <div class="form-group">
+                                                    <label>Raumnr.</label>
+                                                    <input autocomplete="off" id="raum_nr" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-2'>
+                                                <div class="form-group">
+                                                    <label>Etage</label>
+                                                    <input autocomplete="off" id="raum_etage" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-3'>
+                                                <div class="form-group">
+                                                    <label>Straße</label>
+                                                    <input autocomplete="off" id="raum_strasse" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-1'>
+                                                <div class="form-group">
+                                                    <label>Hausnr.</label>
+                                                    <input autocomplete="off" id="raum_hausnr" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-2'>
+                                                <div class="form-group">
+                                                    <label>PLZ</label>
+                                                    <input autocomplete="off" id="raum_plz" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-2'>
+                                                <div class="form-group">
+                                                    <label>Ort</label>
+                                                    <input autocomplete="off" id="raum_ort" class="form-control">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class='col-sm-12'>
+                                                <div class="form-group">
+                                                    <label>Telefonnummer</label>
+                                                    <input autocomplete="off" id="raum_telefon" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <label>Link für Webmeetings</label>
+                                                    <input autocomplete="off" id="raum_link" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-6'>
+                                                <div class="form-group">
+                                                    <label>Passwort für Webmeetings</label>
+                                                    <input autocomplete="off" id="raum_passwort" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button class="btn btn-primary pull-right" type="button" onClick="saveRoom()">Raum Speichern</button>
+                                                <button class="btn btn-default" type="button" onclick="resetRoomForm()">Abbrechen</button>
+                                                <button class="btn btn-danger" type="button" onclick="deleteRoom()">Raum löschen</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div id="newmail" class="calendarForm" style="display:none">
+                                        <div class="row">
+                                            <div class='col-sm-12'>
+                                                <label class="lineheading"><b>Details Mailvorlage</b></label>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class='col-sm-6'>
+                                                <input autocomplete="off" id=templateId type="hidden" value="new">
+                                                <div class="form-group">
+                                                    <label>Titel der Vorlage</label>
+                                                    <input autocomplete="off" id="templateTitle" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Betreff der Mail</label>
+                                                    <input autocomplete="off" id="templateSubject" class="form-control">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class='col-sm-12'>
+                                                <div class="form-group">
+                                                    <label><b>Mailtext</b></label>
+                                                    <div class="col-lg-12 nopadding" id="mailvorlagetermin" style="display:block;">
+                                                        <textarea id="mailTemplateEditor" class=""></textarea>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+
+
+                                        <div class="well">
+                                            <h5><b>Verfügbare Variablen:</b></h5>
+                                            {Termin_Titel} {Termin_Datum} {Termin_Uhrzeit} {Klient_Name} {Klient_Telefon} {Berater_Name} {Berater_Mail} {Raum_Kanal} {Raum_Nummer} {Raum_Etage} {Raum_Strasse} {Raum_Hausnummer} {Raum_PLZ} {Raum_Ort} {Raum_Link} {Raum_Passwort} {Raum_Telefon}
+
+                                        </div>
+
+
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <button class="btn btn-primary pull-right" type="button" onClick="saveTemplate()">Vorlage Speichern</button>
+                                                <button class="btn btn-default" type="button" onclick="resetTemplateForm()">Abbrechen</button>
+                                                <button type="button" class="btn btn-danger pull-center" onclick="deleteTemplate()">Vorlage löschen</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="text-center">
+                                        <h3 style="margin-bottom:0px;">Teilnehmer*in</h3>
+                                    </div>
+                                    <hr style="margin-top:0px;">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Vor- und Nachname:</label>
+                                                <input type="text" class="form-control terminmodal-input" id="calendarClientName" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>E-Mail:</label>
+                                                <input type="text" class="form-control terminmodal-input" id="calendarClientMail" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Anliegen:</label>
+                                                <textarea id="calendarClientIssue" class="form-control terminmodal-input" rows="4" style="resize: vertical;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Telefon:</label>
+                                                <input type="text" class="form-control terminmodal-input" id="calendarClientPhone">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Fragebogen:</label>
+                                                <select id="calendarClientSurvey" class="form-control terminmodal-input" required="">
+                                                    <option value="0">Nein</option>
+                                                    <option value="1">Ja</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <div class="row">
+                                        <div class='col-sm-12'>
+                                            <button class="btn btn-danger pull-left permission-required permission-MEETINGS_WRITE" type="button" id="calendarDeleteMeetingButton">Termin löschen</button>
+                                            <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
+                                            <button type="submit" id="saveMeetingButton" class="btn btn-success pull-right terminmodal-input permission-required permission-MEETINGS_WRITE">Termin Speichern</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- KALENDAR Box Ende-->

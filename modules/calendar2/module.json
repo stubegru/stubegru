@@ -1,0 +1,27 @@
+{
+    "type": "stubegruAddon",
+    "name": "calendar2",
+    "description": "Add-on module for adding two level meeting assignment to stubegru's original calendar module. Needs the original calendar module to be installed. Use 'calendar2' module in the corresponding view instead of 'calendar'",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "calendar/libs/fullcalendar",
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": [],
+        "backend" : ["calendar"]
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "calendar.js"
+    ],
+    "css": [
+        "calendar.css"
+    ],
+    "cronjob" : [
+    ]
+}
