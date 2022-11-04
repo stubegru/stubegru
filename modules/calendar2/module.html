@@ -20,7 +20,7 @@
                             </div>
                             <div class="col-md-7">
                                 <div class="input-group">
-                                    
+
                                     <input type="text" class="form-control" placeholder="Suche nach Kunden" id="calendarSearchInput">
                                     <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="calendarSearchClearButton"><i class="fas fa-times"></i></span>
                                 </div>
@@ -90,87 +90,94 @@
                 <div id="terminmodal" class="modal fade" style="display: none;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog" style="min-width : 80%;">
                         <div class="modal-content">
-                            <form action="javascript:saveMeeting()">
-                                <div class="modal-header">
-                                    <button class="close" type="button" data-dismiss="modal" aria-hidden="true">
-                                        ×
-                                    </button>
-                                    <h4 class="modal-title">Termin Details</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class='col-sm-4'>
-                                            <div class="form-group">
-                                                <label>Datum</label>
-                                                <input autocomplete="off" type='date' id="calendarDate" class="form-control terminmodal-input" required>
+                            <div class="modal-header">
+                                <button class="close" type="button" data-dismiss="modal" aria-hidden="true">
+                                    ×
+                                </button>
+                                <h4 class="modal-title">Termin Details</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="calendar-detail-container">
+                                    <form action="javascript:saveMeeting()">
+                                        <div class="row">
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Datum</label>
+                                                    <input autocomplete="off" type='date' id="calendarDate" class="form-control terminmodal-input" required>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class='col-sm-4'>
-                                            <div class="form-group">
-                                                <label>Beginn</label>
-                                                <input autocomplete="off" type='time' id="calendarStart" class="form-control terminmodal-input" onChange="setDateEndTime()" required>
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Beginn</label>
+                                                    <input autocomplete="off" type='time' id="calendarStart" class="form-control terminmodal-input" onChange="setDateEndTime()" required>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class='col-sm-4'>
-                                            <div class="form-group">
-                                                <label>Ende</label>
-                                                <input autocomplete="off" id="calendarEnd" type='time' class="form-control terminmodal-input" required>
-                                            </div>
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Ende</label>
+                                                    <input autocomplete="off" id="calendarEnd" type='time' class="form-control terminmodal-input" required>
+                                                </div>
 
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6" style="display:block;">
-                                            <div class="form-group">
-                                                <label>Titel</label>
-                                                <input class="form-control terminmodal-input" id="calendarTitle" value="Beratungstermin" required>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Berater*in</label>
-                                                <select id="calendarOwner" class="form-control terminmodal-input">
-                                                </select>
+                                        <div class="row">
+                                            <div class="col-sm-4" style="display:block;">
+                                                <div class="form-group">
+                                                    <label>Titel</label>
+                                                    <input class="form-control terminmodal-input" id="calendarTitle" value="Beratungstermin" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Berater*in</label>
+                                                    <select id="calendarOwner" class="form-control terminmodal-input">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Kontaktkanal</label>
+                                                    <select id="calendarChannel" class="form-control terminmodal-input">
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="row">
+                                        <div class="row">
 
-                                        <div class='col-lg-6'>
-                                            <label>Raum</label>
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                    <div class="form-group">
-                                                        <select id="calendarRoom" class="form-control terminmodal-input" required="">
-                                                        </select>
+                                            <div class='col-lg-6'>
+                                                <label>Raum</label>
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <div class="form-group">
+                                                            <select id="calendarRoom" class="form-control terminmodal-input" required="">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4" style="display: flex; justify-content: space-between;">
+                                                        <button class="btn btn-info terminmodal-input" type="button" onclick="openRoomForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary terminmodal-input" type="button" onclick="openRoomForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                    <button class="btn btn-info terminmodal-input" type="button" onclick="openRoomForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                    <button class="btn btn-primary terminmodal-input" type="button" onclick="openRoomForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
-                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class='col-lg-6'>
-                                            <label>Mailvorlage</label>
-                                            <div class="row">
-                                                <div class="col-lg-8">
-                                                    <div class="form-group">
-                                                        <select id="calendarTemplate" class="form-control terminmodal-input" required="">
-                                                        </select>
+                                            <div class='col-lg-6'>
+                                                <label>Mailvorlage</label>
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <div class="form-group">
+                                                            <select id="calendarTemplate" class="form-control terminmodal-input" required="">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4" style="display: flex; justify-content: space-between;">
+                                                        <button class="btn btn-info terminmodal-input" type="button" onclick="openTemplateForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary terminmodal-input" type="button" onclick="openTemplateForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                    <button class="btn btn-info terminmodal-input" type="button" onclick="openTemplateForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                    <button class="btn btn-primary terminmodal-input" type="button" onclick="openTemplateForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
-                                                </div>
                                             </div>
                                         </div>
-
-                                    </div>
-
+                                    </form>
 
                                     <div id="newroom" class="calendarForm" style="display:none;">
                                         <div class="row">
@@ -327,22 +334,48 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br>
+
+                                </div>
+
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-lg btn-primary"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
+                                        <button class="btn btn-lg btn-secondary"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
+                                        <button class="btn btn-lg btn-success"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <div id="calendarClientDataContainer">
                                     <div class="text-center">
-                                        <h3 style="margin-bottom:0px;">Teilnehmer*in</h3>
+                                        <h3 style="margin-bottom:0px;">Kundendaten</h3>
                                     </div>
                                     <hr style="margin-top:0px;">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Vor- und Nachname:</label>
-                                                <input type="text" class="form-control terminmodal-input" id="calendarClientName" required="">
+                                                <input type="text" class="form-control terminmodal-input" id="calendarClientName" required>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <div class="form-group">
-                                                <label>E-Mail:</label>
-                                                <input type="text" class="form-control terminmodal-input" id="calendarClientMail" required="">
+                                                <label>Fragebogen:</label>
+                                                <select id="calendarClientSurvey" class="form-control terminmodal-input" required>
+                                                    <option value="0">Nein</option>
+                                                    <option value="1">Ja</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label>Kanal:</label>
+                                                <select id="calendarClientChannel" class="form-control terminmodal-input" required>
+                                                    <option value="">Bitte wählen...</option>
+                                                    <option value="personal">Persönlich</option>
+                                                    <option value="telephone">Telefonisch</option>
+                                                    <option value="webmeeting">Webmeeting</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -354,32 +387,30 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
+
                                             <div class="form-group">
                                                 <label>Telefon:</label>
                                                 <input type="text" class="form-control terminmodal-input" id="calendarClientPhone">
                                             </div>
                                             <div class="form-group">
-                                                <label>Fragebogen:</label>
-                                                <select id="calendarClientSurvey" class="form-control terminmodal-input" required="">
-                                                    <option value="0">Nein</option>
-                                                    <option value="1">Ja</option>
-                                                </select>
+                                                <label>E-Mail:</label>
+                                                <input type="text" class="form-control terminmodal-input" id="calendarClientMail" required="">
                                             </div>
-                                        </div>
-                                    </div>
 
-                                </div>
-
-                                <div class="modal-footer">
-                                    <div class="row">
-                                        <div class='col-sm-12'>
-                                            <button class="btn btn-danger pull-left permission-required permission-MEETINGS_WRITE" type="button" id="calendarDeleteMeetingButton">Termin löschen</button>
-                                            <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
-                                            <button type="submit" id="saveMeetingButton" class="btn btn-success pull-right terminmodal-input permission-required permission-MEETINGS_WRITE">Termin Speichern</button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class='col-sm-12'>
+                                        <button class="btn btn-danger pull-left permission-required permission-MEETINGS_WRITE" type="button" id="calendarDeleteMeetingButton">Termin löschen</button>
+                                        <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
+                                        <button type="submit" id="saveMeetingButton" class="btn btn-success pull-right terminmodal-input permission-required permission-MEETINGS_WRITE">Termin Speichern</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

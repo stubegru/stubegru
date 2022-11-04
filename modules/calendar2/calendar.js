@@ -42,27 +42,10 @@ const fullcalendarConfig = {
     eventClick: function (info) {
         info.jsEvent.preventDefault(); // don't let the browser navigate
         clickOnMeetingHandler(info.event.extendedProps);
-    },
-    customButtons: {
-        toggleStubegru: {
-            text: 'Team',
-            click: function () {
-                othersEventsVisible = !othersEventsVisible;
-                setEventVisibility("stubegru-others-events", othersEventsVisible);
-            }
-        },
-        toggleCaldav: {
-            text: 'Ich',
-            click: function () {
-                ownEventsVisible = !ownEventsVisible;
-                setEventVisibility("stubegru-own-events", ownEventsVisible);
-            }
-        }
     }
+    
 }
 let fullCalendarInstance;
-let othersEventsVisible = true;
-let ownEventsVisible = true;
 
 
 //Lade den Kalender
@@ -197,23 +180,12 @@ async function addStubegruMeetingsToFullcalendar(datesArray) {
     });
 }
 
-function setEventVisibility(eventSourceId, visible) {
-    let allEvents = fullCalendarInstance.getEvents();
-    for (let ev of allEvents) {
-        if (ev.source.id == eventSourceId) {
-            ev.setProp("display", visible ? "auto" : "none");
-        }
-    }
-}
-
-
-
 //Setzt die End-Uhrzeit des Termins automatisch auf eine Stunde nach der Startzeit
 function setDateEndTime() {
-    var startTime = $("#calendarStart").val();
+    let startTime = $("#calendarStart").val();
     if (startTime.length == 5) {
-        var hours = startTime.substr(0, 2);
-        var minutes = startTime.substr(3, 2);
+        let hours = startTime.substr(0, 2);
+        let minutes = startTime.substr(3, 2);
         hours++;
         $("#calendarEnd").val(hours + ":" + minutes);
     }
