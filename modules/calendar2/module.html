@@ -94,7 +94,7 @@
                                 <button class="close" type="button" data-dismiss="modal" aria-hidden="true">
                                     ×
                                 </button>
-                                <h4 class="modal-title">Termin Details</h4>
+                                <h4 class="modal-title" id="terminmodalTitle">Termin Details</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="calendar-detail-container">
@@ -103,19 +103,19 @@
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Datum</label>
-                                                    <input autocomplete="off" type='date' id="calendarDate" class="form-control terminmodal-input" required>
+                                                    <input autocomplete="off" type='date' id="calendarDate" class="form-control meeting-details" required>
                                                 </div>
                                             </div>
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Beginn</label>
-                                                    <input autocomplete="off" type='time' id="calendarStart" class="form-control terminmodal-input" onChange="setDateEndTime()" required>
+                                                    <input autocomplete="off" type='time' id="calendarStart" class="form-control meeting-details" onChange="setDateEndTime()" required>
                                                 </div>
                                             </div>
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Ende</label>
-                                                    <input autocomplete="off" id="calendarEnd" type='time' class="form-control terminmodal-input" required>
+                                                    <input autocomplete="off" id="calendarEnd" type='time' class="form-control meeting-details" required>
                                                 </div>
 
                                             </div>
@@ -124,20 +124,20 @@
                                             <div class="col-sm-4" style="display:block;">
                                                 <div class="form-group">
                                                     <label>Titel</label>
-                                                    <input class="form-control terminmodal-input" id="calendarTitle" value="Beratungstermin" required>
+                                                    <input class="form-control meeting-details" id="calendarTitle" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label>Berater*in</label>
-                                                    <select id="calendarOwner" class="form-control terminmodal-input">
+                                                    <select id="calendarOwner" class="form-control meeting-details">
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label>Kontaktkanal</label>
-                                                    <select id="calendarChannel" class="form-control terminmodal-input">
+                                                    <select id="calendarChannel" class="form-control meeting-details">
                                                     </select>
                                                 </div>
                                             </div>
@@ -150,13 +150,13 @@
                                                 <div class="row">
                                                     <div class="col-lg-8">
                                                         <div class="form-group">
-                                                            <select id="calendarRoom" class="form-control terminmodal-input" required="">
+                                                            <select id="calendarRoom" class="form-control meeting-details" required="">
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                        <button class="btn btn-info terminmodal-input" type="button" onclick="openRoomForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                        <button class="btn btn-primary terminmodal-input" type="button" onclick="openRoomForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                        <button class="btn btn-info meeting-details" type="button" onclick="openRoomForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary meeting-details" type="button" onclick="openRoomForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,13 +166,13 @@
                                                 <div class="row">
                                                     <div class="col-lg-8">
                                                         <div class="form-group">
-                                                            <select id="calendarTemplate" class="form-control terminmodal-input" required="">
+                                                            <select id="calendarTemplate" class="form-control meeting-details" required="">
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                        <button class="btn btn-info terminmodal-input" type="button" onclick="openTemplateForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                        <button class="btn btn-primary terminmodal-input" type="button" onclick="openTemplateForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                        <button class="btn btn-info meeting-details" type="button" onclick="openTemplateForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary meeting-details" type="button" onclick="openTemplateForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -191,7 +191,7 @@
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Kontaktkanal</label>
-                                                    <select id="raum_kanal" class="form-control">
+                                                    <select id="raum_kanal" class="form-control meeting-room-input">
                                                         <option value="personally">Persönliche Beratung</option>
                                                         <option value="phone">Telefonberatung</option>
                                                         <option value="webmeeting">Webmeeting</option>
@@ -201,7 +201,7 @@
                                             <div class='col-sm-8'>
                                                 <div class="form-group">
                                                     <label>Titel</label>
-                                                    <input autocomplete="off" id="raum_titel" class="form-control">
+                                                    <input autocomplete="off" id="raum_titel" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
 
@@ -210,37 +210,37 @@
                                             <div class='col-sm-2'>
                                                 <div class="form-group">
                                                     <label>Raumnr.</label>
-                                                    <input autocomplete="off" id="raum_nr" class="form-control">
+                                                    <input autocomplete="off" id="raum_nr" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                             <div class='col-sm-2'>
                                                 <div class="form-group">
                                                     <label>Etage</label>
-                                                    <input autocomplete="off" id="raum_etage" class="form-control">
+                                                    <input autocomplete="off" id="raum_etage" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                             <div class='col-sm-3'>
                                                 <div class="form-group">
                                                     <label>Straße</label>
-                                                    <input autocomplete="off" id="raum_strasse" class="form-control">
+                                                    <input autocomplete="off" id="raum_strasse" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                             <div class='col-sm-1'>
                                                 <div class="form-group">
                                                     <label>Hausnr.</label>
-                                                    <input autocomplete="off" id="raum_hausnr" class="form-control">
+                                                    <input autocomplete="off" id="raum_hausnr" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                             <div class='col-sm-2'>
                                                 <div class="form-group">
                                                     <label>PLZ</label>
-                                                    <input autocomplete="off" id="raum_plz" class="form-control">
+                                                    <input autocomplete="off" id="raum_plz" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                             <div class='col-sm-2'>
                                                 <div class="form-group">
                                                     <label>Ort</label>
-                                                    <input autocomplete="off" id="raum_ort" class="form-control">
+                                                    <input autocomplete="off" id="raum_ort" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
 
@@ -249,7 +249,7 @@
                                             <div class='col-sm-12'>
                                                 <div class="form-group">
                                                     <label>Telefonnummer</label>
-                                                    <input autocomplete="off" id="raum_telefon" class="form-control">
+                                                    <input autocomplete="off" id="raum_telefon" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                         </div>
@@ -257,22 +257,22 @@
                                             <div class='col-sm-6'>
                                                 <div class="form-group">
                                                     <label>Link für Webmeetings</label>
-                                                    <input autocomplete="off" id="raum_link" class="form-control">
+                                                    <input autocomplete="off" id="raum_link" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                             <div class='col-sm-6'>
                                                 <div class="form-group">
                                                     <label>Passwort für Webmeetings</label>
-                                                    <input autocomplete="off" id="raum_passwort" class="form-control">
+                                                    <input autocomplete="off" id="raum_passwort" class="form-control meeting-room-input">
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary pull-right" type="button" onClick="saveRoom()">Raum Speichern</button>
-                                                <button class="btn btn-default" type="button" onclick="resetRoomForm()">Abbrechen</button>
-                                                <button class="btn btn-danger" type="button" onclick="deleteRoom()">Raum löschen</button>
+                                                <button class="btn btn-primary pull-right meeting-room-input" type="button" onClick="saveRoom()">Raum Speichern</button>
+                                                <button class="btn btn-default meeting-room-input" type="button" onclick="resetRoomForm()">Abbrechen</button>
+                                                <button class="btn btn-danger meeting-room-input" type="button" onclick="deleteRoom()">Raum löschen</button>
                                             </div>
                                         </div>
 
@@ -292,13 +292,13 @@
                                                 <input autocomplete="off" id=templateId type="hidden" value="new">
                                                 <div class="form-group">
                                                     <label>Titel der Vorlage</label>
-                                                    <input autocomplete="off" id="templateTitle" class="form-control">
+                                                    <input autocomplete="off" id="templateTitle" class="form-control meeting-template-input">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Betreff der Mail</label>
-                                                    <input autocomplete="off" id="templateSubject" class="form-control">
+                                                    <input autocomplete="off" id="templateSubject" class="form-control meeting-template-input">
                                                 </div>
                                             </div>
 
@@ -328,9 +328,9 @@
                                         <hr>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary pull-right" type="button" onClick="saveTemplate()">Vorlage Speichern</button>
-                                                <button class="btn btn-default" type="button" onclick="resetTemplateForm()">Abbrechen</button>
-                                                <button type="button" class="btn btn-danger pull-center" onclick="deleteTemplate()">Vorlage löschen</button>
+                                                <button class="btn btn-primary pull-right meeting-template-input" type="button" onClick="saveTemplate()">Vorlage Speichern</button>
+                                                <button class="btn btn-default meeting-template-input" type="button" onclick="resetTemplateForm()">Abbrechen</button>
+                                                <button type="button" class="btn btn-danger pull-center meeting-template-input" onclick="deleteTemplate()">Vorlage löschen</button>
                                             </div>
                                         </div>
                                     </div>

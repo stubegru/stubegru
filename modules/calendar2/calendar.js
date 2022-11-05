@@ -1,15 +1,4 @@
 var liveSearchTimer;
-$("#terminmodal").on('hidden.bs.modal', resetCalendarForm); //Reset terminmodal wenn es ausgeblendet wird
-$('#collapseCalendar').on('shown.bs.collapse', () => { fullCalendarInstance.render(); })
-
-$("#calendarSettingsForeignToggle").on("change", function (event) {
-    console.log($(this).prop('checked'));
-});
-
-$(document).on('click', '#calendarSettingsDropdown', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-});
 
 
 const fullcalendarConfig = {
@@ -43,49 +32,91 @@ const fullcalendarConfig = {
         info.jsEvent.preventDefault(); // don't let the browser navigate
         clickOnMeetingHandler(info.event.extendedProps);
     }
-    
+
 }
 let fullCalendarInstance;
 
 
 //Lade den Kalender
-initFullcalendarView();
-loadDates();
-getRooms();
-getTemplates();
-getAdvisorsForCalendar();
-CKEDITOR.replace('mailTemplateEditor'); //Richtexteditor initialisieren
-resetCalendarForm();
+//initFullcalendarView();
+
 
 function initFullcalendarView() {
     let calendarEl = document.getElementById('calendarViewContainer');
     fullCalendarInstance = new FullCalendar.Calendar(calendarEl, fullcalendarConfig);
     fullCalendarInstance.render();
+
+    loadDates();
+    getRooms();
+    getTemplates();
+    getAdvisorsForCalendar();
+    CKEDITOR.replace('mailTemplateEditor'); //Richtexteditor initialisieren
+
+    $("#terminmodal").on('hidden.bs.modal', resetCalendarForm); //Reset terminmodal wenn es ausgeblendet wird
+    $('#collapseCalendar').on('shown.bs.collapse', () => { fullCalendarInstance.render(); })
+
+    $("#calendarSettingsForeignToggle").on("change", function (event) {
+        console.log($(this).prop('checked'));
+    });
+
+    $(document).on('click', '#calendarSettingsDropdown', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+}
+
+//CalendarModalHelper
+const calendarModalHelper = {
+    /**
+     * Show or hide the meeting appointment modal
+     * @param {boolean} state true to show the modal, false to hide
+     */
+    showModal: function (state) {
+        $("#terminmodal").modal(state ? "show" : "hide");
+    },
+
+    /**
+     * Set the modals title, displayed in it's header
+     * @param {string} title 
+     */
+    setTitle: function (title) {
+        $("#terminmodalTitle").html(title);
+    },
+
+    /**
+     * Reset all inputs in the Calendar meeting detail form
+     */
+    resetMeetingDetailForm: function () {
+        $('.meeting-details').val("");
+
+        //load from custom config
+        const calendarTitle = stubegru.constants.CUSTOM_CONFIG.calendarMeetingTitle || "Beratungstermin";
+        $('#calendarTitle').val(calendarTitle);
+
+        calendarModalHelper.resetRoomForm();
+        calendarModalHelper.resetTemplateForm();
+    },
+
+    /**
+     * Reset all inputs in the Calendar meeting room form
+     */
+    resetRoomForm: function () {
+        $(".meeting-room-input").val("");
+    },
+
+    /**
+     * Reset all inputs in the Calendar meeting mail template form
+     */
+    resetTemplateForm: function () {
+        $(".meeting-template-input").val("");
+        CKEDITOR.instances.mailTemplateEditor.setData(""); //reset WYSIWYG editor
+    },
 }
 
 
 
-async function resetCalendarForm() {
-    let calendarTitle = "Beratungstermin";
-    $('#calendarDate').val("");
-    $('#calendarStart').val("");
-    $('#calendarEnd').val("");
-    $('#calendarTitle').val(calendarTitle);
 
-    $('#calendarRoom').val("");
-    $('#calendarTemplate').val("");
-
-    $('#calendarClientName').val("");
-    $('#calendarClientMail').val("");
-    $('#calendarClientIssue').val("");
-    $('#calendarClientPhone').val("");
-    $('#calendarClientSurvey').val("Nein");
-
-    resetRoomForm();
-    resetTemplateForm();
-    $("#calendarDeleteMeetingButton").off();//remove all eventhandler
-    $(".terminmodal-input").prop('disabled', false);
-}
 
 function clickOnMeetingHandler(meeting) {
     //Show event details in modal
@@ -395,21 +426,7 @@ function saveRoom() { //speichert einen neuen Raum in die DB
     });
 }
 
-function resetRoomForm() {
-    $("#raum_id").val("");
-    $("#raum_titel").val("");
-    $("#raum_nr").val("");
-    $("#raum_etage").val("");
-    $("#raum_strasse").val("");
-    $("#raum_hausnr").val("");
-    $("#raum_plz").val("");
-    $("#raum_ort").val("");
-    $("#raum_link").val("");
-    $("#raum_passwort").val("");
-    $("#raum_telefon").val("");
 
-    $("#newroom").slideUp();
-}
 
 function openRoomForm(mode) { //Öffnet die Raum Vorschau zum bearbeiten
     if (mode == "modify") {
@@ -562,13 +579,6 @@ function deleteTemplate() { //löscht ein Template
 
 
 
-
-function resetTemplateForm() {
-    $("#templateTitle").val("");
-    $("#templateSubject").val("");
-    CKEDITOR.instances.mailTemplateEditor.setData("");
-    $("#newmail").slideUp();
-}
 
 function openTemplateForm(mode) { //Öffnet die Template Vorschau zum bearbeiten
     if (mode == "modify") {
