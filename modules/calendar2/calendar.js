@@ -112,6 +112,110 @@ const calendarModalHelper = {
         $(".meeting-template-input").val("");
         CKEDITOR.instances.mailTemplateEditor.setData(""); //reset WYSIWYG editor
     },
+
+    /**
+     * Reset all inputs in the client data form
+     */
+    resetClientForm: function () {
+        $(".meeting-client").val("");
+    },
+
+    /**
+     * Show / hide buttons for client assignment
+     * @param {boolean} assign wether to show the assign button
+     * @param {boolean} save wether to show the save button
+     * @param {boolean} remove wether to show the delete button
+     * @param {boolean} cancel wether to show the cancel button
+     */
+    showAssignButtons: function (assign, save, remove, cancel) {
+        sh($("#calendarAssignAssignButton"), assign);
+        sh($("#calendarAssignSaveButton"), save);
+        sh($("#calendarAssignDeleteButton"), remove);
+        sh($("#calendarAssignCancelButton"), cancel);
+
+        function sh(e, b) { b ? e.show() : e.hide(); }
+    },
+
+    /**
+     * Show / hide buttons for a meeting
+     * @param {boolean} saveAssign wether to show the save and assign button
+     * @param {boolean} save wether to show the save button
+     * @param {boolean} remove wether to show the delete button
+     * @param {boolean} cancel wether to show the cancel button
+     */
+    showFooterButtons: function (saveAssign, save, remove, cancel) {
+        sh($("#calendarSaveAssignMeetingButton"), saveAssign);
+        sh($("#calendarSaveMeetingButton"), save);
+        sh($("#calendarDeleteMeetingButton"), remove);
+        sh($("#calendarCancelButton"), cancel);
+
+        function sh(e, b) { b ? e.show() : e.hide(); }
+    },
+
+    /**
+     * @returns {boolean} wether the current user has write permissions for calendar meetings
+     */
+    isCalendarWriteUser: function () {
+        const writePermission = stubegru.modules.userUtils.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
+        return writePermission.access;
+    }
+}
+
+const calendarBackendHelper = {
+    getAllMeetings: async function () {
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`);
+        let meetingList = await resp.json();
+        return meetingList;
+    },
+
+    getMeetingData: async function (meetingId) {
+
+    },
+
+    createMeetingData: async function (meetingData) {
+        let meeting = new FormData();
+        meeting.append("date", $('#calendarDate').val());
+        meeting.append("start", $('#calendarStart').val());
+        meeting.append("end", $('#calendarEnd').val());
+        meeting.append("title", $('#calendarTitle').val());
+        meeting.append("ownerId", $('#calendarOwner').val());
+        meeting.append("roomId", $('#calendarRoom').val());
+        meeting.append("templateId", $('#calendarTemplate').val());
+
+        let meetingResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/save_calendar_date.php`, {
+            method: 'POST',
+            body: meeting
+        });
+        meetingResp = await meetingResp.json();
+        return meetingResp;
+
+    },
+
+    updateMeetingData: async function (meetingData) {
+
+    },
+
+    deleteMeeting: async function (meetingId) {
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/delete_date.php`, {
+            method: "POST",
+            body: { id: meetingId }
+        });
+        let jsonResp = await resp.json();
+        return jsonResp;
+    },
+
+    getClientData: async function (clientId) {
+
+    },
+
+    saveClientData: async function (clientData, isCreate) {
+
+    },
+
+    deleteClient: async function (clientId) {
+
+    },
+
 }
 
 
@@ -148,31 +252,6 @@ function clickOnMeetingHandler(meeting) {
 }
 
 
-function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus der DB und gibt diese an die addDatesToView() weiter.
-
-    let startDate = new Date();
-    startDate.setDate(1);
-    startDate.setTime(startDate.getTime() - 1000 * 60 * 60 * 24);
-    let timestampNextYear = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-    let endDate = new Date(timestampNextYear);
-    endDate.setDate(30);
-
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`,
-        data: {
-            start: formatDate(startDate, "YYYY-MM-DDThh:mm:ss"),
-            end: formatDate(endDate, "YYYY-MM-DDThh:mm:ss"),
-        },
-        success: function (data) {
-            fullCalendarInstance.removeAllEvents(); //Clear calendar
-            let stubegruMeetings = data.stubegru;
-            addStubegruMeetingsToFullcalendar(stubegruMeetings);
-        }
-    });
-
-}
 
 
 
@@ -227,22 +306,9 @@ async function saveMeeting() {
     $("#saveMeetingButton").html(`Termin wird gespeichert &nbsp;<i class="fas fa-circle-notch fa-spin"></i>`);
     $("#saveMeetingButton").attr("disabled", true);
     //Save Meeting
-    let meeting = new FormData();
-    meeting.append("date", $('#calendarDate').val());
-    meeting.append("start", $('#calendarStart').val());
-    meeting.append("end", $('#calendarEnd').val());
-    meeting.append("title", $('#calendarTitle').val());
-    meeting.append("ownerId", $('#calendarOwner').val());
-    meeting.append("roomId", $('#calendarRoom').val());
-    meeting.append("templateId", $('#calendarTemplate').val());
 
-    let meetingResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/save_calendar_date.php`, {
-        method: 'POST',
-        body: meeting
-    });
 
     //Process response
-    meetingResp = await meetingResp.json();
     if (meetingResp.status != "success") {
         stubegru.modules.alerts.alert({
             title: "Termin konnte nicht gespeichert werden",

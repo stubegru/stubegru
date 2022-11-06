@@ -339,9 +339,10 @@
 
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-lg btn-primary"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
-                                        <button class="btn btn-lg btn-secondary"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
-                                        <button class="btn btn-lg btn-success"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
+                                        <button class="btn btn-lg btn-primary" id="calendarAssignAssignButton"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
+                                        <button class="btn btn-lg btn-secondary" id="calendarAssignCancelButton"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
+                                        <button class="btn btn-lg btn-success" id="calendarAssignSaveButton"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
+                                        <button class="btn btn-lg btn-danger" id="calendarAssignDeleteButton"><i class="far fa-trash-alt"></i>&nbsp;Kundendaten löschen</button>
                                     </div>
                                 </div>
 
@@ -355,13 +356,13 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Vor- und Nachname:</label>
-                                                <input type="text" class="form-control terminmodal-input" id="calendarClientName" required>
+                                                <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientName" required>
                                             </div>
                                         </div>
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label>Fragebogen:</label>
-                                                <select id="calendarClientSurvey" class="form-control terminmodal-input" required>
+                                                <select id="calendarClientSurvey" class="form-control terminmodal-input meeting-client" required>
                                                     <option value="0">Nein</option>
                                                     <option value="1">Ja</option>
                                                 </select>
@@ -370,7 +371,7 @@
                                         <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label>Kanal:</label>
-                                                <select id="calendarClientChannel" class="form-control terminmodal-input" required>
+                                                <select id="calendarClientChannel" class="form-control terminmodal-input meeting-client" required>
                                                     <option value="">Bitte wählen...</option>
                                                     <option value="personal">Persönlich</option>
                                                     <option value="telephone">Telefonisch</option>
@@ -383,18 +384,18 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Anliegen:</label>
-                                                <textarea id="calendarClientIssue" class="form-control terminmodal-input" rows="4" style="resize: vertical;"></textarea>
+                                                <textarea id="calendarClientIssue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
 
                                             <div class="form-group">
                                                 <label>Telefon:</label>
-                                                <input type="text" class="form-control terminmodal-input" id="calendarClientPhone">
+                                                <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientPhone">
                                             </div>
                                             <div class="form-group">
                                                 <label>E-Mail:</label>
-                                                <input type="text" class="form-control terminmodal-input" id="calendarClientMail" required="">
+                                                <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientMail" required="">
                                             </div>
 
                                         </div>
@@ -405,9 +406,10 @@
                             <div class="modal-footer">
                                 <div class="row">
                                     <div class='col-sm-12'>
-                                        <button class="btn btn-danger pull-left permission-required permission-MEETINGS_WRITE" type="button" id="calendarDeleteMeetingButton">Termin löschen</button>
-                                        <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
-                                        <button type="submit" id="saveMeetingButton" class="btn btn-success pull-right terminmodal-input permission-required permission-MEETINGS_WRITE">Termin Speichern</button>
+                                        <button class="btn btn-danger pull-left" type="button" id="calendarDeleteMeetingButton"><i class="far fa-trash-alt"></i> Termin löschen</button>
+                                        <button data-dismiss="modal" class="btn btn-default" id="calendarCancelButton" type="button"><i class="fas fa-times"></i> Abbrechen</button>
+                                        <button id="calendarSaveMeetingButton" class="btn btn-success pull-right"><i class="far fa-save"></i> Termin Speichern</button>
+                                        <button id="calendarSaveAssignMeetingButton" class="btn btn-success pull-right"><i class="far fa-calendar-check"></i> Speichern und vergeben</button>
                                     </div>
                                 </div>
                             </div>

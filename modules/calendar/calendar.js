@@ -127,25 +127,14 @@ function clickOnMeetingHandler(meeting) {
 
 function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus der DB und gibt diese an die addDatesToView() weiter.
 
-    let startDate = new Date();
-    startDate.setDate(1);
-    startDate.setTime(startDate.getTime() - 1000 * 60 * 60 * 24);
-    let timestampNextYear = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-    let endDate = new Date(timestampNextYear);
-    endDate.setDate(30);
-
+    
     $.ajax({
-        type: "POST",
+        type: "GET",
         dataType: "json",
         url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`,
-        data: {
-            start: formatDate(startDate, "YYYY-MM-DDThh:mm:ss"),
-            end: formatDate(endDate, "YYYY-MM-DDThh:mm:ss"),
-        },
         success: function (data) {
             fullCalendarInstance.removeAllEvents(); //Clear calendar
-            let stubegruMeetings = data.stubegru;
-            addStubegruMeetingsToFullcalendar(stubegruMeetings);
+            addStubegruMeetingsToFullcalendar(data);
         }
     });
 
