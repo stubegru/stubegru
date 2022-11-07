@@ -213,7 +213,7 @@ async function saveMeeting() {
     meeting.append("roomId", $('#calendarRoom').val());
     meeting.append("templateId", $('#calendarTemplate').val());
 
-    let meetingResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/save_calendar_date.php`, {
+    let meetingResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/create_calendar_date.php`, {
         method: 'POST',
         body: meeting
     });
