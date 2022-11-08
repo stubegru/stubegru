@@ -14,7 +14,7 @@ foreach ($resultList as &$meetingData) {
     if ($clientId != "") {
         $clientStatement->bindValue(':clientId', $clientId);
         $clientStatement->execute();
-        $clientData = $clientStatement->fetch(PDO::FETCH_ASSOC);;
+        $clientData = $clientStatement->fetch(PDO::FETCH_ASSOC);
         $meetingData["teilnehmer"] = $clientData;
     }
 }

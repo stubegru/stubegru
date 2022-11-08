@@ -106,7 +106,7 @@ class Meeting {
 
     async deleteClient() {
         let formData = new FormData();
-        formData.append("meetingId", this.id);
+        formData.append("dateId", this.id);
 
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/remove_assignment.php`, {
             method: 'POST',
