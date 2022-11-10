@@ -2,7 +2,7 @@ var liveSearchTimer;
 
 
 
-
+CalendarController.init();
 
 
 

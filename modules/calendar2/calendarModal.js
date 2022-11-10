@@ -24,9 +24,6 @@ class CalendarModal {
         //load from custom config
         const calendarTitle = stubegru.constants.CUSTOM_CONFIG.calendarMeetingTitle || "Beratungstermin";
         $('#calendarTitle').val(calendarTitle);
-
-        calendarModalHelper.resetRoomForm();
-        calendarModalHelper.resetTemplateForm();
     }
 
     /**
@@ -49,6 +46,16 @@ class CalendarModal {
      */
     resetClientForm() {
         $(".meeting-client").val("");
+    }
+
+    /**
+     * Resets the meetingDetail-, client-, room- and templateForm
+     */
+    resetAllForms = ()=>{
+        this.resetMeetingDetailForm();
+        this.resetClientForm();
+        this.resetRoomForm();
+        this.resetTemplateForm();
     }
 
     /**

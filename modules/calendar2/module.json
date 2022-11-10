@@ -17,11 +17,11 @@
         "module.html"
     ],
     "js": [
-        "calendar.js",
         "meeting.js",
         "calendarView.js",
         "calendarModal.js",
-        "calendarController.js"
+        "calendarController.js",
+        "calendar.js"
     ],
     "css": [
         "calendar.css"
