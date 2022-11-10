@@ -19,7 +19,9 @@
     "js": [
         "calendar.js",
         "meeting.js",
-        "calendarModal.js"
+        "calendarView.js",
+        "calendarModal.js",
+        "calendarController.js"
     ],
     "css": [
         "calendar.css"

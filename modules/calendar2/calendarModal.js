@@ -103,6 +103,17 @@ class CalendarModal {
         return meetingData;
     }
 
+    showMeetingData(meeting) {
+        $('#calendarDate').val(meeting.date);
+        $('#calendarStart').val(meeting.start);
+        $('#calendarEnd').val(meeting.end);
+        $('#calendarTitle').val(meeting.title);
+        $('#calendarOwner').val(meeting.ownerId);
+
+        $('#calendarRoom').val(meeting.room);
+        $('#calendarTemplate').val(meeting.template);
+    }
+
     getClientData() {
         let clientData = {};
         clientData["name"] = $("#calendarClientName").val();
@@ -111,5 +122,13 @@ class CalendarModal {
         clientData["survey"] = $("#calendarClientSurvey").val();
         clientData["issue"] = $("#calendarClientIssue").val();
         return clientData;
+    }
+
+    showClientData(client) {
+        $('#calendarClientName').val(client.name);
+        $('#calendarClientMail').val(client.mail);
+        $('#calendarClientIssue').val(client.description);
+        $('#calendarClientPhone').val(client.phone);
+        $('#calendarClientSurvey').val("");
     }
 }
