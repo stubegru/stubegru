@@ -127,7 +127,7 @@ function clickOnMeetingHandler(meeting) {
 
 function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus der DB und gibt diese an die addDatesToView() weiter.
 
-    
+
     $.ajax({
         type: "GET",
         dataType: "json",
@@ -271,26 +271,48 @@ function deleteDate(meetingId) { //Löscht den termin
 
     deleteConfirm("Termin löschen", "Soll der Termin wirklich gelöscht werden?", function () {
 
-        $.ajax({
-            type: "POST",
-            dataType: "json",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/delete_date.php`,
-            data: {
-                id: meetingId
-            },
-            success: function (data) {
+        setTimeout(async function () {
+
+            let formData = new FormData();
+            formData.append("dateId", meetingId);
+
+            let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/remove_assignment.php`, {
+                method: 'POST',
+                body: formData
+            });
+            resp = await resp.json();
+
+            if (resp.status != "success") {
                 stubegru.modules.alerts.alert({
-                    title: "Termin löschen",
-                    text: data.message,
-                    type: data.status,
-                    mode: "toast"
+                    title: "Kundendaten löschen fehlgeschlagen",
+                    text: resp.message,
+                    type: resp.status,
                 });
-                if (data.status == "success") {
-                    loadDates();
-                    $("#terminmodal").modal("hide"); //hides the modal
-                }
+                return;
             }
-        });
+
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/delete_date.php`,
+                data: {
+                    id: meetingId
+                },
+                success: function (data) {
+                    stubegru.modules.alerts.alert({
+                        title: "Termin löschen",
+                        text: data.message,
+                        type: data.status,
+                        mode: "toast"
+                    });
+                    if (data.status == "success") {
+                        loadDates();
+                        $("#terminmodal").modal("hide"); //hides the modal
+                    }
+                }
+            });
+
+        }, 100); //setTimeout tail
     });
 
 }

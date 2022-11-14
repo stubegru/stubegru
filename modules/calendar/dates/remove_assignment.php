@@ -16,6 +16,11 @@ $selectStatement->bindValue(':dateId', $dateId);
 $selectStatement->execute();
 $meetingData = $selectStatement->fetch(PDO::FETCH_ASSOC);
 
+if (!$meetingData) {
+    echo json_encode(array("status" => "error", "message" => "Löschen der Kundendaten fehlgeschlagen. Der Termin mit der Id '$dateId' konnte nicht gefunden werden."));
+    exit;
+}
+
 //Add owner mailadress
 $meetingData["ownerMail"] = getUserMail($meetingData["ownerId"]);
 
@@ -24,6 +29,12 @@ $clientStatement = $dbPdo->prepare("SELECT * FROM `Beratene` WHERE id = :clientI
 $clientStatement->bindValue(':clientId', $meetingData["teilnehmer"]);
 $clientStatement->execute();
 $clientData = $clientStatement->fetch(PDO::FETCH_ASSOC);
+
+if (!$clientData) {
+    $clientId = $meetingData["teilnehmer"];
+    echo json_encode(array("status" => "error", "message" => "Löschen der Kundendaten fehlgeschlagen. Der Kundendatensatz mit der Id '$clientId' konnte nicht gefunden werden."));
+    exit;
+}
 
 //Remove entry in feedback-mails table
 $feedbackStatement = $dbPdo->prepare("DELETE FROM `Feedback_Mails` WHERE mail = :clientMailAdress;");
