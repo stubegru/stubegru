@@ -96,6 +96,7 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('ABSENCE_READ', 'user'),
 ('ABSENCE_WRITE', 'admin'),
 ('ASSIGN_DATE', 'beratung'),
+('REMOVE_ASSIGNMENT', 'beratung'),
 ('DAILY_NEWS_READ', 'user'),
 ('DAILY_NEWS_WRITE', 'admin'),
 ('EVALUATION_READ', 'admin'),

@@ -5,7 +5,7 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/calendar/ical/ical_generator.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
-permissionRequest("MEETINGS_WRITE");
+permissionRequest("REMOVE_ASSIGNMENT");
 $loggedInUserId = $_SESSION["id"];
 
 $dateId = $_POST["dateId"];
