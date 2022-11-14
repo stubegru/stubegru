@@ -3,7 +3,7 @@ class CalendarModal {
      * Show or hide the meeting appointment modal
      * @param {boolean} state true to show the modal, false to hide
      */
-    showModal(state) {
+    setModalVisible(state) {
         $("#terminmodal").modal(state ? "show" : "hide");
     }
 
@@ -11,7 +11,7 @@ class CalendarModal {
      * Set the modals title, displayed in it's header
      * @param {string} title 
      */
-    setTitle(title) {
+    setModalTitle(title) {
         $("#terminmodalTitle").html(title);
     }
 
@@ -45,14 +45,14 @@ class CalendarModal {
 
     /**
      * Enable / disable buttons for a meeting
-     * @param {boolean} saveAssign wether to enable the save and assign button
      * @param {boolean} save wether to enable the save button
+     * @param {boolean} saveClose wether to enable the save&close button
      * @param {boolean} remove wether to enable the delete button
      * @param {boolean} cancel wether to enable the cancel button
      */
-    enableFooterButtons(saveAssign, save, remove, cancel) {
-        $("#calendarSaveAssignMeetingButton").prop("disabled", !saveAssign);
+    enableFooterButtons(save, saveClose, remove, cancel) {
         $("#calendarSaveMeetingButton").prop("disabled", !save);
+        $("#calendarSaveCloseMeetingButton").prop("disabled", !saveClose);
         $("#calendarDeleteMeetingButton").prop("disabled", !remove);
         $("#calendarCancelButton").prop("disabled", !cancel);
     }
@@ -76,12 +76,12 @@ class CalendarModal {
         $('#calendarTitle').val(calendarTitle);
     }
 
-    setMeetingDetailEnabled(isEnabled) {
+    enableDetailMeetingForm(isEnabled) {
         $('.meeting-details').prop("disabled", !isEnabled);
     }
 
 
-    getMeetingData() {
+    getMeetingDetailData() {
         let meetingData = {};
         meetingData["date"] = $('#calendarDate').val();
         meetingData["start"] = $('#calendarStart').val();
@@ -93,7 +93,7 @@ class CalendarModal {
         return meetingData;
     }
 
-    showMeetingData(meeting) {
+    setMeetingDetailData(meeting) {
         $('#calendarDate').val(meeting.date);
         $('#calendarStart').val(meeting.start);
         $('#calendarEnd').val(meeting.end);
@@ -116,7 +116,7 @@ class CalendarModal {
         $(".meeting-client").val("");
     }
 
-    setClientEnabled(isEnabled) {
+    enableClientForm(isEnabled) {
         $('.meeting-client').prop("disabled", !isEnabled);
     }
 
@@ -137,7 +137,7 @@ class CalendarModal {
         return clientData;
     }
 
-    showClientData(client) {
+    setClientData(client) {
         $('#calendarClientName').val(client.name);
         $('#calendarClientMail').val(client.mail);
         $('#calendarClientIssue').val(client.description);
