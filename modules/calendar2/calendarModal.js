@@ -15,43 +15,12 @@ class CalendarModal {
         $("#terminmodalTitle").html(title);
     }
 
-    /**
-     * Reset all inputs in the Calendar meeting detail form
-     */
-    resetMeetingDetailForm() {
-        $('.meeting-details').val("");
 
-        //load from custom config
-        const calendarTitle = stubegru.constants.CUSTOM_CONFIG.calendarMeetingTitle || "Beratungstermin";
-        $('#calendarTitle').val(calendarTitle);
-    }
-
-    /**
-     * Reset all inputs in the Calendar meeting room form
-     */
-    resetRoomForm() {
-        $(".meeting-room-input").val("");
-    }
-
-    /**
-     * Reset all inputs in the Calendar meeting mail template form
-     */
-    resetTemplateForm() {
-        $(".meeting-template-input").val("");
-        CKEDITOR.instances.mailTemplateEditor.setData(""); //reset WYSIWYG editor
-    }
-
-    /**
-     * Reset all inputs in the client data form
-     */
-    resetClientForm() {
-        $(".meeting-client").val("");
-    }
 
     /**
      * Resets the meetingDetail-, client-, room- and templateForm
      */
-    resetAllForms = ()=>{
+    resetAllForms = () => {
         this.resetMeetingDetailForm();
         this.resetClientForm();
         this.resetRoomForm();
@@ -75,19 +44,17 @@ class CalendarModal {
     }
 
     /**
-     * Show / hide buttons for a meeting
-     * @param {boolean} saveAssign wether to show the save and assign button
-     * @param {boolean} save wether to show the save button
-     * @param {boolean} remove wether to show the delete button
-     * @param {boolean} cancel wether to show the cancel button
+     * Enable / disable buttons for a meeting
+     * @param {boolean} saveAssign wether to enable the save and assign button
+     * @param {boolean} save wether to enable the save button
+     * @param {boolean} remove wether to enable the delete button
+     * @param {boolean} cancel wether to enable the cancel button
      */
-    showFooterButtons(saveAssign, save, remove, cancel) {
-        sh($("#calendarSaveAssignMeetingButton"), saveAssign);
-        sh($("#calendarSaveMeetingButton"), save);
-        sh($("#calendarDeleteMeetingButton"), remove);
-        sh($("#calendarCancelButton"), cancel);
-
-        function sh(e, b) { b ? e.show() : e.hide(); }
+    enableFooterButtons(saveAssign, save, remove, cancel) {
+        $("#calendarSaveAssignMeetingButton").prop("disabled", !saveAssign);
+        $("#calendarSaveMeetingButton").prop("disabled", !save);
+        $("#calendarDeleteMeetingButton").prop("disabled", !remove);
+        $("#calendarCancelButton").prop("disabled", !cancel);
     }
 
     /**
@@ -97,6 +64,22 @@ class CalendarModal {
         const writePermission = stubegru.modules.userUtils.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
         return writePermission.access;
     }
+
+    /**
+    * Reset all inputs in the Calendar meeting detail form
+    */
+    resetMeetingDetailForm() {
+        $('.meeting-details').val("");
+
+        //load from custom config
+        const calendarTitle = stubegru.constants.CUSTOM_CONFIG.calendarMeetingTitle || "Beratungstermin";
+        $('#calendarTitle').val(calendarTitle);
+    }
+
+    setMeetingDetailEnabled(isEnabled) {
+        $('.meeting-details').prop("disabled", !isEnabled);
+    }
+
 
     getMeetingData() {
         let meetingData = {};
@@ -121,6 +104,29 @@ class CalendarModal {
         $('#calendarTemplate').val(meeting.template);
     }
 
+
+
+
+
+
+    /**
+   * Reset all inputs in the client data form
+   */
+    resetClientForm() {
+        $(".meeting-client").val("");
+    }
+
+    setClientEnabled(isEnabled) {
+        $('.meeting-client').prop("disabled", !isEnabled);
+    }
+
+    setClientVisible(isVisible) {
+        isVisible ?
+            $("#calendarClientDataContainer").slideDown() :
+            $("#calendarClientDataContainer").slideUp();
+    }
+
+
     getClientData() {
         let clientData = {};
         clientData["name"] = $("#calendarClientName").val();
@@ -138,4 +144,29 @@ class CalendarModal {
         $('#calendarClientPhone').val(client.phone);
         $('#calendarClientSurvey').val("");
     }
+
+
+
+
+
+    /**
+     * Reset all inputs in the Calendar meeting room form
+     */
+    resetRoomForm() {
+        $(".meeting-room-input").val("");
+    }
+
+
+
+
+
+
+    /**
+     * Reset all inputs in the Calendar meeting mail template form
+     */
+    resetTemplateForm() {
+        $(".meeting-template-input").val("");
+        CKEDITOR.instances.mailTemplateEditor.setData(""); //reset WYSIWYG editor
+    }
+
 }
