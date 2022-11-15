@@ -98,19 +98,50 @@ function deleteDate(meetingId) { //Löscht den termin
 //********************************************************Räume**********************************************
 
 
-//Verknüpfung Raumkanal zu Mailtemplates
-$("#calendarRoom").on("change", function () {
-    let channel = $(this).find(':selected').attr("data-channel");
+// //Verknüpfung Raumkanal zu Mailtemplates
+// $("#calendarRoom").on("change", function () {
+//     let channel = $(this).find(':selected').attr("data-channel");
 
-    let roomTemplateAssignment = stubegru.constants.CUSTOM_CONFIG.roomTemplateAssignment;
-    if (roomTemplateAssignment && roomTemplateAssignment[channel]) {
-        const templateId = roomTemplateAssignment[channel];
-        $("#calendarTemplate").val(templateId).change();
-    }
-})
+//     let roomTemplateAssignment = stubegru.constants.CUSTOM_CONFIG.roomTemplateAssignment;
+//     if (roomTemplateAssignment && roomTemplateAssignment[channel]) {
+//         const templateId = roomTemplateAssignment[channel];
+//         $("#calendarTemplate").val(templateId).change();
+//     }
+// })
 
 
+// if(mode == "modify") {
+//     //Bestehenden Raum überarbeiten
+//     let raumId = $("#calendarRoom").val(); //Id des zu Raumes aus dem select auslesen
+//     if (raumId == null || raumId == "") {
+//         stubegru.modules.alerts.alert({
+//             title: "Raum bearbeiten:",
+//             text: "Bitte erst einen Raum auswählen",
+//             type: "warning",
+//             mode: "toast"
+//         });
+//         return;
+//     }
 
+
+// //room saved
+//         if(resp.status == "success") {
+//         stubegru.modules.alerts.alert({
+//             title: "Raum gespeichert!",
+//             text: resp.message,
+//             type: "success"
+//         });
+//         await getRooms(); //Reload room to select
+//         $("#calendarRoom option[id='roomSelectOption" + resp.roomId + "']").attr("selected", "selected"); //Gespeicherter Raum wird ausgewählt
+//         resetRoomForm();
+//     }
+//         else {
+//         stubegru.modules.alerts.alert({
+//             title: "Fehler",
+//             text: resp.message,
+//             type: "error"
+//         });
+//     }
 
 
 //***********************************************Mail Templates**************************************************

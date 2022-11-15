@@ -18,6 +18,8 @@
     ],
     "js": [
         "meeting.js",
+        "room.js",
+        "mailTemplate.js",
         "calendarView.js",
         "calendarModal.js",
         "calendarController.js",

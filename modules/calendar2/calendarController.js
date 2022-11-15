@@ -10,9 +10,8 @@ class CalendarController {
         CalendarController.view.addMeetings(meetingList);
 
         //TODO use new room and template functions
-        getRooms();
+        Room.fetchRooms();
         getTemplates();
-        //TODO use new get advisor function
         CalendarController.modal.initAdvisorDropdown();
         CKEDITOR.replace('mailTemplateEditor'); //Richtexteditor initialisieren
 
@@ -32,16 +31,11 @@ class CalendarController {
     }
 
     static clickOnMeetingHandler(meeting) {
-        //Show event details in modal
-        CalendarController.modal.showMeetingData(meeting);
+        CalendarController.modal.resetAllForms();
+        CalendarController.modal.setMeetingDetailData(meeting);
         //TODO check if meeting has clientdata
-        CalendarController.modal.showClientData(meeting.teilnehmer);
-
-        //TODO use new room and template functions
-        resetRoomForm();
-        resetTemplateForm();
-
-        CalendarController.modal.showModal(true);
+        CalendarController.modal.setClientData(meeting.teilnehmer);
+        CalendarController.modal.setModalVisible(true);
     }
 
 

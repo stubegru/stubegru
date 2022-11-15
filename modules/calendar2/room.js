@@ -4,9 +4,18 @@ class Room {
 
 
     static async fetchRooms() {
+        Room.roomList = [];
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`);
         let data = await resp.json();
-        Room.roomList = data;
+
+        for (const roomData of data) {
+            let r = new Room(roomData);
+            Room.roomList.push(r);
+        }
+    }
+
+    static getById(roomId) {
+        return Room.roomList.find(e => e.id == roomId);
     }
 
     constructor(roomData) {
@@ -25,9 +34,36 @@ class Room {
     }
 
 
-    updateOnServer() {
-        let formData = new FormData();
+    async updateOnServer() {
+        let formData = this.toFormData();
 
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`;
+        let roomResp = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+        roomResp = await roomResp.json();
+        return roomResp;
+    }
+
+    static async createOnServer(roomData) {
+        roomData.id = "new";
+        let m = new Room(roomData);
+        let formData = m.toFormData();
+
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`;
+        let resp = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+        resp = await resp.json();
+        return resp;
+    }
+
+
+
+    toFormData() {
+        let formData = new FormData();
         formData.append("id", this.id);
         formData.append("kanal", this.kanal);
         formData.append("titel", this.titel);
@@ -40,14 +76,7 @@ class Room {
         formData.append("link", this.link);
         formData.append("passwort", this.passwort);
         formData.append("telefon", this.telefon);
-
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`;
-        let roomResp = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
-        roomResp = await roomResp.json();
-        return roomResp;
+        return formData;
     }
 
     async deleteOnServer() {
@@ -62,46 +91,4 @@ class Room {
         roomResp = await roomResp.json();
         return roomResp;
     }
-
-    if(mode == "modify") {
-    //Bestehenden Raum überarbeiten
-    let raumId = $("#calendarRoom").val(); //Id des zu Raumes aus dem select auslesen
-    if (raumId == null || raumId == "") {
-        stubegru.modules.alerts.alert({
-            title: "Raum bearbeiten:",
-            text: "Bitte erst einen Raum auswählen",
-            type: "warning",
-            mode: "toast"
-        });
-        return;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_room_data.php`,
-        data: { id: raumId },
-        dataType: "json",
-        success: function (resp) {
-
-
-
-        }
-
-//room saved
-        if(resp.status == "success") {
-        stubegru.modules.alerts.alert({
-            title: "Raum gespeichert!",
-            text: resp.message,
-            type: "success"
-        });
-        await getRooms(); //Reload room to select
-        $("#calendarRoom option[id='roomSelectOption" + resp.roomId + "']").attr("selected", "selected"); //Gespeicherter Raum wird ausgewählt
-        resetRoomForm();
-    }
-        else {
-        stubegru.modules.alerts.alert({
-            title: "Fehler",
-            text: resp.message,
-            type: "error"
-        });
-    }
+}

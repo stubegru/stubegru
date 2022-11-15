@@ -34,16 +34,7 @@ class Meeting {
      * Updates an existing meeting on the server for storage in database
      */
     async updateOnServer() {
-        let formData = new FormData();
-
-        formData.append("id", this.id);
-        formData.append("date", this.date);
-        formData.append("start", this.start);
-        formData.append("end", this.end);
-        formData.append("title", this.title);
-        formData.append("ownerId", this.ownerId);
-        formData.append("roomId", this.roomId);
-        formData.append("templateId", this.templateId);
+        let formData = this.toFormData();
 
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/update_calendar_date.php`;
         let meetingResp = await fetch(url, {
@@ -55,20 +46,28 @@ class Meeting {
     }
 
 
+    toFormData() {
+        let formData = new FormData();
+
+        formData.append("id", this.id);
+        formData.append("date", this.date);
+        formData.append("start", this.start);
+        formData.append("end", this.end);
+        formData.append("title", this.title);
+        formData.append("ownerId", this.ownerId);
+        formData.append("roomId", this.roomId);
+        formData.append("templateId", this.templateId);
+        return formData;
+    }
+
     /**
      * Updates an existing meeting on the server for storage in database
      */
     static async createOnServer(meetingData) {
-        let formData = new FormData();
-
-        formData.append("date", meetingData.date);
-        formData.append("start", meetingData.start);
-        formData.append("end", meetingData.end);
-        formData.append("title", meetingData.title);
-        formData.append("ownerId", meetingData.ownerId);
-        formData.append("roomId", meetingData.roomId);
-        formData.append("templateId", meetingData.templateId);
-
+        meetingData.id = "new";
+        let m = new Meeting(meetingData);
+        let formData = m.toFormData();
+        
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/create_calendar_date.php`;
         let meetingResp = await fetch(url, {
             method: 'POST',
