@@ -91,23 +91,7 @@ function deleteDate(meetingId) { //Löscht den termin
 }
 
 //********************************************************Berater**********************************************
-async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown auswahl
 
-    let ownId = stubegru.currentUser.id;
-
-    let userList = await stubegru.modules.userUtils.getUserByPermission("MEETING_ADVISOR");
-    let selectHtml = "";
-    for (const user of userList) {
-        if (ownId == user.id) { //Add own entry at top (default)
-            selectHtml = `<option value="${user.id}">${user.name}</option>` + selectHtml;
-        } else {
-            selectHtml += `<option value="${user.id}">${user.name}</option>`;
-        }
-    }
-
-    $("#calendarOwner").html(selectHtml);
-
-}
 
 
 
@@ -127,145 +111,6 @@ $("#calendarRoom").on("change", function () {
 
 
 
-async function getRooms() { //Lädt die Räume in die Dropdown auswahl
-
-    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`);
-    let data = await resp.json();
-
-    let ownId = stubegru.currentUser.id;
-    const channelDescriptions = {
-        "personally": "Persönlich",
-        "phone": "Telefon",
-        "webmeeting": "Webmeeting"
-    };
-
-    let selectHtml = "<option value=''>Bitte wählen...</option>";
-    let postHtml;
-    for (const room of data) {
-        const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
-        if (ownId == room.besitzer) { //Add own entry at top
-            selectHtml += optionString;
-        } else {
-            postHtml += optionString;
-        }
-    }
-    $("#calendarRoom").html(selectHtml + postHtml);
-
-}
-
-
-function saveRoom() { //speichert einen neuen Raum in die DB
-
-    let raum = {};
-    raum.id = $("#raum_id").val();
-    raum.kanal = $("#raum_kanal").val();
-    raum.titel = $("#raum_titel").val();
-    raum.raumnummer = $("#raum_nr").val();
-    raum.etage = $("#raum_etage").val();
-    raum.strasse = $("#raum_strasse").val();
-    raum.hausnummer = $("#raum_hausnr").val();
-    raum.plz = $("#raum_plz").val();
-    raum.ort = $("#raum_ort").val();
-    raum.link = $("#raum_link").val();
-    raum.passwort = $("#raum_passwort").val();
-    raum.telefon = $("#raum_telefon").val();
-
-    $.ajax({
-        type: "POST",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`,
-        data: raum,
-        dataType: "json",
-        success: async function (resp) {
-            if (resp.status == "success") {
-                stubegru.modules.alerts.alert({
-                    title: "Raum gespeichert!",
-                    text: resp.message,
-                    type: "success"
-                });
-                await getRooms(); //Reload room to select
-                $("#calendarRoom option[id='roomSelectOption" + resp.roomId + "']").attr("selected", "selected"); //Gespeicherter Raum wird ausgewählt
-                resetRoomForm();
-            }
-            else {
-                stubegru.modules.alerts.alert({
-                    title: "Fehler",
-                    text: resp.message,
-                    type: "error"
-                });
-            }
-        }
-
-    });
-}
-
-
-
-function openRoomForm(mode) { //Öffnet die Raum Vorschau zum bearbeiten
-    if (mode == "modify") {
-        //Bestehenden Raum überarbeiten
-        let raumId = $("#calendarRoom").val(); //Id des zu Raumes aus dem select auslesen
-        if (raumId == null || raumId == "") {
-            stubegru.modules.alerts.alert({
-                title: "Raum bearbeiten:",
-                text: "Bitte erst einen Raum auswählen",
-                type: "warning",
-                mode: "toast"
-            });
-            return;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_room_data.php`,
-            data: { id: raumId },
-            dataType: "json",
-            success: function (resp) {
-                $("#raum_id").val(resp.id);
-                $("#raum_kanal").val(resp.kanal);
-                $("#raum_titel").val(resp.titel);
-                $("#raum_nr").val(resp.raumnummer);
-                $("#raum_etage").val(resp.etage);
-                $("#raum_strasse").val(resp.strasse);
-                $("#raum_hausnr").val(resp.hausnummer);
-                $("#raum_plz").val(resp.plz);
-                $("#raum_ort").val(resp.ort);
-                $("#raum_link").val(resp.link);
-                $("#raum_passwort").val(resp.passwort);
-                $("#raum_telefon").val(resp.telefon);
-
-                $("#newroom").slideDown();
-
-            }
-        });
-    } else {
-        //Neuen Raum anlegen
-        resetRoomForm();
-        $("#raum_id").val("new");
-        $("#newroom").slideDown();
-    }
-}
-
-function deleteRoom() { //löscht einen Raum
-    deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?", function () {
-
-        $.ajax({
-            type: "POST",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/delete_room.php`,
-            dataType: "json",
-            data: { id: $("#raum_id").val() },
-            success: function (resp) {
-                stubegru.modules.alerts.alert({
-                    title: "Hinweis",
-                    text: resp.message,
-                    type: resp.status
-                });
-                getRooms();
-                resetRoomForm();
-            }
-        });
-    });
-
-}
 
 
 //***********************************************Mail Templates**************************************************
@@ -275,19 +120,7 @@ async function getTemplates() { //Lädt templates aus der Db ins Dropdown
     let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/templates/get_templates.php`);
     let data = await resp.json();
 
-    let selectHtml = "<option value=''>Bitte wählen...</option>";
-    let postHtml;
-    for (const template of data) {
-        const ownId = stubegru.currentUser.id;
-        const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
-        if (ownId == template.ersteller) { //Add own entry at top
-            selectHtml += optionString;
-        } else {
-            postHtml += optionString;
-        }
-    }
-    selectHtml += postHtml;
-    $("#calendarTemplate").html(selectHtml);
+    
 
 }
 

@@ -13,7 +13,7 @@ class CalendarController {
         getRooms();
         getTemplates();
         //TODO use new get advisor function
-        getAdvisorsForCalendar();
+        CalendarController.modal.initAdvisorDropdown();
         CKEDITOR.replace('mailTemplateEditor'); //Richtexteditor initialisieren
 
         $("#terminmodal").on('hidden.bs.modal', CalendarController.modal.resetAllForms); //Reset modal forms on hide event

@@ -149,16 +149,6 @@ class CalendarModal {
 
 
 
-    /**
-     * Reset all inputs in the Calendar meeting room form
-     */
-    resetRoomForm() {
-        $(".meeting-room-input").val("");
-    }
-
-
-
-
 
 
     /**
@@ -167,6 +157,126 @@ class CalendarModal {
     resetTemplateForm() {
         $(".meeting-template-input").val("");
         CKEDITOR.instances.mailTemplateEditor.setData(""); //reset WYSIWYG editor
+    }
+
+    setTemplateDropdown(templateList) {
+        let selectHtml = "<option value=''>Bitte wählen...</option>";
+        let postHtml;
+        for (const template of templateList) {
+            const ownId = stubegru.currentUser.id;
+            const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
+            if (ownId == template.ersteller) { //Add own entry at top
+                selectHtml += optionString;
+            } else {
+                postHtml += optionString;
+            }
+        }
+        selectHtml += postHtml;
+        $("#calendarTemplate").html(selectHtml);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+    * Reset all inputs in the Calendar meeting room form
+    */
+    resetRoomForm() {
+        $(".meeting-room-input").val("");
+    }
+
+    setRoomDropdown(roomList) {
+        let ownId = stubegru.currentUser.id;
+        const channelDescriptions = {
+            "personally": "Persönlich",
+            "phone": "Telefon",
+            "webmeeting": "Webmeeting"
+        };
+
+        let selectHtml = "<option value=''>Bitte wählen...</option>";
+        let postHtml;
+        for (const room of roomList) {
+            const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
+            if (ownId == room.besitzer) { //Add own entry at top
+                selectHtml += optionString;
+            } else {
+                postHtml += optionString;
+            }
+        }
+        $("#calendarRoom").html(selectHtml + postHtml);
+    }
+
+    setRoomFormVisible(isVisible) {
+        isVisible ?
+            $("#newroom").slideDown() :
+            $("#newroom").slideUp();
+    }
+
+    setRoomData(roomData) {
+        $("#raum_id").val(roomData.id);
+        $("#raum_kanal").val(roomData.kanal);
+        $("#raum_titel").val(roomData.titel);
+        $("#raum_nr").val(roomData.raumnummer);
+        $("#raum_etage").val(roomData.etage);
+        $("#raum_strasse").val(roomData.strasse);
+        $("#raum_hausnr").val(roomData.hausnummer);
+        $("#raum_plz").val(roomData.plz);
+        $("#raum_ort").val(roomData.ort);
+        $("#raum_link").val(roomData.link);
+        $("#raum_passwort").val(roomData.passwort);
+        $("#raum_telefon").val(roomData.telefon);
+    }
+
+    getRoomData() {
+        let roomData = {};
+        roomData.id = $("#raum_id").val();
+        roomData.kanal = $("#raum_kanal").val();
+        roomData.titel = $("#raum_titel").val();
+        roomData.raumnummer = $("#raum_nr").val();
+        roomData.etage = $("#raum_etage").val();
+        roomData.strasse = $("#raum_strasse").val();
+        roomData.hausnummer = $("#raum_hausnr").val();
+        roomData.plz = $("#raum_plz").val();
+        roomData.ort = $("#raum_ort").val();
+        roomData.link = $("#raum_link").val();
+        roomData.passwort = $("#raum_passwort").val();
+        roomData.telefon = $("#raum_telefon").val();
+        return roomData;
+    }
+
+
+
+
+
+
+
+
+
+    
+
+    async initAdvisorDropdown() {
+        let ownId = stubegru.currentUser.id;
+        let userList = await stubegru.modules.userUtils.getUserByPermission("MEETING_ADVISOR");
+        let selectHtml = "";
+        for (const user of userList) {
+            if (ownId == user.id) { //Add own entry at top (default)
+                selectHtml = `<option value="${user.id}">${user.name}</option>` + selectHtml;
+            } else {
+                selectHtml += `<option value="${user.id}">${user.name}</option>`;
+            }
+        }
+        $("#calendarOwner").html(selectHtml);
+
     }
 
 }
