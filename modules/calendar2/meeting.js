@@ -26,6 +26,13 @@ class Meeting {
     }
 
 
+    applyProperties(data) {
+        for (const propName in data) {
+            this[propName] = data[propName];
+        }
+    }
+
+
     getMeetingById(meetingId) {
         return Meeting.meetingList.find(e => e.id == meetingId);
     }

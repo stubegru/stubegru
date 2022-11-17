@@ -27,6 +27,12 @@ class MailTemplate {
         this.titel = mailTemplateData.titel;
     }
 
+    applyProperties(data) {
+        for (const propName in data) {
+            this[propName] = data[propName];
+        }
+    }
+
 
     async updateOnServer() {
         let formData = this.toFormData();
