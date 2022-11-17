@@ -49,13 +49,6 @@ stubegru.modules.menubar.addItem("secondary primary", `<li><a title="TITLE" href
 ## --- register funtion if the modal is closed ---
 $('#modalID').on('hidden.bs.modal', functionToCall);
 
-## --- ALERT ---
-stubegru.modules.alerts.alert({
-    title: "Es ist ein Fehler aufgetreten",
-    text: e.message,
-    type: "error"
-});
-
 
 
 

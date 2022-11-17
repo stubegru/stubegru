@@ -1,4 +1,34 @@
 class CalendarModal {
+
+    static channelDescriptions = {
+        "personally": "Persönlich",
+        "phone": "Telefon",
+        "webmeeting": "Webmeeting"
+    };
+
+    async init() {
+
+        //Set meeting end time if the start value changes
+        $("#calendarStart").on("change", this.setMeetingEndTimeByStartTime);
+        //Reset modal forms on hide event
+        $("#terminmodal").on('hidden.bs.modal', CalendarController.modal.resetAllForms);
+
+        await Room.fetchRooms();
+        this.setRoomDropdown(Room.roomList);
+        this.initRoomEditButtons();
+
+        await MailTemplate.fetchMailTemplates();
+        this.setTemplateDropdown(MailTemplate.mailTemplateList);
+        //TODO bind click on template item event
+
+        await CalendarController.modal.initAdvisorDropdown();
+
+        //Init richtext editor for mail templates
+        CKEDITOR.replace('mailTemplateEditor');
+    }
+
+
+
     /**
      * Show or hide the meeting appointment modal
      * @param {boolean} state true to show the modal, false to hide
@@ -102,6 +132,19 @@ class CalendarModal {
 
         $('#calendarRoom').val(meeting.room);
         $('#calendarTemplate').val(meeting.template);
+    }
+
+    /**
+     * If the value of the meeting start time input changes, this function is called to set the end time to an according value
+     */
+    setMeetingEndTimeByStartTime() {
+        let startTime = $("#calendarStart").val();
+        if (startTime.length == 5) {
+            let hours = startTime.substr(0, 2);
+            let minutes = startTime.substr(3, 2);
+            hours++;
+            $("#calendarEnd").val(hours + ":" + minutes);
+        }
     }
 
 
@@ -215,23 +258,100 @@ class CalendarModal {
 
     setRoomDropdown(roomList) {
         let ownId = stubegru.currentUser.id;
-        const channelDescriptions = {
-            "personally": "Persönlich",
-            "phone": "Telefon",
-            "webmeeting": "Webmeeting"
-        };
 
         let selectHtml = "<option value=''>Bitte wählen...</option>";
         let postHtml;
         for (const room of roomList) {
-            const optionString = `<option value='${room.id}' id='roomSelectOption${room.id}' data-channel='${room.kanal}' >[${channelDescriptions[room.kanal]}] ${room.titel}</option>`
-            if (ownId == room.besitzer) { //Add own entry at top
-                selectHtml += optionString;
-            } else {
-                postHtml += optionString;
-            }
+            const optionString = `<option value='${room.id}'>${room.titel}</option>`
+            ownId == room.besitzer ? selectHtml += optionString : postHtml += optionString; //Add own entries at top
         }
         $("#calendarRoom").html(selectHtml + postHtml);
+    }
+
+    initRoomEditButtons() {
+        $("#calendarEditRoomButton").on("click", () => {
+            const roomId = $("#calendarRoom").val();
+
+            if (roomId == null || roomId == "") {
+                stubegru.modules.alerts.alert({
+                    title: "Raum bearbeiten:",
+                    text: "Bitte erst einen Raum auswählen",
+                    type: "warning",
+                    mode: "toast"
+                });
+                return;
+            }
+
+            const room = Room.getById(roomId);
+            this.setRoomData(room);
+            this.setRoomFormVisible(true);
+        });
+
+        $("#calendarNewRoomButton").on("click", () => {
+            this.resetRoomForm();
+            $("#raum_id").val("new");
+            this.setRoomFormVisible(true);
+        });
+
+        $("#calendarSaveRoomButton").on("click", async () => {
+            let roomId = $("#raum_id").val();
+            let resp;
+
+            if (roomId == "new") {
+                //create new Room
+                resp = await Room.createOnServer(this.getRoomData());
+                roomId = resp.roomId;
+            } else {
+                //update existing Room
+                let room = Room.getById(roomId);
+                room.applyProperties(this.getRoomData());
+                resp = await room.updateOnServer();
+            }
+
+            stubegru.modules.alerts.alert({
+                title: "Raum Speichern",
+                text: resp.message,
+                type: resp.status
+            });
+            if (resp.status != "success") { return }
+
+            //Refresh room list
+            await Room.fetchRooms();
+            this.setRoomDropdown(Room.roomList);
+            this.resetRoomForm();
+            this.setRoomFormVisible(false);
+
+            //auto-select previously edited/created room
+            $("#calendarRoom").val(roomId);
+        });
+
+        $("#calendarCancelRoomButton").on("click", () => {
+            this.resetRoomForm();
+            this.setRoomFormVisible(false);
+        });
+
+        $("#calendarDeleteRoomButton").on("click", () => {
+            deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?", async () => {
+                let roomId = $("#raum_id").val();
+                if (roomId != "new") {
+                    let room = Room.getById(roomId);
+                    let resp = await room.deleteOnServer();
+
+                    stubegru.modules.alerts.alert({
+                        title: "Raum Löschen",
+                        text: resp.message,
+                        type: resp.status
+                    });
+                    if (resp.status != "success") { return }
+
+
+                    await Room.fetchRooms();
+                    this.setRoomDropdown(Room.roomList);
+                }
+                this.resetRoomForm();
+                this.setRoomFormVisible(false);
+            });
+        });
     }
 
     setRoomFormVisible(isVisible) {

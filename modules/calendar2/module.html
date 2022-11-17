@@ -155,8 +155,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                        <button class="btn btn-info meeting-details" type="button" onclick="openRoomForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                        <button class="btn btn-primary meeting-details" type="button" onclick="openRoomForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                        <button class="btn btn-info meeting-details" type="button" id="calendarEditRoomButton"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary meeting-details" type="button" id="calendarNewRoomButton"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -270,9 +270,9 @@
 
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary pull-right meeting-room-input" type="button" onClick="saveRoom()">Raum Speichern</button>
-                                                <button class="btn btn-default meeting-room-input" type="button" onclick="resetRoomForm()">Abbrechen</button>
-                                                <button class="btn btn-danger meeting-room-input" type="button" onclick="deleteRoom()">Raum löschen</button>
+                                                <button class="btn btn-primary pull-right meeting-room-input" type="button" id="calendarSaveRoomButton">Raum Speichern</button>
+                                                <button class="btn btn-default meeting-room-input" type="button" id="calendarCancelRoomButton">Abbrechen</button>
+                                                <button class="btn btn-danger meeting-room-input" type="button" id="calendarDeleteRoomButton">Raum löschen</button>
                                             </div>
                                         </div>
 
