@@ -6,4 +6,5 @@ $own_id = $_SESSION['id'];
 
 $selectStatement = $dbPdo->query("SELECT * FROM `Templates` ORDER BY titel ASC;");
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
 echo json_encode($resultList);

@@ -175,9 +175,27 @@ class CalendarModal {
         $("#calendarTemplate").html(selectHtml);
     }
 
+    setTemplateFormVisible(isVisible) {
+        isVisible ?
+            $("#newmail").slideDown() :
+            $("#newmail").slideUp();
+    }
 
+    getTemplateData() {
+        let templateData = {};
+        templateData.id = $("#templateId").val();
+        templateData.titel = $("#templateTitle").val();
+        templateData.betreff = $("#templateSubject").val();
+        templateData.text = CKEDITOR.instances.mailTemplateEditor.getData();
+        return templateData;
+    }
 
-
+    setTemplateData(templateData) {
+        $("#templateId").val(templateData.id);
+        $("#templateTitle").val(templateData.titel);
+        $("#templateSubject").val(templateData.betreff);
+        CKEDITOR.instances.mailTemplateEditor.setData(templateData.text)
+    }
 
 
 
@@ -262,7 +280,7 @@ class CalendarModal {
 
 
 
-    
+
 
     async initAdvisorDropdown() {
         let ownId = stubegru.currentUser.id;

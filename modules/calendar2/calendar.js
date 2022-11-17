@@ -159,10 +159,7 @@ async function getTemplates() { //Lädt templates aus der Db ins Dropdown
 function saveTemplate() { //speichert Template in DB
 
     let templateData = {};
-    templateData.title = $("#templateTitle").val();
-    templateData.subject = $("#templateSubject").val();
-    templateData.text = CKEDITOR.instances.mailTemplateEditor.getData();
-    templateData.templateId = $("#templateId").val();
+ 
 
 
     $.ajax({

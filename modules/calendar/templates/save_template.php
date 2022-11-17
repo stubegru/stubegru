@@ -16,9 +16,9 @@ if ($titel != "" && $betreff != "" && $text != "") {
     $echoArray["status"] = "success";
 
     if ($id == "new") { //Neue vorlage
-        $insertStatement = $dbPdo->prepare("INSERT INTO `Templates` (`titel`,`betreff`,`text`,`ersteller`) VALUES (:titel,:titel,:text,:ersteller);");
+        $insertStatement = $dbPdo->prepare("INSERT INTO `Templates` (`titel`,`betreff`,`text`,`ersteller`) VALUES (:titel,:betreff,:text,:ersteller);");
         $insertStatement->bindValue(':titel', $titel);
-        $insertStatement->bindValue(':titel', $titel);
+        $insertStatement->bindValue(':betreff', $betreff);
         $insertStatement->bindValue(':text', $text);
         $insertStatement->bindValue(':ersteller', $ownId);
         $insertStatement->execute();
