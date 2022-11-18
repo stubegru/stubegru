@@ -23,12 +23,16 @@ $clientPhone = $_POST["phone"];
 $clientWantsFormular = $_POST["survey"];
 $dateIssue = $_POST["issue"];
 
-$insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:dateIssue,:dateId);"); // Daten des zu Beratenden in DB speichern
+//Channel attribute will only be set by calendar2 frontend
+$channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
+
+$insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`,`channel`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:dateIssue,:dateId,:channel);"); // Daten des zu Beratenden in DB speichern
 $insertStatement->bindValue(':clientName', $clientName);
 $insertStatement->bindValue(':clientMailAdress', $clientMailAdress);
 $insertStatement->bindValue(':clientPhone', $clientPhone);
 $insertStatement->bindValue(':clientWantsFormular', $clientWantsFormular);
 $insertStatement->bindValue(':dateIssue', $dateIssue);
+$insertStatement->bindValue(':channel', $channel);
 $insertStatement->bindValue(':dateId', $dateId);
 $insertStatement->execute();
 $teilnehmerId = $dbPdo->lastInsertId();
@@ -88,13 +92,13 @@ foreach ($resultList as $row) {
 }
 
 //variablen in den Templates einsetzen
-$templateVariablen = array("{Termin_Titel}", "{Klient_Name}", "{Klient_Telefon}", "{Termin_Datum}", "{Termin_Uhrzeit}", "{Berater_Name}", "{Berater_Mail}", "{Raum_Kanal}", "{Raum_Nummer}", "{Raum_Etage}", "{Raum_Strasse}", "{Raum_Hausnummer}", "{Raum_PLZ}", "{Raum_Ort}", "{Raum_Link}", "{Raum_Passwort}", "{Raum_Telefon}");
-$phpVariablen = array($dateTitle, $clientName, $clientPhone, $dateDate, $dateStartTime, $dateOwnerName, $dateOwnerMailAdress, $roomObject->kanal, $roomObject->raumnummer, $roomObject->etage, $roomObject->strasse, $roomObject->hausnummer, $roomObject->plz, $roomObject->ort, $roomObject->link, $roomObject->passwort, $roomObject->telefon);
+$templateVariablen = array("{Termin_Titel}", "{Termin_Kanal}", "{Klient_Name}", "{Klient_Telefon}", "{Termin_Datum}", "{Termin_Uhrzeit}", "{Berater_Name}", "{Berater_Mail}", "{Raum_Kanal}", "{Raum_Nummer}", "{Raum_Etage}", "{Raum_Strasse}", "{Raum_Hausnummer}", "{Raum_PLZ}", "{Raum_Ort}", "{Raum_Link}", "{Raum_Passwort}", "{Raum_Telefon}");
+$phpVariablen = array($dateTitle, $channel, $clientName, $clientPhone, $dateDate, $dateStartTime, $dateOwnerName, $dateOwnerMailAdress, $roomObject->kanal, $roomObject->raumnummer, $roomObject->etage, $roomObject->strasse, $roomObject->hausnummer, $roomObject->plz, $roomObject->ort, $roomObject->link, $roomObject->passwort, $roomObject->telefon);
 
 //***************ICS EVENT GENERIEREN*****************************
 $eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$dateId";
-$eventStartUTC = gmdate("Ymd\THis\Z",strtotime($dateDateAmericanFormat." ".$dateStartTime));
-$eventEndUTC = gmdate("Ymd\THis\Z",strtotime($dateDateAmericanFormat." ".$dateEndTime));
+$eventStartUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . $dateStartTime));
+$eventEndUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . $dateEndTime));
 $eventSummary = $dateTitle;
 $eventLocation = $roomObject->kanal . " - " . $roomObject->raumnummer .  $roomObject->link . " " . $roomObject->passwort;
 
@@ -105,7 +109,9 @@ $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventS
 $clientMailSubject = str_replace($templateVariablen, $phpVariablen, $templateSubject);
 $clientMailText = str_replace($templateVariablen, $phpVariablen, $templateText);
 
-try {stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText);} catch (Exception $e) {
+try {
+    stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText);
+} catch (Exception $e) {
     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Kunden und den Berater versendet werden."));
     exit;
 }
@@ -147,10 +153,12 @@ $AdvisorMailSubject = "Termin vergeben am $dateDate";
 
 $mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
 
- try {stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);} catch (Exception $e) {
-     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
-     exit;
- }
+try {
+    stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);
+} catch (Exception $e) {
+    echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
+    exit;
+}
 
 //Erfolg melden
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erfolgreich vergeben. Es wurde eine Mail an den Berater und an den Kunden versendet."));

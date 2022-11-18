@@ -14,9 +14,12 @@ $end = $_POST["end"];
 $title = $_POST["title"];
 $template = $_POST["templateId"];
 
+//Channel attribute will only be set by calendar2 frontend
+$channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
+
 $ownerName = getUserName($ownerId);
 
-$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `date`=:date,`owner`=:owner,`ownerId`=:ownerId,`room`=:room,`start`=:start,`end`=:end,`title`=:title,`template`=:template WHERE id = :meetingId;");
+$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `date`=:date,`owner`=:owner,`ownerId`=:ownerId,`room`=:room,`start`=:start,`end`=:end,`title`=:title,`template`=:template, `channel` = :channel WHERE id = :meetingId;");
 $updateStatement->bindValue(':date', $date);
 $updateStatement->bindValue(':owner', $ownerName);
 $updateStatement->bindValue(':ownerId', $ownerId);
@@ -26,6 +29,7 @@ $updateStatement->bindValue(':end', $end);
 $updateStatement->bindValue(':title', $title);
 $updateStatement->bindValue(':template', $template);
 $updateStatement->bindValue(':meetingId', $meetingId);
+$updateStatement->bindValue(':channel', $channel);
 $updateStatement->execute();
 
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erfolgreich aktualisiert"));

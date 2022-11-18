@@ -3,7 +3,9 @@ class CalendarModal {
     static channelDescriptions = {
         "personally": "Persönlich",
         "phone": "Telefon",
-        "webmeeting": "Webmeeting"
+        "webmeeting": "Webmeeting",
+        "digital": "Nur digital (Fon + Web)",
+        "all": "Alle",
     };
 
     async init() {
@@ -22,6 +24,7 @@ class CalendarModal {
         //TODO bind click on template item event
 
         await CalendarController.modal.initAdvisorDropdown();
+        this.initMeetingDetailChannelDropdown();
 
         //Init richtext editor for mail templates
         CKEDITOR.replace('mailTemplateEditor');
@@ -120,6 +123,7 @@ class CalendarModal {
         meetingData["ownerId"] = $('#calendarOwner').val();
         meetingData["roomId"] = $('#calendarRoom').val();
         meetingData["templateId"] = $('#calendarTemplate').val();
+        meetingData["channel"] = $('#calendarChannel').val();
         return meetingData;
     }
 
@@ -129,6 +133,7 @@ class CalendarModal {
         $('#calendarEnd').val(meeting.end);
         $('#calendarTitle').val(meeting.title);
         $('#calendarOwner').val(meeting.ownerId);
+        $('#calendarChannel').val(meeting.channel);
 
         $('#calendarRoom').val(meeting.room);
         $('#calendarTemplate').val(meeting.template);
@@ -145,6 +150,15 @@ class CalendarModal {
             hours++;
             $("#calendarEnd").val(hours + ":" + minutes);
         }
+    }
+
+    initMeetingDetailChannelDropdown() {
+        let html = `<option value="">Bitte wählen...</option>`;
+        const names = CalendarModal.channelDescriptions;
+        for (let channelId in names) {
+            html += `<option value="${channelId}">${names[channelId]}</option>`;
+        }
+        $("#calendarChannel").html(html);
     }
 
 
@@ -177,6 +191,7 @@ class CalendarModal {
         clientData["phone"] = $("#calendarClientPhone").val();
         clientData["survey"] = $("#calendarClientSurvey").val();
         clientData["issue"] = $("#calendarClientIssue").val();
+        clientData["channel"] = $("#calendarClientChannel").val();
         return clientData;
     }
 
@@ -186,6 +201,22 @@ class CalendarModal {
         $('#calendarClientIssue').val(client.description);
         $('#calendarClientPhone').val(client.phone);
         $('#calendarClientSurvey').val("");
+        $('#calendarClientChannel').val(client.channel);
+    }
+
+    initClientChannelDropdown(meetingChannel) {
+        let channelOptions = [];
+
+        if (meetingChannel == "all") { channelOptions.push("personally", "phone", "webmeeting"); }
+        else if (meetingChannel == "digital") { channelOptions.push("phone", "webmeeting"); }
+        else { channelOptions.push(meetingChannel); }
+
+        let html = `<option value="">Bitte wählen...</option>`;
+        const names = CalendarModal.channelDescriptions;
+        for (let channelId of channelOptions) {
+            html += `<option value="${channelId}">${names[channelId]}</option>`;
+        }
+        $("#calendarClientChannel").html(html)
     }
 
 

@@ -23,6 +23,7 @@ class Meeting {
         this.roomId = meetingData.roomId;
         this.templateId = meetingData.templateId;
         this.teilnehmer = meetingData.teilnehmer;
+        this.channel = meetingData.channel;
     }
 
 
@@ -64,6 +65,7 @@ class Meeting {
         formData.append("ownerId", this.ownerId);
         formData.append("roomId", this.roomId);
         formData.append("templateId", this.templateId);
+        formData.append("channel", this.channel);
         return formData;
     }
 
@@ -101,6 +103,7 @@ class Meeting {
         client.append("phone", clientData.phone);
         client.append("survey", clientData.survey);
         client.append("issue", clientData.issue);
+        client.append("channel", clientData.channel);
 
         let clientResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/assign_date.php`, {
             method: 'POST',
