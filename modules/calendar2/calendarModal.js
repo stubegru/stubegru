@@ -58,6 +58,19 @@ class CalendarModal {
         this.resetClientForm();
         this.resetRoomForm();
         this.resetTemplateForm();
+        this.setInfoAlert(false);
+    }
+
+    /**
+     * Sets the text for the info alert in calendarModal.
+     * Alert is hidden if the text is empty ro not given
+     * @param {string} text Text to be displayed in the alert (HTML allowed)
+     */
+    setInfoAlert(text) {
+        (text && text.length > 0) ?
+            $("#calendarModalInfoAlert").show() :
+            $("#calendarModalInfoAlert").hide();
+        $("#calendarModalInfoAlert").html(text);
     }
 
     /**
@@ -90,18 +103,12 @@ class CalendarModal {
         $("#calendarCancelButton").prop("disabled", !cancel);
     }
 
-    /**
-     * @returns {boolean} wether the current user has write permissions for calendar meetings
-     */
-    isCalendarWriteUser() {
-        const writePermission = stubegru.modules.userUtils.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
-        return writePermission.access;
-    }
 
     /**
     * Reset all inputs in the Calendar meeting detail form
     */
-    resetMeetingDetailForm() {
+    resetMeetingDetailForm = () => {
+        this.enableDetailMeetingForm(true);
         $('.meeting-details').val("");
 
         //load from custom config
@@ -169,7 +176,8 @@ class CalendarModal {
     /**
    * Reset all inputs in the client data form
    */
-    resetClientForm() {
+    resetClientForm = () => {
+        this.enableClientForm(true);
         $(".meeting-client").val("");
     }
 
@@ -195,7 +203,8 @@ class CalendarModal {
         return clientData;
     }
 
-    setClientData(client) {
+    setClientData = (client) => {
+        this.initClientChannelDropdown(client.channel);
         $('#calendarClientName').val(client.name);
         $('#calendarClientMail').val(client.mail);
         $('#calendarClientIssue').val(client.description);

@@ -34,7 +34,7 @@ class Meeting {
     }
 
 
-    getMeetingById(meetingId) {
+    static getById(meetingId) {
         return Meeting.meetingList.find(e => e.id == meetingId);
     }
 

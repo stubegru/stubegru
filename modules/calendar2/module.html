@@ -14,7 +14,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <button data-toggle="modal" data-target="#terminmodal" id="termin" type="button" class="btn btn-success btn-block permission-MEETINGS_WRITE permission-required">
+                                <button id="calendarNewMeetingButton" type="button" class="btn btn-success btn-block permission-MEETINGS_WRITE permission-required">
                                     <i class="far fa-calendar-plus"></i>&nbsp; Neuer Termin
                                 </button>
                             </div>
@@ -336,6 +336,9 @@
                                     </div>
 
                                 </div>
+
+                                <br>
+                                <div class="alert alert-info text-center" id="calendarModalInfoAlert" style="display: none;"></div>
 
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-12 text-center">
