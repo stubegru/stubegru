@@ -171,8 +171,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                        <button class="btn btn-info meeting-details" type="button" onclick="openTemplateForm('modify')"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                        <button class="btn btn-primary meeting-details" type="button" onclick="openTemplateForm('new')"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                        <button class="btn btn-info meeting-details" type="button" id="calendarEditTemplateButton"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary meeting-details" type="button" id="calendarNewTemplateButton"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -328,9 +328,9 @@
                                         <hr>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <button class="btn btn-primary pull-right meeting-template-input" type="button" onClick="saveTemplate()">Vorlage Speichern</button>
-                                                <button class="btn btn-default meeting-template-input" type="button" onclick="resetTemplateForm()">Abbrechen</button>
-                                                <button type="button" class="btn btn-danger pull-center meeting-template-input" onclick="deleteTemplate()">Vorlage löschen</button>
+                                                <button class="btn btn-primary pull-right meeting-template-input" type="button" id="calendarSaveTemplateButton">Vorlage Speichern</button>
+                                                <button class="btn btn-default meeting-template-input" type="button" id="calendarCancelTemplateButton">Abbrechen</button>
+                                                <button type="button" class="btn btn-danger pull-center meeting-template-input" id="calendarDeleteTemplateButton">Vorlage löschen</button>
                                             </div>
                                         </div>
                                     </div>

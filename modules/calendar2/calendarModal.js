@@ -21,7 +21,7 @@ class CalendarModal {
 
         await MailTemplate.fetchMailTemplates();
         this.setTemplateDropdown(MailTemplate.mailTemplateList);
-        //TODO bind click on template item event
+        this.initTemplateEditButtons();
 
         await CalendarController.modal.initAdvisorDropdown();
         this.initMeetingDetailChannelDropdown();
@@ -247,6 +247,92 @@ class CalendarModal {
         }
         selectHtml += postHtml;
         $("#calendarTemplate").html(selectHtml);
+    }
+
+    initTemplateEditButtons() {
+        $("#calendarEditTemplateButton").on("click", () => {
+            const templateId = $("#calendarTemplate").val();
+
+            if (templateId == null || templateId == "") {
+                stubegru.modules.alerts.alert({
+                    title: "Mailvorlage bearbeiten:",
+                    text: "Bitte erst eine Mailvorlage auswählen",
+                    type: "warning",
+                    mode: "toast"
+                });
+                return;
+            }
+
+            const template = MailTemplate.getById(templateId);
+            this.setTemplateData(template);
+            this.setTemplateFormVisible(true);
+        });
+
+        $("#calendarNewTemplateButton").on("click", () => {
+            this.resetTemplateForm();
+            $("#templateId").val("new");
+            this.setTemplateFormVisible(true);
+        });
+
+        $("#calendarSaveTemplateButton").on("click", async () => {
+            let templateId = $("#templateId").val();
+            let resp;
+
+            if (templateId == "new") {
+                //create new Template
+                resp = await MailTemplate.createOnServer(this.getTemplateData());
+                templateId = resp.optionId;
+            } else {
+                //update existing Template
+                let template = MailTemplate.getById(templateId);
+                template.applyProperties(this.getTemplateData());
+                resp = await template.updateOnServer();
+            }
+
+            stubegru.modules.alerts.alert({
+                title: "Mailvorlage speichern",
+                text: resp.message,
+                type: resp.status
+            });
+            if (resp.status != "success") { return }
+
+            //Refresh template list
+            await MailTemplate.fetchMailTemplates();
+            this.setTemplateDropdown(MailTemplate.mailTemplateList);
+            this.resetTemplateForm();
+            this.setTemplateFormVisible(false);
+
+            //auto-select previously edited/created template
+            $("#calendarTemplate").val(templateId);
+        });
+
+        $("#calendarCancelTemplateButton").on("click", () => {
+            this.resetTemplateForm();
+            this.setTemplateFormVisible(false);
+        });
+
+        $("#calendarDeleteTemplateButton").on("click", () => {
+            deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?", async () => {
+                let templateId = $("#templateId").val();
+                if (templateId != "new") {
+                    let template = MailTemplate.getById(templateId);
+                    let resp = await template.deleteOnServer();
+
+                    stubegru.modules.alerts.alert({
+                        title: "Mailvorlage Löschen",
+                        text: resp.message,
+                        type: resp.status
+                    });
+                    if (resp.status != "success") { return }
+
+
+                    await MailTemplate.fetchMailTemplates();
+                    this.setTemplateDropdown(MailTemplate.mailTemplateList);
+                }
+                this.resetTemplateForm();
+                this.setTemplateFormVisible(false);
+            });
+        });
     }
 
     setTemplateFormVisible(isVisible) {
