@@ -209,7 +209,7 @@ class CalendarModal {
         $('#calendarClientMail').val(client.mail);
         $('#calendarClientIssue').val(client.description);
         $('#calendarClientPhone').val(client.phone);
-        $('#calendarClientSurvey').val("");
+        $('#calendarClientSurvey').val(client.formular);
         $('#calendarClientChannel').val(client.channel);
     }
 
