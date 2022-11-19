@@ -20,18 +20,23 @@ $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
 
 $ownerName = getUserName($ownerId);
 
-$insertStatement = $dbPdo->prepare("INSERT INTO `Termine` (`date`,`owner`,`ownerId`,`room`,`start`,`end`,`title`,`template`,`channel`) VALUES (:date,:ownerName,:ownerId,:room,:start,:end,:title,:template,:channel);");
-$insertStatement->bindValue(':date', $date);
-$insertStatement->bindValue(':ownerName', $ownerName);
-$insertStatement->bindValue(':ownerId', $ownerId);
-$insertStatement->bindValue(':room', $room);
-$insertStatement->bindValue(':start', $start);
-$insertStatement->bindValue(':end', $end);
-$insertStatement->bindValue(':title', $title);
-$insertStatement->bindValue(':template', $template);
-$insertStatement->bindValue(':channel', $channel);
-$insertStatement->execute();
-//Id des neu hinzugefügten Termins abrufen
-$dateId = $dbPdo->lastInsertId();
-
+try {
+    $insertStatement = $dbPdo->prepare("INSERT INTO `Termine` (`date`,`owner`,`ownerId`,`room`,`start`,`end`,`title`,`template`,`channel`) VALUES (:date,:ownerName,:ownerId,:room,:start,:end,:title,:template,:channel);");
+    $insertStatement->bindValue(':date', $date);
+    $insertStatement->bindValue(':ownerName', $ownerName);
+    $insertStatement->bindValue(':ownerId', $ownerId);
+    $insertStatement->bindValue(':room', $room);
+    $insertStatement->bindValue(':start', $start);
+    $insertStatement->bindValue(':end', $end);
+    $insertStatement->bindValue(':title', $title);
+    $insertStatement->bindValue(':template', $template);
+    $insertStatement->bindValue(':channel', $channel);
+    $insertStatement->execute();
+    //Id des neu hinzugefügten Termins abrufen
+    $dateId = $dbPdo->lastInsertId();
+} catch (Exception $e) {
+    echo json_encode(array("status" => "error", "message" => $e->getMessage()));
+    exit;
+}
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erstellt", "dateId" => $dateId));
+

@@ -8,8 +8,16 @@ const swalToBootstrapClass = {
     "error": "danger",
 }
 
-stubegru.modules.alerts.alert = function (options) {
+stubegru.modules.alerts.alert = function (options,title) {
     if (typeof options == "string") { options = { text: options }; } //if options param is just a string => use this string as alert's text
+
+    //if options is a response object of a stubegru backend script, rename props to display correct alert
+    if(options.message && options.status){
+        options.text = options.message;
+        options.type = options.status;
+        options.title = title;
+    }
+
     options.type = options.type || "info"; //if type is unset => set to info
     options.title = options.title || "Info"; //if title is unset => set to "Info"
     options.text = options.text || ""; //if text is unset => set to empty string

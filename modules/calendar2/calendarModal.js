@@ -52,6 +52,8 @@ class CalendarModal {
 
     /**
      * Resets the meetingDetail-, client-, room- and templateForm
+     * Hides the info alert
+     * Clear all buttons event listeners
      */
     resetAllForms = () => {
         this.resetMeetingDetailForm();
@@ -59,6 +61,8 @@ class CalendarModal {
         this.resetRoomForm();
         this.resetTemplateForm();
         this.setInfoAlert(false);
+        $(".calendar-footer-button").off()
+        $(".calendar-assign-button").off()
     }
 
     /**
@@ -103,6 +107,36 @@ class CalendarModal {
         $("#calendarCancelButton").prop("disabled", !cancel);
     }
 
+    /**
+     * Register eventhandler for click on the footer save button
+     * This does automatically clear all currently registered events
+     * @param {function} callback Function to be executed if the button is clicked
+     */
+    setFooterSaveButtonEvent(callback) {
+        $("#calendarSaveMeetingButton").off();
+        $("#calendarSaveMeetingButton").on("click", callback);
+    }
+
+    /**
+     * Register eventhandler for click on the footer save&close button
+     * This does automatically clear all currently registered events
+     * @param {function} callback Function to be executed if the button is clicked
+     */
+    setFooterSaveCloseButtonEvent(callback) {
+        $("#calendarSaveCloseMeetingButton").off();
+        $("#calendarSaveCloseMeetingButton").on("click", callback);
+    }
+
+    /**
+     * Register eventhandler for click on the footer delete button
+     * This does automatically clear all currently registered events
+     * @param {function} callback Function to be executed if the button is clicked
+     */
+    setFooterDeleteButtonEvent(callback) {
+        $("#calendarDeleteMeetingButton").off();
+        $("#calendarDeleteMeetingButton").on("click", callback);
+    }
+
 
     /**
     * Reset all inputs in the Calendar meeting detail form
@@ -142,8 +176,8 @@ class CalendarModal {
         $('#calendarOwner').val(meeting.ownerId);
         $('#calendarChannel').val(meeting.channel);
 
-        $('#calendarRoom').val(meeting.room);
-        $('#calendarTemplate').val(meeting.template);
+        $('#calendarRoom').val(meeting.roomId);
+        $('#calendarTemplate').val(meeting.templateId);
     }
 
     /**
@@ -155,6 +189,7 @@ class CalendarModal {
             let hours = startTime.substr(0, 2);
             let minutes = startTime.substr(3, 2);
             hours++;
+            hours = hours < 10 ? `0${hours}` : hours;
             $("#calendarEnd").val(hours + ":" + minutes);
         }
     }
@@ -174,8 +209,8 @@ class CalendarModal {
 
 
     /**
-   * Reset all inputs in the client data form
-   */
+    * Reset all inputs in the client data form
+    */
     resetClientForm = () => {
         this.enableClientForm(true);
         $(".meeting-client").val("");

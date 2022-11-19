@@ -5,12 +5,6 @@ class CalendarController {
 
     static async init() {
         let C = CalendarController;
-
-        //Load meetings to view
-        await Meeting.fetchMeetings();
-        let meetingList = Meeting.meetingList;
-        C.view.addMeetings(meetingList);
-
         await C.modal.init();
 
         $("#calendarNewMeetingButton").on("click", C.createMeeting);
@@ -49,6 +43,25 @@ class CalendarController {
         m.showAssignButtons(false, false, false, false);
         m.setClientVisible(false);
         m.enableFooterButtons(true, true, false, true);
+
+        const createMeetingCallback = async () => {
+            let resp = await Meeting.createOnServer(m.getMeetingDetailData());
+            stubegru.modules.alerts.alert(resp, "Termin erstellen");
+            if (resp.status == "error") { throw new Error(resp.message); }
+            await C.view.refresh();
+            return resp;
+        };
+
+        m.setFooterSaveButtonEvent(async () => {
+            let resp = await createMeetingCallback();
+            C.openFreeMeeting(resp.dateId);
+        });
+
+
+        m.setFooterSaveCloseButtonEvent(async () => {
+            await createMeetingCallback();
+            m.setModalVisible(false);
+        });
     }
 
     static openFreeMeeting(meetingId) {

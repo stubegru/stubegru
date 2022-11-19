@@ -8,6 +8,8 @@ class Meeting {
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`);
         let meetingList = await resp.json();
         for (const meetingData of meetingList) {
+            meetingData.roomId = meetingData.room;
+            meetingData.templateId = meetingData.template;
             let m = new Meeting(meetingData);
             Meeting.meetingList.push(m);
         }

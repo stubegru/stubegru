@@ -38,9 +38,17 @@ class CalendarView {
         let calendarEl = document.querySelector(elemSelector);
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, CalendarView.config);
         this.fullCalendar.render();
+        this.refresh();
 
         //render calendar when the calendar box collapses to open
         $('#collapseCalendar').on('shown.bs.collapse', () => { this.fullCalendar.render(); })
+    }
+
+    refresh = async () => {
+        this.fullCalendar.removeAllEvents();
+        await Meeting.fetchMeetings();
+        let meetingList = Meeting.meetingList;
+        this.addMeetings(meetingList);
     }
 
 
