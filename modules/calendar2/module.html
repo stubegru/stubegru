@@ -98,7 +98,7 @@
                             </div>
                             <div class="modal-body">
                                 <div class="calendar-detail-container">
-                                    <form action="javascript:saveMeeting()">
+                                    <form id="calendarMeetingDetailForm">
                                         <div class="row">
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
@@ -186,95 +186,98 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <input autocomplete="off" type="hidden" id="raum_id">
-                                        <div class="row">
-                                            <div class='col-sm-4'>
-                                                <div class="form-group">
-                                                    <label>Kontaktkanal</label>
-                                                    <select id="raum_kanal" class="form-control meeting-room-input">
-                                                        <option value="personally">Persönliche Beratung</option>
-                                                        <option value="phone">Telefonberatung</option>
-                                                        <option value="webmeeting">Webmeeting</option>
-                                                    </select>
+                                        <form id="calendarRoomForm">
+                                            <input autocomplete="off" type="hidden" id="raum_id">
+                                            <div class="row">
+                                                <div class='col-sm-4'>
+                                                    <div class="form-group">
+                                                        <label>Kontaktkanal</label>
+                                                        <select id="raum_kanal" class="form-control meeting-room-input">
+                                                            <option value="personally">Persönliche Beratung</option>
+                                                            <option value="phone">Telefonberatung</option>
+                                                            <option value="webmeeting">Webmeeting</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-8'>
+                                                    <div class="form-group">
+                                                        <label>Titel</label>
+                                                        <input autocomplete="off" id="raum_titel" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class='col-sm-2'>
+                                                    <div class="form-group">
+                                                        <label>Raumnr.</label>
+                                                        <input autocomplete="off" id="raum_nr" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-2'>
+                                                    <div class="form-group">
+                                                        <label>Etage</label>
+                                                        <input autocomplete="off" id="raum_etage" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-3'>
+                                                    <div class="form-group">
+                                                        <label>Straße</label>
+                                                        <input autocomplete="off" id="raum_strasse" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-1'>
+                                                    <div class="form-group">
+                                                        <label>Hausnr.</label>
+                                                        <input autocomplete="off" id="raum_hausnr" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-2'>
+                                                    <div class="form-group">
+                                                        <label>PLZ</label>
+                                                        <input autocomplete="off" id="raum_plz" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-2'>
+                                                    <div class="form-group">
+                                                        <label>Ort</label>
+                                                        <input autocomplete="off" id="raum_ort" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class='col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label>Telefonnummer</label>
+                                                        <input autocomplete="off" id="raum_telefon" class="form-control meeting-room-input">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class='col-sm-8'>
-                                                <div class="form-group">
-                                                    <label>Titel</label>
-                                                    <input autocomplete="off" id="raum_titel" class="form-control meeting-room-input">
+                                            <div class="row">
+                                                <div class='col-sm-6'>
+                                                    <div class="form-group">
+                                                        <label>Link für Webmeetings</label>
+                                                        <input autocomplete="off" id="raum_link" class="form-control meeting-room-input">
+                                                    </div>
+                                                </div>
+                                                <div class='col-sm-6'>
+                                                    <div class="form-group">
+                                                        <label>Passwort für Webmeetings</label>
+                                                        <input autocomplete="off" id="raum_passwort" class="form-control meeting-room-input">
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                        </div>
-                                        <div class="row">
-                                            <div class='col-sm-2'>
-                                                <div class="form-group">
-                                                    <label>Raumnr.</label>
-                                                    <input autocomplete="off" id="raum_nr" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                            <div class='col-sm-2'>
-                                                <div class="form-group">
-                                                    <label>Etage</label>
-                                                    <input autocomplete="off" id="raum_etage" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                            <div class='col-sm-3'>
-                                                <div class="form-group">
-                                                    <label>Straße</label>
-                                                    <input autocomplete="off" id="raum_strasse" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                            <div class='col-sm-1'>
-                                                <div class="form-group">
-                                                    <label>Hausnr.</label>
-                                                    <input autocomplete="off" id="raum_hausnr" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                            <div class='col-sm-2'>
-                                                <div class="form-group">
-                                                    <label>PLZ</label>
-                                                    <input autocomplete="off" id="raum_plz" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                            <div class='col-sm-2'>
-                                                <div class="form-group">
-                                                    <label>Ort</label>
-                                                    <input autocomplete="off" id="raum_ort" class="form-control meeting-room-input">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <button class="btn btn-primary pull-right meeting-room-input" type="button" id="calendarSaveRoomButton">Raum Speichern</button>
+                                                    <button class="btn btn-default meeting-room-input" type="button" id="calendarCancelRoomButton">Abbrechen</button>
+                                                    <button class="btn btn-danger meeting-room-input" type="button" id="calendarDeleteRoomButton">Raum löschen</button>
                                                 </div>
                                             </div>
 
-                                        </div>
-                                        <div class="row">
-                                            <div class='col-sm-12'>
-                                                <div class="form-group">
-                                                    <label>Telefonnummer</label>
-                                                    <input autocomplete="off" id="raum_telefon" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class='col-sm-6'>
-                                                <div class="form-group">
-                                                    <label>Link für Webmeetings</label>
-                                                    <input autocomplete="off" id="raum_link" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                            <div class='col-sm-6'>
-                                                <div class="form-group">
-                                                    <label>Passwort für Webmeetings</label>
-                                                    <input autocomplete="off" id="raum_passwort" class="form-control meeting-room-input">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <button class="btn btn-primary pull-right meeting-room-input" type="button" id="calendarSaveRoomButton">Raum Speichern</button>
-                                                <button class="btn btn-default meeting-room-input" type="button" id="calendarCancelRoomButton">Abbrechen</button>
-                                                <button class="btn btn-danger meeting-room-input" type="button" id="calendarDeleteRoomButton">Raum löschen</button>
-                                            </div>
-                                        </div>
+                                        </form>
 
                                     </div>
 
@@ -287,52 +290,55 @@
                                             </div>
                                         </div>
                                         <br>
-                                        <div class="row">
-                                            <div class='col-sm-6'>
-                                                <input autocomplete="off" id=templateId type="hidden" value="new">
-                                                <div class="form-group">
-                                                    <label>Titel der Vorlage</label>
-                                                    <input autocomplete="off" id="templateTitle" class="form-control meeting-template-input">
+                                        <form id="calendarTemplateForm">
+                                            <div class="row">
+                                                <div class='col-sm-6'>
+                                                    <input autocomplete="off" id=templateId type="hidden" value="new">
+                                                    <div class="form-group">
+                                                        <label>Titel der Vorlage</label>
+                                                        <input autocomplete="off" id="templateTitle" class="form-control meeting-template-input" required>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Betreff der Mail</label>
-                                                    <input autocomplete="off" id="templateSubject" class="form-control meeting-template-input">
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label>Betreff der Mail</label>
+                                                        <input autocomplete="off" id="templateSubject" class="form-control meeting-template-input" required>
+                                                    </div>
                                                 </div>
+
                                             </div>
 
-                                        </div>
+                                            <div class="row">
+                                                <div class='col-sm-12'>
+                                                    <div class="form-group">
+                                                        <label><b>Mailtext</b></label>
+                                                        <div class="col-lg-12 nopadding" id="mailvorlagetermin" style="display:block;">
+                                                            <textarea id="mailTemplateEditor" class=""></textarea>
 
-                                        <div class="row">
-                                            <div class='col-sm-12'>
-                                                <div class="form-group">
-                                                    <label><b>Mailtext</b></label>
-                                                    <div class="col-lg-12 nopadding" id="mailvorlagetermin" style="display:block;">
-                                                        <textarea id="mailTemplateEditor" class=""></textarea>
-
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <br>
+                                            <br>
 
 
-                                        <div class="well">
-                                            <h5><b>Verfügbare Variablen:</b></h5>
-                                            {Termin_Titel} {Termin_Datum} {Termin_Uhrzeit} {Klient_Name} {Klient_Telefon} {Berater_Name} {Berater_Mail} {Raum_Kanal} {Raum_Nummer} {Raum_Etage} {Raum_Strasse} {Raum_Hausnummer} {Raum_PLZ} {Raum_Ort} {Raum_Link} {Raum_Passwort} {Raum_Telefon}
+                                            <div class="well">
+                                                <h5><b>Verfügbare Variablen:</b></h5>
+                                                {Termin_Titel} {Termin_Datum} {Termin_Uhrzeit} {Klient_Name} {Klient_Telefon} {Berater_Name} {Berater_Mail} {Raum_Kanal} {Raum_Nummer} {Raum_Etage} {Raum_Strasse} {Raum_Hausnummer} {Raum_PLZ} {Raum_Ort} {Raum_Link} {Raum_Passwort} {Raum_Telefon}
 
-                                        </div>
-
-
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <button class="btn btn-primary pull-right meeting-template-input" type="button" id="calendarSaveTemplateButton">Vorlage Speichern</button>
-                                                <button class="btn btn-default meeting-template-input" type="button" id="calendarCancelTemplateButton">Abbrechen</button>
-                                                <button type="button" class="btn btn-danger pull-center meeting-template-input" id="calendarDeleteTemplateButton">Vorlage löschen</button>
                                             </div>
-                                        </div>
+
+
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <button class="btn btn-primary pull-right meeting-template-input" type="button" id="calendarSaveTemplateButton">Vorlage Speichern</button>
+                                                    <button class="btn btn-default meeting-template-input" type="button" id="calendarCancelTemplateButton">Abbrechen</button>
+                                                    <button type="button" class="btn btn-danger pull-center meeting-template-input" id="calendarDeleteTemplateButton">Vorlage löschen</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
                                     </div>
 
                                 </div>
@@ -355,51 +361,54 @@
                                         <h3 style="margin-bottom:0px;">Kundendaten</h3>
                                     </div>
                                     <hr style="margin-top:0px;">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Vor- und Nachname:</label>
-                                                <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientName" required>
+                                    <form id="calendarClientDataForm">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Vor- und Nachname:</label>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientName" required>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Fragebogen:</label>
-                                                <select id="calendarClientSurvey" class="form-control terminmodal-input meeting-client" required>
-                                                    <option value="0">Nein</option>
-                                                    <option value="1">Ja</option>
-                                                </select>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Fragebogen:</label>
+                                                    <select id="calendarClientSurvey" class="form-control terminmodal-input meeting-client" required>
+                                                        <option value="0">Nein</option>
+                                                        <option value="1">Ja</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="form-group">
-                                                <label>Kanal:</label>
-                                                <select id="calendarClientChannel" class="form-control terminmodal-input meeting-client" required>
-                                                    
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Anliegen:</label>
-                                                <textarea id="calendarClientIssue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Kanal:</label>
+                                                    <select id="calendarClientChannel" class="form-control terminmodal-input meeting-client" required>
 
-                                            <div class="form-group">
-                                                <label>Telefon:</label>
-                                                <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientPhone">
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label>E-Mail:</label>
-                                                <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientMail" required="">
-                                            </div>
-
                                         </div>
-                                    </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Anliegen:</label>
+                                                    <textarea id="calendarClientIssue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+
+                                                <div class="form-group">
+                                                    <label>Telefon:</label>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientPhone">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>E-Mail:</label>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientMail" required="">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </form>
+
                                 </div>
                             </div>
 

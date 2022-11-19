@@ -318,7 +318,8 @@ class CalendarModal {
             this.setTemplateFormVisible(true);
         });
 
-        $("#calendarSaveTemplateButton").on("click", async () => {
+        $("#calendarTemplateForm").on("submit", async (event) => {
+            event.preventDefault();
             let templateId = $("#templateId").val();
             let resp;
 
@@ -349,6 +350,7 @@ class CalendarModal {
             //auto-select previously edited/created template
             $("#calendarTemplate").val(templateId);
         });
+        $("#calendarSaveTemplateButton").on("click", () => $("#calendarTemplateForm").trigger("submit"));
 
         $("#calendarCancelTemplateButton").on("click", () => {
             this.resetTemplateForm();
