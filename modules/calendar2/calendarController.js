@@ -104,8 +104,8 @@ class CalendarController {
             C.openMeetingForAssignment(meetingId);
         });
 
-        m.setMeetingDetailChangeListener(()=>{
-            m.showAssignButtons(false,false,false,false);
+        m.setMeetingDetailChangeListener(() => {
+            m.showAssignButtons(false, false, false, false);
             m.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
         })
     }
@@ -161,6 +161,16 @@ class CalendarController {
         m.enableFooterButtons(false, false, false, true);
 
         m.setInfoAlert(`Dieser Termin ist bereits an einen Kunden vergeben. Bearbeiten des Termins ist nur möglich, nachdem die Kundendaten gelöscht wurden.`);
+
+        m.setAssignDeleteButtonEvent(() => {
+            deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.", async() => {
+                let resp = await meeting.deleteClient();
+                stubegru.modules.alerts.alert(resp, "Kundendaten löschen");
+                if (resp.status == "error") { throw new Error(resp.message); }
+                await C.view.refresh();
+                C.openFreeMeeting(meetingId);
+            });
+        });
     }
 
 
