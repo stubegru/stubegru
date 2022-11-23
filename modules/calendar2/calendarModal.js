@@ -350,7 +350,7 @@ class CalendarModal {
             //auto-select previously edited/created template
             $("#calendarTemplate").val(templateId);
         });
-        $("#calendarSaveTemplateButton").on("click", () => $("#calendarTemplateForm").trigger("submit"));
+        //$("#calendarSaveTemplateButton").on("click", () => $("#calendarTemplateForm").trigger("submit"));
 
         $("#calendarCancelTemplateButton").on("click", () => {
             this.resetTemplateForm();
