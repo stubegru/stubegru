@@ -61,8 +61,9 @@ class CalendarModal {
         this.resetRoomForm();
         this.resetTemplateForm();
         this.setInfoAlert(false);
-        $(".calendar-footer-button").off()
-        $(".calendar-assign-button").off()
+        $(".calendar-footer-button").off();
+        $(".calendar-assign-button").off();
+        $("#calendarMeetingDetailForm").off();
     }
 
     /**
@@ -110,11 +111,16 @@ class CalendarModal {
     /**
      * Register eventhandler for click on the footer save button
      * This does automatically clear all currently registered events
+     * Footer Save button acts as submit button for meeting detail form
      * @param {function} callback Function to be executed if the button is clicked
      */
     setFooterSaveButtonEvent(callback) {
-        $("#calendarSaveMeetingButton").off();
-        $("#calendarSaveMeetingButton").on("click", callback);
+        //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
+        $("#calendarMeetingDetailForm").off("submit");
+        $("#calendarMeetingDetailForm").on("submit", (event)=>{
+            event.preventDefault();
+            callback(event);
+        });
     }
 
     /**

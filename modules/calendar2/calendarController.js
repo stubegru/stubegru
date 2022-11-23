@@ -70,7 +70,7 @@ class CalendarController {
         let isWrite = C.isCalendarWriteUser();
 
         m.setModalVisible(true);
-        m.setModalTitle("Termindetails (Freier Termin");
+        m.setModalTitle("Termindetails (Freier Termin)");
         m.resetAllForms();
 
         const meeting = Meeting.getById(meetingId);
