@@ -55,8 +55,8 @@ class CalendarView {
     addMeetings(meetingList) {
         //Generate events for fullcalendar
         let ownUserId = stubegru.currentUser.id;
-        let ownEvents = [];
-        let othersEvents = [];
+        let ownEvents = { free: [], assigned: [] };
+        let othersEvents = { free: [], assigned: [] };
 
         for (let inMeeting of meetingList) {
             let outMeeting = {
@@ -66,21 +66,41 @@ class CalendarView {
                 extendedProps: inMeeting
             };
 
-            if (inMeeting.ownerId == ownUserId) { ownEvents.push(outMeeting); } else { othersEvents.push(outMeeting); }
+            //Sort meetings by free/assigned and own/others
+            if (inMeeting.ownerId == ownUserId) {
+                (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
+                    ownEvents.assigned.push(outMeeting) :
+                    ownEvents.free.push(outMeeting);
+            } else {
+                (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
+                    othersEvents.assigned.push(outMeeting) :
+                    othersEvents.free.push(outMeeting);
+            }
         }
 
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
-            id: "stubegru-own-events",
-            events: ownEvents,
-            color: "#2196f3",
+            id: "stubegru-own-free-events",
+            events: ownEvents.free,
+            color: "#5cb85c",
             classNames: ["pointer"]
         });
-
         this.fullCalendar.addEventSource({
-            id: "stubegru-others-events",
-            events: othersEvents,
-            color: "#999ca1",
+            id: "stubegru-own-assigned-events",
+            events: ownEvents.assigned,
+            color: "#d9534f",
+            classNames: ["pointer"]
+        });
+        this.fullCalendar.addEventSource({
+            id: "stubegru-others-free-events",
+            events: othersEvents.free,
+            color: "#5cb85c",
+            classNames: ["pointer"]
+        });
+        this.fullCalendar.addEventSource({
+            id: "stubegru-others-assigned-events",
+            events: othersEvents.assigned,
+            color: "#d9534f",
             classNames: ["pointer"]
         });
     }
