@@ -59,12 +59,14 @@ class CalendarModal {
         this.resetMeetingDetailForm();
         this.resetClientForm();
         this.resetRoomForm();
+        this.setRoomFormVisible(false);
         this.resetTemplateForm();
+        this.setTemplateFormVisible(false);
         this.setInfoAlert(false);
         $(".calendar-footer-button").off();
         $(".calendar-assign-button").off();
-        $("#calendarMeetingDetailForm").off();
-        $('.meeting-details').off();
+        $("#calendarMeetingDetailForm").off("submit");
+        $('.meeting-details').off("change");
     }
 
     /**
@@ -207,7 +209,7 @@ class CalendarModal {
     }
 
     setMeetingDetailChangeListener(callback) {
-        $('.meeting-details').off();
+        $('.meeting-details').off("change");
         $('.meeting-details').on("change",callback);
     }
 
@@ -406,8 +408,8 @@ class CalendarModal {
 
             //auto-select previously edited/created template
             $("#calendarTemplate").val(templateId);
+            $("#calendarTemplate").trigger("change");
         });
-        //$("#calendarSaveTemplateButton").on("click", () => $("#calendarTemplateForm").trigger("submit"));
 
         $("#calendarCancelTemplateButton").on("click", () => {
             this.resetTemplateForm();
@@ -513,7 +515,8 @@ class CalendarModal {
             this.setRoomFormVisible(true);
         });
 
-        $("#calendarSaveRoomButton").on("click", async () => {
+        $("#calendarRoomForm").on("submit", async (event) => {
+            event.preventDefault();
             let roomId = $("#raum_id").val();
             let resp;
 
@@ -543,6 +546,7 @@ class CalendarModal {
 
             //auto-select previously edited/created room
             $("#calendarRoom").val(roomId);
+            $("#calendarRoom").trigger("change");
         });
 
         $("#calendarCancelRoomButton").on("click", () => {
