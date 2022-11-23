@@ -64,6 +64,7 @@ class CalendarModal {
         $(".calendar-footer-button").off();
         $(".calendar-assign-button").off();
         $("#calendarMeetingDetailForm").off();
+        $('.meeting-details').off();
     }
 
     /**
@@ -75,7 +76,7 @@ class CalendarModal {
         (text && text.length > 0) ?
             $("#calendarModalInfoAlert").show() :
             $("#calendarModalInfoAlert").hide();
-        $("#calendarModalInfoAlert").html(text);
+        $("#calendarModalInfoAlert").html(`<i class="fas fa-info-circle"></i> ${text}`);
     }
 
     /**
@@ -92,6 +93,51 @@ class CalendarModal {
         sh($("#calendarAssignCancelButton"), cancel);
 
         function sh(e, b) { b ? e.show() : e.hide(); }
+    }
+
+    /**
+  * Register eventhandler for click on the assign save button
+  * This does automatically clear all currently registered events
+  * Assign Save button acts as submit button for client detail form
+  * @param {function} callback Function to be executed if the button is clicked
+  */
+    setAssignSaveButtonEvent(callback) {
+        //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
+        $("#calendarClientDataForm").off("submit");
+        $("#calendarClientDataForm").on("submit", (event) => {
+            event.preventDefault();
+            callback(event);
+        });
+    }
+
+    /**
+     * Register eventhandler for click on the assign assign button
+     * This does automatically clear all currently registered events
+     * @param {function} callback Function to be executed if the button is clicked
+     */
+    setAssignAssignButtonEvent(callback) {
+        $("#calendarAssignAssignButton").off();
+        $("#calendarAssignAssignButton").on("click", callback);
+    }
+
+    /**
+     * Register eventhandler for click on the assign delete button
+     * This does automatically clear all currently registered events
+     * @param {function} callback Function to be executed if the button is clicked
+     */
+    setAssignDeleteButtonEvent(callback) {
+        $("#calendarAssignDeleteButton").off();
+        $("#calendarAssignDeleteButton").on("click", callback);
+    }
+
+    /**
+     * Register eventhandler for click on the assign cancel button
+     * This does automatically clear all currently registered events
+     * @param {function} callback Function to be executed if the button is clicked
+     */
+    setAssignCancelButtonEvent(callback) {
+        $("#calendarAssignCancelButton").off();
+        $("#calendarAssignCancelButton").on("click", callback);
     }
 
     /**
@@ -117,7 +163,7 @@ class CalendarModal {
     setFooterSaveButtonEvent(callback) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
         $("#calendarMeetingDetailForm").off("submit");
-        $("#calendarMeetingDetailForm").on("submit", (event)=>{
+        $("#calendarMeetingDetailForm").on("submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -158,6 +204,11 @@ class CalendarModal {
 
     enableDetailMeetingForm(isEnabled) {
         $('.meeting-details').prop("disabled", !isEnabled);
+    }
+
+    setMeetingDetailChangeListener(callback) {
+        $('.meeting-details').off();
+        $('.meeting-details').on("change",callback);
     }
 
 

@@ -89,9 +89,12 @@ class Meeting {
     }
 
     async deleteOnServer() {
+        let formData = new FormData();
+        formData.append("id", this.id);
+
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/delete_date.php`, {
             method: "POST",
-            body: { id: this.id }
+            body: formData
         });
         let jsonResp = await resp.json();
         return jsonResp;

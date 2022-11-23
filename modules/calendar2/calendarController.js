@@ -80,6 +80,64 @@ class CalendarController {
         m.showAssignButtons(true, false, false, false);
         m.setClientVisible(false);
         m.enableFooterButtons(isWrite, isWrite, isWrite, true);
+
+        m.setFooterSaveButtonEvent(async () => {
+            meeting.applyProperties(m.getMeetingDetailData());
+            let resp = await meeting.updateOnServer();
+            stubegru.modules.alerts.alert(resp, "Termin speichern");
+            if (resp.status == "error") { throw new Error(resp.message); }
+            await C.view.refresh();
+            C.openFreeMeeting(meetingId);
+        });
+
+        m.setFooterDeleteButtonEvent(() => {
+            deleteConfirm("Termin löschen", "Soll dieser Termin wirklich gelöscht werden?", async () => {
+                let resp = await meeting.deleteOnServer();
+                stubegru.modules.alerts.alert(resp, "Termin löschen");
+                if (resp.status == "error") { throw new Error(resp.message); }
+                await C.view.refresh();
+                m.setModalVisible(false);
+            });
+        });
+
+        m.setAssignAssignButtonEvent(() => {
+            C.openMeetingForAssignment(meetingId);
+        });
+
+        m.setMeetingDetailChangeListener(()=>{
+            m.showAssignButtons(false,false,false,false);
+            m.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
+        })
+    }
+
+    static openMeetingForAssignment(meetingId) {
+        let C = CalendarController;
+        let m = C.modal;
+        let meeting = Meeting.getById(meetingId);
+        m.resetClientForm();
+        m.setModalVisible(true);
+        m.setModalTitle("Kundendaten eintragen");
+        m.setClientVisible(true);
+        m.showAssignButtons(false, true, false, true);
+        m.enableDetailMeetingForm(false);
+        m.enableFooterButtons(false, false, false, true);
+        m.setMeetingDetailData(meeting);
+        m.setInfoAlert("Bitte als nächstes Kundendaten speichern oder abbrechen. Der Termin kann nicht bearbeitet oder gelöscht werden solange die Kundendaten bearbeitet werden.");
+        m.initClientChannelDropdown(meeting.channel);
+
+        //Assign save button
+        m.setAssignSaveButtonEvent(async () => {
+            let resp = await meeting.assignClient(m.getClientData());
+            stubegru.modules.alerts.alert(resp, "Kundendaten speichern");
+            if (resp.status == "error") { throw new Error(resp.message); }
+            await C.view.refresh();
+            C.openAssignedMeeting(meetingId);
+        });
+
+        //Assign cancel button
+        m.setAssignCancelButtonEvent(() => {
+            C.openFreeMeeting(meetingId);
+        })
     }
 
     static openAssignedMeeting(meetingId) {
@@ -102,7 +160,7 @@ class CalendarController {
 
         m.enableFooterButtons(false, false, false, true);
 
-        m.setInfoAlert(`<i class="fas fa-info-circle"></i> Dieser Termin ist bereits an einen Kunden vergeben. Bearbeiten des Termins ist nur möglich, nachdem die Kundendaten gelöscht wurden.`);
+        m.setInfoAlert(`Dieser Termin ist bereits an einen Kunden vergeben. Bearbeiten des Termins ist nur möglich, nachdem die Kundendaten gelöscht wurden.`);
     }
 
 
