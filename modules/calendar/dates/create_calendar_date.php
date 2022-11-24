@@ -35,7 +35,7 @@ try {
     //Id des neu hinzugefügten Termins abrufen
     $dateId = $dbPdo->lastInsertId();
 } catch (Exception $e) {
-    echo json_encode(array("status" => "error", "message" => $e->getMessage()));
+    echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht erstellt werden."));
     exit;
 }
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erstellt", "dateId" => $dateId));
