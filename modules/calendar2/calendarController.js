@@ -124,7 +124,7 @@ class CalendarController {
         let C = CalendarController;
         let m = C.modal;
         let meeting = Meeting.getById(meetingId);
-        m.resetClientForm();
+        m.resetAllForms();
         m.setModalVisible(true);
         m.setModalTitle("Kundendaten eintragen");
         m.setClientVisible(true);
