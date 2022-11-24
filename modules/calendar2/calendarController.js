@@ -6,11 +6,19 @@ class CalendarController {
     static async init() {
         let C = CalendarController;
         await C.modal.init();
+        C.initFilterMenu();
 
         $("#calendarNewMeetingButton").on("click", C.createMeeting);
+    }
 
+    static initFilterMenu() {
         $("#calendarSettingsForeignToggle").on("change", function (event) {
-            console.log($(this).prop('checked'));
+            const showOthers = !$(this).prop('checked');
+            CalendarController.view.showOthersMeetings(showOthers);
+        });
+        $("#calendarSettingsAssignedToggle").on("change", function (event) {
+            const showAssigned = !$(this).prop('checked');
+            CalendarController.view.showAssignedMeetings(showAssigned);
         });
 
         $(document).on('click', '#calendarSettingsDropdown', function (e) {
@@ -163,7 +171,7 @@ class CalendarController {
         m.setInfoAlert(`Dieser Termin ist bereits an einen Kunden vergeben. Bearbeiten des Termins ist nur möglich, nachdem die Kundendaten gelöscht wurden.`);
 
         m.setAssignDeleteButtonEvent(() => {
-            deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.", async() => {
+            deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.", async () => {
                 let resp = await meeting.deleteClient();
                 stubegru.modules.alerts.alert(resp, "Kundendaten löschen");
                 if (resp.status == "error") { throw new Error(resp.message); }

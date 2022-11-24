@@ -22,6 +22,7 @@ class Meeting {
         this.end = meetingData.end;
         this.title = meetingData.title;
         this.ownerId = meetingData.ownerId;
+        this.owner = meetingData.owner;
         this.roomId = meetingData.roomId;
         this.templateId = meetingData.templateId;
         this.teilnehmer = meetingData.teilnehmer;

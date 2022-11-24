@@ -35,6 +35,8 @@ class CalendarView {
 
 
     constructor(elemSelector) {
+        this.assignedVisible = true;
+        this.othersVisible = true;
         let calendarEl = document.querySelector(elemSelector);
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, CalendarView.config);
         this.fullCalendar.render();
@@ -49,6 +51,8 @@ class CalendarView {
         await Meeting.fetchMeetings();
         let meetingList = Meeting.meetingList;
         this.addMeetings(meetingList);
+        this.showAssignedMeetings(this.assignedVisible);
+        this.showOthersMeetings(this.othersVisible);
     }
 
 
@@ -60,7 +64,7 @@ class CalendarView {
 
         for (let inMeeting of meetingList) {
             let outMeeting = {
-                title: inMeeting.title,
+                title: inMeeting.owner,
                 start: `${inMeeting.date}T${inMeeting.start}`,
                 end: `${inMeeting.date}T${inMeeting.end}`,
                 extendedProps: inMeeting
@@ -103,6 +107,31 @@ class CalendarView {
             color: "#d9534f",
             classNames: ["pointer"]
         });
+    }
+
+    setEventVisibility(eventSourceId, visible) {
+        let allEvents = this.fullCalendar.getEvents();
+        for (let ev of allEvents) {
+            if (ev.source.id == eventSourceId) {
+                ev.setProp("display", visible ? "auto" : "none");
+            }
+        }
+    }
+
+    showOthersMeetings = (isVisible) => {
+        this.othersVisible = isVisible;
+        this.setEventVisibility("stubegru-others-free-events", isVisible);
+        if (!isVisible || this.assignedVisible) {
+            this.setEventVisibility("stubegru-others-assigned-events", isVisible);
+        }
+    }
+
+    showAssignedMeetings = (isVisible) => {
+        this.assignedVisible = isVisible;
+        this.setEventVisibility("stubegru-own-assigned-events", isVisible);
+        if (!isVisible || this.othersVisible) {
+            this.setEventVisibility("stubegru-others-assigned-events", isVisible);
+        }
     }
 
 
