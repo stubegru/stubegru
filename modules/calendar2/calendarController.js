@@ -2,6 +2,7 @@ class CalendarController {
 
     static modal = new CalendarModal();
     static view = new CalendarView('#calendarViewContainer');
+    static freeMeetingMode = false;
 
     static async init() {
         let C = CalendarController;
@@ -62,12 +63,14 @@ class CalendarController {
 
         m.setFooterSaveButtonEvent(async () => {
             let resp = await createMeetingCallback();
+            m.setUnsavedChanges(false);
             C.openFreeMeeting(resp.dateId);
         });
 
 
         m.setFooterSaveCloseButtonEvent(async () => {
             await createMeetingCallback();
+            m.setUnsavedChanges(false);
             m.setModalVisible(false);
         });
     }
@@ -80,6 +83,7 @@ class CalendarController {
         m.setModalVisible(true);
         m.setModalTitle("Termindetails (Freier Termin)");
         m.resetAllForms();
+        CalendarController.freeMeetingMode = true;
 
         const meeting = Meeting.getById(meetingId);
         m.setMeetingDetailData(meeting);
@@ -95,6 +99,7 @@ class CalendarController {
             stubegru.modules.alerts.alert(resp, "Termin speichern");
             if (resp.status == "error") { throw new Error(resp.message); }
             await C.view.refresh();
+            m.setUnsavedChanges(false);
             C.openFreeMeeting(meetingId);
         });
 
@@ -104,6 +109,7 @@ class CalendarController {
                 stubegru.modules.alerts.alert(resp, "Termin löschen");
                 if (resp.status == "error") { throw new Error(resp.message); }
                 await C.view.refresh();
+                m.setUnsavedChanges(false);
                 m.setModalVisible(false);
             });
         });
@@ -112,10 +118,6 @@ class CalendarController {
             C.openMeetingForAssignment(meetingId);
         });
 
-        m.setMeetingDetailChangeListener(() => {
-            m.showAssignButtons(false, false, false, false);
-            m.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
-        })
     }
 
     static openMeetingForAssignment(meetingId) {
@@ -139,11 +141,13 @@ class CalendarController {
             stubegru.modules.alerts.alert(resp, "Kundendaten speichern");
             if (resp.status == "error") { throw new Error(resp.message); }
             await C.view.refresh();
+            m.setUnsavedChanges(false);
             C.openAssignedMeeting(meetingId);
         });
 
         //Assign cancel button
         m.setAssignCancelButtonEvent(() => {
+            m.setUnsavedChanges(false);
             C.openFreeMeeting(meetingId);
         })
     }
@@ -176,6 +180,7 @@ class CalendarController {
                 stubegru.modules.alerts.alert(resp, "Kundendaten löschen");
                 if (resp.status == "error") { throw new Error(resp.message); }
                 await C.view.refresh();
+                m.setUnsavedChanges(false);
                 C.openFreeMeeting(meetingId);
             });
         });

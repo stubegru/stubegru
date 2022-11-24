@@ -9,11 +9,12 @@ class CalendarModal {
     };
 
     async init() {
-
-        //Set meeting end time if the start value changes
-        $("#calendarStart").on("change", this.setMeetingEndTimeByStartTime);
+        this.setUnsavedChanges(false);
+        this.initFomularChangeListener();
+        //ask for unsaved changes
+        $("#terminmodal").on('hide.bs.modal', this.askForUnsavedChanges);
         //Reset modal forms on hide event
-        $("#terminmodal").on('hidden.bs.modal', CalendarController.modal.resetAllForms);
+        $("#terminmodal").on('hidden.bs.modal', this.resetAllForms);
 
         await Room.fetchRooms();
         this.setRoomDropdown(Room.roomList);
@@ -23,14 +24,29 @@ class CalendarModal {
         this.setTemplateDropdown(MailTemplate.mailTemplateList);
         this.initTemplateEditButtons();
 
-        await CalendarController.modal.initAdvisorDropdown();
+        await this.initAdvisorDropdown();
         this.initMeetingDetailChannelDropdown();
 
         //Init richtext editor for mail templates
         CKEDITOR.replace('mailTemplateEditor');
     }
 
+    askForUnsavedChanges = () => {
+        if (!this.unsavedChanges) { return true; }
+        return confirm("Es gibt ungespeicherte Änderungen. Soll das Formular wirklich geschlossen werden?");
+    }
 
+    setUnsavedChanges = (unsavedChanges) => {
+        this.unsavedChanges = unsavedChanges;
+        unsavedChanges?
+        $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #d9534f"></i> Ungespeicherte Änderungen`):
+        $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`);
+
+        if(unsavedChanges && CalendarController.freeMeetingMode){
+            this.showAssignButtons(false, false, false, false);
+            this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
+        }
+    }
 
     /**
      * Show or hide the meeting appointment modal
@@ -63,11 +79,22 @@ class CalendarModal {
         this.resetTemplateForm();
         this.setTemplateFormVisible(false);
         this.setInfoAlert(false);
+        CalendarController.freeMeetingMode = false;
         $(".calendar-footer-button").off();
         $(".calendar-assign-button").off();
         $("#calendarMeetingDetailForm").off("submit");
-        $('.meeting-details').off("change");
+        this.setUnsavedChanges(false);
     }
+
+    initFomularChangeListener() {
+        $('.meeting-details').on("change", () => CalendarController.modal.setUnsavedChanges(true));
+        $(".meeting-room-input").on("change", () => CalendarController.modal.setUnsavedChanges(true));
+        $(".meeting-template-input").on("change", () => CalendarController.modal.setUnsavedChanges(true));
+        $(".meeting-client").on("change", () => CalendarController.modal.setUnsavedChanges(true));
+        $("#calendarStart").on("change", this.setMeetingEndTimeByStartTime);
+    }
+
+
 
     /**
      * Sets the text for the info alert in calendarModal.
@@ -206,11 +233,6 @@ class CalendarModal {
 
     enableDetailMeetingForm(isEnabled) {
         $('.meeting-details').prop("disabled", !isEnabled);
-    }
-
-    setMeetingDetailChangeListener(callback) {
-        $('.meeting-details').off("change");
-        $('.meeting-details').on("change",callback);
     }
 
 
