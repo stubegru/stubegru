@@ -38,11 +38,11 @@ class CalendarModal {
 
     setUnsavedChanges = (unsavedChanges) => {
         this.unsavedChanges = unsavedChanges;
-        unsavedChanges?
-        $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #d9534f"></i> Ungespeicherte Änderungen`):
-        $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`);
+        unsavedChanges ?
+            $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #d9534f"></i> Ungespeicherte Änderungen`) :
+            $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`);
 
-        if(unsavedChanges && CalendarController.freeMeetingMode){
+        if (unsavedChanges && CalendarController.freeMeetingMode) {
             this.showAssignButtons(false, false, false, false);
             this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
         }
@@ -324,9 +324,16 @@ class CalendarModal {
         $('#calendarClientName').val(client.name);
         $('#calendarClientMail').val(client.mail);
         $('#calendarClientIssue').val(client.description);
-        $('#calendarClientPhone').val(client.phone);
         $('#calendarClientSurvey').val(client.formular);
         $('#calendarClientChannel').val(client.channel);
+
+        let phone = "";
+        for (const index in client.phone) {
+            let char = client.phone[index];
+            phone += char;
+            if (index % 4 == 3) { phone += " "; }
+        }
+        $('#calendarClientPhone').val(phone);
     }
 
     initClientChannelDropdown(meetingChannel) {
