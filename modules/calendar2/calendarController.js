@@ -2,6 +2,7 @@ class CalendarController {
 
     static modal = new CalendarModal();
     static view = new CalendarView('#calendarViewContainer');
+    static search = new CalendarSearch();
     static freeMeetingMode = false;
 
     static async init() {
