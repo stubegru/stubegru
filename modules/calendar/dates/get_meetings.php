@@ -15,6 +15,12 @@ foreach ($resultList as &$meetingData) {
         $clientStatement->bindValue(':clientId', $clientId);
         $clientStatement->execute();
         $clientData = $clientStatement->fetch(PDO::FETCH_ASSOC);
+
+        //remove client issue if this is not the owner account
+        if($own_id != $meetingData["ownerId"]){
+            $clientData["description"] = "*** Wird nur dem Beratenden angezeigt ***";
+        }
+
         $meetingData["teilnehmer"] = $clientData;
     }
 }
