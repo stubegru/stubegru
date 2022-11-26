@@ -6,20 +6,21 @@ $own_id = $_SESSION['id'];
 
 try {
     $meetingId = $_POST["meetingId"];
-    $blockMeeting = $_POST["blockMeeting"] == "1" ? $own_id : 0;
+    $blockMeeting = $_POST["blockMeeting"] == 1 ? $own_id : 0;
 
     $selectStatement = $dbPdo->prepare("SELECT blocked FROM `Termine` WHERE id = :meetingId;");
     $selectStatement->bindValue(':meetingId', $meetingId);
     $selectStatement->execute();
     $alreadyBlocked = $selectStatement->fetchColumn();
 
-    if ($blockMeeting != 0 && $alreadyBlocked != 0) {
-        echo json_encode(array("status" => "error", "message" => "Der Termin ist bereits blockiert und konnte nicht erneut blockiert werden.","blockId" => $alreadyBlocked));
+
+    if ($blockMeeting != 0 && ($alreadyBlocked != 0 && $alreadyBlocked != $own_id)) {
+        echo json_encode(array("status" => "error", "message" => "Der Termin ist bereits blockiert und konnte nicht erneut blockiert werden.", "blockId" => $alreadyBlocked));
         exit;
     }
 
-    if ($blockMeeting == 0 && $alreadyBlocked != $own_id) {
-        echo json_encode(array("status" => "error", "message" => "Der Termin ist durch eine andere Person blockiert. Die Blockierung kann nicht aufgehoben werden.","blockId" => $alreadyBlocked));
+    if ($blockMeeting == 0 && ($alreadyBlocked != $own_id && $alreadyBlocked != 0)) {
+        echo json_encode(array("status" => "error", "message" => "Der Termin ist durch eine andere Person blockiert. Die Blockierung kann nicht aufgehoben werden.", "blockId" => $alreadyBlocked));
         exit;
     }
 
@@ -32,4 +33,5 @@ try {
     exit;
 }
 
-echo json_encode(array("status" => "success", "message" => "Der Termin mit id '$meetingId' wurde erfolgreich für user '$own_id' blockiert."));
+
+echo json_encode(array("status" => "success", "message" => "Blockieren / Block aufheben erfolgreich"));
