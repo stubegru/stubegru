@@ -29,6 +29,21 @@ class CalendarController {
         });
     }
 
+
+    static async setMeetingBlock(meetingId,blockMeeting){
+        let formData = new FormData();
+        formData.append("meetingId",meetingId);
+        formData.append("blockMeeting",blockMeeting);
+
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/set_meeting_block.php`;
+        let resp = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+        resp = await resp.json();
+        return resp;
+    }
+
     /**
      * @returns {boolean} wether the current user has write permissions for calendar meetings
      */
