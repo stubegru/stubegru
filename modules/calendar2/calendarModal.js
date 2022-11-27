@@ -336,6 +336,15 @@ class CalendarModal {
         $('#calendarClientPhone').val(phone);
     }
 
+    showBlockError(userName, callback) {
+        callback = callback || function () { };
+        swal({
+            title: "Termin ist blockiert",
+            text: `Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${userName}.`,
+            type: "error"
+        }, callback);
+    }
+
     initClientChannelDropdown(meetingChannel) {
         let channelOptions = [];
 

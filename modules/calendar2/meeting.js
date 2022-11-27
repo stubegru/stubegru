@@ -79,7 +79,7 @@ class Meeting {
         meetingData.id = "new";
         let m = new Meeting(meetingData);
         let formData = m.toFormData();
-        
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/create_calendar_date.php`;
         let meetingResp = await fetch(url, {
             method: 'POST',
@@ -124,6 +124,35 @@ class Meeting {
         formData.append("dateId", this.id);
 
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/remove_assignment.php`, {
+            method: 'POST',
+            body: formData
+        });
+        resp = await resp.json();
+        return resp;
+    }
+
+
+    async setBlock(blockMeeting) {
+        blockMeeting = blockMeeting ? 1 : 0;
+        let formData = new FormData();
+        formData.append("meetingId", this.id);
+        formData.append("blockMeeting", blockMeeting);
+
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/set_meeting_block.php`;
+        let resp = await fetch(url, {
+            method: 'POST',
+            body: formData
+        });
+        resp = await resp.json();
+        return resp;
+    }
+
+    async isBlock() {
+        let formData = new FormData();
+        formData.append("meetingId", this.id);
+
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/is_meeting_block.php`;
+        let resp = await fetch(url, {
             method: 'POST',
             body: formData
         });

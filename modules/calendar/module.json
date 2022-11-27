@@ -22,6 +22,7 @@
         "calendar.css"
     ],
     "cronjob" : [
-        "cronjobs/clean_calendar.php"
+        "cronjobs/clean_calendar.php",
+        "cronjobs/remove_all_blocks.php"
     ]
 }

@@ -26,6 +26,19 @@ $dateIssue = $_POST["issue"];
 //Channel attribute will only be set by calendar2 frontend
 $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
 
+//check for meeting block
+$selectStatement = $dbPdo->prepare("SELECT blocked FROM `Termine` WHERE id = :meetingId;");
+$selectStatement->bindValue(':meetingId', $dateId);
+$selectStatement->execute();
+$alreadyBlocked = $selectStatement->fetchColumn();
+
+if($alreadyBlocked != 0 && $alreadyBlocked != $loggedInUserId){
+    $blockUsername = getUserName($alreadyBlocked);
+    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin ist blockiert durch: $blockUsername"));
+    exit;
+}
+
+
 $insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`,`channel`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:dateIssue,:dateId,:channel);"); // Daten des zu Beratenden in DB speichern
 $insertStatement->bindValue(':clientName', $clientName);
 $insertStatement->bindValue(':clientMailAdress', $clientMailAdress);
@@ -159,6 +172,11 @@ try {
     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
     exit;
 }
+
+//Terminblock freigeben
+$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked = '0' WHERE id = :meetingId");
+$updateStatement->bindValue(':meetingId', $dateId);
+$updateStatement->execute();
 
 //Erfolg melden
 echo json_encode(array("status" => "success", "message" => "Der Termin wurde erfolgreich vergeben. Es wurde eine Mail an den Berater und an den Kunden versendet."));

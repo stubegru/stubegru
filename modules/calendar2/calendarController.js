@@ -30,19 +30,6 @@ class CalendarController {
     }
 
 
-    static async setMeetingBlock(meetingId,blockMeeting){
-        let formData = new FormData();
-        formData.append("meetingId",meetingId);
-        formData.append("blockMeeting",blockMeeting);
-
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/set_meeting_block.php`;
-        let resp = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
-        resp = await resp.json();
-        return resp;
-    }
 
     /**
      * @returns {boolean} wether the current user has write permissions for calendar meetings
@@ -91,7 +78,7 @@ class CalendarController {
         });
     }
 
-    static openFreeMeeting(meetingId) {
+    static async openFreeMeeting(meetingId) {
         let C = CalendarController;
         let m = C.modal;
         let isWrite = C.isCalendarWriteUser();
@@ -103,11 +90,15 @@ class CalendarController {
 
         const meeting = Meeting.getById(meetingId);
         m.setMeetingDetailData(meeting);
-        m.enableDetailMeetingForm(isWrite);
-
-        m.showAssignButtons(true, false, false, false);
+        
+        let resp = await meeting.isBlock();
+        let isUnblocked = resp.blockId == "0";
+        if (!isUnblocked) { m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`); }
+        
+        m.enableDetailMeetingForm(isWrite && isUnblocked);
+        m.showAssignButtons(isUnblocked, false, false, false);
         m.setClientVisible(false);
-        m.enableFooterButtons(isWrite, isWrite, isWrite, true);
+        m.enableFooterButtons(isWrite && isUnblocked, isWrite && isUnblocked, isWrite && isUnblocked, true);
 
         m.setFooterSaveButtonEvent(async () => {
             meeting.applyProperties(m.getMeetingDetailData());
@@ -136,10 +127,26 @@ class CalendarController {
 
     }
 
-    static openMeetingForAssignment(meetingId) {
+    static async openMeetingForAssignment(meetingId) {
         let C = CalendarController;
         let m = C.modal;
         let meeting = Meeting.getById(meetingId);
+
+        //Check for block
+        let resp = await meeting.isBlock();
+        if (resp.blockId == "0") {
+            //Not blocked => block now and continue
+            resp = await meeting.setBlock(true);
+            if (resp.status != "success") {
+                m.showBlockError(resp.blockId)
+            }
+        } else {
+            m.showBlockError(resp.blockName, () => {
+                C.openFreeMeeting(meetingId);
+            });
+            return;
+        }
+
         m.resetAllForms();
         m.setModalVisible(true);
         m.setModalTitle("Kundendaten eintragen");
@@ -162,8 +169,9 @@ class CalendarController {
         });
 
         //Assign cancel button
-        m.setAssignCancelButtonEvent(() => {
+        m.setAssignCancelButtonEvent(async () => {
             m.setUnsavedChanges(false);
+            await meeting.setBlock(false);
             C.openFreeMeeting(meetingId);
         })
     }
