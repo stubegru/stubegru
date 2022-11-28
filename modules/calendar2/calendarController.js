@@ -92,6 +92,14 @@ class CalendarController {
         m.setMeetingDetailData(meeting);
         
         let resp = await meeting.isBlock();
+
+        if(resp.blockId == stubegru.currentUser.id){
+            //If meeting is blocked by yourself => remove block 
+            await meeting.setBlock(false);
+            resp = await meeting.isBlock();
+            stubegru.modules.alerts.alert("Die Terminblockierung wurde aufgehoben");
+        }
+
         let isUnblocked = resp.blockId == "0";
         if (!isUnblocked) { m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`); }
         
@@ -134,7 +142,7 @@ class CalendarController {
 
         //Check for block
         let resp = await meeting.isBlock();
-        if (resp.blockId == "0") {
+        if (resp.blockId == "0" || resp.blockId == stubegru.currentUser.id) {
             //Not blocked => block now and continue
             resp = await meeting.setBlock(true);
             if (resp.status != "success") {
