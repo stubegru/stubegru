@@ -51,7 +51,8 @@ async function checkViewAccess() {
     const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_users_permission_requests.php`, XHR_DEFAULT_OPTIONS);
     if (resp.status >= 300) {
         console.log(`Access denied, because response status is ${resp.status}`);
-        document.location.href = `${stubegru.constants.BASE_URL}?view=login`;
+        let triggerUrl = encodeURIComponent(document.location.href);
+        document.location.href = `${stubegru.constants.BASE_URL}?view=login&triggerUrl=${triggerUrl}`;
         return;
     }
 

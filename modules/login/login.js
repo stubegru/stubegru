@@ -16,7 +16,7 @@ function doLogin() {
 
     $("#loginButton").html(`<i class="fas fa-circle-notch fa-spin"></i>`);
     const urlParam = getParam("triggerUrl");
-    let triggerUrl = urlParam ? decodeURIComponent(triggerUrl) : stubegru.constants.BASE_URL;
+    let triggerUrl = urlParam ? decodeURIComponent(urlParam) : stubegru.constants.BASE_URL;
 
     $.ajax({
         type: "POST",
