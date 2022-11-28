@@ -17,6 +17,18 @@ $template = $_POST["templateId"];
 //Channel attribute will only be set by calendar2 frontend
 $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
 
+//check for meeting block
+$selectStatement = $dbPdo->prepare("SELECT blocked FROM `Termine` WHERE id = :meetingId;");
+$selectStatement->bindValue(':meetingId', $meetingId);
+$selectStatement->execute();
+$alreadyBlocked = $selectStatement->fetchColumn();
+
+if ($alreadyBlocked != 0) {
+    $blockUsername = getUserName($alreadyBlocked);
+    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht bearbeitet werden. Dieser Termin ist blockiert durch: $blockUsername"));
+    exit;
+}
+
 $ownerName = getUserName($ownerId);
 
 $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `date`=:date,`owner`=:owner,`ownerId`=:ownerId,`room`=:room,`start`=:start,`end`=:end,`title`=:title,`template`=:template, `channel` = :channel WHERE id = :meetingId;");
