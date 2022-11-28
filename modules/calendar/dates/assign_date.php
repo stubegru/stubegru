@@ -32,7 +32,7 @@ $selectStatement->bindValue(':meetingId', $dateId);
 $selectStatement->execute();
 $alreadyBlocked = $selectStatement->fetchColumn();
 
-if($alreadyBlocked != 0 && $alreadyBlocked != $loggedInUserId){
+if ($alreadyBlocked != 0 && $alreadyBlocked != $loggedInUserId) {
     $blockUsername = getUserName($alreadyBlocked);
     echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin ist blockiert durch: $blockUsername"));
     exit;
@@ -104,9 +104,13 @@ foreach ($resultList as $row) {
     $templateSubject = $row["betreff"];
 }
 
+//Channel in Klartext übersetzen
+$channelDescriptions = array("personally" => "Persönlich", "phone" => "Telefon", "webmeeting" => "Webmeeting");
+$channelPrint = $channelDescriptions[$channel];
+
 //variablen in den Templates einsetzen
 $templateVariablen = array("{Termin_Titel}", "{Termin_Kanal}", "{Klient_Name}", "{Klient_Telefon}", "{Termin_Datum}", "{Termin_Uhrzeit}", "{Berater_Name}", "{Berater_Mail}", "{Raum_Kanal}", "{Raum_Nummer}", "{Raum_Etage}", "{Raum_Strasse}", "{Raum_Hausnummer}", "{Raum_PLZ}", "{Raum_Ort}", "{Raum_Link}", "{Raum_Passwort}", "{Raum_Telefon}");
-$phpVariablen = array($dateTitle, $channel, $clientName, $clientPhone, $dateDate, $dateStartTime, $dateOwnerName, $dateOwnerMailAdress, $roomObject->kanal, $roomObject->raumnummer, $roomObject->etage, $roomObject->strasse, $roomObject->hausnummer, $roomObject->plz, $roomObject->ort, $roomObject->link, $roomObject->passwort, $roomObject->telefon);
+$phpVariablen = array($dateTitle, $channelPrint, $clientName, $clientPhone, $dateDate, $dateStartTime, $dateOwnerName, $dateOwnerMailAdress, $roomObject->kanal, $roomObject->raumnummer, $roomObject->etage, $roomObject->strasse, $roomObject->hausnummer, $roomObject->plz, $roomObject->ort, $roomObject->link, $roomObject->passwort, $roomObject->telefon);
 
 //***************ICS EVENT GENERIEREN*****************************
 $eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$dateId";
