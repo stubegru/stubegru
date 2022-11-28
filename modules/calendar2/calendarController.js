@@ -90,10 +90,10 @@ class CalendarController {
 
         const meeting = Meeting.getById(meetingId);
         m.setMeetingDetailData(meeting);
-        
+
         let resp = await meeting.isBlock();
 
-        if(resp.blockId == stubegru.currentUser.id){
+        if (resp.blockId == stubegru.currentUser.id) {
             //If meeting is blocked by yourself => remove block 
             await meeting.setBlock(false);
             resp = await meeting.isBlock();
@@ -102,7 +102,7 @@ class CalendarController {
 
         let isUnblocked = resp.blockId == "0";
         if (!isUnblocked) { m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`); }
-        
+
         m.enableDetailMeetingForm(isWrite && isUnblocked);
         m.showAssignButtons(isUnblocked, false, false, false);
         m.setClientVisible(false);
@@ -146,8 +146,16 @@ class CalendarController {
             //Not blocked => block now and continue
             resp = await meeting.setBlock(true);
             if (resp.status != "success") {
-                m.showBlockError(resp.blockId)
+                m.showBlockError("ubekannt", () => {
+                    C.openFreeMeeting(meetingId);
+                })
+                return;
             }
+            $("#terminmodal").on('hidden.bs.modal.remove-block', () => { 
+                meeting.setBlock(false) ;
+                stubegru.modules.alerts.alert("Die Terminblockierung wurde aufgehoben.");
+                $("#terminmodal").off('hidden.remove-block');
+            });
         } else {
             m.showBlockError(resp.blockName, () => {
                 C.openFreeMeeting(meetingId);
@@ -173,6 +181,7 @@ class CalendarController {
             if (resp.status == "error") { throw new Error(resp.message); }
             await C.view.refresh();
             m.setUnsavedChanges(false);
+            $("#terminmodal").off('hidden.remove-block');
             C.openAssignedMeeting(meetingId);
         });
 
@@ -180,6 +189,7 @@ class CalendarController {
         m.setAssignCancelButtonEvent(async () => {
             m.setUnsavedChanges(false);
             await meeting.setBlock(false);
+            $("#terminmodal").off('hidden.remove-block');
             C.openFreeMeeting(meetingId);
         })
     }

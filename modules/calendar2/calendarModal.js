@@ -80,6 +80,7 @@ class CalendarModal {
         this.setTemplateFormVisible(false);
         this.setInfoAlert(false);
         CalendarController.freeMeetingMode = false;
+        CalendarController.blockedMeeting = false;
         $(".calendar-footer-button").off();
         $(".calendar-assign-button").off();
         $("#calendarMeetingDetailForm").off("submit");
