@@ -120,6 +120,8 @@ $eventSummary = $dateTitle;
 $eventLocation = $roomObject->kanal . " - " . $roomObject->raumnummer .  $roomObject->link . " " . $roomObject->passwort;
 
 $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, "", $eventLocation, "0", "CONFIRMED");
+$mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
+
 
 
 //***************Mail an den Kunden senden************************
@@ -127,7 +129,7 @@ $clientMailSubject = str_replace($templateVariablen, $phpVariablen, $templateSub
 $clientMailText = str_replace($templateVariablen, $phpVariablen, $templateText);
 
 try {
-    stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText);
+    stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText, $mailOptions);
 } catch (Exception $e) {
     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Kunden und den Berater versendet werden."));
     exit;
@@ -168,7 +170,6 @@ $AdvisorMailText = "<p>Guten Tag</p>
 
 $AdvisorMailSubject = "Termin vergeben am $dateDate";
 
-$mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
 
 try {
     stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);

@@ -51,11 +51,6 @@ $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = ''  WHER
 $updateStatement->bindValue(':dateId', $dateId);
 $updateStatement->execute();
 
-//Mail to Client
-$clientMailBody = loadMailTemplate("cancel_client_mail_template.html");
-stubegruMail($clientData["mail"], "Terminabsage - $INSTITUTION_NAME", $clientMailBody);
-
-//Mail to Meeting-owner (with ics cancel event)
 //Prepare ICS cancel event
 $eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$dateId";
 $eventStartUTC = gmdate("Ymd\THis\Z", strtotime($meetingData["date"] . " " . $meetingData["start"]));
@@ -64,7 +59,11 @@ $eventSummary = $meetingData["title"];
 $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, "", "", "100", "CANCELLED");
 $mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
 
-//Prepare and send mail
+//Mail to Client
+$clientMailBody = loadMailTemplate("cancel_client_mail_template.html");
+stubegruMail($clientData["mail"], "Terminabsage - $INSTITUTION_NAME", $clientMailBody, $mailOptions);
+
+//Mail to Meeting-owner (with ics cancel event)
 $ownerMailBody = loadMailTemplate("cancel_owner_mail_template.html");
 stubegruMail($meetingData["ownerMail"], "Terminabsage - $INSTITUTION_NAME", $ownerMailBody, $mailOptions);
 
