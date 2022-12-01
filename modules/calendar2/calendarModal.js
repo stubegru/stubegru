@@ -322,14 +322,18 @@ class CalendarModal {
         $('#calendarClientIssue').val(client.description);
         $('#calendarClientSurvey').val(client.formular);
         $('#calendarClientChannel').val(client.channel);
+        $('#calendarClientPhone').val(this.prettyPrintPhoneNumber(client.phone));
+    }
 
-        let phone = "";
-        for (const index in client.phone) {
-            let char = client.phone[index];
-            phone += char;
-            if (index % 4 == 3) { phone += " "; }
+    prettyPrintPhoneNumber(phone) {
+        if (!/\d/.test(phone)) { return phone; } //Dont beautify if not contains any number
+        let output = "";
+        for (const index in phone) {
+            let char = phone[index];
+            output += char;
+            if (index % 4 == 3) { output += " "; }
         }
-        $('#calendarClientPhone').val(phone);
+        return output;
     }
 
     showBlockError(userName, callback) {
