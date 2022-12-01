@@ -173,15 +173,15 @@ class CalendarModal {
     /**
      * Enable / disable buttons for a meeting
      * @param {boolean} save wether to enable the save button
-     * @param {boolean} saveClose wether to enable the save&close button
+     * @param {boolean} saveNext wether to show or hide the save&next button
      * @param {boolean} remove wether to enable the delete button
      * @param {boolean} cancel wether to enable the cancel button
      */
-    enableFooterButtons(save, saveClose, remove, cancel) {
+    enableFooterButtons(save, saveNext, remove, cancel) {
         $("#calendarSaveMeetingButton").prop("disabled", !save);
-        $("#calendarSaveCloseMeetingButton").prop("disabled", !saveClose);
         $("#calendarDeleteMeetingButton").prop("disabled", !remove);
         $("#calendarCancelButton").prop("disabled", !cancel);
+        saveNext ? $("#calendarSaveNextMeetingButton").show() : $("#calendarSaveNextMeetingButton").hide();
     }
 
     /**
@@ -197,16 +197,6 @@ class CalendarModal {
             event.preventDefault();
             callback(event);
         });
-    }
-
-    /**
-     * Register eventhandler for click on the footer save&close button
-     * This does automatically clear all currently registered events
-     * @param {function} callback Function to be executed if the button is clicked
-     */
-    setFooterSaveCloseButtonEvent(callback) {
-        $("#calendarSaveCloseMeetingButton").off();
-        $("#calendarSaveCloseMeetingButton").on("click", callback);
     }
 
     /**

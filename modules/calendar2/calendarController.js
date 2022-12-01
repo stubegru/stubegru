@@ -10,7 +10,7 @@ class CalendarController {
         await C.modal.init();
         C.initFilterMenu();
 
-        $("#calendarNewMeetingButton").on("click", C.createMeeting);
+        $("#calendarNewMeetingButton").on("click", ()=>C.createMeeting());
     }
 
     static initFilterMenu() {
@@ -45,13 +45,13 @@ class CalendarController {
             CalendarController.openFreeMeeting(meeting.id);
     }
 
-    static createMeeting() {
+    static createMeeting(keepValues) {
         let C = CalendarController;
         let m = C.modal;
 
         m.setModalVisible(true);
         m.setModalTitle("Termin erstellen");
-        m.resetAllForms();
+        if (!keepValues) { m.resetAllForms(); }
         m.showAssignButtons(false, false, false, false);
         m.setClientVisible(false);
         m.enableFooterButtons(true, true, false, true);
@@ -64,17 +64,15 @@ class CalendarController {
             return resp;
         };
 
-        m.setFooterSaveButtonEvent(async () => {
+        m.setFooterSaveButtonEvent(async (event) => {
             let resp = await createMeetingCallback();
             m.setUnsavedChanges(false);
-            C.openFreeMeeting(resp.dateId);
-        });
-
-
-        m.setFooterSaveCloseButtonEvent(async () => {
-            await createMeetingCallback();
-            m.setUnsavedChanges(false);
-            m.setModalVisible(false);
+            
+            if (event.originalEvent.submitter.id == "calendarSaveNextMeetingButton") {
+                C.createMeeting(true);
+            } else {
+                C.openFreeMeeting(resp.dateId);
+            }
         });
     }
 
@@ -106,7 +104,7 @@ class CalendarController {
         m.enableDetailMeetingForm(isWrite && isUnblocked);
         m.showAssignButtons(isUnblocked, false, false, false);
         m.setClientVisible(false);
-        m.enableFooterButtons(isWrite && isUnblocked, isWrite && isUnblocked, isWrite && isUnblocked, true);
+        m.enableFooterButtons(isWrite && isUnblocked, false, isWrite && isUnblocked, true);
 
         m.setFooterSaveButtonEvent(async () => {
             meeting.applyProperties(m.getMeetingDetailData());
@@ -151,8 +149,8 @@ class CalendarController {
                 })
                 return;
             }
-            $("#terminmodal").on('hidden.bs.modal.remove-block', () => { 
-                meeting.setBlock(false) ;
+            $("#terminmodal").on('hidden.bs.modal.remove-block', () => {
+                meeting.setBlock(false);
                 stubegru.modules.alerts.alert("Die Terminblockierung wurde aufgehoben.");
                 $("#terminmodal").off('hidden.remove-block');
             });
