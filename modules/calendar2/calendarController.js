@@ -204,7 +204,7 @@ class CalendarController {
         m.setMeetingDetailData(meeting);
         m.enableDetailMeetingForm(false);
 
-        m.showAssignButtons(false, false, true, false);
+        m.showAssignButtons(false, false, C.isCalendarWriteUser(), false);
 
         m.setClientVisible(true);
         m.enableClientForm(false);
