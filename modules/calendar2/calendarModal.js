@@ -230,6 +230,11 @@ class CalendarModal {
         //load from custom config
         const calendarTitle = stubegru.constants.CUSTOM_CONFIG.calendarMeetingTitle || "Beratungstermin";
         $('#calendarTitle').val(calendarTitle);
+        $("#calendarOwner").val(stubegru.currentUser.id);
+        $("#calendarChannel").val("all");
+        $("#calendarRoom")[0].selectedIndex = 1; //Select first entry by default
+        $("#calendarTemplate")[0].selectedIndex = 1;
+
     }
 
     enableDetailMeetingForm(isEnabled) {
