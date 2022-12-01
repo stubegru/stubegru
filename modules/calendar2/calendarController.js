@@ -67,11 +67,11 @@ class CalendarController {
         m.setFooterSaveButtonEvent(async (event) => {
             let resp = await createMeetingCallback();
             m.setUnsavedChanges(false);
-            
+
             if (event.originalEvent.submitter.id == "calendarSaveNextMeetingButton") {
                 C.createMeeting(true);
             } else {
-                C.openFreeMeeting(resp.dateId);
+                m.setModalVisible(false);
             }
         });
     }
@@ -113,7 +113,7 @@ class CalendarController {
             if (resp.status == "error") { throw new Error(resp.message); }
             await C.view.refresh();
             m.setUnsavedChanges(false);
-            C.openFreeMeeting(meetingId);
+            m.setModalVisible(false);
         });
 
         m.setFooterDeleteButtonEvent(() => {
