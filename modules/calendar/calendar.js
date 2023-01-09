@@ -229,6 +229,23 @@ async function saveMeeting() {
         return; //stop here, dont save client data
     }
 
+    //Block meeting to save client data
+    let formData = new FormData();
+    formData.append("meetingId", meetingResp.dateId);
+    formData.append("blockMeeting", 1);
+
+    const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/set_meeting_block.php`;
+    let blockResp = await fetch(url, { method: 'POST', body: formData });
+    blockResp = await blockResp.json();
+    if (blockResp.status != "success") {
+        stubegru.modules.alerts.alert({
+            title: "Termin wurde erstellt, konnte aber nicht zum Speichern der Kundendaten blockiert werden.",
+            text: blockResp.message,
+            type: "error"
+        });
+        return; //stop here, dont save client data
+    }
+
     //Save Client data
     let client = new FormData();
     client.append("dateId", meetingResp.dateId);

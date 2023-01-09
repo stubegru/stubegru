@@ -32,9 +32,9 @@ $selectStatement->bindValue(':meetingId', $dateId);
 $selectStatement->execute();
 $alreadyBlocked = $selectStatement->fetchColumn();
 
-if ($alreadyBlocked != 0 && $alreadyBlocked != $loggedInUserId) {
+if ($alreadyBlocked != $loggedInUserId) {
     $blockUsername = getUserName($alreadyBlocked);
-    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin ist blockiert durch: $blockUsername"));
+    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $loggedInUserId) blockiert, sondern durch: $blockUsername (Id: $alreadyBlocked)"));
     exit;
 }
 
@@ -105,7 +105,7 @@ foreach ($resultList as $row) {
 }
 
 //Channel in Klartext übersetzen
-$channelDescriptions = array("personally" => "Persönlich", "phone" => "Telefon", "webmeeting" => "Webmeeting");
+$channelDescriptions = array("personally" => "Persönlich", "phone" => "Telefon", "webmeeting" => "Webmeeting", "unknown" => "unknown");
 $channelPrint = $channelDescriptions[$channel];
 
 //variablen in den Templates einsetzen
