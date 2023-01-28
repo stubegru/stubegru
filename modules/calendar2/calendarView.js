@@ -29,7 +29,7 @@ class CalendarView {
         },
         eventClick: function (info) {
             info.jsEvent.preventDefault(); // don't let the browser navigate
-            CalendarController.clickOnMeetingHandler(info.event.extendedProps);
+            CalendarController.clickOnMeetingHandler(info.event.extendedProps.id);
         }
     }
 

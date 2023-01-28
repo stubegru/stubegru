@@ -10,7 +10,7 @@ class CalendarController {
         await C.modal.init();
         C.initFilterMenu();
 
-        $("#calendarNewMeetingButton").on("click", ()=>C.createMeeting());
+        $("#calendarNewMeetingButton").on("click", () => C.createMeeting());
     }
 
     static initFilterMenu() {
@@ -39,7 +39,10 @@ class CalendarController {
         return writePermission.access;
     }
 
-    static clickOnMeetingHandler(meeting) {
+    static async clickOnMeetingHandler(meetingId) {
+        let meeting = Meeting.getById(meetingId);
+        await meeting.updateFromServer();
+
         (meeting.teilnehmer && meeting.teilnehmer != "") ?
             CalendarController.openAssignedMeeting(meeting.id) :
             CalendarController.openFreeMeeting(meeting.id);

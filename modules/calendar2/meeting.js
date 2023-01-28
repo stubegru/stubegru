@@ -41,6 +41,22 @@ class Meeting {
         return Meeting.meetingList.find(e => e.id == meetingId);
     }
 
+    static setById(meetingId,meeting) {
+        let ref = Meeting.meetingList.find(e => e.id == meetingId);
+        ref = meeting;
+    }
+
+    /**
+     * Updates an local meeting with properties from the server
+     */
+    async updateFromServer() {
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meeting.php?meetingId=${this.id}`;
+        let meetingResp = await fetch(url);
+        meetingResp = await meetingResp.json();
+        this.applyProperties(meetingResp);
+        Meeting.setById(this.id,this);
+    }
+
     /**
      * Updates an existing meeting on the server for storage in database
      */
