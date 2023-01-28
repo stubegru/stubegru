@@ -38,6 +38,17 @@ if ($alreadyBlocked != $loggedInUserId) {
     exit;
 }
 
+//check if meeting is already assigned
+$selectStatement = $dbPdo->prepare("SELECT teilnehmer FROM `Termine` WHERE id = :meetingId;");
+$selectStatement->bindValue(':meetingId', $dateId);
+$selectStatement->execute();
+$alreadyAssigned = $selectStatement->fetchColumn();
+
+if ($alreadyAssigned != "") {
+    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden."));
+    exit;
+}
+
 
 $insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`,`channel`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:dateIssue,:dateId,:channel);"); // Daten des zu Beratenden in DB speichern
 $insertStatement->bindValue(':clientName', $clientName);

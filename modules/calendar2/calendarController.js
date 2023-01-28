@@ -141,6 +141,12 @@ class CalendarController {
         let m = C.modal;
         let meeting = Meeting.getById(meetingId);
 
+        await meeting.updateFromServer();
+        if (meeting.teilnehmer && meeting.teilnehmer != "") {
+            stubegru.modules.alerts.alert({ title: "Termin kann nicht vergeben werden", text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...", type: "error" });
+            return;
+        }
+
         //Check for block
         let resp = await meeting.isBlock();
         if (resp.blockId == "0" || resp.blockId == stubegru.currentUser.id) {
