@@ -69,7 +69,7 @@ foreach ($resultList as $questionData) {
     $selectStatement->execute();
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($resultList as $questionData) {
+    foreach ($resultList as $answerOptionData) {
         //Add data to array
         $questionData["options"][] = $answerOptionData;
     }
