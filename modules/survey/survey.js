@@ -48,7 +48,7 @@ async function initSurvey(path, selector, uniqueKey) {
     }
 
     //get all questions from template
-    const templateQuestionList = $(`#surveyContainer${pathHash}>survey>question`);
+    const templateQuestionList = $(`#surveyContainer${pathHash}>survey question`);
 
     //generate html inputs for each question
     for (let templateQuestion of templateQuestionList) {
