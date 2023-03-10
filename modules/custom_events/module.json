@@ -1,0 +1,19 @@
+{
+    "type": "stubegruModule",
+    "name": "custom_events",
+    "description": "Modules can trigger event hooks via this module. This module reads a custom configuration file and react ot the triggered events",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+    ],
+    "js": [
+        "custom_events.js"
+    ],
+    "css": [],
+    "cronjob": []
+}
