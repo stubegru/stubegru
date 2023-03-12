@@ -9,7 +9,8 @@
             "menubar",
             "alerts",
             "user_utils",
-            "survey"
+            "survey",
+            "custom_events"
         ],
         "nonBlocking": []
     },

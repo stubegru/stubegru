@@ -11,6 +11,7 @@ async function initMonitoring() {
     }
     surveyId = await stubegru.modules.survey.initSurvey(monitoringTemplatePath, "#monitoringContainerEvaluation", "");
     stubegru.modules.menubar.addItem("secondary", `<li class="permission-MONITORING_READ permission-required"><a title="Monitoring Ergebnisse als CSV herunterladen" href="${stubegru.constants.BASE_URL}/modules/survey/get_survey_answers.php?surveyId=${surveyId}"><i class="fas fa-download"></i>&nbsp;Download Monitoring</a></li>`, 1);
+    await stubegru.modules.customEvents.trigger("postMonitoringReset");
 }
 
 
@@ -23,11 +24,13 @@ $("#monitoringSubmitButton").on("click", async () => {
 $("#monitoringSubmitAndNextButton").on("click", async () => {
     if (await stubegru.modules.survey.submitSurvey(monitoringTemplatePath)) {
         await stubegru.modules.survey.resetSurvey(monitoringTemplatePath, "#monitoringContainerEvaluation", "");
+        await stubegru.modules.customEvents.trigger("postMonitoringReset");
     }
 });
 
 $('#monitoringModal').on('hidden.bs.modal', async () => {
     await stubegru.modules.survey.resetSurvey(monitoringTemplatePath, "#monitoringContainerEvaluation", "");
+    await stubegru.modules.customEvents.trigger("postMonitoringReset");
 });
 
 
