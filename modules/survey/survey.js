@@ -196,7 +196,7 @@ async function initSurvey(path, selector, uniqueKey) {
                 let textareaHtml = `<div class= "form-group">
                 <label> ${questionData.title}</label>
                 <p class="help-block">${questionData.text}</p>
-                <textarea id="${questionHtmlId}"></textarea>`;
+                <textarea id="${questionHtmlId}" class="form-control" style="min-width: 100%"></textarea>`;
 
                 $(templateQuestion).append(textareaHtml)
 
