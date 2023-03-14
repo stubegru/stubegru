@@ -212,9 +212,8 @@ async function initSurvey(path, selector, uniqueKey) {
             case "toggle":
 
                 let toggleElem = $(`<div class="form-group">
-                    <label>${questionData.title}</label>
-                    <p class="help-block">${questionData.text}</p>
-                    <input type="checkbox" data-toggle="toggle" class="survey-toggle" id="${questionHtmlId}">
+                <input type="checkbox" data-toggle="toggle" class="survey-toggle" id="${questionHtmlId}">&nbsp;&nbsp;&nbsp;<label>${questionData.title}</label>
+                <p class="help-block">${questionData.text}</p>
                 </div>`);
                 $(templateQuestion).append(toggleElem);
 
