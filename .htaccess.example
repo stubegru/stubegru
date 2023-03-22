@@ -17,6 +17,7 @@ SetEnv LOGO "/assets/images/favicon.png"
 
 SetEnv MAIL_METHOD "phpmail"
 SetEnv SMTP_HOST "your.smtp.server"
+SetEnv SMTP_AUTH 1
 SetEnv SMTP_USERNAME "username"
 SetEnv SMTP_PASSWORD "s3cr3t"
 SetEnv SMTP_SECURE "tls"

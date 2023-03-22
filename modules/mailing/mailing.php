@@ -112,10 +112,12 @@ function initPHPMailer()
     //$myPHPMailer->SMTPDebug = SMTP::DEBUG_SERVER; //Enable verbose debug output
     $myPHPMailer->isSMTP();
     $myPHPMailer->Host       = getenv("SMTP_HOST");
-    $myPHPMailer->SMTPAuth   = true;
-    $myPHPMailer->Username   = getenv("SMTP_USERNAME");
-    $myPHPMailer->Password   = getenv("SMTP_PASSWORD");
-    $myPHPMailer->SMTPSecure = getenv("SMTP_SECURE"); //Enable implicit TLS encryption
+    $myPHPMailer->SMTPAuth   = getenv("SMTP_AUTH");
+    if (getenv("SMTP_AUTH")) {
+        $myPHPMailer->Username   = getenv("SMTP_USERNAME");
+        $myPHPMailer->Password   = getenv("SMTP_PASSWORD");
+        $myPHPMailer->SMTPSecure = getenv("SMTP_SECURE"); //Enable implicit TLS encryption
+    }
     $myPHPMailer->Port       = getenv("SMTP_PORT");
     $myPHPMailer->CharSet    = 'UTF-8';
     $myPHPMailer->Encoding   = 'base64';
