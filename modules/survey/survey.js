@@ -12,10 +12,10 @@ async function initSurvey(path, selector, uniqueKey) {
     //add a loader until the surve is fully loaded
     let surveyLoader = $(`<div id="surveyLoader${pathHash}"><div class="well well-lg text-center"><h2> <i class="fas fa-circle-notch fa-spin"></i>&nbsp;Fragen werden geladen</h2></div></div>`);
     $(selector).append(surveyLoader)
-    
+
     //read templatefile from path
     let templateRequestResponse = await fetch(`${stubegru.constants.BASE_URL}/${path}`);
-    if(templateRequestResponse.status != 200){
+    if (templateRequestResponse.status != 200) {
         console.warn(`[Survey] Could not load survey because template can't be found at "${path}"`);
         return;
     }
@@ -27,7 +27,7 @@ async function initSurvey(path, selector, uniqueKey) {
 
     //Extract survey id
     const surveyId = $(`#surveyContainer${pathHash}>survey`).attr("data-survey-id");
-    if(!surveyId){throw new Error(`Could not load survey from template at "${path}" because surveyId is "${surveyId}"`)}
+    if (!surveyId) { throw new Error(`Could not load survey from template at "${path}" because surveyId is "${surveyId}"`) }
     stubegru.modules.survey.pathToId[path] = surveyId;
 
     //Load survey data via ajax
@@ -38,7 +38,7 @@ async function initSurvey(path, selector, uniqueKey) {
     let surveyQuestions = surveyData.questions;
 
     //show warning if a unique key is required but not given
-    if(surveyData.uniqueKey != "0" && surveyData.validKey  != "1"){
+    if (surveyData.uniqueKey != "0" && surveyData.validKey != "1") {
         stubegru.modules.alerts.alert({
             title: "Kein gültiger Key",
             text: "Bitte nutzen Sie genau den Link zur Umfrage den Sie erhalten haben. Sie können den Fragebogen nur einmal beantworten. Sie können den Fragebogen jetzt ansehen jedoch NICHT abschicken.",
@@ -192,6 +192,61 @@ async function initSurvey(path, selector, uniqueKey) {
                 })
                 break;
 
+            case "radio-inline":
+
+                let radioinlineOptions = questionData.options
+                let radioinlineHTML = `<label>${questionData.title}</label>
+                        <p class="help-block">${questionData.text}</p>`
+
+                let col1 = ``
+                let col2 = ``
+                let counter = 1
+
+                for (const currentRadio of radioinlineOptions) {
+                    let tooltip = ``
+                    if (currentRadio.action && currentRadio.action == "tooltip") {
+                        tooltip = `data-toggle="tooltip" data-placement="top" data-original-title="${currentRadio.text}" style="color:#307ea5; text-decoration:underline;"`
+                    }
+                    /*if (counter%2 == 0) {
+                        col1 += `<label class="radio" ${tooltip}>
+                                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
+                                </label>`
+                    } else {
+                        col2 += `<label class="radio" ${tooltip}>
+                                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
+                                </label>`
+                    }*/
+                    let row = ``
+                    col1 += `<div class="col-md-6" style="padding-left:30px;">
+                                    <label class="radio" ${tooltip}>
+                                        <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
+                                    </label>
+                                    </div>`
+                    if (counter % 2 == 0 || currentRadio == radioinlineOptions[radioinlineOptions.length - 1]) {
+                        row = `<div class="row">${col1}</div>`
+                        col1 = ``
+                        radioinlineHTML += row
+                        //counter++
+                    }
+                    counter++
+                }
+                /*radioinlineHTML += `<div class="row">
+                                        <div class="col-md-6" style="padding-left:30px;">${col1}</div>
+                                        <div class="col-md-6" style="padding-left:30px;">${col2}</div>
+                                    </div>`*/
+
+                radioinlineHTML = `<div class="form-group tracking-group" style="border:1px solid #757d84; padding: 10px; border-radius: 5px;">${radioinlineHTML}</div>`
+
+
+                $(templateQuestion).append(radioinlineHTML);
+                //Add eventlistener
+                $(`input[type=radio][name="${questionHtmlId}"]`).on("change", function () {
+                    let inputValue = $(this).val();
+                    questionData.answer = { value: inputValue };
+                    console.log(questionData);
+                })
+                break;
+
             case "text":
                 let textareaHtml = `<div class= "form-group">
                 <label> ${questionData.title}</label>
@@ -309,7 +364,7 @@ async function initSurvey(path, selector, uniqueKey) {
     return surveyId;
 }
 
-async function resetSurvey(path, selector, uniqueKey){
+async function resetSurvey(path, selector, uniqueKey) {
     let pathHash = stringToHash(path);
     $(`#surveyContainer${pathHash}`).remove();
     await initSurvey(path, selector, uniqueKey);
@@ -374,8 +429,8 @@ async function submitSurvey(surveyPath, userHash, uniqueKey) {
             body: reqData
         });
         let resp = await surveyDataResponse.json();
-        
-        if(resp.status == "error"){throw new Error(resp.message)}
+
+        if (resp.status == "error") { throw new Error(resp.message) }
         stubegru.modules.alerts.alert({
             title: "Speichern der Antworten",
             text: resp.message,
