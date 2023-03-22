@@ -7,7 +7,7 @@ SetEnv DB_NAME "DBNAME"
 
 SetEnv APPLICATION_ID "stubegru-test-environment"
 SetEnv APPLICATION_NAME "Stubegru Test"
-SetEnv INSTITUTION_MAIL_ADDRESS "StuBeGru <stubegru@example.com>"
+SetEnv INSTITUTION_MAIL_ADDRESS "stubegru@example.com"
 SetEnv INSTITUTION_NAME "Stubegru Company"
 SetEnv INSTITUTION_MAIL_POSTFIX "Company Name<br>Company Address"
 SetEnv ADMIN_MAIL "admin@example.com"
