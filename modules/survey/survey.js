@@ -353,6 +353,9 @@ async function initSurvey(path, selector, uniqueKey) {
         off: 'Nein'
     });
 
+    //Init tooltips
+    $(`[data-toggle="tooltip"]`).tooltip()
+
     //Add surveydata reference
     stubegru.modules.survey.data[surveyId] = surveyData;
 
