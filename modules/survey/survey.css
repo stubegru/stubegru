@@ -15,10 +15,29 @@
 
 .survey-rating-row {
     background-color: var(--survey-rating-row);
+    border-radius: 10px;
 }
 
 .stubegru-rating-table{
     margin-bottom: 30px;
+}
+
+.survey-rating-sm-text{
+    color: var(--survey-rating-row-text);
+    font-size: large;
+}
+
+.survey-rating-text{
+    color: var(--survey-rating-row-text);
+    padding: 10px;
+    font-size: larger;
+    margin-bottom: -15px;
+}
+
+.v-center {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
 
 

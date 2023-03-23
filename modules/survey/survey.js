@@ -293,48 +293,49 @@ async function initSurvey(path, selector, uniqueKey) {
                 let ratingOptions = [
                     { value: 1, title: "Gar nicht Zutreffend" },
                     { value: 2, title: "Eher nicht Zutreffend" },
-                    { value: 3, title: "Teils / Teils" },
+                    { value: 3, title: "Teils /<br> Teils" },
                     { value: 4, title: "Eher Zutreffend" },
                     { value: 5, title: "Sehr Zutreffend" },
                 ];
 
-                //---Generate initial cells---
-                //COLWIDTHS
-                let colwidths = `<col width="40%">`; //big one for the question text
-                const colWidthPercent = (100 - 40) / ratingOptions.length; //split up lasting space for ratingOptions
-
-                //HEADROW
-                let headlineTableRow = `<td style="padding-right:20px;"><b>${questionData.title}</b></td>`;
-
-                //RATINGROW
-                let ratingTableRow = `<td style="padding:10px; padding-right:20px; color:var(--survey-rating-row-text)">${questionData.text}</td>`;
-
-
-                //---Generate table cells for each option---
+                let generatedOptions = "";
+                //---Generate cols for each option---
                 for (const currentOption of ratingOptions) {
-                    //COLWIDTH
-                    colwidths += `<col width="${colWidthPercent}%">`;
-
-                    //HEADROW
-                    headlineTableRow += `<td>${currentOption.title}</td>`;
-
-                    //RATINGROW
-                    ratingTableRow += `
-                    <td><label>
-                          <input class="survey-rating-radio" type="radio" name="${questionHtmlId}" value="${currentOption.value} - ${currentOption.title}">
-                    </label></td>`;
+                    generatedOptions += `
+                        <div class="col-sm-2">
+                            <div class="row">
+                            <div class="col-xs-9 col-sm-12 text-center v-center">
+                                <div class="survey-rating-sm-text">${currentOption.title}</div>
+                            </div>
+                            <br>
+                            <div class="col-xs-3 col-sm-12 text-center v-center">
+                                <input class="survey-rating-radio" type="radio" name="${questionHtmlId}" value="${currentOption.value} - ${currentOption.title}">
+                            </div>
+                            </div>
+                        </div>`;
                 }
+
 
                 //---Generate html---
                 let ratingContainer = $(`<div class="form-group stubegru-rating-table" id="${questionHtmlId}">
-                    <table style="width:100%;">
-                        <colgroup>${colwidths}</colgroup>
-                        <tbody>
-                            <tr>${headlineTableRow}</tr>
-                            <tr class="survey-rating-row">${ratingTableRow}</tr>
-                        </tbody>
-                    </table>
-                </div>`);
+                                            <h4>${questionData.title}</h4>
+                                            <div class="survey-rating-row">
+                                                <div class="survey-rating-text text-center">
+                                                    <b>${questionData.text}</b>
+                                                </div>
+                                                <hr>
+
+                                                <div class="row">
+                                                    <div class="col-sm-1"></div>
+                                                    ${generatedOptions}                       
+                                                    <div class="col-sm-1"></div>
+                                                </div>
+                                                <br>
+                                            </div>
+                                        </div>`);
+
+
+                
 
                 //add things to document 
                 $(templateQuestion).append(ratingContainer);
