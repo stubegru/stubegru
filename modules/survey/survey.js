@@ -26,7 +26,7 @@ async function initSurvey(path, selector, uniqueKey) {
     $(selector).append(templateContainer);
 
     //Extract survey id
-    const surveyId = $(`#surveyContainer${pathHash}>survey`).attr("data-survey-id");
+    const surveyId = $(`#surveyContainer${pathHash} survey`).attr("data-survey-id");
     if (!surveyId) { throw new Error(`Could not load survey from template at "${path}" because surveyId is "${surveyId}"`) }
     stubegru.modules.survey.pathToId[path] = surveyId;
 
@@ -48,7 +48,7 @@ async function initSurvey(path, selector, uniqueKey) {
     }
 
     //get all questions from template
-    const templateQuestionList = $(`#surveyContainer${pathHash}>survey question`);
+    const templateQuestionList = $(`#surveyContainer${pathHash} survey question`);
 
     //generate html inputs for each question
     for (let templateQuestion of templateQuestionList) {
