@@ -137,16 +137,22 @@ async function initSurvey(path, selector, uniqueKey) {
             case "checkbox":
 
                 let checkOptions = questionData.options
-                let checkHTML = `<label>${questionData.title}</label>
-                    <p class="help-block">${questionData.text}</p>`
+
+                let checkBoxHtml = "";
                 for (const currentCheck of checkOptions) {
-                    checkHTML += `
+                    checkBoxHtml += `
                                     <div class="checkbox">
-                                        <label>
+                                    <label>
                                             <input type="checkbox" name="${questionHtmlId}" value="${currentCheck.value}">${currentCheck.title}</input>
-                                        </label>
+                                    </label>
                                     </div>`;
                 }
+
+                let checkHTML = `<div class="form-group">
+                        <label>${questionData.title}</label>
+                        <p class="help-block">${questionData.text}</p>
+                        ${checkBoxHtml}
+                    </div>`;
 
                 $(templateQuestion).append(checkHTML);
 
@@ -298,10 +304,10 @@ async function initSurvey(path, selector, uniqueKey) {
                 const colWidthPercent = (100 - 40) / ratingOptions.length; //split up lasting space for ratingOptions
 
                 //HEADROW
-                let headlineTableRow = `<td><b>${questionData.title}</b></td>`;
+                let headlineTableRow = `<td style="padding-right:20px;"><b>${questionData.title}</b></td>`;
 
                 //RATINGROW
-                let ratingTableRow = `<td>${questionData.text}</td>`;
+                let ratingTableRow = `<td style="padding:10px; padding-right:20px; color:var(--survey-rating-row-text)">${questionData.text}</td>`;
 
 
                 //---Generate table cells for each option---
@@ -320,7 +326,7 @@ async function initSurvey(path, selector, uniqueKey) {
                 }
 
                 //---Generate html---
-                let ratingContainer = $(`<div class="form-group" id="${questionHtmlId}">
+                let ratingContainer = $(`<div class="form-group stubegru-rating-table" id="${questionHtmlId}">
                     <table style="width:100%;">
                         <colgroup>${colwidths}</colgroup>
                         <tbody>
