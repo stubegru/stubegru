@@ -72,6 +72,17 @@ async function initSurvey(path, selector, uniqueKey) {
         const questionSecondaryType = questionTypeElements[1];
         const questionHtmlId = `question-${surveyId}-${questionId}`;
 
+
+        //generate tooltip for types "radio", "radio-inline" and "checkbox"
+        if (questionPrimaryType == "radio" || questionPrimaryType == "radio-inline" || questionPrimaryType == "checkbox") {
+            for (answerOption of optionsData) {
+                if (answerOption.text.length > 0) {
+                    answerOption.title = `<span data-toggle="tooltip" data-placement="top" data-original-title="${answerOption.text}" style="color:#307ea5; text-decoration:underline;">${answerOption.title}</span>`;
+                }
+            }
+        }
+
+
         switch (questionPrimaryType) {
             case "input":
 
@@ -105,7 +116,6 @@ async function initSurvey(path, selector, uniqueKey) {
                     console.log(questionData);
                 });
                 break;
-
 
             case "select":
 
@@ -208,27 +218,23 @@ async function initSurvey(path, selector, uniqueKey) {
 
                 for (let index in radioinlineOptions) {
                     let currentRadio = radioinlineOptions[index];
-                    
-                    //Generate tooltip
-                    let tooltip = "";
-                    if (currentRadio.action && currentRadio.action == "tooltip") {
-                        tooltip = `data-toggle="tooltip" data-placement="top" data-original-title="${currentRadio.text}" style="color:#307ea5; text-decoration:underline;"`
-                    }
-                    
+
                     //generate radio buttton
                     rowContent += `<div class="col-md-6" style="padding-left:30px;">
-                    <label class="radio" ${tooltip}>
-                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
+                    <label class="radio">
+                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">
+                        ${currentRadio.title}
+                    </input>
                     </label>
                     </div>`;
 
                     //Add as row every second iteration
-                    if (index % 2 == 0 || index >= radioinlineOptions.length -1) {
+                    if (index % 2 == 0 || index >= radioinlineOptions.length - 1) {
                         radioinlineHTML += `<div class="row">${rowContent}</div>`;
                         rowContent = "";
                     }
                 }
-                
+
                 radioinlineHTML = `<div class="form-group tracking-group" style="border:1px solid #757d84; padding: 10px; border-radius: 5px;">${radioinlineHTML}</div>`
 
                 $(templateQuestion).append(radioinlineHTML);
@@ -255,7 +261,6 @@ async function initSurvey(path, selector, uniqueKey) {
                     console.log(questionData);
                 });
                 break;
-
 
             case "toggle":
 
@@ -342,8 +347,6 @@ async function initSurvey(path, selector, uniqueKey) {
 
                 break;
         }
-
-
     }
 
     //Init all survey toggles
