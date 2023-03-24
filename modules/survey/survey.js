@@ -204,52 +204,39 @@ async function initSurvey(path, selector, uniqueKey) {
                 let radioinlineHTML = `<label>${questionData.title}</label>
                         <p class="help-block">${questionData.text}</p>`
 
-                let col1 = ``
-                let col2 = ``
-                let counter = 1
+                let rowContent = "";
 
-                for (const currentRadio of radioinlineOptions) {
-                    let tooltip = ``
+                for (let index in radioinlineOptions) {
+                    let currentRadio = radioinlineOptions[index];
+                    
+                    //Generate tooltip
+                    let tooltip = "";
                     if (currentRadio.action && currentRadio.action == "tooltip") {
                         tooltip = `data-toggle="tooltip" data-placement="top" data-original-title="${currentRadio.text}" style="color:#307ea5; text-decoration:underline;"`
                     }
-                    /*if (counter%2 == 0) {
-                        col1 += `<label class="radio" ${tooltip}>
-                                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
-                                </label>`
-                    } else {
-                        col2 += `<label class="radio" ${tooltip}>
-                                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
-                                </label>`
-                    }*/
-                    let row = ``
-                    col1 += `<div class="col-md-6" style="padding-left:30px;">
-                                    <label class="radio" ${tooltip}>
-                                        <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
-                                    </label>
-                                    </div>`
-                    if (counter % 2 == 0 || currentRadio == radioinlineOptions[radioinlineOptions.length - 1]) {
-                        row = `<div class="row">${col1}</div>`
-                        col1 = ``
-                        radioinlineHTML += row
-                        //counter++
-                    }
-                    counter++
-                }
-                /*radioinlineHTML += `<div class="row">
-                                        <div class="col-md-6" style="padding-left:30px;">${col1}</div>
-                                        <div class="col-md-6" style="padding-left:30px;">${col2}</div>
-                                    </div>`*/
+                    
+                    //generate radio buttton
+                    rowContent += `<div class="col-md-6" style="padding-left:30px;">
+                    <label class="radio" ${tooltip}>
+                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">${currentRadio.title}</input>
+                    </label>
+                    </div>`;
 
+                    //Add as row every second iteration
+                    if (index % 2 == 0 || index >= radioinlineOptions.length -1) {
+                        radioinlineHTML += `<div class="row">${rowContent}</div>`;
+                        rowContent = "";
+                    }
+                }
+                
                 radioinlineHTML = `<div class="form-group tracking-group" style="border:1px solid #757d84; padding: 10px; border-radius: 5px;">${radioinlineHTML}</div>`
 
-
                 $(templateQuestion).append(radioinlineHTML);
+
                 //Add eventlistener
                 $(`input[type=radio][name="${questionHtmlId}"]`).on("change", function () {
                     let inputValue = $(this).val();
                     questionData.answer = { value: inputValue };
-                    console.log(questionData);
                 })
                 break;
 
@@ -334,7 +321,7 @@ async function initSurvey(path, selector, uniqueKey) {
                                         </div>`);
 
 
-                
+
 
                 //add things to document 
                 $(templateQuestion).append(ratingContainer);
@@ -342,9 +329,9 @@ async function initSurvey(path, selector, uniqueKey) {
                 //---Add Eventlistener---
                 $(`input:radio[name ='${questionHtmlId}']`).on("change", function () {
                     //Highlight selected value
-                    $(".survey-rating-sm-text").css({"font-weight":"normal"});
+                    $(".survey-rating-sm-text").css({ "font-weight": "normal" });
                     const labelId = $(`input:radio[name ='${questionHtmlId}']:checked`).attr("data-label-id");
-                    $(`#${labelId}`).css({"font-weight":"1000"});
+                    $(`#${labelId}`).css({ "font-weight": "1000" });
 
 
                     let inputValue = $(`input:radio[name ='${questionHtmlId}']:checked`).val();
