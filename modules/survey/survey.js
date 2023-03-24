@@ -303,12 +303,11 @@ async function initSurvey(path, selector, uniqueKey) {
                 for (const currentOption of ratingOptions) {
                     generatedOptions += `
                         <div class="col-sm-2">
-                            <div class="row">
-                            <div class="col-xs-9 col-sm-12 text-center v-center">
+                            <div class="row v-center">
+                            <div class="col-xs-8 col-sm-12 text-center">
                                 <div class="survey-rating-sm-text">${currentOption.title}</div>
                             </div>
-                            <br>
-                            <div class="col-xs-3 col-sm-12 text-center v-center">
+                            <div class="col-xs-4 col-sm-12 text-center">
                                 <input class="survey-rating-radio" type="radio" name="${questionHtmlId}" value="${currentOption.value} - ${currentOption.title}">
                             </div>
                             </div>

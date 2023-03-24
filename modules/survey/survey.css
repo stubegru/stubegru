@@ -10,7 +10,7 @@
 .survey-rating-radio {
     width: 40px;
     height: 40px;
-    margin: 10px !important;
+    margin: 10px 0px !important;
 }
 
 .survey-rating-row {
@@ -18,41 +18,27 @@
     border-radius: 10px;
 }
 
-.stubegru-rating-table{
+.stubegru-rating-table {
     margin-bottom: 30px;
 }
 
-.survey-rating-sm-text{
+.survey-rating-sm-text {
     color: var(--survey-rating-row-text);
     font-size: large;
 }
 
-.survey-rating-text{
+.survey-rating-text {
     color: var(--survey-rating-row-text);
     padding: 10px;
     font-size: larger;
     margin-bottom: -15px;
 }
 
-.v-center {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
+@media only screen and (max-width: 750px) {
+    .v-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
-
-.stubegru-rating-table tr:last-child td:first-child {
-    border-top-left-radius: 10px;
-}
-
-.stubegru-rating-table tr:last-child td:last-child {
-    border-top-right-radius: 10px;
-}
-
-.stubegru-rating-table tr:last-child td:first-child {
-    border-bottom-left-radius: 10px;
-}
-
-.stubegru-rating-table tr:last-child td:last-child {
-    border-bottom-right-radius: 10px;
-}
