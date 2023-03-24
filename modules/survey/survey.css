@@ -42,3 +42,8 @@
     }
 }
 
+.survey-inline-radio-container {
+    border: 1px solid;
+    padding: 5px 15px;
+    border-radius: 5px;
+}

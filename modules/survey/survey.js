@@ -210,34 +210,31 @@ async function initSurvey(path, selector, uniqueKey) {
 
             case "radio-inline":
 
-                let radioinlineOptions = questionData.options
-                let radioinlineHTML = `<label>${questionData.title}</label>
-                        <p class="help-block">${questionData.text}</p>`
-
+                let radioInlineOptions = questionData.options
+                let extraText = questionData.text.length > 0 ? `<p class="help-block">${questionData.text}</p>` : "";
                 let rowContent = "";
 
-                for (let index in radioinlineOptions) {
-                    let currentRadio = radioinlineOptions[index];
+
+                for (let currentRadio of radioInlineOptions) {
 
                     //generate radio buttton
-                    rowContent += `<div class="col-md-6" style="padding-left:30px;">
-                    <label class="radio">
-                    <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">
-                        ${currentRadio.title}
-                    </input>
-                    </label>
-                    </div>`;
-
-                    //Add as row every second iteration
-                    if (index % 2 == 0 || index >= radioinlineOptions.length - 1) {
-                        radioinlineHTML += `<div class="row">${rowContent}</div>`;
-                        rowContent = "";
-                    }
+                    rowContent += `<div class="col-sm-6 col-md-4 col-lg-3">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="${questionHtmlId}" value="${currentRadio.value}">
+                                            ${currentRadio.title}
+                                        </label>
+                                   </div>`;
                 }
 
-                radioinlineHTML = `<div class="form-group tracking-group" style="border:1px solid #757d84; padding: 10px; border-radius: 5px;">${radioinlineHTML}</div>`
+                let radioInlineHTML = ` <label>${questionData.title}</label>
+                                        ${extraText}
+                                        <div class="form-group survey-inline-radio-container">
+                                            <div class="row">
+                                                ${rowContent}
+                                            </div>
+                                        </div>`;
 
-                $(templateQuestion).append(radioinlineHTML);
+                $(templateQuestion).append(radioInlineHTML);
 
                 //Add eventlistener
                 $(`input[type=radio][name="${questionHtmlId}"]`).on("change", function () {
