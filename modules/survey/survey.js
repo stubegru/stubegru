@@ -293,7 +293,7 @@ async function initSurvey(path, selector, uniqueKey) {
                 let ratingOptions = [
                     { value: 1, title: "Gar nicht Zutreffend" },
                     { value: 2, title: "Eher nicht Zutreffend" },
-                    { value: 3, title: "Teils /<br> Teils" },
+                    { value: 3, title: "&nbsp;Teils &nbsp;/ &nbsp;Teils&nbsp;&nbsp;" },
                     { value: 4, title: "Eher Zutreffend" },
                     { value: 5, title: "Sehr Zutreffend" },
                 ];
@@ -305,10 +305,10 @@ async function initSurvey(path, selector, uniqueKey) {
                         <div class="col-sm-2">
                             <div class="row v-center">
                             <div class="col-xs-8 col-sm-12 text-center">
-                                <div class="survey-rating-sm-text">${currentOption.title}</div>
+                                <div class="survey-rating-sm-text" id="label-${questionHtmlId}-${currentOption.value}">${currentOption.title}</div>
                             </div>
                             <div class="col-xs-4 col-sm-12 text-center">
-                                <input class="survey-rating-radio" type="radio" name="${questionHtmlId}" value="${currentOption.value} - ${currentOption.title}">
+                                <input class="survey-rating-radio" type="radio" name="${questionHtmlId}" value="${currentOption.value} - ${currentOption.title}" data-label-id="label-${questionHtmlId}-${currentOption.value}">
                             </div>
                             </div>
                         </div>`;
@@ -341,6 +341,12 @@ async function initSurvey(path, selector, uniqueKey) {
 
                 //---Add Eventlistener---
                 $(`input:radio[name ='${questionHtmlId}']`).on("change", function () {
+                    //Highlight selected value
+                    $(".survey-rating-sm-text").css({"font-weight":"normal"});
+                    const labelId = $(`input:radio[name ='${questionHtmlId}']:checked`).attr("data-label-id");
+                    $(`#${labelId}`).css({"font-weight":"1000"});
+
+
                     let inputValue = $(`input:radio[name ='${questionHtmlId}']:checked`).val();
                     questionData.answer = { value: inputValue };
                     executeSurveyAction(questionData.action);
