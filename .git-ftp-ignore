@@ -1,5 +1,4 @@
 .gitignore
 .git-ftp-ignore
 .git-ftp-include
-custom/.git/*
-custom/.dev/*
+.dev/*
