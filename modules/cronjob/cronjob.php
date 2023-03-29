@@ -1,8 +1,10 @@
 <?php
 
+$NEW_LINE_SYMBOL = "<br>";
 // Serve Env variables when called from CLI
 if (php_sapi_name() == "cli") {
     //read .htaccess
+    $NEW_LINE_SYMBOL = "\n";
     echo "Restore ENV Variables manually from .htaccess file\n";
     $currentPath = dirname(__FILE__);
     $htaccess = file($currentPath . '/../../.htaccess');
@@ -25,6 +27,8 @@ $MODULES_PATH = "$BASE_PATH/modules/";
 $MODULE_FILE_NAME = "module.json";
 $CONFIG_PATH = "$BASE_PATH/custom/";
 $CONFIG_FILE_NAME = "config.json";
+
+echo "+++ $NEW_LINE_SYMBOL [" . date("Y-m-d H:i:s") . "] Executing Stubegru Cronjob$NEW_LINE_SYMBOL";
 
 $cronjobList = array();
 
@@ -59,9 +63,11 @@ if (file_exists($CONFIG_PATH . $CONFIG_FILE_NAME)) {
 foreach ($cronjobList as $cronInfo) {
     $cronName = $cronInfo["name"];
     $cronPath = $cronInfo["path"];
-    echo "<br><br>Load Cronjob: <b>$cronName</b><br>";
+    echo "$NEW_LINE_SYMBOL $NEW_LINE_SYMBOL Load Cronjob: <b>$cronName</b>$NEW_LINE_SYMBOL";
     require($cronPath);
 }
+
+echo $NEW_LINE_SYMBOL;
 
 
 function scanForModules($path)
