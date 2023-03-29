@@ -46,9 +46,12 @@ function permissionRequest($permChannel)
         }
 
         //If user is not logged in, deny access
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start(); //Session starten, falls sie noch nicht läuft
+        }
         if (empty($_SESSION["id"])) {
             header("HTTP/1.1 401 Unauthorized");
-            echo json_encode(array("status" => "error", "message" => "This resource is only accessible for logged in users", "permission" => "user"));
+            echo json_encode(array("status" => "error", "message" => "You are not logged in. This resource is only accessible for logged in users", "permission" => $permission));
             exit;
         }
 
