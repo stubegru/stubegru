@@ -35,6 +35,13 @@ async function initSurvey(path, selector, uniqueKey) {
         method: "GET",
     });
     let surveyData = await surveyDataResponse.json();
+
+    //Check if auth was successful
+    if(surveyDataResponse.status == "401"){
+        console.warn(`[Survey] Could not load survey with id ${surveyId}. Access denied!`);
+        return;
+    }
+
     let surveyQuestions = surveyData.questions;
 
     //show warning if a unique key is required but not given
