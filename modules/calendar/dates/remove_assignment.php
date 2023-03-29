@@ -59,7 +59,7 @@ $eventSummary = $meetingData["title"];
 $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, "", "", "100", "CANCELLED");
 $mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
 
-//Mail to Client
+//Mail to Client (with ics cancel event)
 $clientMailBody = loadMailTemplate("cancel_client_mail_template.html");
 stubegruMail($clientData["mail"], "Terminabsage - $INSTITUTION_NAME", $clientMailBody, $mailOptions);
 

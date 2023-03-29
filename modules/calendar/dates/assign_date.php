@@ -116,7 +116,7 @@ foreach ($resultList as $row) {
 }
 
 //Channel in Klartext übersetzen
-$channelDescriptions = array("personally" => "Persönlich", "phone" => "Telefon", "webmeeting" => "Webmeeting", "unknown" => "unknown");
+$channelDescriptions = array("personally" => "Persönliches Gespräch", "phone" => "Telefonberatung", "webmeeting" => "Webmeeting", "unknown" => "unknown");
 $channelPrint = $channelDescriptions[$channel];
 
 //variablen in den Templates einsetzen
@@ -131,7 +131,10 @@ $eventSummary = $dateTitle;
 $eventLocation = $roomObject->kanal . " - " . $roomObject->raumnummer .  $roomObject->link . " " . $roomObject->passwort;
 
 $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, "", $eventLocation, "0", "CONFIRMED");
-$mailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
+
+
+$advisorMailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
+$clientMailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString),"replyTo" => array("name" => $dateOwnerName, "address" => $dateOwnerMailAdress));
 
 
 
@@ -140,7 +143,7 @@ $clientMailSubject = str_replace($templateVariablen, $phpVariablen, $templateSub
 $clientMailText = str_replace($templateVariablen, $phpVariablen, $templateText);
 
 try {
-    stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText, $mailOptions);
+    stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText, $clientMailOptions);
 } catch (Exception $e) {
     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Kunden und den Berater versendet werden."));
     exit;
@@ -183,7 +186,7 @@ $AdvisorMailSubject = "Termin vergeben am $dateDate";
 
 
 try {
-    stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $mailOptions);
+    stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $advisorMailOptions);
 } catch (Exception $e) {
     echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
     exit;

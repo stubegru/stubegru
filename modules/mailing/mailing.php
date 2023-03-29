@@ -15,6 +15,9 @@ require "$BASE_PATH/modules/mailing/PHPMailer/src/SMTP.php";
  * @param string $subject Subject of the mail
  * @param string $message Content of the mail (plain text or HTML)
  * @param array $options stubegru specific options
+ *      - "replyTo"                     : array with reply to address
+ *          - "replyTo['name']"         : Name of reply to
+ *          - "replyTo['address']"      : Mail address fo reply to
  *      - "postfix"                     : use custom postfix instead of INSTITUTION_MAIL_POSTFIX, use empty string here for no postfix
  *      - "attachment"                  : array with information to add an attachment to the mail
  *          - "attachment['name']"      : filename that should be set for the attachment
@@ -40,6 +43,15 @@ function stubegruMail($to, $subject, $message, $options = [])
 
             $additional_headers = array(); //Additional headers are handled as array
             $additional_headers["From"] = getenv("INSTITUTION_NAME") . " <" . getenv("INSTITUTION_MAIL_ADDRESS") . ">";
+
+            //set optional reply to
+            if (isset($options) && isset($options["replyTo"])) {
+                if (empty($options["replyTo"]["name"]) || empty($options["replyTo"]["address"])) {
+                    trigger_error("[stubegruMail] ReplyTo could not be set because name or address was not set correctly!", E_USER_WARNING);
+                } else {
+                    $additional_headers["Reply-To"] = $options["replyTo"]["name"]  . '<' . $options["replyTo"]["address"] . '>';
+                }
+            }
 
             //Attachment
             if (isset($options) && isset($options["attachment"])) {
@@ -79,6 +91,16 @@ function stubegruMail($to, $subject, $message, $options = [])
             }
             //Recipients
             $myPHPMailer->setFrom(getenv("INSTITUTION_MAIL_ADDRESS"), getenv("INSTITUTION_NAME"));
+
+            //set optional reply to
+            if (isset($options) && isset($options["replyTo"])) {
+                if (empty($options["replyTo"]["name"]) || empty($options["replyTo"]["address"])) {
+                    trigger_error("[stubegruMail] ReplyTo could not be set because name or address was not set correctly!", E_USER_WARNING);
+                } else {
+                    $myPHPMailer->addReplyTo($options["replyTo"]["address"], $options["replyTo"]["name"]);
+                }
+            }
+
             $myPHPMailer->addAddress($to);
             //Content
             $myPHPMailer->isHTML(true);
@@ -95,6 +117,7 @@ function stubegruMail($to, $subject, $message, $options = [])
                     $myPHPMailer->addStringAttachment($content, $fileName);
                 }
             }
+
 
 
             $myPHPMailer->send();
