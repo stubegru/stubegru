@@ -53,7 +53,7 @@ Empfänger: <input type="mail" id="addr" placeholder="Mailadresse" value="<?php 
     </tr>
 
     <?php
-    $vars = array("MAIL_METHOD", "SMTP_HOST", "SMTP_AUTH", "SMTP_USERNAME", "SMTP_PASSWORD", "SMTP_SECURE", "SMTP_PORT");
+    $vars = array("MAIL_METHOD", "SMTP_HOST", "SMTP_AUTH", "SMTP_USERNAME", "SMTP_SECURE", "SMTP_PORT");
 
     foreach ($vars as $var) {
         $value = getenv($var);
