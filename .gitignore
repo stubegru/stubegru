@@ -1,5 +1,5 @@
 env.php
-.htaccess
+**/.htaccess
 .version
 custom/*
 custom
