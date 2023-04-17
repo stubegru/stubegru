@@ -15,3 +15,6 @@ $password = getenv("DB_PASSWORD");
 $database = getenv("DB_NAME");
 
 $dbPdo = new PDO("mysql:host=$server;dbname=$database", $user, $password); //Provide PDO Database
+
+unset($user);
+unset($password);
