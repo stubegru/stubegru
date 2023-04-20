@@ -123,14 +123,18 @@ $channelPrint = $channelDescriptions[$channel];
 $templateVariablen = array("{Termin_Titel}", "{Termin_Kanal}", "{Klient_Name}", "{Klient_Telefon}", "{Termin_Datum}", "{Termin_Uhrzeit}", "{Berater_Name}", "{Berater_Mail}", "{Raum_Kanal}", "{Raum_Nummer}", "{Raum_Etage}", "{Raum_Strasse}", "{Raum_Hausnummer}", "{Raum_PLZ}", "{Raum_Ort}", "{Raum_Link}", "{Raum_Passwort}", "{Raum_Telefon}");
 $phpVariablen = array($dateTitle, $channelPrint, $clientName, $clientPhone, $dateDate, $dateStartTime, $dateOwnerName, $dateOwnerMailAdress, $roomObject->kanal, $roomObject->raumnummer, $roomObject->etage, $roomObject->strasse, $roomObject->hausnummer, $roomObject->plz, $roomObject->ort, $roomObject->link, $roomObject->passwort, $roomObject->telefon);
 
+$clientMailSubject = str_replace($templateVariablen, $phpVariablen, $templateSubject);
+$clientMailText = str_replace($templateVariablen, $phpVariablen, $templateText);
+
 //***************ICS EVENT GENERIEREN*****************************
 $eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$dateId";
 $eventStartUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . $dateStartTime));
 $eventEndUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . $dateEndTime));
 $eventSummary = $dateTitle;
 $eventLocation = $roomObject->kanal . " - " . $roomObject->raumnummer .  $roomObject->link . " " . $roomObject->passwort;
+$eventDescription = str_replace(array("\r", "\n"), '', $clientMailText);
 
-$eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, "", $eventLocation, "0", "CONFIRMED");
+$eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, $eventDescription, $eventLocation, "0", "CONFIRMED");
 
 
 $advisorMailOptions = array("attachment" => array("name" => "event.ics", "content" => $eventIcsString));
@@ -139,8 +143,7 @@ $clientMailOptions = array("attachment" => array("name" => "event.ics", "content
 
 
 //***************Mail an den Kunden senden************************
-$clientMailSubject = str_replace($templateVariablen, $phpVariablen, $templateSubject);
-$clientMailText = str_replace($templateVariablen, $phpVariablen, $templateText);
+
 
 try {
     stubegruMail($clientMailAdress, $clientMailSubject, $clientMailText, $clientMailOptions);
