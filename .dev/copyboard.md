@@ -1,3 +1,4 @@
+# Copyboard for some sample code
 # ------------------------------PHP------------------------------
 
 $BASE_PATH = getenv("BASE_PATH");
