@@ -4,6 +4,12 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 
+if (!function_exists('str_contains')) {
+    function str_contains($haystack, $needle) {
+        return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+    }
+}
+
 $where = "`id`>='0'";
 $currentIndex = 0;
 echo "Converting wikiwords in all articles from $server.$database where $where<br>";
