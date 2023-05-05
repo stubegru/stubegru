@@ -207,6 +207,7 @@ function generateAbsenceStrings(absence) {
                     //Today, but the time is in the future
                     absence.startString = `Heute ${formatDate(absence.start, "hh:mm")}`;
                     absence.endString = `Heute ${formatDate(absence.end, "hh:mm")}`;
+                    absence.table = "present"; //Show upcoming hourly absence in present table if it is today but time is in the future
                 } else {
                     absence.startString = formatDate(absence.start, "DD.MM.YYYY hh:mm");
                     absence.endString = formatDate(absence.end, "DD.MM.YYYY hh:mm");
