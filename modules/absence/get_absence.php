@@ -12,7 +12,7 @@ if (isset($_POST["absenceId"])) {
 }
 $dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 
-$today = date("c");
+$today = date("Y-m-d");
 $dbPdo->query("DELETE FROM `Abwesenheiten` WHERE recurring = '' AND end < '$today';"); //Delete past absence entries
 
 
