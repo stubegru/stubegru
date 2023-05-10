@@ -260,7 +260,8 @@ CREATE TABLE `survey_answers` (
   `userHash` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `optionId` int(11) NOT NULL,
-  `surveyId` int(11) NOT NULL
+  `surveyId` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------

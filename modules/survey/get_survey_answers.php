@@ -24,8 +24,11 @@ permissionRequest($permission);
 
 //init questionArrayList
 $csvHeaderList = array();
-$csvHeaderList[0] = "userHash"; //first column is the userHash
-$csvHeaderListIndex = 1;
+$INDEX_FOR_USER_HASH = 0;
+$csvHeaderList[$INDEX_FOR_USER_HASH] = "userHash"; //first column is the userHash
+$INDEX_FOR_TIMESTAMP = 1;
+$csvHeaderList[$INDEX_FOR_TIMESTAMP] = "timestamp"; //second column is the timestamp
+$csvHeaderListIndex = 2; //start other columns at index 2
 
 //get list of all questions connected to this survey
 $questionObjectList = array();
@@ -57,8 +60,9 @@ foreach ($resultList as $answerData) {
     $value = $answerData["value"];
 
     if (empty($userList[$userHash])) {
-        $userList[$userHash] = array_fill(0, $csvColumnCount, "");;
-        $userList[$userHash][0] = $userHash;
+        $userList[$userHash] = array_fill(0, $csvColumnCount, ""); //Init new user row
+        $userList[$userHash][$INDEX_FOR_USER_HASH] = $userHash; //add user hash
+        $userList[$userHash][$INDEX_FOR_TIMESTAMP] = $answerData["timestamp"]; //add timestamp
     }
     $csvListIndex = $questionObjectList[$questionId]["csvIndex"];
     $userList[$userHash][$csvListIndex] = $value;
