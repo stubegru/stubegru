@@ -80,7 +80,7 @@ foreach ($userList as $userEntry) {
 //Return data as CSV File
 $output = fopen("php://output", 'w') or die("Can't open php://output");
 header("Content-Type:application/csv");
-header("Content-Disposition:attachment;filename=$surveyName.csv");
+header("Content-Disposition:attachment;filename=" . date("Y-m-d") . " Export " . $surveyName . ".csv");
 foreach ($csvMap as $csvLine) {
     fputcsv($output, $csvLine, ";");
 }
