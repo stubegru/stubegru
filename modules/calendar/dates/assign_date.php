@@ -132,7 +132,7 @@ $eventStartUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . 
 $eventEndUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . $dateEndTime));
 $eventSummary = $dateTitle;
 $eventLocation = $roomObject->kanal . " - " . $roomObject->raumnummer .  $roomObject->link . " " . $roomObject->passwort;
-$eventDescription = strip_tags(str_replace(array("\r", "\n"), '', $clientMailText));
+$eventDescription = html_entity_decode(strip_tags(str_replace(array("\r", "\n"), '', $clientMailText)));
 
 $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, $eventDescription, $eventLocation, "0", "CONFIRMED");
 
