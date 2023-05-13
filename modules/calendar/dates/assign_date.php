@@ -12,6 +12,8 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/calendar/ical/ical_generator.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
+$INCLUDED_IN_SCRIPT = true;
+require_once "$BASE_PATH/utils/constants.php";
 permissionRequest("ASSIGN_DATE");
 $loggedInUserId = $_SESSION["id"];
 
@@ -132,7 +134,13 @@ $eventStartUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . 
 $eventEndUTC = gmdate("Ymd\THis\Z", strtotime($dateDateAmericanFormat . " " . $dateEndTime));
 $eventSummary = $dateTitle;
 $eventLocation = $roomObject->kanal . " - " . $roomObject->raumnummer .  $roomObject->link . " " . $roomObject->passwort;
-$eventDescription = html_entity_decode(strip_tags(str_replace(array("\r", "\n"), '', $clientMailText)));
+
+//generate description text
+$rawIcsDescription = "";
+if (isset($constants["CUSTOM_CONFIG"]["icsDescriptionTemplate"])){
+    $rawIcsDescription = $constants["CUSTOM_CONFIG"]["icsDescriptionTemplate"];
+}
+$eventDescription = str_replace($templateVariablen, $phpVariablen, $rawIcsDescription);
 
 $eventIcsString = generateEvent($eventUid, $eventStartUTC, $eventEndUTC, $eventSummary, $eventDescription, $eventLocation, "0", "CONFIRMED");
 
