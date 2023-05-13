@@ -179,6 +179,10 @@ $AdvisorMailText = "<p>Guten Tag</p>
         <td>&nbsp;Anliegen</td>
         <td>&nbsp;$dateIssue</td>
         </tr>
+        <tr>
+        <td>&nbsp;Beratungskanal</td>
+        <td>&nbsp;$channelPrint</td>
+        </tr>
         </tbody>
         </table>
         </span>
