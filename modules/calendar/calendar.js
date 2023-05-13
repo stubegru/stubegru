@@ -74,7 +74,7 @@ function initFullcalendarView() {
 
 
 async function resetCalendarForm() {
-    let calendarTitle = "Beratungstermin";
+    let calendarTitle = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
     $('#calendarDate').val("");
     $('#calendarStart').val("");
     $('#calendarEnd').val("");

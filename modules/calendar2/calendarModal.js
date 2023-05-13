@@ -213,12 +213,12 @@ class CalendarModal {
     /**
     * Reset all inputs in the Calendar meeting detail form
     */
-    resetMeetingDetailForm = () => {
+    resetMeetingDetailForm = async () => {
         this.enableDetailMeetingForm(true);
         $('.meeting-details').val("");
 
         //load from custom config
-        const calendarTitle = stubegru.constants.CUSTOM_CONFIG.calendarMeetingTitle || "Beratungstermin";
+        const calendarTitle = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
         $('#calendarTitle').val(calendarTitle);
         $("#calendarOwner").val(stubegru.currentUser.id);
         $("#calendarChannel").val("all");
