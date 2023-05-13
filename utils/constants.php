@@ -23,7 +23,7 @@ if (file_exists("$BASE_PATH/.version")) {
 $CUSTOM_CONFIG = array();
 if (file_exists("$BASE_PATH/custom/config.json")) {
     $configJson = file_get_contents("$BASE_PATH/custom/config.json");
-    $CUSTOM_CONFIG = json_decode($configJson);
+    $CUSTOM_CONFIG = json_decode($configJson,true);
 }
 
 $constants = array();
