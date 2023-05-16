@@ -1,7 +1,3 @@
-XHR_DEFAULT_OPTIONS = {
-    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-};
-
 DEFAULT_VIEW = "dashboard";
 
 initStubegru();
@@ -42,7 +38,7 @@ async function checkViewAccess() {
     let accessValue = $("stubegruAttribute[data-name='access']").attr("data-value");
     accessValue = accessValue || "DEFAULT_VIEW_ACCESS";
 
-    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/test_permission_request.php?permissionRequest=${accessValue}`, XHR_DEFAULT_OPTIONS);
+    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/test_permission_request.php?permissionRequest=${accessValue}`);
     const respJson = await resp.json();
 
     if (resp.status == 200 && respJson.status == "success") {
