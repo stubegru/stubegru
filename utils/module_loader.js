@@ -90,9 +90,21 @@ const StubegruModuleLoader = {
     initModulesLists: async function () {
         for (let moduleElement of $("stubegruModule")) {
             const moduleName = $(moduleElement).attr("data-name");
-            this.allModulesNames.push(moduleName);
+
+            //Check if module permissionRequest is fulfilled
+            const moduleAccess = $(moduleElement).attr("data-access");
+
+            if (moduleAccess && moduleAccess != "") {
+                const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/test_permission_request.php?permissionRequest=${moduleAccess}`);
+                const respJson = await resp.json();
+                if (respJson.status != "success") {
+                    console.log(`Ignore module "${moduleName}" because it's required permissionRequest "${moduleAccess}" is not fulfilled`);
+                    return false;
+                }
+            }
 
             //load module data
+            this.allModulesNames.push(moduleName);
             let moduleData = await this.getModuleData(moduleName);
             this.waitForLoad[moduleName] = moduleData;
         }
