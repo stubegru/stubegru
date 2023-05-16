@@ -3,7 +3,6 @@ XHR_DEFAULT_OPTIONS = {
 };
 
 DEFAULT_VIEW = "dashboard";
-DEFAULT_ACCESS_VALUE = "user"
 
 initStubegru();
 
@@ -41,39 +40,29 @@ async function loadView() {
 
 async function checkViewAccess() {
     let accessValue = $("stubegruAttribute[data-name='access']").attr("data-value");
-    accessValue = accessValue || DEFAULT_ACCESS_VALUE;
+    accessValue = accessValue || "DEFAULT_VIEW_ACCESS";
 
-    if (accessValue == "anybody") {
-        console.log(`Access granted because view-access is '${accessValue}'`);
-        return true
-    } //Allow access for anybody views (no check here)
+    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/test_permission_request.php?permissionRequest=${accessValue}`, XHR_DEFAULT_OPTIONS);
+    const respJson = await resp.json();
 
-    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_users_permission_requests.php`, XHR_DEFAULT_OPTIONS);
-    if (resp.status >= 300) {
-        console.log(`Access denied, because response status is ${resp.status}`);
-        let triggerUrl = encodeURIComponent(document.location.href);
-        document.location.href = `${stubegru.constants.BASE_URL}?view=login&triggerUrl=${triggerUrl}`;
-        return;
+    if (resp.status == 200 && respJson.status == "success") {
+        return true;
     }
+    else {
+        console.log(respJson.message);
 
-    if (accessValue == "user") {
-        console.log(`Access granted because view-access is '${accessValue}'`);
-        return true
-    } //allow access for any logged in user (check for valid session, not for any permission)
-
-    const permRequestList = await resp.json();
-    for (let permRequest of permRequestList) {
-        if (accessValue == permRequest.name && permRequest.access) {
-            console.log(`Access granted because view-access is '${accessValue}'`);
-            return true
-        } //allow access for user with required permission
+        if (respJson.permission == "user") { //Redirect to Login page
+            let triggerUrl = encodeURIComponent(document.location.href);
+            document.location.href = `${stubegru.constants.BASE_URL}?view=login&triggerUrl=${triggerUrl}`;
+        } else {
+            //Add error message to current page
+            let html = `<div class="alert alert-danger text-center">
+                        <strong>Kein Zugriff! </strong>
+                        Um diese Seite aufzurufen ist die Berechtigung <b>'${respJson.permission}'</b> nötig.
+                    </div>`;
+            $("body").append(html);
+        }
     }
-
-    let html = `<div class="alert alert-danger text-center">
-                    <strong>Kein Zugriff! </strong>
-                    Um diese Seite aufzurufen ist die Berechtigung <b>'${accessValue}'</b> nötig.
-                </div>`;
-    $("body").append(html);
     return false;
 }
 

@@ -114,6 +114,9 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('SEND_TELEPHONE_NOTE', 'user'),
 ('USER_READ', 'user'),
 ('USER_WRITE', 'admin'),
+('DEFAULT_VIEW_ACCESS', 'user'),
+('VIEW_ACCESS_LOGIN', 'anybody'),
+('VIEW_ACCESS_EVALUATION', 'anybody'),
 ('WIKI_READ', 'user'),
 ('WIKI_WRITE', 'wiki_autor');
 

@@ -36,7 +36,7 @@ function permissionRequest($permChannel)
 
         if (empty($permission) || $permission == "") {
             header("HTTP/1.1 401 Unauthorized");
-            echo json_encode(array("status" => "error", "message" => "Cannot grant access for empty permission", "permission" => $permission));
+            echo json_encode(array("status" => "error", "message" => "Cannot grant access for empty permission", "permission" => $permission, "permissionRequest" => $permChannel));
             exit;
         }
 
@@ -51,7 +51,7 @@ function permissionRequest($permChannel)
         }
         if (empty($_SESSION["id"])) {
             header("HTTP/1.1 401 Unauthorized");
-            echo json_encode(array("status" => "error", "message" => "You are not logged in. This resource is only accessible for logged in users", "permission" => $permission));
+            echo json_encode(array("status" => "error", "message" => "You are not logged in. This resource is only accessible for logged in users", "permission" => $permission, "permissionRequest" => $permChannel));
             exit;
         }
 
@@ -69,7 +69,7 @@ function permissionRequest($permChannel)
         $rowNumbers = $testStatement->fetchColumn();
         if ($rowNumbers <= 0) {
             header("HTTP/1.1 401 Unauthorized");
-            echo json_encode(array("status" => "error", "message" => "You have no permission to access this resource or action. Required permission: $permission", "permission" => $permission));
+            echo json_encode(array("status" => "error", "message" => "You have no permission to access this resource or action. Required permission: $permission", "permission" => $permission, "permissionRequest" => $permChannel));
             exit;
         }
     }
