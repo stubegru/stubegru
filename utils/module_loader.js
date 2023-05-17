@@ -99,7 +99,7 @@ const StubegruModuleLoader = {
                 const respJson = await resp.json();
                 if (respJson.status != "success") {
                     console.log(`Ignore module "${moduleName}" because it's required permissionRequest "${moduleAccess}" is not fulfilled`);
-                    return false;
+                    continue;
                 }
             }
 
