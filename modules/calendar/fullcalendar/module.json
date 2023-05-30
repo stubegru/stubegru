@@ -1,6 +1,6 @@
 {
     "type": "externalLibrary",
-    "name": "calendar/libs/fullcalendar",
+    "name": "calendar/fullcalendar",
     "description": "Library for displaying calendar views",
     "author": "Adam Shaw",
     "license": "MIT",

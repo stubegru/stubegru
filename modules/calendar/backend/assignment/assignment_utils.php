@@ -2,7 +2,6 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
-require_once "$BASE_PATH/modules/calendar/ical/ical_generator.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
 require_once "$BASE_PATH/modules/calendar/backend/templates/template_variables.php";
 $INCLUDED_IN_SCRIPT = true;
@@ -46,7 +45,7 @@ function assignMeetingTo($meetingId, $clientData)
     $insertStatement->bindValue(':clientMailAdress', $clientData["mail"]);
     $insertStatement->bindValue(':clientPhone', $clientData["phone"]);
     $insertStatement->bindValue(':clientWantsFormular', $clientData["survey"]);
-    $insertStatement->bindValue(':dateIssue', $clientData["issue"]);
+    $insertStatement->bindValue(':dateIssue', $clientData["description"]);
     $insertStatement->bindValue(':channel', $clientData["channel"]);
     $insertStatement->bindValue(':meetingId', $meetingId);
     $insertStatement->execute();
@@ -119,9 +118,12 @@ function getReplaceList($dataList)
     $replaceList = array();
 
     foreach ($variables as $v) {
+        $cat = $v["category"];
+        $prop = $v["property"];
+
         $replaceList[] = array(
             "search" => $v["placeholder"],
-            "replace" => $dataList[$v["category"]][$v["property"]]
+            "replace" => $dataList[$cat][$prop]
         );
     }
 

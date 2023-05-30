@@ -17,7 +17,7 @@ $meetingId = $_POST["dateId"];
 
 $clientData = array();
 $clientData["name"] = $_POST["name"];
-$clientData["issue"] = $_POST["issue"];
+$clientData["description"] = $_POST["issue"];
 $clientData["mail"] = $_POST["mail"];
 $clientData["phone"] = $_POST["phone"];
 $clientData["survey"] = $_POST["survey"];
@@ -44,10 +44,10 @@ try {
 
 //Add an entry in the Feedback_mails DB, if required
 try {
-    if ($clientWantsFormular == "1") {
-        bookmarkFeedbackMail($meetingId, $mailAdress);
+    if ($clientData["survey"] == "1") {
+        bookmarkFeedbackMail($meetingId, $clientData["mail"]);
     }
-    $toReturn["survey"] = array("status" => "success", "requested" => $clientWantsFormular);
+    $toReturn["survey"] = array("status" => "success", "requested" => $clientData["survey"]);
 } catch (Exception $e) {
     $toReturn["status"] = "warning";
     $toReturn["survey"] = array("status" => "error");
@@ -76,7 +76,7 @@ $dataList = array();
 $dataList["meeting"] = $meetingData;
 $dataList["room"] = $roomData;
 $dataList["client"] = $clientData;
-$dataList["extra"] = $$extraData;
+$dataList["extra"] = $extraData;
 
 $replaceList = getReplaceList($dataList);
 
@@ -97,8 +97,8 @@ $clientMailOptions = array(
 );
 
 try {
-    $toReturn["clientMail"] = array("template" => $templateData["title"], "address" => $clientData["mail"]);
-    stubegruMail($clientData["mail"], $templateData["subject"], $templateData["text"], $clientMailOptions);
+    $toReturn["clientMail"] = array("template" => $templateData["betreff"], "address" => $clientData["mail"]);
+    stubegruMail($clientData["mail"], $templateData["betreff"], $templateData["text"], $clientMailOptions);
     $toReturn["clientMail"]["status"] = "success";
 } catch (Exception $e) {
     $toReturn["clientMail"]["status"] = "error";
