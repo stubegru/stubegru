@@ -5,7 +5,7 @@ class Room {
 
     static async fetchRooms() {
         Room.roomList = [];
-        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`);
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/get_rooms.php`);
         let data = await resp.json();
 
         for (const roomData of data) {
@@ -44,7 +44,7 @@ class Room {
     async updateOnServer() {
         let formData = this.toFormData();
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/save_room.php`;
         let roomResp = await fetch(url, {
             method: 'POST',
             body: formData
@@ -58,7 +58,7 @@ class Room {
         let m = new Room(roomData);
         let formData = m.toFormData();
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/save_room.php`;
         let resp = await fetch(url, {
             method: 'POST',
             body: formData
@@ -90,7 +90,7 @@ class Room {
         let formData = new FormData();
         formData.append("id", this.id);
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/rooms/delete_room.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/delete_room.php`;
         let roomResp = await fetch(url, {
             method: 'POST',
             body: formData

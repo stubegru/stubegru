@@ -5,7 +5,7 @@ class Meeting {
     static async fetchMeetings() {
         Meeting.meetingList = [];
 
-        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`);
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/get_meetings.php`);
         let meetingList = await resp.json();
         for (const meetingData of meetingList) {
             meetingData.roomId = meetingData.room;
@@ -50,7 +50,7 @@ class Meeting {
      * Updates an local meeting with properties from the server
      */
     async updateFromServer() {
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meeting.php?meetingId=${this.id}`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/get_meeting.php?meetingId=${this.id}`;
         let meetingResp = await fetch(url);
         meetingResp = await meetingResp.json();
         this.applyProperties(meetingResp);
@@ -63,7 +63,7 @@ class Meeting {
     async updateOnServer() {
         let formData = this.toFormData();
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/update_calendar_date.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/update_meeting.php`;
         let meetingResp = await fetch(url, {
             method: 'POST',
             body: formData
@@ -96,7 +96,7 @@ class Meeting {
         let m = new Meeting(meetingData);
         let formData = m.toFormData();
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/create_calendar_date.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/create_meeting.php`;
         let meetingResp = await fetch(url, {
             method: 'POST',
             body: formData
@@ -109,7 +109,7 @@ class Meeting {
         let formData = new FormData();
         formData.append("id", this.id);
 
-        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/delete_date.php`, {
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/delete_meeting.php`, {
             method: "POST",
             body: formData
         });
@@ -127,7 +127,7 @@ class Meeting {
         client.append("issue", clientData.issue);
         client.append("channel", clientData.channel);
 
-        let clientResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/assign_date.php`, {
+        let clientResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/create_meeting_assignment.php`, {
             method: 'POST',
             body: client
         });
@@ -139,7 +139,7 @@ class Meeting {
         let formData = new FormData();
         formData.append("dateId", this.id);
 
-        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/remove_assignment.php`, {
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/cancel_meeting_assignment.php`, {
             method: 'POST',
             body: formData
         });
@@ -154,7 +154,7 @@ class Meeting {
         formData.append("meetingId", this.id);
         formData.append("blockMeeting", blockMeeting);
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/set_meeting_block.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/set_meeting_block.php`;
         let resp = await fetch(url, {
             method: 'POST',
             body: formData
@@ -167,7 +167,7 @@ class Meeting {
         let formData = new FormData();
         formData.append("meetingId", this.id);
 
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/is_meeting_block.php`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/is_meeting_block.php`;
         let resp = await fetch(url, {
             method: 'POST',
             body: formData

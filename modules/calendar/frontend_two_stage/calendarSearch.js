@@ -25,7 +25,7 @@ class CalendarSearch {
         }
 
         query = encodeURI(query);
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/search_for_client.php?query=${query}`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/search_for_client.php?query=${query}`;
         let resp = await fetch(url);
         resp = await resp.json();
         this.handleResult(resp);
