@@ -3,7 +3,8 @@
 
 // ----------- 1. Includes ------------
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/modules/calendar/dates/meeting_utils.php";
+require_once "$BASE_PATH/modules/calendar/backend/assignment/assignment_utils.php";
+require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 permissionRequest("ASSIGN_DATE");
 $loggedInUserId = $_SESSION["id"];
 
@@ -66,11 +67,22 @@ $meetingData["ownerMail"] = getUserMail($meetingData["ownerId"]);
 //Format date to dd.mm.yyyy
 $meetingData["datePretty"] = DateTime::createFromFormat('Y-m-d', $meetingData["date"])->format('d.m.Y');
 
-$replaceList = getReplaceList($meetingData, $clientData, $roomData);
+//Add current users id
+$loggedInUserName = getUserName($loggedInUserId);
+$extraData = array("currentUserName" => $loggedInUserName);
+
+//Prepare complete dataList
+$dataList = array();
+$dataList["meeting"] = $meetingData;
+$dataList["room"] = $roomData;
+$dataList["client"] = $clientData;
+$dataList["extra"] = $$extraData;
+
+$replaceList = getReplaceList($dataList);
 
 
 // ----------- 6. Generate ICS File ------------
-$icsAttachment = generateIcsAttachment($meetingData, $clientData, $roomData, $replaceList);
+$icsAttachment = generateIcsAttachment($dataList);
 
 
 
@@ -97,24 +109,35 @@ try {
 // ----------- 8. Send advisor's mail ------------
 
 $advisorMailOptions = array("attachment" => $icsAttachment);
-$loggedInUserName = getUserName($loggedInUserId);
 
-$AdvisorMailText = "";
+$AdvisorMailText = "TO BECOME BETTER";
+//Load default text from template file
+//Replace default text by text from custom/config.json
+//Replace template variables
 
-$AdvisorMailSubject = "Termin vergeben am $dateDate";
+$AdvisorMailSubject = "Stubegru Termin vergeben am " . $meetingData["datePretty"];
+//Set default subject 
+//Replace default subject by subject from custom/config.json
+//Replace template variables
+
 
 
 try {
-    stubegruMail($dateOwnerMailAdress, $AdvisorMailSubject, $AdvisorMailText, $advisorMailOptions);
+    $toReturn["advisorMail"] = array("address" => $meetingData["ownerMail"]);
+    stubegruMail($meetingData["ownerMail"], $AdvisorMailSubject, $AdvisorMailText, $advisorMailOptions);
+    $toReturn["advisorMail"]["status"] = "success";
 } catch (Exception $e) {
-    echo json_encode(array("status" => "warning", "message" => "Der Termin wurde erfolgreich vergeben. Allerdings konnte keine Mail an den Berater versendet werden. Die Mail an den Kunden wurde bereits versendet."));
-    exit;
+    $toReturn["advisorMail"]["status"] = "error";
+    $toReturn["status"] = "warning";
 }
 
-//Terminblock freigeben
+
+// ----------- 9. Unblock Meeting ------------
 $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked = '0' WHERE id = :meetingId");
 $updateStatement->bindValue(':meetingId', $meetingId);
 $updateStatement->execute();
 
-//Erfolg melden
+
+
+// ----------- 10. Return global feedback ------------
 echo json_encode($toReturn);

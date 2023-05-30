@@ -4,6 +4,7 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/calendar/ical/ical_generator.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
+require_once "$BASE_PATH/modules/calendar/backend/templates/template_variables.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 
@@ -112,10 +113,17 @@ function prettyChannelName($channel)
     return $channelDescriptions[$channel];
 }
 
-function getReplaceList($meetingData, $clientData, $roomData)
+function getReplaceList($dataList)
 {
+    $variables = getTemplateVariables();
+    $replaceList = array();
 
-    
+    foreach ($variables as $v) {
+        $replaceList[] = array(
+            "search" => $v["placeholder"],
+            "replace" => $dataList[$v["category"]][$v["property"]]
+        );
+    }
 
     return $replaceList;
 }
@@ -123,13 +131,19 @@ function getReplaceList($meetingData, $clientData, $roomData)
 function replaceVariables($text, $replaceList)
 {
     foreach ($replaceList as $i) {
-        $text = str_replace($i["placeholder"], $i["value"], $text);
+        $text = str_replace($i["search"], $i["replace"], $text);
     }
     return $text;
 }
 
-function generateIcsAttachment($meetingData, $clientData, $roomData, $replaceList)
+function generateIcsAttachment($dataList)
 {
+    $replaceList = getReplaceList($dataList);
+
+    $meetingData = $dataList["meeting"];
+    $clientData = $dataList["client"];
+    $roomData = $dataList["room"];
+
 
     $eventId = "STUBEGRU-" . getenv("APPLICATION_ID") . "-" . $meetingData["id"];
 
