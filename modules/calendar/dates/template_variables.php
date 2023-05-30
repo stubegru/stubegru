@@ -12,37 +12,37 @@ $variableList = array();
 //Meeting Variables
 $variableList[] = array(
     "placeholder" => "{Termin_Titel}",
-    "description" => "",
+    "description" => "Titel des Termins",
     "category" => "meeting",
     "property" => "title"
 );
 $variableList[] = array(
     "placeholder" => "{Termin_Datum}",
-    "description" => "",
+    "description" => "Datum des Termins. Format: dd.mm.yyyy",
     "category" => "meeting",
     "property" => "datePretty"
 );
 $variableList[] = array(
     "placeholder" => "{Termin_Uhrzeit}",
-    "description" => "",
+    "description" => "Beginn des Termins im Format: hh:mm",
     "category" => "meeting",
     "property" => "start"
 );
 $variableList[] = array(
     "placeholder" => "{Termin_Uhrzeit_Ende}",
-    "description" => "",
+    "description" => "Ende des Termins im Format: hh:mm",
     "category" => "meeting",
     "property" => "end"
 );
 $variableList[] = array(
     "placeholder" => "{Berater_Name}",
-    "description" => "",
+    "description" => "Name der Beratenden Person",
     "category" => "meeting",
     "property" => "owner"
 );
 $variableList[] = array(
     "placeholder" => "{Berater_Mail}",
-    "description" => "",
+    "description" => "Mailadresse der Beratenden Person",
     "category" => "meeting",
     "property" => "ownerMail"
 );
@@ -51,31 +51,31 @@ $variableList[] = array(
 //Client variables
 $variableList[] = array(
     "placeholder" => "{Termin_Kanal}",
-    "description" => "",
+    "description" => "Beratungskanal, den der Kunde bei der Terminvergabe gewünscht hat. Mögliche Werte: Persönliches Gespräch / Telefonberatung / Webmeeting",
     "category" => "client",
     "property" => "channelPretty"
 );
 $variableList[] = array(
     "placeholder" => "{Klient_Name}",
-    "description" => "",
+    "description" => "Name des Kunden",
     "category" => "client",
     "property" => "name"
 );
 $variableList[] = array(
     "placeholder" => "{Klient_Telefon}",
-    "description" => "",
+    "description" => "Telefonnummer des Kunden",
     "category" => "client",
     "property" => "phone"
 );
 $variableList[] = array(
     "placeholder" => "{Klient_Mail}",
-    "description" => "",
+    "description" => "Mailadresse des Kunden",
     "category" => "client",
     "property" => "mail"
 );
 $variableList[] = array(
     "placeholder" => "{Klient_Anliegen}",
-    "description" => "",
+    "description" => "Beratungsanliegen des Kunden",
     "category" => "client",
     "property" => "description"
 );
@@ -84,61 +84,61 @@ $variableList[] = array(
 //Room variables
 $variableList[] = array(
     "placeholder" => "{Raum_Kanal}",
-    "description" => "",
+    "description" => "Art des Beratungsraums, mögliche Werte: personally,webmeeting,phone",
     "category" => "room",
     "property" => "kanal"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Nummer}",
-    "description" => "",
+    "description" => "Raumnummer",
     "category" => "room",
     "property" => "raumnummer"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Etage}",
-    "description" => "",
+    "description" => "Etage des Raums",
     "category" => "room",
     "property" => "etage"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Strasse}",
-    "description" => "",
+    "description" => "Strasse des Gebäudes",
     "category" => "room",
     "property" => "strasse"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Hausnummer}",
-    "description" => "",
+    "description" => "Hausnummer des Gebäudes",
     "category" => "room",
     "property" => "hausnummer"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_PLZ}",
-    "description" => "",
+    "description" => "Postleitzahl des Gebäudes",
     "category" => "room",
     "property" => "plz"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Ort}",
-    "description" => "",
+    "description" => "Ortsname des Gebäudes",
     "category" => "room",
     "property" => "ort"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Link}",
-    "description" => "",
+    "description" => "Link zur Wegbeschreibung des Raumes",
     "category" => "room",
     "property" => "link"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Passwort}",
-    "description" => "",
+    "description" => "Passwort für den Raum. Beispielsweise Kenncode bei Webmeetings",
     "category" => "room",
     "property" => "passwort"
 );
 $variableList[] = array(
     "placeholder" => "{Raum_Telefon}",
-    "description" => "",
+    "description" => "Telefonnummer des Raums",
     "category" => "room",
     "property" => "telefon"
 );
