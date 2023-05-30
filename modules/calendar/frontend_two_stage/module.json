@@ -1,17 +1,18 @@
 {
-    "type": "stubegruAddon",
-    "name": "calendar2",
-    "description": "Add-on module for adding two level meeting assignment to stubegru's original calendar module. Needs the original calendar module to be installed. Use 'calendar2' module in the corresponding view instead of 'calendar'",
+    "type": "stubegruModule",
+    "name": "calendar/frontend_two_stage",
+    "description": "Calendar frontend to use for two level meeting assignment in combination with calendar/backend. Use this frontend module if the meetings are assigned in antoher step (or by another person), than they are created.",
     "author": "Johannes Schnirring",
     "license": "MIT",
     "dependencies": {
         "blocking": [
-            "calendar/libs/fullcalendar",
             "alerts",
             "user_utils"
         ],
         "nonBlocking": [],
-        "backend" : ["calendar"]
+        "backend": [
+            "calendar/backend"
+        ]
     },
     "html": [
         "module.html"
@@ -29,6 +30,5 @@
     "css": [
         "calendar.css"
     ],
-    "cronjob" : [
-    ]
+    "cronjob": []
 }

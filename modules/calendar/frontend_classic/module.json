@@ -1,0 +1,27 @@
+{
+    "type": "stubegruModule",
+    "name": "calendar/frontend_classic",
+    "description": "Classic calendar frontend for consultation meetings. This variant will create and assign meetings in one step. Use this module in combination with calendar/backend if meetings are assigned to clients instantly when creatign a meeting",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": [],
+        "backend": [
+            "calendar/backend"
+        ]
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "calendar.js"
+    ],
+    "css": [
+        "calendar.css"
+    ],
+    "cronjob": []
+}
