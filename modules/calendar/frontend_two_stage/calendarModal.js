@@ -28,7 +28,7 @@ class CalendarModal {
         this.initMeetingDetailChannelDropdown();
 
         //Init richtext editor for mail templates
-        CKEDITOR.replace('mailTemplateEditor',{height: "300px"});
+        CKEDITOR.replace('mailTemplateEditor', { height: "400px" });
     }
 
     askForUnsavedChanges = () => {
@@ -479,14 +479,39 @@ class CalendarModal {
 
 
         //Show available template variables
-        const templateVariables = await MailTemplate.getTemplateVariables();
-        console.log(templateVariables);
+        const templateVariableList = await MailTemplate.getTemplateVariables();
+        let templateVariableObject = {
+            meeting: { title: "Termin", items: [] },
+            room: { title: "Beratungsraum", items: [] },
+            client: { title: "Kunde", items: [] },
+            extra: { title: "Sonstiges", items: [] }
+        };
+
+        for (const t of templateVariableList) { templateVariableObject[t.category].items.push(t); }
+
+        let varHtml = ``;
+        for (const categoryId in templateVariableObject) {
+            const category = templateVariableObject[categoryId];
+            varHtml += `<h4><b>${category.title}</b></h4><ul style="padding-inline-start: 10px">`;
+            for (const t of category.items) {
+                varHtml += `<li>
+                                <b>${t.placeholder}</b> <br>
+                                <small>${t.description}</small>
+                            </li>`;
+            }
+            varHtml += `</ul><br>`;
+        }
+
+        $("#calendarTemplateVariablesContainer").html(varHtml);
     }
 
     setTemplateFormVisible(isVisible) {
-        isVisible ?
-            $("#newmail").slideDown() :
+        if (isVisible){
+            $("#newmail").slideDown();
+            this.setUnsavedChanges(true); //this is not always correct, but seems to be useful
+        }else{
             $("#newmail").slideUp();
+        }
     }
 
     getTemplateData() {

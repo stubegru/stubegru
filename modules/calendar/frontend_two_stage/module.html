@@ -316,36 +316,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <h5><b>Verfügbare Variablen:</b></h5>
-                                                    <div class="well">
-                                                        <h4><b>Termin</b></h4>
-                                                        <ul style="padding-inline-start: 10px">
-                                                            <li>
-                                                                <b>{Termin_Uhrzeit}</b> <br>
-                                                                <small>Start des Termins, Format hh:mm</small>
-                                                            </li>
-                                                            <li>
-                                                                {Termin_Uhrzeit} <br>
-                                                                <small>Start des Termins, Format hh:mm</small>
-                                                            </li>
-                                                            <li>
-                                                                {Termin_Uhrzeit} <br>
-                                                                <small>Start des Termins, Format hh:mm</small>
-                                                            </li>
-                                                            <li>
-                                                                {Termin_Uhrzeit} <br>
-                                                                <small>Start des Termins, Format hh:mm</small>
-                                                            </li>
-                                                            <li>
-                                                                {Termin_Uhrzeit} <br>
-                                                                <small>Start des Termins, Format hh:mm</small>
-                                                            </li>
-                                                            <li>
-                                                                {Termin_Uhrzeit} <br>
-                                                                <small>Start des Termins, Format hh:mm</small>
-                                                            </li>
-                                                        </ul>
-
-                                                    </div>
+                                                    <div class="well" id="calendarTemplateVariablesContainer" style="overflow-y: auto; height: 550px;"></div>
 
                                                 </div>
                                             </div>
@@ -442,8 +413,8 @@
                                 <div class="row">
                                     <div class='col-sm-12'>
                                         <button class="btn btn-danger pull-left calendar-footer-button" type="button" id="calendarDeleteMeetingButton"><i class="far fa-trash-alt"></i> Termin löschen</button>
-                                        <button data-dismiss="modal" class="btn btn-default" id="calendarCancelButton" type="button"><i class="fas fa-times"></i> Schließen</button>
-                                        <button id="calendarSaveMeetingButton" class="btn btn-success pull-right calendar-footer-button" type="submit" form="calendarMeetingDetailForm"><i class="fas fa-save"></i> Speichern</button>
+                                        <button data-dismiss="modal" class="btn btn-default" id="calendarCancelButton" type="button"><i class="fas fa-times"></i> Termineditor schließen</button>
+                                        <button id="calendarSaveMeetingButton" class="btn btn-success pull-right calendar-footer-button" type="submit" form="calendarMeetingDetailForm"><i class="fas fa-save"></i> Termin speichern</button>
                                         <button id="calendarSaveNextMeetingButton" class="btn btn-default pull-right calendar-footer-button" type="submit" form="calendarMeetingDetailForm"><i class="fas fa-check-circle"></i> Speichern und Nächster</button>
                                     </div>
                                 </div>
