@@ -285,7 +285,7 @@
                                     <div id="newmail" class="calendarForm" style="display:none">
                                         <div class="row">
                                             <div class='col-sm-12'>
-                                                <label class="lineheading"><b>Details Mailvorlage</b></label>
+                                                <h3><b>Editor für Mailtemplates</b></h3>
                                             </div>
                                         </div>
                                         <br>
@@ -308,32 +308,59 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class='col-sm-12'>
+                                                <div class='col-md-9'>
                                                     <div class="form-group">
                                                         <label><b>Mailtext</b></label>
-                                                        <div class="col-lg-12 nopadding" id="mailvorlagetermin" style="display:block;">
-                                                            <textarea id="mailTemplateEditor" class=""></textarea>
-
-                                                        </div>
+                                                        <textarea id="mailTemplateEditor"></textarea>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <h5><b>Verfügbare Variablen:</b></h5>
+                                                    <div class="well">
+                                                        <h4><b>Termin</b></h4>
+                                                        <ul style="padding-inline-start: 10px">
+                                                            <li>
+                                                                <b>{Termin_Uhrzeit}</b> <br>
+                                                                <small>Start des Termins, Format hh:mm</small>
+                                                            </li>
+                                                            <li>
+                                                                {Termin_Uhrzeit} <br>
+                                                                <small>Start des Termins, Format hh:mm</small>
+                                                            </li>
+                                                            <li>
+                                                                {Termin_Uhrzeit} <br>
+                                                                <small>Start des Termins, Format hh:mm</small>
+                                                            </li>
+                                                            <li>
+                                                                {Termin_Uhrzeit} <br>
+                                                                <small>Start des Termins, Format hh:mm</small>
+                                                            </li>
+                                                            <li>
+                                                                {Termin_Uhrzeit} <br>
+                                                                <small>Start des Termins, Format hh:mm</small>
+                                                            </li>
+                                                            <li>
+                                                                {Termin_Uhrzeit} <br>
+                                                                <small>Start des Termins, Format hh:mm</small>
+                                                            </li>
+                                                        </ul>
+
+                                                    </div>
+
+                                                </div>
                                             </div>
-                                            <br>
-
-
-                                            <div class="well">
-                                                <h5><b>Verfügbare Variablen:</b></h5>
-                                                {Termin_Titel}, {Termin_Kanal}[Persönliches Gespräch/Telefonberatung/Webmeeting], {Klient_Name}, {Klient_Telefon}, {Termin_Datum}[DD.MM.YYYY], {Termin_Uhrzeit}[hh:mm], {Berater_Name}, {Berater_Mail}, {Raum_Kanal}, {Raum_Nummer}, {Raum_Etage}, {Raum_Strasse}, {Raum_Hausnummer}, {Raum_PLZ}, {Raum_Ort}, {Raum_Link}, {Raum_Passwort}, {Raum_Telefon}
-
-                                            </div>
-
-
-                                            <hr>
+                                            <hr class="border-top">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <button class="btn btn-primary pull-right meeting-template-input" type="submit" id="calendarSaveTemplateButton">Vorlage Speichern</button>
-                                                    <button class="btn btn-default meeting-template-input" type="button" id="calendarCancelTemplateButton">Abbrechen</button>
-                                                    <button type="button" class="btn btn-danger pull-center meeting-template-input" id="calendarDeleteTemplateButton">Vorlage löschen</button>
+                                                    <button class="btn btn-lg btn-primary pull-right meeting-template-input" type="submit" id="calendarSaveTemplateButton">
+                                                        <i class="far fa-save"></i> Vorlage speichern
+                                                    </button>
+                                                    <button class="btn btn-lg btn-default meeting-template-input pull-right" style="margin-right: 10px;" type="button" id="calendarCancelTemplateButton">
+                                                        <i class="far fa-times-circle"></i> Bearbeitung abbrechen
+                                                    </button>
+                                                    <button type="button" class="btn btn-lg btn-danger pull-center meeting-template-input" id="calendarDeleteTemplateButton">
+                                                        <i class="far fa-trash-alt"></i> Diese Vorlage löschen
+                                                    </button>
                                                 </div>
                                             </div>
                                         </form>

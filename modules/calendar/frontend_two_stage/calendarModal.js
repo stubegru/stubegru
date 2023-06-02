@@ -28,7 +28,7 @@ class CalendarModal {
         this.initMeetingDetailChannelDropdown();
 
         //Init richtext editor for mail templates
-        CKEDITOR.replace('mailTemplateEditor');
+        CKEDITOR.replace('mailTemplateEditor',{height: "300px"});
     }
 
     askForUnsavedChanges = () => {
@@ -390,7 +390,7 @@ class CalendarModal {
         $("#calendarTemplate").html(selectHtml);
     }
 
-    initTemplateEditButtons() {
+    async initTemplateEditButtons() {
         $("#calendarEditTemplateButton").on("click", () => {
             const templateId = $("#calendarTemplate").val();
 
@@ -476,6 +476,11 @@ class CalendarModal {
                 this.setTemplateFormVisible(false);
             });
         });
+
+
+        //Show available template variables
+        const templateVariables = await MailTemplate.getTemplateVariables();
+        console.log(templateVariables);
     }
 
     setTemplateFormVisible(isVisible) {

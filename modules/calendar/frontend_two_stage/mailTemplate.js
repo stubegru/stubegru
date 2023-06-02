@@ -61,6 +61,14 @@ class MailTemplate {
     }
 
 
+    static async getTemplateVariables() {
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_template_variables.php`;
+        let resp = await fetch(url);
+        resp = await resp.json();
+        return resp;
+    }
+
+
 
     toFormData() {
         let formData = new FormData();

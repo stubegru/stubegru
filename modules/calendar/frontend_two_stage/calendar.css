@@ -1,12 +1,23 @@
-.pointer{
+.pointer {
     cursor: pointer;
 }
 
-.calendar-dropdown{
+.calendar-dropdown {
     padding: 10px;
     min-width: 250px;
 }
 
-.calendar-search-result-button{
+.calendar-search-result-button {
     cursor: pointer;
+}
+
+#newmail {
+    background-color: #E3F2FD;
+    padding: 0px 25px 25px 25px;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 10px #546e7a75;
+}
+
+.border-top{
+    border-top: 2px solid #78909C;
 }
