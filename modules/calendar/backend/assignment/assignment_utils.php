@@ -95,6 +95,12 @@ function getTemplateData($templateId)
 function bookmarkFeedbackMail($meetingId, $mailAdress)
 {
     global $dbPdo;
+
+    if(!filter_var($mailAdress, FILTER_VALIDATE_EMAIL)){
+        throw new Exception("Invalid mailadress '$mailAdress'. This mailadress could not be added for Feedbackmails", 1);
+        return;
+    }
+
     $selectStatement = $dbPdo->prepare("SELECT `date` FROM `Termine` WHERE id = :meetingId;");
     $selectStatement->bindValue(':meetingId', $meetingId);
     $selectStatement->execute();

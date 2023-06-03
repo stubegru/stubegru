@@ -64,7 +64,13 @@ foreach ($cronjobList as $cronInfo) {
     $cronName = $cronInfo["name"];
     $cronPath = $cronInfo["path"];
     echo "$NEW_LINE_SYMBOL $NEW_LINE_SYMBOL Load Cronjob: <b>$cronName</b>$NEW_LINE_SYMBOL";
-    require($cronPath);
+    try {
+        require($cronPath);
+    } catch (\Throwable $th) {
+        echo "$NEW_LINE_SYMBOL [ERROR] Could not execute Cronjob: <b>$cronName</b>$NEW_LINE_SYMBOL";
+        echo $th->getMessage();
+        stubegruMail(getenv("ADMIN_MAIL"),"Cronjob Error",$th->getMessage());
+    }
 }
 
 echo $NEW_LINE_SYMBOL;
