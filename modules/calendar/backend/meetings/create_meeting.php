@@ -33,10 +33,10 @@ try {
     $insertStatement->bindValue(':channel', $channel);
     $insertStatement->execute();
     //Id des neu hinzugefügten Termins abrufen
-    $dateId = $dbPdo->lastInsertId();
+    $meetingId = $dbPdo->lastInsertId();
 } catch (Exception $e) {
     echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht erstellt werden."));
     exit;
 }
-echo json_encode(array("status" => "success", "message" => "Der Termin wurde erstellt", "dateId" => $dateId));
+echo json_encode(array("status" => "success", "message" => "Der Termin wurde erstellt", "meetingId" => $meetingId));
 

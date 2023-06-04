@@ -229,7 +229,7 @@ async function saveMeeting() {
 
     //Block meeting to save client data
     let formData = new FormData();
-    formData.append("meetingId", meetingResp.dateId);
+    formData.append("meetingId", meetingResp.meetingId);
     formData.append("blockMeeting", 1);
 
     const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/set_meeting_block.php`;
@@ -250,7 +250,7 @@ async function saveMeeting() {
 
     //Save Client data
     let client = new FormData();
-    client.append("dateId", meetingResp.dateId);
+    client.append("meetingId", meetingResp.meetingId);
     client.append("name", $("#calendarClientName").val());
     client.append("mail", $("#calendarClientMail").val());
     client.append("phone", $("#calendarClientPhone").val());
@@ -285,7 +285,7 @@ function deleteDate(meetingId) { //Löscht den termin
         setTimeout(async function () {
 
             let formData = new FormData();
-            formData.append("dateId", meetingId);
+            formData.append("meetingId", meetingId);
 
             let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/cancel_meeting_assignment.php`, {
                 method: 'POST',

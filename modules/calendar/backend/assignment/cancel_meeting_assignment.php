@@ -8,16 +8,16 @@ require_once "$BASE_PATH/modules/mailing/mailing.php";
 permissionRequest("REMOVE_ASSIGNMENT");
 $loggedInUserId = $_SESSION["id"];
 
-$dateId = $_POST["dateId"];
+$meetingId = $_POST["meetingId"];
 
 //Get Meeting-data from DB
-$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE `id`=:dateId;");
-$selectStatement->bindValue(':dateId', $dateId);
+$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE `id`=:meetingId;");
+$selectStatement->bindValue(':meetingId', $meetingId);
 $selectStatement->execute();
 $meetingData = $selectStatement->fetch(PDO::FETCH_ASSOC);
 
 if (!$meetingData) {
-    echo json_encode(array("status" => "error", "message" => "Löschen der Kundendaten fehlgeschlagen. Der Termin mit der Id '$dateId' konnte nicht gefunden werden."));
+    echo json_encode(array("status" => "error", "message" => "Löschen der Kundendaten fehlgeschlagen. Der Termin mit der Id '$meetingId' konnte nicht gefunden werden."));
     exit;
 }
 
@@ -47,12 +47,12 @@ $clientStatement->bindValue(':clientId', $meetingData["teilnehmer"]);
 $clientStatement->execute();
 
 //Update Meeting-data
-$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = ''  WHERE `id` = :dateId;");
-$updateStatement->bindValue(':dateId', $dateId);
+$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = ''  WHERE `id` = :meetingId;");
+$updateStatement->bindValue(':meetingId', $meetingId);
 $updateStatement->execute();
 
 //Prepare ICS cancel event
-$eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$dateId";
+$eventUid = "STUBEGRU-" . getenv("APPLICATION_ID") . "-$meetingId";
 $eventStartUTC = gmdate("Ymd\THis\Z", strtotime($meetingData["date"] . " " . $meetingData["start"]));
 $eventEndUTC = gmdate("Ymd\THis\Z", strtotime($meetingData["date"] . " " . $meetingData["end"]));
 $eventSummary = $meetingData["title"];

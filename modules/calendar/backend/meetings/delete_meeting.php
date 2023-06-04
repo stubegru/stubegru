@@ -3,10 +3,10 @@ $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("MEETINGS_WRITE");
 
-$dateId = $_POST["id"];
+$meetingId = $_POST["id"];
 
-$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE `id`=:dateId;");
-$selectStatement->bindValue(':dateId', $dateId);
+$selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE `id`=:meetingId;");
+$selectStatement->bindValue(':meetingId', $meetingId);
 $selectStatement->execute();
 $meetingData = $selectStatement->fetch(PDO::FETCH_ASSOC);
 
@@ -22,8 +22,8 @@ if ($meetingData["teilnehmer"] != "") {
     exit;
 }
 
-$deleteStatement = $dbPdo->prepare("DELETE FROM Termine WHERE id=:dateId;");
-$deleteStatement->bindValue(':dateId', $dateId);
+$deleteStatement = $dbPdo->prepare("DELETE FROM Termine WHERE id=:meetingId;");
+$deleteStatement->bindValue(':meetingId', $meetingId);
 $deleteStatement->execute();
 
 echo json_encode(array("status" => "success", "message" => "Termin erfolgreich gelöscht."));

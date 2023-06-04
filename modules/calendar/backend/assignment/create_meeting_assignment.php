@@ -18,7 +18,7 @@ $toReturn["advisorMail"] = array("status" => "error");
 
 
 // ----------- 2. Post Parameter ------------
-$meetingId = $_POST["dateId"];
+$meetingId = $_POST["meetingId"];
 
 $clientData = array();
 $clientData["name"] = $_POST["name"];

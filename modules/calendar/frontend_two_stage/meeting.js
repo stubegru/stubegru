@@ -119,7 +119,7 @@ class Meeting {
 
     async assignClient(clientData) {
         let client = new FormData();
-        client.append("dateId", this.id);
+        client.append("meetingId", this.id);
         client.append("name", clientData.name);
         client.append("mail", clientData.mail);
         client.append("phone", clientData.phone);
@@ -137,7 +137,7 @@ class Meeting {
 
     async deleteClient() {
         let formData = new FormData();
-        formData.append("dateId", this.id);
+        formData.append("meetingId", this.id);
 
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/cancel_meeting_assignment.php`, {
             method: 'POST',
