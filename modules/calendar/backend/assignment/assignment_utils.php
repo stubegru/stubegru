@@ -40,12 +40,12 @@ function meetingShouldBeUnassigned($meetingId)
 function saveClientData($meetingId, $clientData)
 {
     global $dbPdo;
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`,`channel`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:dateIssue,:meetingId,:channel);"); // Daten des zu Beratenden in DB speichern
+    $insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`,`channel`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:meetingIssue,:meetingId,:channel);"); // Daten des zu Beratenden in DB speichern
     $insertStatement->bindValue(':clientName', $clientData["name"]);
     $insertStatement->bindValue(':clientMailAdress', $clientData["mail"]);
     $insertStatement->bindValue(':clientPhone', $clientData["phone"]);
     $insertStatement->bindValue(':clientWantsFormular', $clientData["survey"]);
-    $insertStatement->bindValue(':dateIssue', $clientData["description"]);
+    $insertStatement->bindValue(':meetingIssue', $clientData["description"]);
     $insertStatement->bindValue(':channel', $clientData["channel"]);
     $insertStatement->bindValue(':meetingId', $meetingId);
     $insertStatement->execute();
@@ -101,7 +101,7 @@ function bookmarkFeedbackMail($meetingId, $mailAdress)
 {
     global $dbPdo;
 
-    if(!filter_var($mailAdress, FILTER_VALIDATE_EMAIL)){
+    if (!filter_var($mailAdress, FILTER_VALIDATE_EMAIL)) {
         throw new Exception("Invalid mailadress '$mailAdress'. This mailadress could not be added for Feedbackmails", 1);
         return;
     }
@@ -230,4 +230,12 @@ function generateIcsString($uid, $start, $end, $summary, $description, $location
 
     $icsString = implode("\r\n", $eventData);
     return $icsString;
+}
+
+function unblockMeeting($meetingId)
+{
+    global $dbPdo;
+    $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked = '0' WHERE id = :meetingId");
+    $updateStatement->bindValue(':meetingId', $meetingId);
+    $updateStatement->execute();
 }

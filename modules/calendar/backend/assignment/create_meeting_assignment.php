@@ -151,10 +151,7 @@ try {
 
 
 // ----------- 9. Unblock Meeting ------------
-$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked = '0' WHERE id = :meetingId");
-$updateStatement->bindValue(':meetingId', $meetingId);
-$updateStatement->execute();
-
+unblockMeeting($meetingId);
 
 
 // ----------- 10. Return global feedback ------------
