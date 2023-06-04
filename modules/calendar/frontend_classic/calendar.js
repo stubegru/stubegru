@@ -203,6 +203,7 @@ async function saveMeeting() {
     //show spinner    
     $("#saveMeetingButton").html(`Termin wird gespeichert &nbsp;<i class="fas fa-circle-notch fa-spin"></i>`);
     $("#saveMeetingButton").attr("disabled", true);
+    AssignFeedbackModal.resetAndShow();
     //Save Meeting
     let meeting = new FormData();
     meeting.append("date", $('#calendarDate').val());
@@ -220,12 +221,9 @@ async function saveMeeting() {
 
     //Process response
     meetingResp = await meetingResp.json();
+    AssignFeedbackModal.showMeetingFeedback(meetingResp);
+
     if (meetingResp.status != "success") {
-        stubegru.modules.alerts.alert({
-            title: "Termin konnte nicht gespeichert werden",
-            text: meetingResp.message,
-            type: "error"
-        });
         return; //stop here, dont save client data
     }
 
@@ -262,22 +260,14 @@ async function saveMeeting() {
 
     //Process response
     clientResp = await clientResp.json();
-    if (clientResp.status != "success") {
-        stubegru.modules.alerts.alert({
-            title: "Termin konnte nicht vollständig vergeben werden",
-            text: clientResp.message,
-            type: "error"
-        });
-    }
-    else {
-        stubegru.modules.alerts.alert({
-            title: "Termin vergeben",
-            text: clientResp.message,
-            type: "success"
-        });
+    AssignFeedbackModal.showFeedback(clientResp);
+
+    if (clientResp.status != "error") {
         loadDates();
         $("#terminmodal").modal("hide");
     }
+
+    //Re-activate buttons
     $("#saveMeetingButton").attr("disabled", false);
     $("#saveMeetingButton").html(`Termin speichern`);
 
