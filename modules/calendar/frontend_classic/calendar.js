@@ -541,6 +541,32 @@ async function getTemplates() { //Lädt templates aus der Db ins Dropdown
     selectHtml += postHtml;
     $("#calendarTemplate").html(selectHtml);
 
+    //Show available template variables
+    const templateVariableList = await getTemplateVariables();
+    let templateVariableObject = {
+        meeting: { title: "Termin", items: [] },
+        room: { title: "Beratungsraum", items: [] },
+        client: { title: "Kunde", items: [] },
+        extra: { title: "Sonstiges", items: [] }
+    };
+
+    for (const t of templateVariableList) { templateVariableObject[t.category].items.push(t); }
+
+    let varHtml = ``;
+    for (const categoryId in templateVariableObject) {
+        const category = templateVariableObject[categoryId];
+        varHtml += `<h4><b>${category.title}</b></h4><ul style="padding-inline-start: 10px">`;
+        for (const t of category.items) {
+            varHtml += `<li>
+                            <b>${t.placeholder}</b> <br>
+                            <small>${t.description}</small>
+                        </li>`;
+        }
+        varHtml += `</ul><br>`;
+    }
+
+    $("#calendarTemplateVariablesContainer").html(varHtml);
+
 }
 
 
@@ -644,5 +670,14 @@ function openTemplateForm(mode) { //Öffnet die Template Vorschau zum bearbeiten
     }
     $("#newmail").slideDown();
 }
+
+async function getTemplateVariables() {
+    const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_template_variables.php`;
+    let resp = await fetch(url);
+    resp = await resp.json();
+    return resp;
+}
+
+
 
 

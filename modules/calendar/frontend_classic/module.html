@@ -228,23 +228,17 @@
                                         </div>
 
                                         <div class="row">
-                                            <div class='col-sm-12'>
+                                            <div class='col-md-9'>
                                                 <div class="form-group">
                                                     <label><b>Mailtext</b></label>
-                                                    <div class="col-lg-12 nopadding" id="mailvorlagetermin" style="display:block;">
-                                                        <textarea id="mailTemplateEditor" class=""></textarea>
-
-                                                    </div>
+                                                    <textarea id="mailTemplateEditor"></textarea>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <br>
+                                            <div class="col-md-3">
+                                                <h5><b>Verfügbare Variablen:</b></h5>
+                                                <div class="well" id="calendarTemplateVariablesContainer" style="overflow-y: auto; height: 550px;"></div>
 
-
-                                        <div class="well">
-                                            <h5><b>Verfügbare Variablen:</b></h5>
-                                            {Termin_Titel} {Termin_Datum} {Termin_Uhrzeit} {Klient_Name} {Klient_Telefon} {Berater_Name} {Berater_Mail} {Raum_Kanal} {Raum_Nummer} {Raum_Etage} {Raum_Strasse} {Raum_Hausnummer} {Raum_PLZ} {Raum_Ort} {Raum_Link} {Raum_Passwort} {Raum_Telefon}
-
+                                            </div>
                                         </div>
 
 
