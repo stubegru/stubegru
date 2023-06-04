@@ -241,6 +241,10 @@ async function saveMeeting() {
             text: blockResp.message,
             type: "error"
         });
+        
+        //Re-activate buttons
+        $("#saveMeetingButton").attr("disabled", false);
+        $("#saveMeetingButton").html(`Termin speichern`);
         return; //stop here, dont save client data
     }
 
