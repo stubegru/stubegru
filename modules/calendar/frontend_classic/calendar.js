@@ -144,13 +144,13 @@ function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus d
 
 
 
-async function addStubegruMeetingsToFullcalendar(datesArray) {
+async function addStubegruMeetingsToFullcalendar(meetingList) {
     //Generate events for fullcalendar
     let ownUserId = stubegru.currentUser.id;
     let ownEvents = [];
     let othersEvents = [];
 
-    for (let inDate of datesArray) {
+    for (let inDate of meetingList) {
         let outDate = {
             title: inDate.title,
             start: `${inDate.date}T${inDate.start}`,
