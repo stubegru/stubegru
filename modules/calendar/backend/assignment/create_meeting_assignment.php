@@ -10,6 +10,11 @@ $loggedInUserId = $_SESSION["id"];
 
 $toReturn = array();
 $toReturn["status"] = "success";
+$toReturn["clientData"] = array("status" => "error");
+$toReturn["assign"] = array("status" => "error");
+$toReturn["survey"] = array("status" => "error");
+$toReturn["clientMail"] = array("status" => "error");
+$toReturn["advisorMail"] = array("status" => "error");
 
 
 // ----------- 2. Post Parameter ------------
@@ -36,29 +41,34 @@ meetingShouldBeUnassigned($meetingId);
 //Insert client data
 try {
     $clientData["id"] = saveClientData($meetingId, $clientData);
-    $toReturn["clientData"] = array("status" => "success");
+    $toReturn["clientData"]["status"] = "success";
+    $toReturn["clientData"]["message"] = "Die Kundendaten wurden erfolgreich gespeichert.";
 } catch (Exception $e) {
-    $toReturn["status"] = "warning";
-    $toReturn["clientData"] = array("status" => "error");
+    $toReturn["status"] = "error";
+    $toReturn["clientData"]["message"] = "Die Kundendaten konnten nicht gespeichert werden. Die Terminvergabe wird abgebrochen.";
+    exit;
 }
 //Add reference in meeting's table
 try {
     $clientData["id"] = assignMeetingTo($meetingId, $clientData["id"]);
-    $toReturn["assign"] = array("status" => "success");
+    $toReturn["assign"]["status"] = "success";
+    $toReturn["assign"]["message"] = "Der Termin wurde erfolgreich an den Kunden <b>" . $clientData["name"] . "</b> vergeben.";
 } catch (Exception $e) {
-    $toReturn["status"] = "warning";
-    $toReturn["assign"] = array("status" => "error");
+    $toReturn["status"] = "error";
+    $toReturn["assign"]["message"] = "Der Termin konnte nicht an den Kunden vergeben werden. Die Terminvergabe wird abgebrochen.";
 }
 
 //Add an entry in the Feedback_mails DB, if required
 try {
+    $toReturn["survey"]["message"] = "Auf Wunsch des Kunden wurde <b>keine</b> Mailadresse zum Feedbackfragebogen hinterlegt.";
     if ($clientData["survey"] == "1") {
+        $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> wurde erfolgreich zum Feedbackfragebogen hinterlegt.";
         bookmarkFeedbackMail($meetingId, $clientData["mail"]);
     }
-    $toReturn["survey"] = array("status" => "success", "requested" => $clientData["survey"]);
+    $toReturn["survey"]["status"] = "success";
 } catch (Exception $e) {
     $toReturn["status"] = "warning";
-    $toReturn["survey"] = array("status" => "error");
+    $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> konnte nicht für den Feedbackfragebogen hinterlegt werden.";
 }
 
 
@@ -105,12 +115,12 @@ $clientMailOptions = array(
 );
 
 try {
-    $toReturn["clientMail"] = array("template" => $templateData["betreff"], "address" => $clientData["mail"]);
     stubegruMail($clientData["mail"], $templateData["betreff"], $templateData["text"], $clientMailOptions);
     $toReturn["clientMail"]["status"] = "success";
+    $toReturn["clientMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $clientData["mail"] . "</b> versandt.";
 } catch (Exception $e) {
-    $toReturn["clientMail"]["status"] = "error";
     $toReturn["status"] = "warning";
+    $toReturn["clientMail"]["message"] = "Es konnte keine Bestätigungsmail an <b>" . $clientData["mail"] . "</b> versandt werden.";
 }
 
 
@@ -131,11 +141,11 @@ $AdvisorMailSubject = "Stubegru Termin vergeben am " . $meetingData["datePretty"
 
 
 try {
-    $toReturn["advisorMail"] = array("address" => $meetingData["ownerMail"]);
     stubegruMail($meetingData["ownerMail"], $AdvisorMailSubject, $AdvisorMailText, $advisorMailOptions);
     $toReturn["advisorMail"]["status"] = "success";
+    $toReturn["advisorMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $meetingData["ownerMail"] . "</b> versandt.";
 } catch (Exception $e) {
-    $toReturn["advisorMail"]["status"] = "error";
+    $toReturn["clientMail"]["message"] = "Es konnte keine Bestätigungsmail an <b>" . $meetingData["ownerMail"] . "</b> versandt werden.";
     $toReturn["status"] = "warning";
 }
 

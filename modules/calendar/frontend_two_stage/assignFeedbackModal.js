@@ -25,31 +25,40 @@ class AssignFeedbackModal {
                         <br><small></small>
                     </li>
                 </ul>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fas fa-times"></i> Fenster schließen</button>
         `);
-        
+
         $('#calendarAssignFeedbackModal').modal('show');
     }
 
-    static showFeedback(statusObject) {
-        AssignFeedbackModal.setTask("clientData",statusObject.clientData.status,statusObject.clientData.message);
-        AssignFeedbackModal.setTask("assign",statusObject.assign.status,statusObject.assign.message);
-        AssignFeedbackModal.setTask("survey",statusObject.survey.status,statusObject.survey.message);
-        AssignFeedbackModal.setTask("clientMail",statusObject.clientMail.status,statusObject.clientMail.message);
-        AssignFeedbackModal.setTask("advisorMail",statusObject.advisorMail.status,statusObject.advisorMail.message);
-    
+    static async showFeedback(statusObject) {
+        AssignFeedbackModal.setTask("clientData", statusObject.clientData.status, statusObject.clientData.message);
+        await AssignFeedbackModal.wait(500);
+        AssignFeedbackModal.setTask("assign", statusObject.assign.status, statusObject.assign.message);
+        await AssignFeedbackModal.wait(500);
+        AssignFeedbackModal.setTask("survey", statusObject.survey.status, statusObject.survey.message);
+        await AssignFeedbackModal.wait(500);
+        AssignFeedbackModal.setTask("clientMail", statusObject.clientMail.status, statusObject.clientMail.message);
+        await AssignFeedbackModal.wait(500);
+        AssignFeedbackModal.setTask("advisorMail", statusObject.advisorMail.status, statusObject.advisorMail.message);
+
     }
 
-    static setTask(task,status,message){
+    static setTask(task, status, message) {
         let li = $(`#calendarAssignFeedbackModal li[data-task="${task}"]`);
         li.children(`small`).html(message);
 
-        if(status == "success"){
+        if (status == "success") {
             li.addClass(`list-group-item-success`);
-            li.children(`i`).attr("class","far fa-check-circle");
-        }else{
+            li.children(`i`).attr("class", "far fa-check-circle");
+        } else {
             li.addClass(`list-group-item-danger`);
             li.children(`i`).attr("class", "far fa-times-circle");
         }
+    }
+
+    static async wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
     }
 
 }
