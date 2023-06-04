@@ -37,7 +37,7 @@ function meetingShouldBeUnassigned($meetingId)
     }
 }
 
-function assignMeetingTo($meetingId, $clientData)
+function saveClientData($meetingId, $clientData)
 {
     global $dbPdo;
     $insertStatement = $dbPdo->prepare("INSERT INTO `Beratene` (`name`,`mail`,`phone`,`formular`,`description`,`dateId`,`channel`) VALUES (:clientName,:clientMailAdress,:clientPhone,:clientWantsFormular,:dateIssue,:meetingId,:channel);"); // Daten des zu Beratenden in DB speichern
@@ -51,12 +51,17 @@ function assignMeetingTo($meetingId, $clientData)
     $insertStatement->execute();
     $clientId = $dbPdo->lastInsertId();
 
+    return $clientId;
+}
+
+
+function assignMeetingTo($meetingId, $clientId)
+{
+    global $dbPdo;
     $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = :teilnehmerId  WHERE `id` = :meetingId;"); // clientId dem Termin zuordnen
     $updateStatement->bindValue(':teilnehmerId', $clientId);
     $updateStatement->bindValue(':meetingId', $meetingId);
     $updateStatement->execute();
-
-    return $clientId;
 }
 
 function getMeetingData($meetingId)

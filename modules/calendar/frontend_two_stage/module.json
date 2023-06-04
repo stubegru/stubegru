@@ -24,6 +24,7 @@
         "mailTemplate.js",
         "calendarView.js",
         "calendarModal.js",
+        "assignFeedbackModal.js",
         "calendarSearch.js",
         "calendarController.js",
         "calendar.js"

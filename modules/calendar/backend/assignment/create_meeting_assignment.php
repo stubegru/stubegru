@@ -33,9 +33,17 @@ meetingShouldBeUnassigned($meetingId);
 
 
 // ----------- 4. Assign Meeting ------------
-//Insert client data and add reference in meeting's table
+//Insert client data
 try {
-    $clientData["id"] = assignMeetingTo($meetingId, $clientData);
+    $clientData["id"] = saveClientData($meetingId, $clientData);
+    $toReturn["clientData"] = array("status" => "success");
+} catch (Exception $e) {
+    $toReturn["status"] = "warning";
+    $toReturn["clientData"] = array("status" => "error");
+}
+//Add reference in meeting's table
+try {
+    $clientData["id"] = assignMeetingTo($meetingId, $clientData["id"]);
     $toReturn["assign"] = array("status" => "success");
 } catch (Exception $e) {
     $toReturn["status"] = "warning";

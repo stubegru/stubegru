@@ -183,9 +183,10 @@ class CalendarController {
 
         //Assign save button
         m.setAssignSaveButtonEvent(async () => {
+            AssignFeedbackModal.resetAndShow();
             let resp = await meeting.assignClient(m.getClientData());
-            stubegru.modules.alerts.alert(resp, "Kundendaten speichern");
-            if (resp.status == "error") { throw new Error(resp.message); }
+            AssignFeedbackModal.showFeedback(resp);
+
             await C.view.refresh();
             m.setUnsavedChanges(false);
             $("#terminmodal").off('hidden.remove-block');
