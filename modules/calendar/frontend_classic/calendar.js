@@ -131,7 +131,7 @@ function loadDates() { //Lädt die Daten des aktuell angezeigten Zeitraums aus d
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/get_meetings.php`,
+        url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/get_meetings.php`,
         success: function (data) {
             fullCalendarInstance.removeAllEvents(); //Clear calendar
             addStubegruMeetingsToFullcalendar(data);
@@ -213,7 +213,7 @@ async function saveMeeting() {
     meeting.append("roomId", $('#calendarRoom').val());
     meeting.append("templateId", $('#calendarTemplate').val());
 
-    let meetingResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/create_calendar_date.php`, {
+    let meetingResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/create_meeting.php`, {
         method: 'POST',
         body: meeting
     });
@@ -234,7 +234,7 @@ async function saveMeeting() {
     formData.append("meetingId", meetingResp.dateId);
     formData.append("blockMeeting", 1);
 
-    const url = `${stubegru.constants.BASE_URL}/modules/calendar/dates/set_meeting_block.php`;
+    const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/set_meeting_block.php`;
     let blockResp = await fetch(url, { method: 'POST', body: formData });
     blockResp = await blockResp.json();
     if (blockResp.status != "success") {
@@ -255,7 +255,7 @@ async function saveMeeting() {
     client.append("survey", $("#calendarClientSurvey").val());
     client.append("issue", $("#calendarClientIssue").val());
 
-    let clientResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/assign_date.php`, {
+    let clientResp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/create_meeting_assignment.php`, {
         method: 'POST',
         body: client
     });
@@ -293,7 +293,7 @@ function deleteDate(meetingId) { //Löscht den termin
             let formData = new FormData();
             formData.append("dateId", meetingId);
 
-            let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/dates/remove_assignment.php`, {
+            let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/cancel_meeting_assignment.php`, {
                 method: 'POST',
                 body: formData
             });
@@ -311,7 +311,7 @@ function deleteDate(meetingId) { //Löscht den termin
             $.ajax({
                 type: "POST",
                 dataType: "json",
-                url: `${stubegru.constants.BASE_URL}/modules/calendar/dates/delete_date.php`,
+                url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/delete_meeting.php`,
                 data: {
                     id: meetingId
                 },
@@ -373,7 +373,7 @@ $("#calendarRoom").on("change", function () {
 
 async function getRooms() { //Lädt die Räume in die Dropdown auswahl
 
-    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_rooms.php`);
+    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/get_rooms.php`);
     let data = await resp.json();
 
     let ownId = stubegru.currentUser.id;
@@ -416,7 +416,7 @@ function saveRoom() { //speichert einen neuen Raum in die DB
 
     $.ajax({
         type: "POST",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/save_room.php`,
+        url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/save_room.php`,
         data: raum,
         dataType: "json",
         success: async function (resp) {
@@ -474,7 +474,7 @@ function openRoomForm(mode) { //Öffnet die Raum Vorschau zum bearbeiten
 
         $.ajax({
             type: "POST",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/get_room_data.php`,
+            url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/get_room_data.php`,
             data: { id: raumId },
             dataType: "json",
             success: function (resp) {
@@ -508,7 +508,7 @@ function deleteRoom() { //löscht einen Raum
 
         $.ajax({
             type: "POST",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/rooms/delete_room.php`,
+            url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/delete_room.php`,
             dataType: "json",
             data: { id: $("#raum_id").val() },
             success: function (resp) {
@@ -530,7 +530,7 @@ function deleteRoom() { //löscht einen Raum
 
 async function getTemplates() { //Lädt templates aus der Db ins Dropdown
 
-    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/templates/get_templates.php`);
+    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_templates.php`);
     let data = await resp.json();
 
     let selectHtml = "<option value=''>Bitte wählen...</option>";
@@ -562,7 +562,7 @@ function saveTemplate() { //speichert Template in DB
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/save_template.php`,
+        url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/save_template.php`,
         data: templateData,
         success: async function (data) {
             stubegru.modules.alerts.alert({
@@ -587,7 +587,7 @@ function deleteTemplate() { //löscht ein Template
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/delete_template.php`,
+            url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/delete_template.php`,
             data: {
                 templateId: templateId
             },
@@ -634,7 +634,7 @@ function openTemplateForm(mode) { //Öffnet die Template Vorschau zum bearbeiten
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: `${stubegru.constants.BASE_URL}/modules/calendar/templates/get_template_data.php`,
+            url: `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_template_data.php`,
             data: {
                 templateId: templateId
             },

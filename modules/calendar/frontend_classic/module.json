@@ -19,7 +19,8 @@
         "module.html"
     ],
     "js": [
-        "calendar.js"
+        "calendar.js",
+        "assignFeedbackModal.js"
     ],
     "css": [
         "calendar.css"
