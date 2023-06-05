@@ -50,10 +50,10 @@ class Meeting {
      * Updates an local meeting with properties from the server
      */
     async updateFromServer() {
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/get_meeting.php?meetingId=${this.id}`;
+        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/meetings/get_meetings.php?meetingId=${this.id}`;
         let meetingResp = await fetch(url);
         meetingResp = await meetingResp.json();
-        this.applyProperties(meetingResp);
+        this.applyProperties(meetingResp[0]);
         Meeting.setById(this.id,this);
     }
 

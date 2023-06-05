@@ -7,8 +7,20 @@ require_once "$BASE_PATH/utils/constants.php";
 permissionRequest("MEETINGS_READ");
 $own_id = $_SESSION['id'];
 
-$selectStatement = $dbPdo->query("SELECT * FROM `Termine` ORDER BY date, start;");
-$resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+$resultList;
+
+if (isset($_GET["meetingId"])) {
+    //select one specific meeting
+    $meetingId =  $_GET["meetingId"];
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `Termine` WHERE id = :meetingId;");
+    $selectStatement->bindValue(':meetingId', $meetingId);
+    $selectStatement->execute();
+    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    //select all available meetings
+    $selectStatement = $dbPdo->query("SELECT * FROM `Termine` ORDER BY date, start;");
+    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+}
 
 $clientStatement = $dbPdo->prepare("SELECT * FROM `Beratene` WHERE id = :clientId");
 foreach ($resultList as &$meetingData) {
