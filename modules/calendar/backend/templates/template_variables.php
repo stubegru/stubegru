@@ -129,7 +129,7 @@ function getTemplateVariables()
     );
     $variableList[] = array(
         "placeholder" => "{Raum_Link}",
-        "description" => "Link zur Wegbeschreibung des Raumes",
+        "description" => "Weblink für den Beratungsraum (z.B. Wegbeschreibung, Zoomlink,...)",
         "category" => "room",
         "property" => "link"
     );

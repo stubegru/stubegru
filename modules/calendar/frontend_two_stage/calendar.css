@@ -11,7 +11,7 @@
     cursor: pointer;
 }
 
-#newmail {
+.calendar-form-blue {
     background-color: #E3F2FD;
     padding: 0px 25px 25px 25px;
     border-radius: 10px;

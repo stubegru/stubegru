@@ -178,10 +178,10 @@
                                         </div>
                                     </form>
 
-                                    <div id="newroom" class="calendarForm" style="display:none;">
+                                    <div id="newroom" class="calendarForm calendar-form-blue" style="display:none;">
                                         <div class="row">
                                             <div class='col-sm-12'>
-                                                <label class="lineheading">Details des Raums</label>
+                                                <h3><b>Editor für Beratungsräume</b></h3>
                                             </div>
                                         </div>
                                         <br>
@@ -210,7 +210,7 @@
                                                 <div class='col-sm-2'>
                                                     <div class="form-group">
                                                         <label>Raumnr.</label>
-                                                        <input autocomplete="off" id="raum_nr" class="form-control meeting-room-input" required>
+                                                        <input autocomplete="off" id="raum_nr" class="form-control meeting-room-input">
                                                     </div>
                                                 </div>
                                                 <div class='col-sm-2'>
@@ -246,33 +246,31 @@
 
                                             </div>
                                             <div class="row">
-                                                <div class='col-sm-12'>
+                                                <div class='col-md-4'>
                                                     <div class="form-group">
                                                         <label>Telefonnummer</label>
                                                         <input autocomplete="off" id="raum_telefon" class="form-control meeting-room-input">
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class='col-sm-6'>
+                                                <div class='col-md-4'>
                                                     <div class="form-group">
-                                                        <label>Link für Webmeetings</label>
+                                                        <label>Weblink (z.B. Wegbeschreibung, Zoomlink,...)</label>
                                                         <input autocomplete="off" id="raum_link" class="form-control meeting-room-input">
                                                     </div>
                                                 </div>
-                                                <div class='col-sm-6'>
+                                                <div class='col-md-4'>
                                                     <div class="form-group">
-                                                        <label>Passwort für Webmeetings</label>
+                                                        <label>Passwort (z.B. für Webmeetings)</label>
                                                         <input autocomplete="off" id="raum_passwort" class="form-control meeting-room-input">
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <hr class="border-top">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <button class="btn btn-primary pull-right meeting-room-input" type="submit" id="calendarSaveRoomButton">Raum Speichern</button>
-                                                    <button class="btn btn-default meeting-room-input" type="button" id="calendarCancelRoomButton">Abbrechen</button>
-                                                    <button class="btn btn-danger meeting-room-input" type="button" id="calendarDeleteRoomButton">Raum löschen</button>
+                                                    <button class="btn btn-lg btn-primary pull-right meeting-room-input" type="submit" id="calendarSaveRoomButton"><i class="far fa-save"></i> Raum Speichern</button>
+                                                    <button class="btn btn-lg btn-default meeting-room-input pull-right" style="margin-right: 10px;" type="button" id="calendarCancelRoomButton"><i class="far fa-times-circle"></i> Bearbeitung abbrechen</button>
+                                                    <button class="btn btn-lg btn-danger meeting-room-input" type="button" id="calendarDeleteRoomButton"><i class="far fa-trash-alt"></i> Diesen Raum löschen</button>
                                                 </div>
                                             </div>
 
@@ -282,7 +280,7 @@
 
 
 
-                                    <div id="newmail" class="calendarForm" style="display:none">
+                                    <div id="newmail" class="calendarForm calendar-form-blue" style="display:none">
                                         <div class="row">
                                             <div class='col-sm-12'>
                                                 <h3><b>Editor für Mailtemplates</b></h3>
@@ -290,7 +288,7 @@
                                         </div>
                                         <br>
                                         <form id="calendarTemplateForm">
-                                            <div class="row">
+                                            <div class="row"> 
                                                 <div class='col-sm-6'>
                                                     <input autocomplete="off" id=templateId type="hidden" value="new">
                                                     <div class="form-group">
