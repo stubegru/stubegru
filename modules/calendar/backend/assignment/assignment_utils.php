@@ -151,6 +151,7 @@ function replaceVariables($text, $replaceList)
 
 function generateIcsAttachment($dataList)
 {
+    global $constants;
     $replaceList = getReplaceList($dataList);
 
     $meetingData = $dataList["meeting"];
@@ -238,4 +239,44 @@ function unblockMeeting($meetingId)
     $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked = '0' WHERE id = :meetingId");
     $updateStatement->bindValue(':meetingId', $meetingId);
     $updateStatement->execute();
+}
+
+function sendAdvisorMail($meetingData, $replaceList, $icsAttachment)
+{
+    global $BASE_PATH, $constants;
+    $advisorMailOptions = array("attachment" => $icsAttachment);
+
+    //Load default text from template file
+    $advisorMailTextRaw = file_get_contents("$BASE_PATH/modules/calendar/backend/templates/default_mail_texts/assign_meeting_advisor_mail_template.html");
+    //Replace default text by text from custom/config.json
+    if (isset($constants["CUSTOM_CONFIG"]["assignMeetingAdvisorMailText"])) {
+        $advisorMailTextRaw = $constants["CUSTOM_CONFIG"]["assignMeetingAdvisorMailText"];
+    }
+    //Replace template variables
+    $advisorMailText = replaceVariables($advisorMailTextRaw, $replaceList);
+
+    //Set default subject 
+    $advisorMailSubjectRaw = "Stubegru Termin vergeben am " . $meetingData["datePretty"];
+    //Replace default subject by subject from custom/config.json
+    if (isset($constants["CUSTOM_CONFIG"]["assignMeetingAdvisorMailSubject"])) {
+        $advisorMailSubjectRaw = $constants["CUSTOM_CONFIG"]["assignMeetingAdvisorMailSubject"];
+    }
+    //Replace template variables
+    $advisorMailSubject = replaceVariables($advisorMailSubjectRaw, $replaceList);
+
+    stubegruMail($meetingData["ownerMail"], $advisorMailSubject, $advisorMailText, $advisorMailOptions);
+}
+
+function sendClientMail($meetingData,$clientData,$replaceList,$icsAttachment)
+{
+    $templateData = getTemplateData($meetingData["template"]);
+    $templateData["text"] = replaceVariables($templateData["text"], $replaceList);
+    $templateData["betreff"] = replaceVariables($templateData["betreff"], $replaceList);
+
+    $clientMailOptions = array(
+        "attachment" => $icsAttachment,
+        "replyTo" => array("name" => $meetingData["owner"], "address" => $meetingData["ownerMail"])
+    );
+
+    stubegruMail($clientData["mail"], $templateData["betreff"], $templateData["text"], $clientMailOptions);
 }

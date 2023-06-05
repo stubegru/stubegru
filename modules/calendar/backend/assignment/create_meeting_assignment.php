@@ -105,17 +105,8 @@ $icsAttachment = generateIcsAttachment($dataList);
 
 
 // ----------- 7. Send Client's Mail ------------
-$templateData = getTemplateData($meetingData["template"]);
-$templateData["text"] = replaceVariables($templateData["text"], $replaceList);
-$templateData["betreff"] = replaceVariables($templateData["betreff"], $replaceList);
-
-$clientMailOptions = array(
-    "attachment" => $icsAttachment,
-    "replyTo" => array("name" => $meetingData["owner"], "address" => $meetingData["ownerMail"])
-);
-
-try {
-    stubegruMail($clientData["mail"], $templateData["betreff"], $templateData["text"], $clientMailOptions);
+try{
+    sendClientMail($meetingData,$clientData,$replaceList,$icsAttachment);
     $toReturn["clientMail"]["status"] = "success";
     $toReturn["clientMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $clientData["mail"] . "</b> versandt.";
 } catch (Exception $e) {
@@ -126,22 +117,8 @@ try {
 
 // ----------- 8. Send advisor's mail ------------
 
-$advisorMailOptions = array("attachment" => $icsAttachment);
-
-$AdvisorMailText = "TO BECOME BETTER";
-//Load default text from template file
-//Replace default text by text from custom/config.json
-//Replace template variables
-
-$AdvisorMailSubject = "Stubegru Termin vergeben am " . $meetingData["datePretty"];
-//Set default subject 
-//Replace default subject by subject from custom/config.json
-//Replace template variables
-
-
-
-try {
-    stubegruMail($meetingData["ownerMail"], $AdvisorMailSubject, $AdvisorMailText, $advisorMailOptions);
+try{
+    sendAdvisorMail($meetingData,$replaceList,$icsAttachment);
     $toReturn["advisorMail"]["status"] = "success";
     $toReturn["advisorMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $meetingData["ownerMail"] . "</b> versandt.";
 } catch (Exception $e) {
