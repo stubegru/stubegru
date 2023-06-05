@@ -1,3 +1,13 @@
 .pointer{
     cursor: pointer;
 }
+.calendar-form-blue {
+    background-color: #E3F2FD;
+    padding: 0px 25px 25px 25px;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 10px #546e7a75;
+}
+
+.border-top{
+    border-top: 2px solid #78909C;
+}
