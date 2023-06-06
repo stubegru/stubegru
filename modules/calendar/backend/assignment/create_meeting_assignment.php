@@ -82,8 +82,12 @@ $clientData["channelPretty"] = prettyChannelName($clientData["channel"]);
 //Get advisor's mail address
 $meetingData["ownerMail"] = getUserMail($meetingData["ownerId"]);
 
-//Format date to dd.mm.yyyy
+//Format date yyyy-mm-dd -> dd.mm.yyyy
 $meetingData["datePretty"] = DateTime::createFromFormat('Y-m-d', $meetingData["date"])->format('d.m.Y');
+
+//Format times to hh:mm:ss -> hh:mm
+$meetingData["startPretty"] =  substr($meetingData["start"],0,-3);  
+$meetingData["endPretty"] =  substr($meetingData["end"],0,-3);  
 
 //Add current users id
 $loggedInUserName = getUserName($loggedInUserId);

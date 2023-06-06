@@ -29,13 +29,13 @@ function getTemplateVariables()
         "placeholder" => "{Termin_Uhrzeit}",
         "description" => "Beginn des Termins im Format: hh:mm",
         "category" => "meeting",
-        "property" => "start"
+        "property" => "startPretty"
     );
     $variableList[] = array(
         "placeholder" => "{Termin_Uhrzeit_Ende}",
         "description" => "Ende des Termins im Format: hh:mm",
         "category" => "meeting",
-        "property" => "end"
+        "property" => "endPretty"
     );
     $variableList[] = array(
         "placeholder" => "{Berater_Name}",
