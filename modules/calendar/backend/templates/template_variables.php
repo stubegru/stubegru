@@ -53,7 +53,7 @@ function getTemplateVariables()
 
     //Client variables
     $variableList[] = array(
-        "placeholder" => "{Termin_Kanal}",
+        "placeholder" => "{Klient_Kanal}",
         "description" => "Beratungskanal, den der Kunde bei der Terminvergabe gewünscht hat. Mögliche Werte: Persönliches Gespräch / Telefonberatung / Webmeeting",
         "category" => "client",
         "property" => "channelPretty"
