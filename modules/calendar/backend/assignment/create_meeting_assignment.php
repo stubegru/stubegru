@@ -76,35 +76,12 @@ try {
 $meetingData = getMeetingData($meetingId);
 $roomData = getRoomData($meetingData["room"]);
 
-//Translate channel to human readable channel
-$clientData["channelPretty"] = prettyChannelName($clientData["channel"]);
-
-//Get advisor's mail address
-$meetingData["ownerMail"] = getUserMail($meetingData["ownerId"]);
-
-//Format date yyyy-mm-dd -> dd.mm.yyyy
-$meetingData["datePretty"] = DateTime::createFromFormat('Y-m-d', $meetingData["date"])->format('d.m.Y');
-
-//Format times to hh:mm:ss -> hh:mm
-$meetingData["startPretty"] =  substr($meetingData["start"],0,-3);  
-$meetingData["endPretty"] =  substr($meetingData["end"],0,-3);  
-
-//Add current users id
-$loggedInUserName = getUserName($loggedInUserId);
-$extraData = array("currentUserName" => $loggedInUserName);
-
-//Prepare complete dataList
-$dataList = array();
-$dataList["meeting"] = $meetingData;
-$dataList["room"] = $roomData;
-$dataList["client"] = $clientData;
-$dataList["extra"] = $extraData;
-
-$replaceList = getReplaceList($dataList);
+makeDataPretty($meetingData, $clientData);
+$replaceList = getReplaceList($meetingData,$clientData,$roomData);
 
 
 // ----------- 6. Generate ICS File ------------
-$icsAttachment = generateIcsAttachment($dataList);
+$icsAttachment = generateIcsAttachment($meetingData, $clientData, $roomData);
 
 
 

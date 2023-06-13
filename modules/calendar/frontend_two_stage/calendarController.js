@@ -227,6 +227,8 @@ class CalendarController {
         m.setAssignDeleteButtonEvent(() => {
             deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.", async () => {
                 let resp = await meeting.deleteClient();
+                resp.mode = "alert";
+                await C.wait(200); //Wait until the delete confirm alert is closed
                 stubegru.modules.alerts.alert(resp, "Kundendaten löschen");
                 if (resp.status == "error") { throw new Error(resp.message); }
                 await C.view.refresh();
@@ -235,6 +237,11 @@ class CalendarController {
             });
         });
     }
+
+    static async wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
 
 
 }
