@@ -171,8 +171,20 @@ function generateIcsAttachment($dataList)
 
     $eventSummary = $meetingData["title"];
 
-    //TODO Set correct event location
-    $eventLocation = "unknown";
+    //Set event location
+    $locationString = "";
+    $eventChannel = $clientData["channel"] == "unknown" ? $roomData["kanal"] : $clientData["channel"];
+    switch ($eventChannel) {
+        case 'personally':
+            $locationString = "Persönliches Gespräch in Raum " . $roomData["raumnummer"];
+            break;
+        case 'phone':
+            $locationString = "Telefonisches Gespräch";
+            break;
+        case 'webmeeting':
+            $locationString = "Webmeeting: " . $roomData["link"];
+            break;
+    }
 
     //Generate description text (with variables)
     $rawIcsDescription = "";
@@ -181,7 +193,7 @@ function generateIcsAttachment($dataList)
     }
     $eventDescription = replaceVariables($rawIcsDescription, $replaceList);
 
-    $icsString = generateIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $eventLocation, "0", "CONFIRMED");
+    $icsString = generateIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $locationString, "0", "CONFIRMED");
 
     return array("name" => "event.ics", "content" => $icsString);
 }
