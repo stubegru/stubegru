@@ -48,13 +48,13 @@ class CalendarController {
             CalendarController.openFreeMeeting(meeting.id);
     }
 
-    static createMeeting(keepValues) {
+    static async createMeeting(keepValues) {
         let C = CalendarController;
         let m = C.modal;
 
         m.setModalVisible(true);
         m.setModalTitle("Termin erstellen");
-        if (!keepValues) { m.resetAllForms(); }
+        if (!keepValues) { await m.resetAllForms(); }
         m.showAssignButtons(false, false, false, false);
         m.setClientVisible(false);
         m.enableFooterButtons(true, true, false, true);
