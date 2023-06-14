@@ -71,8 +71,8 @@ class CalendarModal {
      * Hides the info alert
      * Clear all buttons event listeners
      */
-    resetAllForms = () => {
-        this.resetMeetingDetailForm();
+    resetAllForms = async () => {
+        await this.resetMeetingDetailForm();
         this.resetClientForm();
         this.resetRoomForm();
         this.setRoomFormVisible(false);

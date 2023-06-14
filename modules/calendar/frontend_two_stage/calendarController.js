@@ -86,7 +86,7 @@ class CalendarController {
 
         m.setModalVisible(true);
         m.setModalTitle("Termindetails (Freier Termin)");
-        m.resetAllForms();
+        await m.resetAllForms();
         CalendarController.freeMeetingMode = true;
 
         const meeting = Meeting.getById(meetingId);
@@ -170,7 +170,7 @@ class CalendarController {
             return;
         }
 
-        m.resetAllForms();
+        await m.resetAllForms();
         m.setModalVisible(true);
         m.setModalTitle("Kundendaten eintragen");
         m.setClientVisible(true);
@@ -202,13 +202,13 @@ class CalendarController {
         })
     }
 
-    static openAssignedMeeting(meetingId) {
+    static async openAssignedMeeting(meetingId) {
         let C = CalendarController;
         let m = C.modal;
 
         m.setModalVisible(true);
         m.setModalTitle("Termindetails (Termin vergeben)");
-        m.resetAllForms();
+        await m.resetAllForms();
 
         const meeting = Meeting.getById(meetingId);
         m.setMeetingDetailData(meeting);
