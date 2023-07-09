@@ -4,8 +4,9 @@
 $BASE_URL = getenv("BASE_URL");
 $BASE_PATH = getenv("BASE_PATH");
 $surveyId = getenv("EVALUATION_SURVEY_ID");
+$INCLUDED_IN_SCRIPT = true;
+require_once "$BASE_PATH/utils/constants.php";
 require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
-$EVALUATION_MAIL_TEXT_PATH = "$BASE_PATH/custom/evaluation_mail_text.html";
 
 $beforeXDays = date("Y-m-d", strtotime("-2 days")); //Datum vor x=2 Tagen
 
@@ -39,7 +40,7 @@ foreach ($resultList as $row) {
     $INSTITUTION_NAME = getenv("INSTITUTION_NAME");
     $mail_betreff = "$INSTITUTION_NAME | Umfrage zu Ihrer Erfahrung";
 
-    $mail_text = "Guten Tag,
+    $mail_text_default = "Guten Tag,
     <br><br>
     Wir möchten Sie bitten sich einen kurzen Moment Zeit zu nehmen und uns ein paar Fragen zu unserer Leistung zu beantworten. Damit helfen Sie uns unseren Service zu verbessern.
     <br><br>
@@ -49,9 +50,7 @@ foreach ($resultList as $row) {
     Herzlichen Dank für Ihre Unterstützung und alles Gute!";
 
     //If a custom mail text template exists => use that instead of the default text
-    if (file_exists($EVALUATION_MAIL_TEXT_PATH)) {
-        $mail_text = file_get_contents($EVALUATION_MAIL_TEXT_PATH);
-    }
+    $mail_text = isset($constants["CUSTOM_CONFIG"]["evaluationMailText"]) ? $constants["CUSTOM_CONFIG"]["evaluationMailText"] : $mail_text_default;
 
     $surveyLink = "$BASE_URL/?view=evaluation&uniqueKey=$uniqueKey";
     $mail_text = str_replace(array("{{evaluationLink}}"), array($surveyLink), $mail_text);
