@@ -70,7 +70,8 @@ function createOnlineNotifications($typeList, $emitterId, $title, $text, $userId
 
 function sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $action)
 {
-    global $dbPdo, $BASE_PATH;
+    global $dbPdo, $BASE_PATH, $constants;
+    $applicationName = isset($constants["CUSTOM_CONFIG"]["applicationName"]) ? $constants["CUSTOM_CONFIG"]["applicationName"] : "Stubegru";
     $emitterUserName = getUserName($userId);
     $selectStatement = $dbPdo->prepare("SELECT `name`,`description` FROM `notification_types` WHERE id = :type;");
 
@@ -86,10 +87,10 @@ function sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $a
         //load mail template and replace variables
         $mail_text = file_get_contents("$BASE_PATH/modules/notifications/mail_template_notification.html");
         $variablen_im_text = array("{title}", "{text}", "{user_name}", "{trigger_type}", "{trigger_description}", "{application_name}", "{application_url}");
-        $variablen_daten = array($title, $text, $emitterUserName, $typeName, $typeDescription, getenv("APPLICATION_NAME"), getenv("BASE_URL"));
+        $variablen_daten = array($title, $text, $emitterUserName, $typeName, $typeDescription, $applicationName, getenv("BASE_URL"));
         $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
         
-        $mail_betreff = getenv("APPLICATION_NAME") . " - Benachrichtigung";
+        $mail_betreff = $applicationName . " - Benachrichtigung";
 
         //select recipients
         $selectRecipients = $dbPdo->prepare("SELECT mail FROM Nutzer WHERE id IN (SELECT userId FROM `notification_type_user` WHERE  notificationType = :notificationType AND `mail`='1');");

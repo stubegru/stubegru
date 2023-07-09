@@ -40,7 +40,7 @@ function showArticleListByTag() {
         data: { tagId: tagId },
         success: function (data) {
             $("#tagViewHeadingTagName").html(data.tagName); //set tagname in heading
-            document.title = `${stubegru.constants["APPLICATION_NAME"]} | Tag | ${data.tagName}`;
+            document.title = `${stubegru.constants.CUSTOM_CONFIG.applicationName} | Tag | ${data.tagName}`;
 
             $("#artikelListe").html("");
 

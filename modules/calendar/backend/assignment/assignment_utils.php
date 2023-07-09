@@ -7,6 +7,8 @@ require_once "$BASE_PATH/modules/calendar/backend/templates/template_variables.p
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 
+$institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
+
 function meetingShouldBeBlockedBy($meetingId, $userId)
 {
     //check for meeting block
@@ -295,9 +297,9 @@ function unblockMeeting($meetingId)
 
 function sendAdvisorMail($meetingData, $replaceList, $icsAttachment)
 {
-    $INSTITUTION_NAME = getenv("INSTITUTION_NAME");
+    global $institutionName;
     $recipient = $meetingData["ownerMail"];
-    $defaultSubject = "$INSTITUTION_NAME Termin vergeben am " . $meetingData["datePretty"];
+    $defaultSubject = "$institutionName Termin vergeben am " . $meetingData["datePretty"];
     $configKeySubject = "assignMeetingAdvisorMailSubject";
     $templateName = "assign_meeting_advisor_mail_template";
     $configKeyText = "assignMeetingAdvisorMailText";
@@ -307,9 +309,9 @@ function sendAdvisorMail($meetingData, $replaceList, $icsAttachment)
 
 function sendAdvisorCancelMail($meetingData, $replaceList, $icsAttachment)
 {
-    $INSTITUTION_NAME = getenv("INSTITUTION_NAME");
+    global $institutionName;
     $recipient = getUserMail($meetingData["ownerId"]);
-    $defaultSubject = "$INSTITUTION_NAME Termin abgesagt am " . $meetingData["datePretty"];
+    $defaultSubject = "$institutionName Termin abgesagt am " . $meetingData["datePretty"];
     $configKeySubject = "cancelMeetingAdvisorMailSubject";
     $templateName = "cancel_meeting_advisor_mail_template";
     $configKeyText = "cancelMeetingAdvisorMailText";
@@ -319,8 +321,8 @@ function sendAdvisorCancelMail($meetingData, $replaceList, $icsAttachment)
 
 function sendClientCancelMail($recipient, $meetingData, $replaceList, $icsAttachment)
 {
-    $INSTITUTION_NAME = getenv("INSTITUTION_NAME");
-    $defaultSubject = "$INSTITUTION_NAME Termin abgesagt am " . $meetingData["datePretty"];
+    global $institutionName;
+    $defaultSubject = "$institutionName Termin abgesagt am " . $meetingData["datePretty"];
     $configKeySubject = "cancelMeetingClientMailSubject";
     $templateName = "cancel_meeting_client_mail_template";
     $configKeyText = "cancelMeetingClientMailText";

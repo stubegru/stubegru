@@ -49,7 +49,7 @@ function loadArticleData() {
                 currentArticleName = json.heading;
                 $('#articleHeading').html(currentArticleName);
                 //Seitentitel anpassen
-                document.title = `${stubegru.constants["APPLICATION_NAME"]} | Wiki Artikel | ${json.heading}`;
+                document.title = `${stubegru.constants.CUSTOM_CONFIG.applicationName} | Wiki Artikel | ${json.heading}`;
 
                 //Inhalt laden und Wikiwords verarbeiten
                 var articleText = json.text;

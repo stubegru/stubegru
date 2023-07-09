@@ -5,14 +5,6 @@ SetEnv DB_USER "user123"
 SetEnv DB_PASSWORD "s3cr3t"
 SetEnv DB_NAME "DBNAME"
 
-SetEnv APPLICATION_ID "stubegru-test-environment"
-SetEnv APPLICATION_NAME "Stubegru Test"
-SetEnv INSTITUTION_MAIL_ADDRESS "stubegru@example.com"
-SetEnv INSTITUTION_NAME "Stubegru Company"
-SetEnv INSTITUTION_MAIL_POSTFIX "Company Name<br>Company Address"
-SetEnv ADMIN_MAIL "admin@example.com"
-SetEnv EVALUATION_SURVEY_ID "1"
-
 SetEnv LOGO "/assets/images/favicon.png"
 
 SetEnv MAIL_METHOD "phpmail"
@@ -23,4 +15,5 @@ SetEnv SMTP_PASSWORD "s3cr3t"
 SetEnv SMTP_SECURE "tls"
 SetEnv SMTP_PORT "587"
 
+SetEnv APPLICATION_ID "stubegru-test-environment"
 SetEnv DEV_MODE 0

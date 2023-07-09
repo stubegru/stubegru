@@ -3,10 +3,16 @@
 // Dieses Script wird per Cronjob einmal täglich nachts ausgeführt und versendet mails mit Links zur Beratung x Tage nach einem Beratungstermin
 $BASE_URL = getenv("BASE_URL");
 $BASE_PATH = getenv("BASE_PATH");
-$surveyId = getenv("EVALUATION_SURVEY_ID");
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
+
+if (empty($constants["CUSTOM_CONFIG"]["evaluationSurveyId"])){
+    throw new Exception("No evaluationSurveyId is set in custom/config.json. Cant send feedback mails!", 1);
+    exit;
+}
+$surveyId = $constants["CUSTOM_CONFIG"]["evaluationSurveyId"];
+
 
 $beforeXDays = date("Y-m-d", strtotime("-2 days")); //Datum vor x=2 Tagen
 
@@ -37,8 +43,8 @@ foreach ($resultList as $row) {
     $insertStatement->execute();
 
     //Mail versenden
-    $INSTITUTION_NAME = getenv("INSTITUTION_NAME");
-    $mail_betreff = "$INSTITUTION_NAME | Umfrage zu Ihrer Erfahrung";
+    $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
+    $mail_betreff = "$institutionName | Umfrage zu Ihrer Erfahrung";
 
     $mail_text_default = "Guten Tag,
     <br><br>

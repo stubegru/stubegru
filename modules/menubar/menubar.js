@@ -83,10 +83,10 @@ stubegru.modules.menubar.addDivider = function (level, index) {
 }
 
 //Set logo
-let logoPath = stubegru.constants["BASE_URL"] + stubegru.constants["LOGO"];
+let logoPath = stubegru.constants["BASE_URL"] + (stubegru.constants.CUSTOM_CONFIG.favicon || "/assets/images/favicon.png");
 $("#menubarLogoLink").attr("href", stubegru.constants["BASE_URL"]);
 $("#menubarLogoImg").attr("src", logoPath);
-$("#menubarLogoImg").attr("title", stubegru.constants["APPLICATION_NAME"]);
+$("#menubarLogoImg").attr("title", stubegru.constants.CUSTOM_CONFIG.applicationName);
 
 //Add default Menu Entries
 stubegru.modules.menubar.addDivider("secondary", 999);

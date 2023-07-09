@@ -66,7 +66,7 @@ async function checkViewAccess() {
  * Set the page's title.
  */
 function setTitle() {
-    let defaultTitle = stubegru.constants["APPLICATION_NAME"];
+    let defaultTitle = stubegru.constants.CUSTOM_CONFIG.applicationName;
     let viewTitle = $("stubegruAttribute[data-name='title']").attr("data-value");
     document.title = defaultTitle + (viewTitle ? `| ${viewTitle}` : "");
 }
@@ -75,7 +75,7 @@ function setTitle() {
  * Set the page's favicon.
  */
 function setFavicon() {
-    let defaultFavicon = stubegru.constants["LOGO"];
+    let defaultFavicon = stubegru.constants.CUSTOM_CONFIG.favicon || "/assets/images/favicon.png";
     let viewFavicon = $("stubegruAttribute[data-name='favicon']").attr("data-value") || defaultFavicon;
     var link = document.querySelector("link[rel~='icon']");
     link.href = stubegru.constants.BASE_URL + viewFavicon;

@@ -2,6 +2,8 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
+$INCLUDED_IN_SCRIPT = true;
+require_once "$BASE_PATH/utils/constants.php";
 permissionRequest("USER_WRITE");
 ?>
 
@@ -24,7 +26,7 @@ permissionRequest("USER_WRITE");
 <h1>Stubegru Mailing System</h1>
 
 <h3>Mailversand testen</h3>
-Empfänger: <input type="mail" id="addr" placeholder="Mailadresse" value="<?php echo getenv("ADMIN_MAIL"); ?>">
+Empfänger: <input type="mail" id="addr" placeholder="Mailadresse" value="<?php echo $constants["CUSTOM_CONFIG"]["adminMail"] ?>">
 <button id="testMail">Testmail senden</button>
 <br>
 

@@ -9,6 +9,11 @@ $BASE_PATH = getenv("BASE_PATH");
 require "$BASE_PATH/modules/mailing/PHPMailer/src/Exception.php";
 require "$BASE_PATH/modules/mailing/PHPMailer/src/PHPMailer.php";
 require "$BASE_PATH/modules/mailing/PHPMailer/src/SMTP.php";
+$INCLUDED_IN_SCRIPT = true;
+require_once "$BASE_PATH/utils/constants.php";
+
+$institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
+$institutionMail = isset($constants["CUSTOM_CONFIG"]["institutionMailAddress"]) ? $constants["CUSTOM_CONFIG"]["institutionMailAddress"] : "nobody@example.com";
 
 /**
  * @param string $to Recipient of the mail. Following RFC2822 (http://www.faqs.org/rfcs/rfc2822)
@@ -27,11 +32,14 @@ require "$BASE_PATH/modules/mailing/PHPMailer/src/SMTP.php";
  */
 function stubegruMail($to, $subject, $message, $options = [])
 {
+    global $institutionMail, $institutionName, $constants;
     //Add postfix
+    $defaultPostfix = isset($constants["CUSTOM_CONFIG"]["institutionMailPostfix"]) ? $constants["CUSTOM_CONFIG"]["institutionMailPostfix"] : "";
+
     if (isset($options["postfix"])) {
         $message .= "<br>" . $options["postfix"];
     } else {
-        $message .= "<br>" . getenv("INSTITUTION_MAIL_POSTFIX");
+        $message .= "<br>" . $defaultPostfix;
     }
 
     $mailMethod = getenv(("MAIL_METHOD"));
@@ -42,7 +50,8 @@ function stubegruMail($to, $subject, $message, $options = [])
         case 'phpmail':
 
             $additional_headers = array(); //Additional headers are handled as array
-            $additional_headers["From"] = getenv("INSTITUTION_NAME") . " <" . getenv("INSTITUTION_MAIL_ADDRESS") . ">";
+            $additional_headers["From"] = $institutionName . " <" . $institutionMail . ">";
+            $additional_headers["Content-type"] = "text/html; charset=utf-8";
 
             //set optional reply to
             if (isset($options) && isset($options["replyTo"])) {
@@ -69,7 +78,6 @@ function stubegruMail($to, $subject, $message, $options = [])
 
                     // message & attachment
                     $tempMessage = "--" . $uid . "\r\n";
-                    $tempMessage .= "Content-type:text/html; charset=utf-8\r\n";
                     $tempMessage .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
                     $tempMessage .= $message . "\r\n\r\n";
                     $tempMessage .= "--" . $uid . "\r\n";
@@ -90,7 +98,7 @@ function stubegruMail($to, $subject, $message, $options = [])
                 $myPHPMailer = initPHPMailer();
             }
             //Recipients
-            $myPHPMailer->setFrom(getenv("INSTITUTION_MAIL_ADDRESS"), getenv("INSTITUTION_NAME"));
+            $myPHPMailer->setFrom($institutionMail, $institutionName);
 
             //set optional reply to
             if (isset($options) && isset($options["replyTo"])) {

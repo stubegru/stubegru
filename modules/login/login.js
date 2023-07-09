@@ -1,5 +1,5 @@
-$("#institutionName").html(stubegru.constants.APPLICATION_NAME);
-let logoPath = stubegru.constants["BASE_URL"] + stubegru.constants["LOGO"];
+$("#institutionName").html(stubegru.constants.CUSTOM_CONFIG.applicationName);
+let logoPath = stubegru.constants["BASE_URL"] + (stubegru.constants.CUSTOM_CONFIG.favicon || "/assets/images/favicon.png");
 $("#loginLogo").attr("src", logoPath);
 
 
