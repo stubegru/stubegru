@@ -178,16 +178,46 @@ async function getAbsence(absenceId) {
 
 }
 
+/**
+ * Checks wether the passed absence's time slot has overlay with the current time
+ * 
+ * Returns "past" if the absence's time slot has already ended at the current time
+ * 
+ * Returns "present" if the absence's time slot has overlay with the current time
+ * 
+ * Returns "future" if the absence's time slot has not yet begun at the current time
+ * 
+ * A whole-day absence will always return "present"
+ * This function cares about daylight saving time offsets between the absence's start date and today
+ * This function does NOT check for dates or days of the week. It just checks for time!
+ * @param {Object} absence 
+ * @returns {string} "past","present","future"
+ */
+function getTimeslotTiming(absence) {
+    if (absence.wholeDay) return "present"; //If absence is whole-day it matches every time
+
+    const now = new Date();
+    let startTimeMillis = absence.start.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+    let endTimeMillis = absence.end.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+    let nowTimeMillis = now.getTime() % (1000 * 60 * 60 * 24);
+
+    //Handle daylight saving time offsets (crazy shit...)
+    const dstOffset = now.getTimezoneOffset() - absence.start.getTimezoneOffset(); //Get offset between DST and not-DST in MINUTES
+    startTimeMillis += dstOffset * 60 * 1000;
+    endTimeMillis += dstOffset * 60 * 1000;
+
+    if (endTimeMillis > nowTimeMillis && startTimeMillis < nowTimeMillis) { return "present"; }
+    if (endTimeMillis > nowTimeMillis) { return "future"; }
+    return "past";
+}
+
+
+
 function generateAbsenceStrings(absence) {
     absence.startString = formatDate(absence.start, "DD.MM.YYYY");
     absence.endString = formatDate(absence.end, "DD.MM.YYYY");
     absence.recurringString = "";
     absence.table = "present";
-
-    const now = new Date();
-    const startTimeMillis = absence.start.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
-    const endTimeMillis = absence.end.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
-    const nowTimeMillis = now.getTime() % (1000 * 60 * 60 * 24);
 
     //No recurring
     if (absence.recurring == "") {
@@ -234,8 +264,8 @@ function generateAbsenceStrings(absence) {
                 absence.endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
             }
 
-            //check if the time of the absence is in the past or future
-            if (!absence.wholeDay && (endTimeMillis < nowTimeMillis || startTimeMillis > nowTimeMillis)) { absence.table = "future"; }
+            //if the absence's timeslot has ended before the current time -> move to upcoming table
+            if (getTimeslotTiming(absence) == "past") { absence.table = "future"; }
         }
 
         if (absence.epoch == "future") {
@@ -262,8 +292,8 @@ function generateAbsenceStrings(absence) {
             if (dayOfWeek != currentDayOfWeek) {
                 absence.table = "future";
             } else {
-                //check if the time of the absence is in the past or future
-                if (!absence.wholeDay && (endTimeMillis < nowTimeMillis || startTimeMillis > nowTimeMillis)) { absence.table = "future"; }
+                //if the absence's timeslot has ended before the current time -> move to upcoming table
+                if (getTimeslotTiming(absence) == "past") { absence.table = "future"; }
             }
 
             if (absence.wholeDay) {
@@ -298,7 +328,7 @@ async function refreshAbsenceView() {
     for (let absence of absenceList) {
         absence.start = new Date(absence.start);
         absence.end = new Date(absence.end);
-        absence.wholeDay = absence.wholeDay == "1";
+        absence.wholeDay = (absence.wholeDay == "1");
 
         absence = setAbsenceEpoch(absence);
         absence = generateAbsenceStrings(absence);
@@ -337,12 +367,15 @@ function setAbsenceEpoch(absence) {
     todayEnd.setHours(23, 59, 59, 9999);
 
     absence.epoch = "present";
+
     if (absence.end < todayStart) { absence.epoch = "past"; }
     if (absence.start > todayEnd) { absence.epoch = "future"; }
+
     if (!absence.wholeDay && absence.epoch == "present") {
         if (absence.end < now) { absence.epoch = "past"; }
         if (absence.start > now) { absence.epoch = "future"; }
     }
+
     return absence;
 }
 
