@@ -22,6 +22,7 @@ stubegru.modules.alerts.alert = function (options,title) {
     options.title = options.title || "Info"; //if title is unset => set to "Info"
     options.text = options.text || ""; //if text is unset => set to empty string
     options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
+    options.html = true; //render html tags in title and text property
 
     if (options.mode == "alert") { swal(options); }
     else if (options.mode == "toast") {
