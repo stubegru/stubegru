@@ -1,0 +1,25 @@
+{
+    "type": "stubegruModule",
+    "name": "event_management/event_types",
+    "description": "Handling event types as presets for concrete events. Provides an UI-panel to list, create, edit and delete event types",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "event_types.html"
+    ],
+    "js": [
+        "event_types.js"
+    ],
+    "css": [
+        "event_types.css"
+    ],
+    "cronjob": []
+}
