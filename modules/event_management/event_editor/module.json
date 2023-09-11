@@ -1,0 +1,25 @@
+{
+    "type": "stubegruModule",
+    "name": "event_management/event_editor",
+    "description": "Provides an UI-panel to edit events. The corresponding eventId must be defined by URL-Parameter (e.g. ?eventId=42)",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "event_editor.html"
+    ],
+    "js": [
+        "event_editor.js"
+    ],
+    "css": [
+        "event_editor.css"
+    ],
+    "cronjob": []
+}
