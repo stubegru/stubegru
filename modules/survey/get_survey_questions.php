@@ -64,15 +64,13 @@ foreach ($resultList as $questionData) {
     $questionId = $questionData["id"];
     $questionData["options"] = array();
     //Get answer options for this question from SURVEY_ANSWER_OPTIONS table (SQL)
-    $selectStatement = $dbPdo->prepare("SELECT * FROM `survey_answer_options` WHERE `questionId` = :questionId");
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `survey_answer_options` WHERE `questionId` = :questionId ORDER BY `title` ASC");
     $selectStatement->bindValue(':questionId', $questionId);
     $selectStatement->execute();
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
-    foreach ($resultList as $answerOptionData) {
-        //Add data to array
-        $questionData["options"][] = $answerOptionData;
-    }
+    $questionData["options"] = $resultList;
+
     //Add question data as new row in surveyData["questions"]
     $surveyData["questions"][$questionId] = $questionData;
 }
