@@ -4,3 +4,8 @@ const eventTypeTemplatePath = $(`stubegruModule[data-name="event_management/even
 stubegru.modules.survey.initSurvey(eventTypeTemplatePath, "#surveyContainerEventType").then(() => {
     $("#surveyContainerEventType").show();
 });
+
+function editEventType(eventTypeId){
+    stubegru.modules.survey.resetSurvey(eventTypeTemplatePath, "#surveyContainerEventType");
+    $("#eventTypeModal").modal("show");
+}

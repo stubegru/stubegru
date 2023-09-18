@@ -4,7 +4,42 @@
             <a class="" href="#collapseEventTypes" data-toggle="collapse" aria-expanded="true">Veranstaltungskategorien</a>
         </h4>
     </div>
-    <div class="panel-collapse collapse in" id="collapseEventTypes" aria-expanded="true">
-        <div id="surveyContainerEventType"> </div>
+    <div class="panel-collapse collapse in" style="padding: 15px;" id="collapseEventTypes" aria-expanded="true">
+
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button class="btn btn-success" onclick="editEventType('new')">
+                    <i class="fas fa-plus-circle"></i> Neuer Eintrag
+                </button>
+            </div>
+        </div>
+
+        <div aria-hidden="true" role="dialog" tabindex="-1" id="eventTypeModal" class="modal fade" style="display: none;">
+            <div class="modal-dialog" style="min-width:70%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                        <h4 class="modal-title">Veranstaltungskategorie bearbeiten</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="surveyContainerEventType"> </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-sm-12 text-rigth"> <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
+                                <input class="btn btn-primary" type="submit" value="Eintrag speichern">
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
     </div>
 </div>
