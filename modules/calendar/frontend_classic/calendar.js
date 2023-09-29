@@ -241,7 +241,7 @@ async function saveMeeting() {
             text: blockResp.message,
             type: "error"
         });
-        
+
         //Re-activate buttons
         $("#saveMeetingButton").attr("disabled", false);
         $("#saveMeetingButton").html(`Termin speichern`);
@@ -331,6 +331,7 @@ function deleteDate(meetingId) { //Löscht den termin
 //********************************************************Berater**********************************************
 async function getAdvisorsForCalendar() { //Lädt die Berater in die Dropdown auswahl
 
+    while (stubegru.currentUser == undefined) { await stubegru.wait(100); }
     let ownId = stubegru.currentUser.id;
 
     let userList = await stubegru.modules.userUtils.getUserByPermission("MEETING_ADVISOR");

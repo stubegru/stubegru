@@ -13,6 +13,7 @@ async function initStubegruObject() {
     let stubegru = {};
     stubegru.modules = {};
     stubegru.constants = await getGlobalConstants();
+    stubegru.wait = async function (ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
     window.stubegru = stubegru;
     checkAppVersion();
 }
@@ -193,6 +194,8 @@ function formatDate(date, templateString) {
         .replace('ss', seconds)
         .replace('s', shortSeconds)
 }
+
+
 
 
 
