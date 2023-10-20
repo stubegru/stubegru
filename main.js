@@ -57,7 +57,7 @@ async function checkViewAccess() {
                         <strong>Kein Zugriff! </strong>
                         Um diese Seite aufzurufen ist die Berechtigung <b>'${respJson.permission}'</b> nötig.
                     </div>`;
-            $("body").append(html);
+            $("body").html(html);
         }
     }
     return false;
