@@ -5,8 +5,6 @@ SetEnv DB_USER "user123"
 SetEnv DB_PASSWORD "s3cr3t"
 SetEnv DB_NAME "DBNAME"
 
-SetEnv LOGO "/assets/images/favicon.png"
-
 SetEnv MAIL_METHOD "phpmail"
 SetEnv SMTP_HOST "your.smtp.server"
 SetEnv SMTP_AUTH 1
