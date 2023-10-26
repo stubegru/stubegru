@@ -24,7 +24,7 @@ foreach ($typeList as &$type) {
     if (isset($subArray[$typeId])) {
         $type["online"] = $subArray[$typeId]["online"] ? true : false;
         $type["mail"] = $subArray[$typeId]["mail"] ? true : false;
-    } else {
+    } else { //if this notificationType is not set for this user -> handle as NOT subscribed
         $type["online"] = false;
         $type["mail"] = false;
     }
