@@ -17,3 +17,5 @@ function deleteConfirm(pTitle, pDescription, callback) { //Dialog der vor dem LÃ
         });*/
     });
 }
+
+stubegru.modules.alerts.deleteConfirm = deleteConfirm;

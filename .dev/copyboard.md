@@ -1,4 +1,7 @@
 # Copyboard for some sample code
+
+
+
 # ------------------------------PHP------------------------------
 
 $BASE_PATH = getenv("BASE_PATH");
@@ -23,6 +26,12 @@ echo json_encode(array("status" => "success", "message" => "..."));
 
 # ------------------------------JS------------------------------
 
+## --- IGNORE TYPESCRIPT ERROR IN NEXT LINE ---
+//@ts-expect-error
+
+
+# ------------------------------JS------------------------------
+
 ## --- AJAX TEMPLATE ---
 $.ajax({
         type: "POST",
@@ -43,6 +52,9 @@ stubegru.modules.alerts.alert({
     type: "error",
     mode: "alert"
 });
+
+## --- DELETE CONFIRM ---
+stubegru.modules.alerts.deleteConfirm("Abwesenheit löschen", "Soll diese Abwesenheit wirklich gelöscht werden?", function () { dosomething });
 
 ## --- ADD MENU ENTRY ---
 stubegru.modules.menubar.addItem("secondary primary", `<li><a title="TITLE" href="${stubegru.constants.BASE_URL}/LINK_LOCATION"><i class="FONT_AWESOME_ICON"></i>&nbsp;DISPLAY_TEXT</a></li>`, PRIORITY);
