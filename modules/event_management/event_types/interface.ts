@@ -1,4 +1,5 @@
 interface EventType{
+    id:string;
     name:string;
     isPortfolio: boolean;
     descriptionInternal:string;
@@ -31,4 +32,8 @@ interface MailReminder{ //????????????
     date: Date;
     name: string;
     address: string;
+}
+
+interface EventTypeList{
+    [index: string]: EventType;
 }
