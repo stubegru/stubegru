@@ -8,7 +8,7 @@
 
         <div class="row">
             <div class="col-md-12 text-right">
-                <button class="btn btn-success" onclick="editEventType('new')">
+                <button class="btn btn-success" id="eventTypeNewButton">
                     <i class="fas fa-plus-circle"></i> Neuer Eintrag
                 </button>
             </div>
@@ -39,223 +39,183 @@
                         <h4 class="modal-title">Veranstaltungskategorie bearbeiten</h4>
                     </div>
                     <div class="modal-body">
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> In diesem Formular kann eine <b>Veranstaltungskategorie</b> bearbeitet werden. Eine Kategorie dient als Vorlage um später verschiedene Veranstaltungen von dieser Kategorie anzulegen. An dieser Stelle können <b>keine Veranstaltungen</b> bearbeitet werden!
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <!-- Freitext -->
-                                <!-- Name -->
-
-                                <div class="form-group">
-                                    <label>Name der Veranstaltungkategorie</label>
-                                    <p class="help-block"></p>
-                                    <input type="text" class="form-control" id="question-3-60">
-                                </div>
-
-                            </div>
-
-                            <div class="col-sm-6" style="text-align:end;">
-                                <!-- Checkbox -->
-                                <!-- Im Portfolio...? -->
-
-                                <div class="form-group">
-                                    <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-61">
-                                        <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
-                                    </div>&nbsp;&nbsp;&nbsp;<label>Aktuell im Portfolio?</label>
-                                    <p class="help-block"></p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <!-- Freitext-->
-                                <!-- Beschreibung intern-->
-
-                                <div class="form-group">
-                                    <label> Beschreibung (intern)</label>
-                                    <p class="help-block"></p>
-                                    <textarea id="question-3-62" class="form-control" style="min-width: 100%"></textarea>
-                                </div>
-
-                            </div>
-                            <div class="col-md-6">
-                                <!-- Freitext -->
-                                <!-- Beschreibung extern -->
-
-                                <div class="form-group">
-                                    <label> Beschreibung (extern)</label>
-                                    <p class="help-block"></p>
-                                    <textarea id="question-3-63" class="form-control" style="min-width: 100%"></textarea>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="alert alert-success">
-                            <label>Anzeige? (Feedback von Maike wie ist das gemeint, Zusammenhang mit "Aktuell im Portfolio?")</label>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <!-- Toggle-->
-                                    <!-- HSB Anzeige?-->
-
-                                    <div class="form-group">
-                                        <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-64">
-                                            <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
-                                        </div>&nbsp;&nbsp;&nbsp;<label>HSB</label>
-                                        <p class="help-block"></p>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- Toggle-->
-                                    <!-- Extern Anzeige?-->
-
-                                    <div class="form-group">
-                                        <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-65">
-                                            <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
-                                        </div>&nbsp;&nbsp;&nbsp;<label>Extern</label>
-                                        <p class="help-block"></p>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="alert alert-warning">
+                        <form id="eventTypeModalForm">
                             <div class="row">
                                 <div class="col-sm-12">
-                                    <!-- Select -->
-                                    <!-- Zielgruppe -->
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle"></i> In diesem Formular kann eine <b>Veranstaltungskategorie</b> bearbeitet werden. Eine Kategorie dient als Vorlage um später verschiedene Veranstaltungen von dieser Kategorie anzulegen. An dieser Stelle können <b>keine Veranstaltungen</b> bearbeitet werden!
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <div class="form-group"><label>Zielgruppe</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-66">
-                                            <option value="">Keine Angabe</option>
-                                        </select>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <!-- Freitext -->
+                                    <!-- Name -->
+
+                                    <div class="form-group">
+                                        <label>Name der Veranstaltungkategorie</label>
+                                        <p class="help-block"></p>
+                                        <input type="text" class="form-control" id="question-3-60">
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-6" style="text-align:end;">
+                                    <!-- Checkbox -->
+                                    <!-- Im Portfolio...? -->
+
+                                    <div class="form-group">
+                                        <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-61">
+                                            <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
+                                        </div>&nbsp;&nbsp;&nbsp;<label>Aktuell im Portfolio?</label>
+                                        <p class="help-block"></p>
                                     </div>
 
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <!-- Select -->
-                                    <!-- Verantwortlich ZSB -->
+                                <div class="col-md-6">
+                                    <!-- Freitext-->
+                                    <!-- Beschreibung intern-->
 
-                                    <div class="form-group"><label>Verantwortliche ZSB</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-68">
-                                            <option value="">Keine Angabe</option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label> Beschreibung (intern)</label>
+                                        <p class="help-block"></p>
+                                        <textarea id="question-3-62" class="form-control" style="min-width: 100%"></textarea>
                                     </div>
 
                                 </div>
-                                <div class="col-sm-6">
-                                    <!-- Select -->
-                                    <!-- Aufwand ZSB -->
+                                <div class="col-md-6">
+                                    <!-- Freitext -->
+                                    <!-- Beschreibung extern -->
 
-                                    <div class="form-group"><label>Aufwand ZSB</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-69">
-                                            <option value="">Keine Angabe</option>
-                                            <option value="Sehr wenig" title="" data-option-id="602" data-action="">Sehr wenig</option>
-                                            <option value="Wenig" title="" data-option-id="603" data-action="">Wenig</option>
-                                            <option value="Durchschnittlich" title="" data-option-id="604" data-action="">Durchschnittlich</option>
-                                            <option value="Viel" title="" data-option-id="605" data-action="">Viel</option>
-                                            <option value="Sehr viel" title="" data-option-id="606" data-action="">Sehr viel</option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label> Beschreibung (extern)</label>
+                                        <p class="help-block"></p>
+                                        <textarea id="question-3-63" class="form-control" style="min-width: 100%"></textarea>
                                     </div>
 
                                 </div>
                             </div>
+
+                            <div class="alert alert-success">
+                                <label>Anzeige? (Feedback von Maike wie ist das gemeint, Zusammenhang mit "Aktuell im Portfolio?")</label>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <!-- Toggle-->
+                                        <!-- HSB Anzeige?-->
+
+                                        <div class="form-group">
+                                            <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-64">
+                                                <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
+                                            </div>&nbsp;&nbsp;&nbsp;<label>HSB</label>
+                                            <p class="help-block"></p>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <!-- Toggle-->
+                                        <!-- Extern Anzeige?-->
+
+                                        <div class="form-group">
+                                            <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-65">
+                                                <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
+                                            </div>&nbsp;&nbsp;&nbsp;<label>Extern</label>
+                                            <p class="help-block"></p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-warning">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!-- Select -->
+                                        <!-- Zielgruppe -->
+
+                                        <div class="form-group"><label>Zielgruppe</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-66">
+                                                <option value="">Keine Angabe</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <!-- Select -->
+                                        <!-- Verantwortlich ZSB -->
+
+                                        <div class="form-group"><label>Verantwortliche ZSB</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-68">
+                                                <option value="">Keine Angabe</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Select -->
+                                        <!-- Aufwand ZSB -->
+
+                                        <div class="form-group"><label>Aufwand ZSB</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-69">
+                                                <option value="">Keine Angabe</option>
+                                                <option value="Sehr wenig" title="" data-option-id="602" data-action="">Sehr wenig</option>
+                                                <option value="Wenig" title="" data-option-id="603" data-action="">Wenig</option>
+                                                <option value="Durchschnittlich" title="" data-option-id="604" data-action="">Durchschnittlich</option>
+                                                <option value="Viel" title="" data-option-id="605" data-action="">Viel</option>
+                                                <option value="Sehr viel" title="" data-option-id="606" data-action="">Sehr viel</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <!-- Select -->
+                                        <!-- Koop Bedarf -->
+
+                                        <div class="form-group"><label>Koop Bedarf</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-70">
+                                                <option value="">Keine Angabe</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Select -->
+                                        <!-- Aufwand Koop -->
+
+                                        <div class="form-group"><label>Aufwand Koop</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-71">
+                                                <option value="">Keine Angabe</option>
+                                                <option value="Sehr wenig" title="" data-option-id="607" data-action="">Sehr wenig</option>
+                                                <option value="Wenig" title="" data-option-id="608" data-action="">Wenig</option>
+                                                <option value="Durchschnittlich" title="" data-option-id="609" data-action="">Durchschnittlich</option>
+                                                <option value="Viel" title="" data-option-id="610" data-action="">Viel</option>
+                                                <option value="Sehr viel" title="" data-option-id="611" data-action="">Sehr viel</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <!-- Select -->
-                                    <!-- Koop Bedarf -->
+                                <div class="col-sm-12">
+                                    <!-- Freitext -->
+                                    <!-- Notizen -->
 
-                                    <div class="form-group"><label>Koop Bedarf</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-70">
-                                            <option value="">Keine Angabe</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-6">
-                                    <!-- Select -->
-                                    <!-- Aufwand Koop -->
-
-                                    <div class="form-group"><label>Aufwand Koop</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-71">
-                                            <option value="">Keine Angabe</option>
-                                            <option value="Sehr wenig" title="" data-option-id="607" data-action="">Sehr wenig</option>
-                                            <option value="Wenig" title="" data-option-id="608" data-action="">Wenig</option>
-                                            <option value="Durchschnittlich" title="" data-option-id="609" data-action="">Durchschnittlich</option>
-                                            <option value="Viel" title="" data-option-id="610" data-action="">Viel</option>
-                                            <option value="Sehr viel" title="" data-option-id="611" data-action="">Sehr viel</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <!-- Freitext -->
-                                <!-- Notizen -->
-
-                                <div class="form-group">
-                                    <label> Bemerkungen/Notizen ZSB:</label>
-                                    <p class="help-block"></p>
-                                    <textarea id="question-3-72" class="form-control" style="min-width: 100%"></textarea>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <!-- Select -->
-                                <!-- Erinnerungsmail -->
-
-                                <div class="form-group"><label>Erinnerungsmail</label>
-                                    <p class="help-block">Wochen vor dem Termin</p><select class="form-control" id="question-3-73">
-                                        <option value="">Keine Angabe</option>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="well">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <!-- Select -->
-                                    <!-- Verantwortlich PR -->
-
-                                    <div class="form-group"><label>Verantwortlich PR</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-74">
-                                            <option value="">Keine Angabe</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="col-sm-6">
-                                    <!-- Select -->
-                                    <!-- Verteiler PR -->
-
-                                    <div class="form-group"><label>Verteiler PR</label>
-                                        <p class="help-block"></p><select class="form-control" id="question-3-75">
-                                            <option value="">Keine Angabe</option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label> Bemerkungen/Notizen ZSB:</label>
+                                        <p class="help-block"></p>
+                                        <textarea id="question-3-72" class="form-control" style="min-width: 100%"></textarea>
                                     </div>
 
                                 </div>
@@ -264,19 +224,60 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <!-- Select -->
-                                    <!-- Erinnerungsmail PR -->
+                                    <!-- Erinnerungsmail -->
 
-                                    <div class="form-group"><label>Erinnerungsmail PR</label>
-                                        <p class="help-block">Wochen vor dem Termin </p><select class="form-control" id="question-3-76">
+                                    <div class="form-group"><label>Erinnerungsmail</label>
+                                        <p class="help-block">Wochen vor dem Termin</p><select class="form-control" id="question-3-73">
                                             <option value="">Keine Angabe</option>
                                         </select>
                                     </div>
 
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <!-- Select -->
+                                        <!-- Verantwortlich PR -->
+
+                                        <div class="form-group"><label>Verantwortlich PR</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-74">
+                                                <option value="">Keine Angabe</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <!-- Select -->
+                                        <!-- Verteiler PR -->
+
+                                        <div class="form-group"><label>Verteiler PR</label>
+                                            <p class="help-block"></p><select class="form-control" id="question-3-75">
+                                                <option value="">Keine Angabe</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <!-- Select -->
+                                        <!-- Erinnerungsmail PR -->
+
+                                        <div class="form-group"><label>Erinnerungsmail PR</label>
+                                            <p class="help-block">Wochen vor dem Termin </p><select class="form-control" id="question-3-76">
+                                                <option value="">Keine Angabe</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
 
 
+                        </form>
                     </div>
 
                     <div class="modal-footer">

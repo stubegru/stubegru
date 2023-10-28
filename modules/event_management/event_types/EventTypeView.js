@@ -1,24 +1,34 @@
 class EventTypeView {
     static init() {
-        this.refreshListView(); //Init event view
-        setInterval(this.refreshListView, 1000 * 60 * 15); //Refresh view every 15 minutes
+        EventTypeView.refreshListView(); //Init event view
+        setInterval(EventTypeView.refreshListView, 1000 * 60 * 15); //Refresh view every 15 minutes
         //Reset modal on hide
         let modal = document.getElementById("eventTypeModal");
-        modal.addEventListener("hidden.bs.modal", this.resetModalForm);
+        modal.addEventListener("hidden.bs.modal", EventTypeView.resetModalForm);
+        //Register new event type button
+        let newBtn = document.getElementById("eventTypeNewButton");
+        newBtn.addEventListener("click", EventTypeView.newEventType);
+    }
+    static newEventType() {
+        EventTypeView.resetModalForm();
+        EventTypeView.setModalVisible(true);
     }
     static resetModalForm() {
-        let form = document.getElementById("eventForm");
+        let form = document.getElementById("eventTypeModalForm");
         form.reset();
     }
     static editEventType(eventTypeId) {
-        let eventType = this.eventTypeList[eventTypeId];
+        let eventType = EventTypeView.eventTypeList[eventTypeId];
         //TODO set inputs elements with object properties...
-        //@ts-expect-error Show modal
-        $("#eventTypeModal").modal("show");
+        EventTypeView.setModalVisible(true);
+    }
+    static setModalVisible(visible) {
+        //@ts-expect-error
+        $("#eventTypeModal").modal(visible ? "show" : "hide");
     }
     static async refreshListView() {
-        let eventTypeList = await EventTypeController.getAll();
-        this.eventTypeList = eventTypeList;
+        let eventTypeList = await EventTypeController.refreshEventTypeList();
+        EventTypeView.eventTypeList = eventTypeList;
         let listElement = document.getElementById("eventTypeList");
         listElement.innerHTML = "";
         for (let eventTypeId in eventTypeList) {
@@ -30,17 +40,18 @@ class EventTypeView {
         let deleteBtnList = document.querySelectorAll(".event-type-delete-button");
         for (const btn of deleteBtnList) {
             let eventTypeId = btn.getAttribute("data-event-type-id");
-            this.stubegru.modules.alerts.deleteConfirm("Abwesenheit löschen", "Soll diese Abwesenheit wirklich gelöscht werden?", async () => await EventTypeController.delete(eventTypeId));
+            EventTypeView.stubegru.modules.alerts.deleteConfirm("Abwesenheit löschen", "Soll diese Abwesenheit wirklich gelöscht werden?", async () => await EventTypeController.delete(eventTypeId));
         }
         //register edit button actions
         let editBtnList = document.querySelectorAll(".event-type-edit-button");
         for (const btn of editBtnList) {
             let eventTypeId = btn.getAttribute("data-event-type-id");
-            this.editEventType(eventTypeId);
+            EventTypeView.editEventType(eventTypeId);
         }
-        this.stubegru.modules.userUtils.updateAdminElements();
+        EventTypeView.stubegru.modules.userUtils.updateAdminElements();
     }
 }
 //@ts-expect-error
-EventTypeView.stubegru = document.stubegru;
+EventTypeView.stubegru = window.stubegru;
 EventTypeView.eventTypeList = {};
+EventTypeView.init();
