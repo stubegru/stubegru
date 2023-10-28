@@ -16,7 +16,8 @@
         "event_types.html"
     ],
     "js": [
-        "event_types.js"
+        "EventTypeController.js",
+        "EventTypeView.js"
     ],
     "css": [
         "event_types.css"
