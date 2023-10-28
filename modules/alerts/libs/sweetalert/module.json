@@ -12,8 +12,7 @@
     },
     "html": [],
     "js": [
-        "sweetalert.min.js",
-        "sweetalert_utils.js"
+        "sweetalert.min.js"
     ],
     "css": [
         "sweetalert.css"
