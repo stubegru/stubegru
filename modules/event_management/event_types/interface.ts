@@ -71,6 +71,7 @@ interface StubegruAlertOptions {
     text: string;
     type: string;
     title: string;
+    mode?: string;
 }
 
 interface StubegruHttpResponse {

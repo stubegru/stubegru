@@ -8,7 +8,7 @@
 
         <div class="row">
             <div class="col-md-12 text-right">
-                <button class="btn btn-success" id="eventTypeNewButton">
+                <button class="btn btn-primary" id="eventTypeNewButton">
                     <i class="fas fa-plus-circle"></i> Neuer Eintrag
                 </button>
             </div>
@@ -20,12 +20,39 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th></th>
+                            <th>Aktiv</th>
+                            <th>Verantwortlich</th>
                             <th class="permission-EVENT_TYPE_WRITE permission-required"></th>
                         </tr>
                     </thead>
-                    <tbody id="event_type_table">
+                    <tbody id="eventTypeTable">
                         <!-- Here are generated all the Event Entries with an AJAX call -->
+                        <tr>
+                            <td>Orientierungskurs</td>
+                            <td>Ja</td>
+                            <td>Max Meier</td>
+                            <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
+                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}'>
+                                    <i class='fa fa-pencil-alt'></i>
+                                </button>
+                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}'>
+                                    <i class='fa fa-times'></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Einführungstage</td>
+                            <td>Nein</td>
+                            <td>Nicole Müller</td>
+                            <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
+                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}'>
+                                    <i class='fa fa-pencil-alt'></i>
+                                </button>
+                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}'>
+                                    <i class='fa fa-times'></i>
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

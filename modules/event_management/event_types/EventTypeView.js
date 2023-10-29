@@ -33,7 +33,7 @@ class EventTypeView {
         listElement.innerHTML = "";
         for (let eventTypeId in eventTypeList) {
             let eventType = eventTypeList[eventTypeId];
-            let tableRow = `<tr><td>${eventType.name}</td><td><button class='event-edit-button btn btn-default permission-EVENT_TYPE_WRITE permission-required' data-event-type-id='${eventType.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='event-delete-button btn btn-danger permission-EVENT_TYPE_WRITE permission-required' data-event-type-id='${eventType.id}'><i class='fa fa-times'></i></button></td></tr>`;
+            let tableRow = `<tr><td>${eventType.name}</td><td><button class='event-type-edit-button btn btn-default permission-EVENT_TYPE_WRITE permission-required' data-event-type-id='${eventType.id}'><i class='fa fa-pencil-alt'></i></button></td><td><button class='event-type-delete-button btn btn-danger permission-EVENT_TYPE_WRITE permission-required' data-event-type-id='${eventType.id}'><i class='fa fa-times'></i></button></td></tr>`;
             listElement.innerHTML += tableRow;
         }
         //register delete button actions
