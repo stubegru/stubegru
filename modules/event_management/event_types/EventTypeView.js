@@ -8,6 +8,8 @@ class EventTypeView {
         //Register new event type button
         let newBtn = document.getElementById("eventTypeNewButton");
         newBtn.addEventListener("click", EventTypeView.newEventType);
+        //@ts-expect-error Activate multi-selects
+        setTimeout(MultiselectDropdown, 2000);
     }
     static newEventType() {
         EventTypeView.resetModalForm();

@@ -1,0 +1,19 @@
+{
+    "type": "externalLibrary",
+    "name": "event_management/libs/multi_select_dropdown",
+    "description": "Library for using dropdowns with the ability to select multiple items",
+    "author": "Admir Hodzic",
+    "license": "MIT",
+    "url" : "https://github.com/admirhodzic/multiselect-dropdown",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": [],
+        "backend":[]
+    },
+    "html": [],
+    "js": [
+        "multiselect-dropdown.js"
+    ],
+    "css": [
+    ]
+}
