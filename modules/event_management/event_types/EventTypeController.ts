@@ -12,7 +12,7 @@ class EventTypeController {
             for (const e of eventTypeList) { EventTypeView.eventTypeList[e.id] = e; }
             return EventTypeView.eventTypeList;
         } catch (error) {
-            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            //EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
 }
