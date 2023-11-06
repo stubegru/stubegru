@@ -88,6 +88,7 @@ function setFavicon() {
  */
 function afterLoadView() {
     $(`[data-toggle="toggle"]`).bootstrapToggle();//Init toggles
+    $(".table-sortable").tableSortable(); ///Init sortable tables
     ckEditorModalFix();
     if (stubegru.modules.userUtils) { stubegru.modules.userUtils.updateAdminElements(); }
 }
