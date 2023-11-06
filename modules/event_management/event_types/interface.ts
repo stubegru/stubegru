@@ -15,6 +15,8 @@ interface EventType {
     assigneesPR: DropdownOption[];
     distributerPR: DropdownOption[];
     reminderPR: MailReminder;
+    announcementPR: string;
+
 }
 
 interface PublishingChannel {
