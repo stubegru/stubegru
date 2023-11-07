@@ -22,7 +22,7 @@
                             <th>Name</th>
                             <th>Aktiv</th>
                             <th>Verantwortlich</th>
-                            <th class="permission-EVENT_TYPE_WRITE permission-required"></th>
+                            <th class="permission-EVENT_TYPE_WRITE permission-required" data-table-sortable-disable></th>
                         </tr>
                     </thead>
                     <tbody id="eventTypeTableBody">
@@ -31,6 +31,22 @@
                             <td>Orientierungskurs</td>
                             <td>Ja</td>
                             <td>Max Meier</td>
+                            <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
+                                <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}'  title="Kategorie bearbeiten">
+                                    <i class='fa fa-pencil-alt'></i>
+                                </button>
+                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}'  title="Kategorie löschen">
+                                    <i class='fa fa-times'></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Anfangskurs</td>
+                            <td>Ja</td>
+                            <td>Anton</td>
                             <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
                                 <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
                                     <i class="fas fa-plus"></i>

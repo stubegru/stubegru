@@ -1,7 +1,7 @@
 class EventTypeView {
     static init() {
-        EventTypeView.refreshListView(); //Init event view
-        setInterval(EventTypeView.refreshListView, 1000 * 60 * 15); //Refresh view every 15 minutes
+        //EventTypeView.refreshListView(); //Init event view
+        //setInterval(EventTypeView.refreshListView, 1000 * 60 * 15); //Refresh view every 15 minutes
         //Reset modal on hide
         let modal = document.getElementById("eventTypeModal");
         modal.addEventListener("hidden.bs.modal", EventTypeView.resetModalForm);
