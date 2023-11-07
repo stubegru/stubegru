@@ -7,9 +7,10 @@
 (function($) {
 
     const TABLE_SORTER_ICON_CLASS = "fa";
-    const TABLE_SORTER_SORT_ICON = "";
-    const TABLE_SORTER_SORT_ICON_DESC = "";
-    const TABLE_SORTER_SORT_ICON_ASC = "";
+    const TABLE_SORTER_SORT_ICON = "fa-sort";
+    const TABLE_SORTER_SORT_ICON_DESC = "fa-sort-amount-up";
+    const TABLE_SORTER_SORT_ICON_ASC = "fa-sort-amount-down-alt";
+    const TABLE_SORTER_HIGHLIGHT = "text-info";
 
     var sortFunctions = {
         string: function(a, b) {
@@ -76,13 +77,15 @@
                 th.find('.table-sortable-icon')
                     .removeClass(TABLE_SORTER_SORT_ICON_ASC)
                     .removeClass(TABLE_SORTER_SORT_ICON_DESC)
-                    .addClass(TABLE_SORTER_SORT_ICON);
+                    .removeClass(TABLE_SORTER_HIGHLIGHT)
+                    .addClass(TABLE_SORTER_SORT_ICON)
+                    .attr("title","Nach dieser Spalte sortieren");
 
-                $(this).children(TABLE_SORTER_ICON_CLASS).removeClass(TABLE_SORTER_SORT_ICON);
+                $(this).children("."+TABLE_SORTER_ICON_CLASS).removeClass(TABLE_SORTER_SORT_ICON);
                 if(newOrder === 'asc') {
-                    $(this).children(TABLE_SORTER_ICON_CLASS).addClass(TABLE_SORTER_SORT_ICON);
+                    $(this).children("."+TABLE_SORTER_ICON_CLASS).addClass(TABLE_SORTER_SORT_ICON_ASC).addClass(TABLE_SORTER_HIGHLIGHT).attr("title","Aufsteigend sortiert (klicken für absteigende Sortierung)");
                 } else {
-                    $(this).children(TABLE_SORTER_ICON_CLASS).addClass(TABLE_SORTER_SORT_ICON_DESC);
+                    $(this).children("."+TABLE_SORTER_ICON_CLASS).addClass(TABLE_SORTER_SORT_ICON_DESC).addClass(TABLE_SORTER_HIGHLIGHT).attr("title","Absteigend sortiert (klicken für aufsteigende Sortierung)");
                 }
 
                 var sortType = $(this).attr('data-table-sortable-type');
@@ -90,12 +93,9 @@
                 tableSort($(this).parent().parent().parent(), $(this).index(), newOrder, sortFunctions[sortType]);
 
                 $(this).attr('data-table-sortable-order', newOrder);
-            }).append('&nbsp;<span class="glyphicon TABLE_SORTER_SORT_ICON table-sortable-icon"></span>');
+            }).append(`&nbsp;<span class="${TABLE_SORTER_ICON_CLASS} ${TABLE_SORTER_SORT_ICON} table-sortable-icon" style="cursor:pointer" title="Nach dieser Spalte sortieren"></span>`);
 
         });
     };
 
-    $(function() {
-        $('.table-sortable').tableSortable();
-    });
 })($);
