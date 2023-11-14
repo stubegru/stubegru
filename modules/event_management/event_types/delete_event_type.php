@@ -12,9 +12,9 @@ try {
         throw new Exception("Die Id '" . $_POST['eventTypeId'] . "' ist keine gültige Id für eine Veranstaltungskategorie.", 404);
     }
 
-    $selectStatement = $dbPdo->prepare("DELETE * FROM `event_mgmt_types` WHERE eventTypeId = :eventTypeId;");
-    $selectStatement->bindValue(':eventTypeId', $eventTypeId);
-    $selectStatement->execute();
+    $deleteStatement = $dbPdo->prepare("DELETE FROM `event_mgmt_types` WHERE eventTypeId = :eventTypeId;");
+    $deleteStatement->bindValue(':eventTypeId', $eventTypeId);
+    $deleteStatement->execute();
 
     echo json_encode(array("status" => "success", "message" => "Veranstaltungskategorie mit der id '$eventTypeId' erfolgreich gelöscht."));
 
