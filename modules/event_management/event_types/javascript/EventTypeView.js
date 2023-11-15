@@ -21,14 +21,20 @@ class EventTypeView {
         let form = document.getElementById("eventTypeModalForm");
         let formData = new FormData(form);
         let o = [];
+        //generate list of multi-select's names
+        let multipleNamesList = [];
+        let elementList = document.querySelectorAll(`#eventTypeModalForm select[multiple]`);
+        elementList.forEach(e => multipleNamesList.push(e.getAttribute("name")));
         for (const [key, value] of formData) {
-            console.log(key + " : " + value);
-            // let attribute :HttpTransportAttribute = {
-            //     id : key,
-            //     value: value,
-            //     isMultiple : false //TODO correct logic here...
-            // }
+            //console.log(key + " : " + value);
+            let attribute = {
+                key: key,
+                value: value,
+                isMultiple: multipleNamesList.includes(key)
+            };
+            o.push(attribute);
         }
+        console.log(o);
         return JSON.stringify(o);
     }
     static newEventType() {

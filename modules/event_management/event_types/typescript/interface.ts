@@ -20,7 +20,7 @@ interface EventType {
 }
 
 interface HttpTransportAttribute {
-    id: string;
+    key: string;
     value: string;
     isMultiple: boolean;
 }

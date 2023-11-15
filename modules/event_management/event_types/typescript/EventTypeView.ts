@@ -20,6 +20,7 @@ class EventTypeView {
         document.getElementById("eventTypeModalForm").addEventListener("submit", event => {
             event.preventDefault(); //Don't trigger default submit actions
             let jsonString = EventTypeView.parseFormDataToJsonString();
+            
             //TODO trigger update or create functions...
         })
 
@@ -32,18 +33,25 @@ class EventTypeView {
         let form = document.getElementById("eventTypeModalForm") as HTMLFormElement;
         let formData = new FormData(form);
         let o = [];
-        
+
+        //generate list of multi-select's names
+        let multipleNamesList = [];
+        let elementList = document.querySelectorAll(`#eventTypeModalForm select[multiple]`);
+        elementList.forEach(e=>multipleNamesList.push(e.getAttribute("name")));
+
 
         for (const [key, value] of formData) {
-            console.log(key + " : " + value);
-            
-            // let attribute :HttpTransportAttribute = {
-            //     id : key,
-            //     value: value,
-            //     isMultiple : false //TODO correct logic here...
-            // }
+            //console.log(key + " : " + value);
+
+            let attribute :HttpTransportAttribute = {
+                key : key,
+                value: value as string,
+                isMultiple : multipleNamesList.includes(key)
+            }
+            o.push(attribute);
         }
 
+        console.log(o);
         return JSON.stringify(o);
     }
 
