@@ -35,10 +35,10 @@
                                 <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
                                     <i class="fas fa-plus"></i>
                                 </button>
-                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}'  title="Kategorie bearbeiten">
+                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
                                     <i class='fa fa-pencil-alt'></i>
                                 </button>
-                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}'  title="Kategorie löschen">
+                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
                                     <i class='fa fa-times'></i>
                                 </button>
                             </td>
@@ -51,10 +51,10 @@
                                 <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
                                     <i class="fas fa-plus"></i>
                                 </button>
-                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}'  title="Kategorie bearbeiten">
+                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
                                     <i class='fa fa-pencil-alt'></i>
                                 </button>
-                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}'  title="Kategorie löschen">
+                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
                                     <i class='fa fa-times'></i>
                                 </button>
                             </td>
@@ -67,10 +67,10 @@
                                 <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Instanz erstellen">
                                     <i class="fas fa-plus"></i>
                                 </button>
-                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}'  title="Kategorie bearbeiten">
+                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
                                     <i class='fa fa-pencil-alt'></i>
                                 </button>
-                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}'  title="Kategorie löschen">
+                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
                                     <i class='fa fa-times'></i>
                                 </button>
                             </td>
@@ -87,8 +87,8 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                         <h4 class="modal-title">Veranstaltungskategorie bearbeiten</h4>
                     </div>
+                    <form id="eventTypeModalForm">
                     <div class="modal-body">
-                        <form id="eventTypeModalForm">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="alert alert-info">
@@ -104,8 +104,7 @@
 
                                     <div class="form-group">
                                         <label>Name der Veranstaltungkategorie</label>
-                                        <p class="help-block"></p>
-                                        <input type="text" class="form-control" id="question-3-60">
+                                        <input type="text" class="form-control" name="name">
                                     </div>
 
                                 </div>
@@ -115,10 +114,9 @@
                                     <!-- Im Portfolio...? -->
 
                                     <div class="form-group">
-                                        <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-61">
-                                            <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
-                                        </div>&nbsp;&nbsp;&nbsp;<label>Aktuell im Portfolio?</label>
-                                        <p class="help-block"></p>
+                                        <input type="checkbox" data-toggle="toggle" name="isPortfolio">
+                                        <label>Aktuell im Portfolio?</label>
+
                                     </div>
 
                                 </div>
@@ -131,8 +129,7 @@
 
                                     <div class="form-group">
                                         <label> Beschreibung (intern)</label>
-                                        <p class="help-block"></p>
-                                        <textarea id="question-3-62" class="form-control" style="min-width: 100%"></textarea>
+                                        <textarea name="descriptionInternal" class="form-control" style="min-width: 100%"></textarea>
                                     </div>
 
                                 </div>
@@ -142,25 +139,22 @@
 
                                     <div class="form-group">
                                         <label> Beschreibung (extern)</label>
-                                        <p class="help-block"></p>
-                                        <textarea id="question-3-63" class="form-control" style="min-width: 100%"></textarea>
+                                        <textarea name="descriptionExternal" class="form-control" style="min-width: 100%"></textarea>
                                     </div>
 
                                 </div>
                             </div>
 
                             <div class="alert alert-success">
-                                <label>Anzeige? (Feedback von Maike wie ist das gemeint, Zusammenhang mit "Aktuell im Portfolio?")</label>
+                                <label>Anzeige</label>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <!-- Toggle-->
-                                        <!-- HSB Anzeige?-->
+                                        <!-- ZSB Anzeige?-->
 
                                         <div class="form-group">
-                                            <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-64">
-                                                <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
-                                            </div>&nbsp;&nbsp;&nbsp;<label>HSB</label>
-                                            <p class="help-block"></p>
+                                            <input type="checkbox" data-toggle="toggle" class="survey-toggle" name="visibleInternal">
+                                            <label>ZSB</label>
                                         </div>
 
                                     </div>
@@ -169,10 +163,8 @@
                                         <!-- Extern Anzeige?-->
 
                                         <div class="form-group">
-                                            <div class="toggle btn btn-default off" data-toggle="toggle" style="width: 0px; height: 0px;"><input type="checkbox" data-toggle="toggle" class="survey-toggle" id="question-3-65">
-                                                <div class="toggle-group"><label class="btn btn-primary toggle-on">Ja</label><label class="btn btn-default active toggle-off">Nein</label><span class="toggle-handle btn btn-default"></span></div>
-                                            </div>&nbsp;&nbsp;&nbsp;<label>Extern</label>
-                                            <p class="help-block"></p>
+                                            <input type="checkbox" data-toggle="toggle" class="survey-toggle" name="visibleExternal">
+                                            <label>Extern</label>
                                         </div>
 
                                     </div>
@@ -186,7 +178,7 @@
                                         <!-- Zielgruppe -->
 
                                         <div class="form-group"><label>Zielgruppe</label>
-                                            <select multiple class="form-control" id="question-3-66">
+                                            <select multiple class="form-control" name="targetGroups">
                                                 <option value="1">Studierende</option>
                                                 <option value="2">Studieninteressierte</option>
                                                 <option value="3">Mitarbeitende</option>
@@ -204,7 +196,7 @@
                                         <!-- Verantwortlich ZSB -->
 
                                         <div class="form-group"><label>Verantwortliche ZSB</label>
-                                            <p class="help-block"></p><select class="form-control" id="question-3-68">
+                                            <select class="form-control" name="assigneesInternal">
                                                 <option value="">Keine Angabe</option>
                                             </select>
                                         </div>
@@ -215,7 +207,7 @@
                                         <!-- Aufwand ZSB -->
 
                                         <div class="form-group"><label>Aufwand ZSB</label>
-                                            <p class="help-block"></p><select class="form-control" id="question-3-69">
+                                            <select class="form-control" name="expenseInternal">
                                                 <option value="">Keine Angabe</option>
                                                 <option value="Sehr wenig" title="" data-option-id="602" data-action="">Sehr wenig</option>
                                                 <option value="Wenig" title="" data-option-id="603" data-action="">Wenig</option>
@@ -234,7 +226,7 @@
                                         <!-- Koop Bedarf -->
 
                                         <div class="form-group"><label>Koop Bedarf</label>
-                                            <p class="help-block"></p><select class="form-control" id="question-3-70">
+                                            <select class="form-control" name="assigneesExternal">
                                                 <option value="">Keine Angabe</option>
                                             </select>
                                         </div>
@@ -245,7 +237,7 @@
                                         <!-- Aufwand Koop -->
 
                                         <div class="form-group"><label>Aufwand Koop</label>
-                                            <p class="help-block"></p><select class="form-control" id="question-3-71">
+                                            <select class="form-control" name="expenseExternal">
                                                 <option value="">Keine Angabe</option>
                                                 <option value="Sehr wenig" title="" data-option-id="607" data-action="">Sehr wenig</option>
                                                 <option value="Wenig" title="" data-option-id="608" data-action="">Wenig</option>
@@ -267,8 +259,7 @@
 
                                     <div class="form-group">
                                         <label> Bemerkungen/Notizen ZSB:</label>
-                                        <p class="help-block"></p>
-                                        <textarea id="question-3-72" class="form-control" style="min-width: 100%"></textarea>
+                                        <textarea name="notes" class="form-control" style="min-width: 100%"></textarea>
                                     </div>
 
                                 </div>
@@ -280,7 +271,7 @@
                                     <!-- Erinnerungsmail -->
 
                                     <div class="form-group"><label>Erinnerungsmail</label>
-                                        <p class="help-block">Wochen vor dem Termin</p><select class="form-control" id="question-3-73">
+                                        <p class="help-block">Wochen vor dem Termin</p><select class="form-control" name="reminderInternal">
                                             <option value="">Keine Angabe</option>
                                         </select>
                                     </div>
@@ -295,7 +286,7 @@
                                         <!-- Verantwortlich PR -->
 
                                         <div class="form-group"><label>Verantwortlich PR</label>
-                                            <p class="help-block"></p><select class="form-control" id="question-3-74">
+                                            <select class="form-control" name="assigneesPR">
                                                 <option value="">Keine Angabe</option>
                                             </select>
                                         </div>
@@ -306,7 +297,7 @@
                                         <!-- Verteiler PR -->
 
                                         <div class="form-group"><label>Verteiler PR</label>
-                                            <p class="help-block"></p><select class="form-control" id="question-3-75">
+                                            <select class="form-control" name="distributerPR">
                                                 <option value="">Keine Angabe</option>
                                             </select>
                                         </div>
@@ -320,7 +311,7 @@
                                         <!-- Erinnerungsmail PR -->
 
                                         <div class="form-group"><label>Erinnerungsmail PR</label>
-                                            <p class="help-block">Wochen vor dem Termin </p><select class="form-control" id="question-3-76">
+                                            <p class="help-block">Wochen vor dem Termin </p><select class="form-control" name="reminderPR">
                                                 <option value="">Keine Angabe</option>
                                             </select>
                                         </div>
@@ -334,7 +325,7 @@
 
                                         <div class="form-group">
                                             <label>Ankündigungstext PR</label>
-                                            <textarea class="form-control"></textarea>
+                                            <textarea class="form-control" name="announcementPR"></textarea>
                                         </div>
 
                                     </div>
@@ -342,18 +333,19 @@
                             </div>
 
 
-                        </form>
-                    </div>
-
-                    <div class="modal-footer">
-                        <div class="row">
-                            <div class="col-sm-12 text-rigth"> <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
-                                <input class="btn btn-primary" type="submit" value="Eintrag speichern">
-                            </div>
                         </div>
-
-
-                    </div>
+                        
+                        <div class="modal-footer">
+                            <div class="row">
+                                <div class="col-sm-12 text-rigth">
+                                    <button data-dismiss="modal" class="btn btn-default" type="button"><i class="fas fa-times"></i> Abbrechen</button>
+                                    <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Eintrag speichern</button>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </form>
 
                 </div>
             </div>

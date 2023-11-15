@@ -4,19 +4,25 @@ interface EventType {
     isPortfolio: boolean;
     descriptionInternal: string;
     descriptionExternal: string;
-    visible: PublishingChannel[];
+    visible: PublishingChannel[]; //multiple toggles!
     targetGroups: DropdownOption[];
     assigneesInternal: DropdownOption[];
-    assigneesExternal: DropdownOption[];
+    assigneesExternal: DropdownOption[]; 
     expenseInternal: string;
     expenseExternal: string;
     notes: string;
-    reminderInternal: MailReminder;
+    reminderInternal: MailReminder; //Mailreminder!!!
     assigneesPR: DropdownOption[];
     distributerPR: DropdownOption[];
     reminderPR: MailReminder;
     announcementPR: string;
 
+}
+
+interface HttpTransportAttribute {
+    id: string;
+    value: string;
+    isMultiple: boolean;
 }
 
 interface PublishingChannel {
