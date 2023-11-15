@@ -12,7 +12,6 @@ try {
     }
 
     $jsonString = $_POST["eventTypeData"];
-    //$jsonString = '[{"id":"name","value":"Workshop","isMultiple" : false},{"id":"assignee","value":"Maike","isMultiple" : true}]';
     $jsonList = json_decode($jsonString, true);
 
     //Remove old entries with this eventTypeId
@@ -25,16 +24,16 @@ try {
     }
 
     //Insert new values
-    $insertStatement = $dbPdo->prepare("INSERT INTO event_mgmt_types(eventTypeId, multiple, attributeId, value) VALUES (:eventTypeId, :multiple, :attributeId, :value)");
+    $insertStatement = $dbPdo->prepare("INSERT INTO event_mgmt_types(eventTypeId, multiple, attributeKey, value) VALUES (:eventTypeId, :multiple, :attributeKey, :value)");
 
     foreach ($jsonList as $attributeData) {
-        $attributeId = $attributeData["id"];
+        $attributeKey = $attributeData["key"];
         $attributeValue = $attributeData["value"];
         $isMultiple = $attributeData["isMultiple"] ? 1 : 0;
 
         $insertStatement->bindValue(':eventTypeId', $eventTypeId);
         $insertStatement->bindValue(':multiple', $isMultiple);
-        $insertStatement->bindValue(':attributeId', $attributeId);
+        $insertStatement->bindValue(':attributeKey', $attributeKey);
         $insertStatement->bindValue(':value', $attributeValue);
         $insertStatement->execute();
     }
