@@ -29,7 +29,7 @@ class EventTypeView {
         $("#eventTypeModal").modal(visible ? "show" : "hide");
     }
     static async refreshListView() {
-        let eventTypeList = await EventTypeController.refreshEventTypeList();
+        let eventTypeList = await EventTypeController.getAll();
         EventTypeView.eventTypeList = eventTypeList;
         let listElement = document.getElementById("eventTypeList");
         listElement.innerHTML = "";

@@ -36,7 +36,7 @@ interface MailReminder { //????????????
     address: string;
 }
 
-interface EventTypeList {
+interface EventTypeIndexedList {
     [index: string]: EventType;
 }
 
