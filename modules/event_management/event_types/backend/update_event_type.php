@@ -12,7 +12,7 @@ try {
     }
 
     $jsonString = $_POST["eventTypeData"];
-    $jsonString = '[{"id":"name","value":"Workshop","isMultiple" : false},{"id":"assignee","value":"Maike","isMultiple" : true}]';
+    //$jsonString = '[{"id":"name","value":"Workshop","isMultiple" : false},{"id":"assignee","value":"Maike","isMultiple" : true}]';
     $jsonList = json_decode($jsonString, true);
 
     //Remove old entries with this eventTypeId

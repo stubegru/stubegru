@@ -8,8 +8,28 @@ class EventTypeView {
         //Register new event type button
         let newBtn = document.getElementById("eventTypeNewButton");
         newBtn.addEventListener("click", EventTypeView.newEventType);
+        //Register modal's save-button
+        document.getElementById("eventTypeModalForm").addEventListener("submit", event => {
+            event.preventDefault(); //Don't trigger default submit actions
+            let jsonString = EventTypeView.parseFormDataToJsonString();
+            //TODO trigger update or create functions...
+        });
         //@ts-expect-error Activate multi-selects
         MultiselectDropdown({ style: { width: "100%", padding: "5px" } });
+    }
+    static parseFormDataToJsonString() {
+        let form = document.getElementById("eventTypeModalForm");
+        let formData = new FormData(form);
+        let o = [];
+        for (const [key, value] of formData) {
+            console.log(key + " : " + value);
+            // let attribute :HttpTransportAttribute = {
+            //     id : key,
+            //     value: value,
+            //     isMultiple : false //TODO correct logic here...
+            // }
+        }
+        return JSON.stringify(o);
     }
     static newEventType() {
         EventTypeView.resetModalForm();
