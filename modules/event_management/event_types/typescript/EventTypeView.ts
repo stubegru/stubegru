@@ -2,7 +2,7 @@ class EventTypeView {
 
     //@ts-expect-error
     static stubegru = window.stubegru as StubegruObject;
-    static eventTypeList: EventTypeList = {};
+    static eventTypeList: EventTypeIndexedList = {};
 
     static init() {
         //EventTypeView.refreshListView(); //Init event view
@@ -51,7 +51,7 @@ class EventTypeView {
 
     static async refreshListView() {
 
-        let eventTypeList = await EventTypeController.refreshEventTypeList();
+        let eventTypeList = await EventTypeController.getAll();
         EventTypeView.eventTypeList = eventTypeList;
 
         let listElement = document.getElementById("eventTypeList") as HTMLElement;
