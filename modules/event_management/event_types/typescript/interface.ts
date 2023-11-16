@@ -4,17 +4,17 @@ interface EventType {
     isPortfolio: boolean;
     descriptionInternal: string;
     descriptionExternal: string;
-    visible: PublishingChannel[]; //multiple toggles!
-    targetGroups: DropdownOption[];
-    assigneesInternal: DropdownOption[];
-    assigneesExternal: DropdownOption[]; 
+    visible: string[]; //multiple toggles!
+    targetGroups: string[];
+    assigneesInternal: string[];
+    assigneesExternal: string[]; 
     expenseInternal: string;
     expenseExternal: string;
     notes: string;
-    reminderInternal: MailReminder; //Mailreminder!!!
-    assigneesPR: DropdownOption[];
-    distributerPR: DropdownOption[];
-    reminderPR: MailReminder;
+    reminderInternal: string; //Mailreminder!!!
+    assigneesPR: string[];
+    distributerPR: string[];
+    reminderPR: string;
     announcementPR: string;
 
 }
@@ -25,13 +25,17 @@ interface HttpTransportAttribute {
     isMultiple: boolean;
 }
 
+enum EditMode{
+    "CREATE","UPDATE"
+}
+
 interface PublishingChannel {
     name: string;
     isVisible: boolean;
 }
 
 interface DropdownOption {
-    id: string;
+    value: string;
     title: string;
     description: string;
 }
