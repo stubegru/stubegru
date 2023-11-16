@@ -27,54 +27,6 @@
                     </thead>
                     <tbody id="eventTypeTableBody">
                         <!-- Here are generated all the Event Entries with an AJAX call -->
-                        <tr>
-                            <td>Orientierungskurs</td>
-                            <td>Ja</td>
-                            <td>Max Meier</td>
-                            <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
-                                <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
-                                    <i class='fa fa-pencil-alt'></i>
-                                </button>
-                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
-                                    <i class='fa fa-times'></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Anfangskurs</td>
-                            <td>Ja</td>
-                            <td>Anton</td>
-                            <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
-                                <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
-                                    <i class='fa fa-pencil-alt'></i>
-                                </button>
-                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
-                                    <i class='fa fa-times'></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Einführungstage</td>
-                            <td>Nein</td>
-                            <td>Nicole Müller</td>
-                            <td class="permission-EVENT_TYPE_WRITE permission-required text-right">
-                                <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Instanz erstellen">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
-                                    <i class='fa fa-pencil-alt'></i>
-                                </button>
-                                <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
-                                    <i class='fa fa-times'></i>
-                                </button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -88,7 +40,7 @@
                         <h4 class="modal-title">Veranstaltungskategorie bearbeiten</h4>
                     </div>
                     <form id="eventTypeModalForm">
-                    <div class="modal-body">
+                        <div class="modal-body">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="alert alert-info">
@@ -148,26 +100,12 @@
                             <div class="alert alert-success">
                                 <label>Anzeige</label>
                                 <div class="row">
-                                    <div class="col-md-3">
-                                        <!-- Toggle-->
-                                        <!-- ZSB Anzeige?-->
-
-                                        <div class="form-group">
-                                            <input type="checkbox" data-toggle="toggle" class="survey-toggle" name="visibleInternal">
-                                            <label>ZSB</label>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-md-3">
-                                        <!-- Toggle-->
-                                        <!-- Extern Anzeige?-->
-
-                                        <div class="form-group">
-                                            <input type="checkbox" data-toggle="toggle" class="survey-toggle" name="visibleExternal">
-                                            <label>Extern</label>
-                                        </div>
-
-                                    </div>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="intern" name="visible"> ZSB
+                                    </label>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" value="extern" name="visible"> Extern
+                                    </label>
                                 </div>
                             </div>
 
@@ -334,7 +272,7 @@
 
 
                         </div>
-                        
+
                         <div class="modal-footer">
                             <div class="row">
                                 <div class="col-sm-12 text-rigth">
@@ -342,8 +280,8 @@
                                     <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Eintrag speichern</button>
                                 </div>
                             </div>
-                            
-                            
+
+
                         </div>
                     </form>
 

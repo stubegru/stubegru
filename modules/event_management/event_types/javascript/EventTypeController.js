@@ -37,4 +37,41 @@ class EventTypeController {
             EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Löschen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
+    static async create(attributesJson) {
+        try {
+            let formData = new FormData();
+            formData.append("eventTypeData", attributesJson);
+            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/create_event_type.php`, {
+                method: 'POST',
+                body: formData
+            });
+            let parsedResp = await resp.json();
+            if (!parsedResp.status || parsedResp.status == "error") {
+                throw new Error(parsedResp.message);
+            }
+            EventTypeView.stubegru.modules.alerts.alert(parsedResp);
+        }
+        catch (error) {
+            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Erstellen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+        }
+    }
+    static async update(eventTypeId, attributesJson) {
+        try {
+            let formData = new FormData();
+            formData.append("eventTypeId", eventTypeId);
+            formData.append("eventTypeData", attributesJson);
+            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/update_event_type.php`, {
+                method: 'POST',
+                body: formData
+            });
+            let parsedResp = await resp.json();
+            if (!parsedResp.status || parsedResp.status == "error") {
+                throw new Error(parsedResp.message);
+            }
+            EventTypeView.stubegru.modules.alerts.alert(parsedResp);
+        }
+        catch (error) {
+            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Speichern der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+        }
+    }
 }
