@@ -120,7 +120,7 @@ async function initSurvey(path, selector, uniqueKey) {
                     let inputValue = $(this).val();
                     questionData.answer = { value: inputValue };
                     executeSurveyAction(questionData.action);
-                    console.log(questionData);
+                    //console\.log(questionData);
                 });
                 break;
 
@@ -143,7 +143,7 @@ async function initSurvey(path, selector, uniqueKey) {
                     let action = selectedOptionElem.attr("data-action");
                     questionData.answer = { value: inputValue, optionId: optionId };
                     executeSurveyAction(action);
-                    console.log(questionData);
+                    //console\.log(questionData);
                 })
 
                 let selectFormGroup = $(`<div class="form-group"><label>${questionData.title}</label><p class="help-block">${questionData.text}</p></div>`);
@@ -182,11 +182,11 @@ async function initSurvey(path, selector, uniqueKey) {
                         } else {
                             questionData.answer = inputValue + ";"
                         }
-                        console.log(questionData.answer);
+                        //console\.log(questionData.answer);
                     } else {
                         let ans = questionData.answer.replace($(this).val() + ";", "")
                         questionData.answer = ans;
-                        console.log(questionData);
+                        //console\.log(questionData);
                     }
                 });
                 break;
@@ -211,7 +211,7 @@ async function initSurvey(path, selector, uniqueKey) {
                 $(`input[type=radio][name="${questionHtmlId}"]`).on("change", function () {
                     let inputValue = $(this).val();
                     questionData.answer = { value: inputValue };
-                    console.log(questionData);
+                    //console\.log(questionData);
                 })
                 break;
 
@@ -262,7 +262,7 @@ async function initSurvey(path, selector, uniqueKey) {
                 $(`#${questionHtmlId}`).on("change", function () {
                     let inputValue = $(this).val();
                     questionData.text = { value: inputValue };
-                    console.log(questionData);
+                    //console\.log(questionData);
                 });
                 break;
 
@@ -279,7 +279,7 @@ async function initSurvey(path, selector, uniqueKey) {
                     let inputValue = $(this).is(":checked");
                     questionData.answer = { value: inputValue };
                     executeSurveyAction(questionData.action);
-                    console.log(questionData);
+                    //console\.log(questionData);
                 })
 
                 break;
@@ -346,7 +346,7 @@ async function initSurvey(path, selector, uniqueKey) {
                     let inputValue = $(`input:radio[name ='${questionHtmlId}']:checked`).val();
                     questionData.answer = { value: inputValue };
                     executeSurveyAction(questionData.action);
-                    console.log(questionData);
+                    //console\.log(questionData);
                 })
 
                 break;
