@@ -12,7 +12,7 @@ try {
 
     foreach ($attributeRowList as $attributeRow) {
         $eventTypeId = $attributeRow["eventTypeId"];
-        $attributeId = $attributeRow["attributeId"];
+        $attributeKey = $attributeRow["attributeKey"];
         $attributeValue = $attributeRow["value"];
         $isMultiple = $attributeRow["multiple"];
 
@@ -24,12 +24,12 @@ try {
         
         //Add current value as property to eventType Object. If this property is multiple -> create a list of properties at that point.
         if ($isMultiple) {
-            if (empty($eventType[$attributeId])) {
-                $eventType[$attributeId] = array(); //Create new list of values 
+            if (empty($eventType[$attributeKey])) {
+                $eventType[$attributeKey] = array(); //Create new list of values 
             }
-            $eventType[$attributeId][] = $attributeValue; //Add new value to list of values
+            $eventType[$attributeKey][] = $attributeValue; //Add new value to list of values
         } else {
-            $eventType[$attributeId] = $attributeValue; //Add value as plain property
+            $eventType[$attributeKey] = $attributeValue; //Add value as plain property
         }
     }
     echo json_encode($eventTypeList);
