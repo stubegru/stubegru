@@ -1,77 +1,109 @@
 class EventTypeController {
-    static async getAll() {
+    static init() {
+        EventTypeController.handleGetAllEventTypes(); //Init event view
+        setInterval(EventTypeController.handleGetAllEventTypes, 1000 * 60 * 15); //Refresh view every 15 minutes
+        //Reset modal on hide
+        let modal = document.getElementById("eventTypeModal");
+        modal.addEventListener("hidden.bs.modal", EventTypeView.resetModalForm);
+        //Register new event type button
+        let newBtn = document.getElementById("eventTypeNewButton");
+        newBtn.addEventListener("click", EventTypeView.showModalForCreate);
+        //Register modal's save-button
+        document.getElementById("eventTypeModalForm").addEventListener("submit", event => {
+            event.preventDefault(); //Don't trigger default submit actions
+            let jsonString = EventTypeController.parseFormDataToJsonString();
+            EventTypeController.editMode == EditMode.CREATE ? EventTypeController.handleCreateEventType(jsonString) : EventTypeController.handleUpdateEventType(jsonString);
+        });
+        //@ts-expect-error Activate multi-selects
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" } });
+    }
+    static async handleUpdateEventType(jsonString) {
         try {
-            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/get_all_event_types.php`);
-            let eventTypeList = await resp.json();
-            return eventTypeList;
+            let resp = await EventTypeService.update(EventTypeController.currentEventTypeId, jsonString);
+            EventTypeController.stubegru.modules.alerts.alert(resp);
+            EventTypeView.setModalVisible(false);
+            EventTypeController.handleGetAllEventTypes();
         }
         catch (error) {
-            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventTypeController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Speichern der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
-    static async get(eventTypeId) {
+    static async handleCreateEventType(jsonString) {
         try {
-            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/get_event_type.php?eventTypeId=${eventTypeId}`);
-            let eventType = await resp.json();
-            return eventType;
+            let resp = await EventTypeService.create(jsonString);
+            EventTypeController.stubegru.modules.alerts.alert(resp);
+            EventTypeView.setModalVisible(false);
+            EventTypeController.handleGetAllEventTypes();
         }
         catch (error) {
-            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventTypeController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Erstellen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
-    static async delete(eventTypeId) {
+    static async handleDeleteEventType(eventTypeId) {
         try {
-            let formData = new FormData();
-            formData.append("eventTypeId", eventTypeId);
-            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/delete_event_type.php`, {
-                method: 'POST',
-                body: formData
+            let resp = await EventTypeService.delete(eventTypeId);
+            EventTypeController.stubegru.modules.alerts.alert(resp);
+            EventTypeController.handleGetAllEventTypes();
+        }
+        catch (error) {
+            EventTypeController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Löschen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+        }
+    }
+    static async handleGetAllEventTypes() {
+        try {
+            let eventTypeList = await EventTypeService.getAll();
+            EventTypeController.eventTypeList = eventTypeList;
+            EventTypeView.renderListView(eventTypeList);
+            EventTypeController.registerDeleteButtons();
+            EventTypeController.registerEditButtons();
+            EventTypeController.stubegru.modules.userUtils.updateAdminElements();
+        }
+        catch (error) {
+            EventTypeController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+        }
+    }
+    static registerEditButtons() {
+        let editBtnList = document.querySelectorAll(".event-type-edit-button");
+        editBtnList.forEach(btn => {
+            btn.addEventListener("click", () => {
+                let eventTypeId = btn.getAttribute("data-event-type-id");
+                EventTypeView.showModalForUpdate(eventTypeId);
             });
-            let parsedResp = await resp.json();
-            if (!parsedResp.status || parsedResp.status == "error") {
-                throw new Error(parsedResp.message);
-            }
-            EventTypeView.stubegru.modules.alerts.alert(parsedResp);
-        }
-        catch (error) {
-            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Löschen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
-        }
+        });
     }
-    static async create(attributesJson) {
-        try {
-            let formData = new FormData();
-            formData.append("eventTypeData", attributesJson);
-            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/create_event_type.php`, {
-                method: 'POST',
-                body: formData
+    static registerDeleteButtons() {
+        let deleteBtnList = document.querySelectorAll(".event-type-delete-button");
+        deleteBtnList.forEach(btn => {
+            btn.addEventListener("click", () => {
+                let eventTypeId = btn.getAttribute("data-event-type-id");
+                EventTypeController.stubegru.modules.alerts.deleteConfirm("Veranstaltungskategorie löschen", "Soll diese Veranstaltungskategorie wirklich gelöscht werden?", () => EventTypeController.handleDeleteEventType(eventTypeId));
             });
-            let parsedResp = await resp.json();
-            if (!parsedResp.status || parsedResp.status == "error") {
-                throw new Error(parsedResp.message);
-            }
-            EventTypeView.stubegru.modules.alerts.alert(parsedResp);
-        }
-        catch (error) {
-            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Erstellen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
-        }
+        });
     }
-    static async update(eventTypeId, attributesJson) {
-        try {
-            let formData = new FormData();
-            formData.append("eventTypeId", eventTypeId);
-            formData.append("eventTypeData", attributesJson);
-            let resp = await fetch(`${EventTypeView.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/update_event_type.php`, {
-                method: 'POST',
-                body: formData
-            });
-            let parsedResp = await resp.json();
-            if (!parsedResp.status || parsedResp.status == "error") {
-                throw new Error(parsedResp.message);
-            }
-            EventTypeView.stubegru.modules.alerts.alert(parsedResp);
+    static parseFormDataToJsonString() {
+        let form = document.getElementById("eventTypeModalForm");
+        let formData = new FormData(form);
+        let o = [];
+        //generate list of multi-select's names
+        let multipleNamesList = [];
+        let elementList = document.querySelectorAll(`#eventTypeModalForm select[multiple]`);
+        elementList.forEach(e => multipleNamesList.push(e.getAttribute("name")));
+        //add special multiple keys
+        multipleNamesList.push("visible"); //Mark visible-checkboxes as multiple
+        for (const [key, value] of formData) {
+            //console.log(key + " : " + value);
+            let attribute = {
+                key: key,
+                value: value,
+                isMultiple: multipleNamesList.includes(key)
+            };
+            o.push(attribute);
         }
-        catch (error) {
-            EventTypeView.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Speichern der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
-        }
+        console.log(o);
+        return JSON.stringify(o);
     }
 }
+//@ts-expect-error
+EventTypeController.stubegru = window.stubegru;
+EventTypeController.eventTypeList = {};
+EventTypeController.init();

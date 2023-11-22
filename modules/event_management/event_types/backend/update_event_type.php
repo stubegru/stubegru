@@ -5,7 +5,7 @@ try {
     permissionRequest("EVENT_TYPE_WRITE");
     $ownId = $_SESSION["id"];
 
-    if (isset($_POST["eventTypeId"]) && is_numeric($_POST["eventTypeId"])) {
+    if (isset($_POST["eventTypeId"])) {
         $eventTypeId = $_POST["eventTypeId"];
     } else {
         throw new Exception("Die Id '" . $_POST['eventTypeId'] . "' ist keine gültige Id für eine Veranstaltungskategorie.", 404);
