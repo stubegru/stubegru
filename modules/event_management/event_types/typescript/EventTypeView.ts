@@ -12,9 +12,52 @@ class EventTypeView {
         EventTypeController.editMode = EditMode.UPDATE;
         EventTypeController.currentEventTypeId = eventTypeId;
 
+        for (const key in eventType) {
+            const value = eventType[key];
+            console.log(`\ncurrently at "${key}" : ${value}`);
+            switch (typeof value) {
+                case "string":
+                    let input = document.querySelector(`#eventTypeModalForm input[name='${key}'], #eventTypeModalForm textarea[name='${key}'], #eventTypeModalForm select[name='${key}']`) as HTMLInputElement;
+                    if (input && input.getAttribute("type") == "checkbox") {
+                        input.checked = (value == "on");
+                        input.dispatchEvent(new Event("change")); //fire change event, to update toggle html
+                        console.log(`--> setting checkbox ${key} to value ${input.checked}`);
+                    }
+                    if (input) { input.value = value; }
+                    else { console.log(`--> ignoring ${key} because no matching input was found`); }
+                    break;
+                case "object":
+                    let input2 = document.querySelector(`#eventTypeModalForm select[name='${key}']`) as HTMLSelectElement;
+                    if (input2) { EventTypeView.setMultipleSelectValues(input2, value); }
+                    else {
+                        EventTypeView.setCheckboxValues(`#eventTypeModalForm input[name='${key}']`, value);
+                    }
+                    break;
+
+                default:
+                    console.log(`--> ignoring ${key} because its value is of type ${typeof value}`);
+                    break;
+            }
+
+        }
+
         //TODO set inputs elements with object properties...
 
         EventTypeView.setModalVisible(true);
+    }
+
+    static setMultipleSelectValues(selectElement: HTMLSelectElement, values: string[]) {
+        for (const option of selectElement) {
+            option.selected = (values.indexOf(option.value) != -1);
+        }
+    }
+
+    static setCheckboxValues(selector: string, values: string[]) {
+        let checkBoxList = document.querySelectorAll(selector) as NodeListOf<HTMLInputElement>;
+
+        for (const checkboxElem of checkBoxList) {
+            checkboxElem.checked = (values.indexOf(checkboxElem.getAttribute("value")) != -1);
+        }
     }
 
     /**
@@ -28,6 +71,7 @@ class EventTypeView {
     static resetModalForm() {
         let form = document.getElementById("eventTypeModalForm") as HTMLFormElement;
         form.reset();
+        document.querySelectorAll(`#eventTypeModalForm input[type='checkbox'][data-toggle='toggle']`).forEach(elem => { elem.dispatchEvent(new Event("change")); }); //trigger change event on toggles to update state
         EventTypeController.editMode = undefined;
         EventTypeController.currentEventTypeId = undefined;
     }
