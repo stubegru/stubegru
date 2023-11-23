@@ -11,7 +11,7 @@ class EventTypeController {
         //Register modal's save-button
         document.getElementById("eventTypeModalForm").addEventListener("submit", event => {
             event.preventDefault(); //Don't trigger default submit actions
-            let jsonString = EventTypeController.parseFormDataToJsonString();
+            let jsonString = EventTypeView.parseFormDataToJsonString();
             EventTypeController.editMode == EditMode.CREATE ? EventTypeController.handleCreateEventType(jsonString) : EventTypeController.handleUpdateEventType(jsonString);
         });
         //@ts-expect-error Activate multi-selects
@@ -79,28 +79,6 @@ class EventTypeController {
                 EventTypeController.stubegru.modules.alerts.deleteConfirm("Veranstaltungskategorie löschen", "Soll diese Veranstaltungskategorie wirklich gelöscht werden?", () => EventTypeController.handleDeleteEventType(eventTypeId));
             });
         });
-    }
-    static parseFormDataToJsonString() {
-        let form = document.getElementById("eventTypeModalForm");
-        let formData = new FormData(form);
-        let o = [];
-        //generate list of multi-select's names
-        let multipleNamesList = [];
-        let elementList = document.querySelectorAll(`#eventTypeModalForm select[multiple]`);
-        elementList.forEach(e => multipleNamesList.push(e.getAttribute("name")));
-        //add special multiple keys
-        multipleNamesList.push("visible"); //Mark visible-checkboxes as multiple
-        for (const [key, value] of formData) {
-            console.log(key + " : " + value);
-            let attribute = {
-                key: key,
-                value: value,
-                isMultiple: multipleNamesList.includes(key)
-            };
-            o.push(attribute);
-        }
-        console.log(o);
-        return JSON.stringify(o);
     }
 }
 //@ts-expect-error

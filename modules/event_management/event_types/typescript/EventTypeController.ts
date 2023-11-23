@@ -21,7 +21,7 @@ class EventTypeController {
         //Register modal's save-button
         document.getElementById("eventTypeModalForm").addEventListener("submit", event => {
             event.preventDefault(); //Don't trigger default submit actions
-            let jsonString = EventTypeController.parseFormDataToJsonString();
+            let jsonString = EventTypeView.parseFormDataToJsonString();
 
             EventTypeController.editMode == EditMode.CREATE ? EventTypeController.handleCreateEventType(jsonString) : EventTypeController.handleUpdateEventType(jsonString);
         })
@@ -99,34 +99,7 @@ class EventTypeController {
     }
 
 
-    static parseFormDataToJsonString(): string {
-        let form = document.getElementById("eventTypeModalForm") as HTMLFormElement;
-        let formData = new FormData(form);
-        let o = [];
-
-        //generate list of multi-select's names
-        let multipleNamesList = [];
-        let elementList = document.querySelectorAll(`#eventTypeModalForm select[multiple]`);
-        elementList.forEach(e => multipleNamesList.push(e.getAttribute("name")));
-
-        //add special multiple keys
-        multipleNamesList.push("visible"); //Mark visible-checkboxes as multiple
-
-
-        for (const [key, value] of formData) {
-            console.log(key + " : " + value);
-
-            let attribute: HttpTransportAttribute = {
-                key: key,
-                value: value as string,
-                isMultiple: multipleNamesList.includes(key)
-            }
-            o.push(attribute);
-        }
-
-        console.log(o);
-        return JSON.stringify(o);
-    }
+   
 }
 
 EventTypeController.init();

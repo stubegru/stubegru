@@ -14,35 +14,38 @@ class EventTypeView {
 
         for (const key in eventType) {
             const value = eventType[key];
-            console.log(`\ncurrently at "${key}" : ${value}`);
-            switch (typeof value) {
-                case "string":
-                    let input = document.querySelector(`#eventTypeModalForm input[name='${key}'], #eventTypeModalForm textarea[name='${key}'], #eventTypeModalForm select[name='${key}']`) as HTMLInputElement;
-                    if (input && input.getAttribute("type") == "checkbox") {
-                        input.checked = (value == "on");
-                        input.dispatchEvent(new Event("change")); //fire change event, to update toggle html
-                        console.log(`--> setting checkbox ${key} to value ${input.checked}`);
-                    }
-                    if (input) { input.value = value; }
-                    else { console.log(`--> ignoring ${key} because no matching input was found`); }
-                    break;
-                case "object":
-                    let input2 = document.querySelector(`#eventTypeModalForm select[name='${key}']`) as HTMLSelectElement;
-                    if (input2) { EventTypeView.setMultipleSelectValues(input2, value); }
-                    else {
+            let formElement = document.querySelector(`#eventTypeModalForm [name='${key}']`) as HTMLElement;
+            if (!formElement) { continue; } //Skip if this attribute is not present
+
+            switch (formElement.nodeName) {
+                case "INPUT":
+                    let inputElement = formElement as HTMLInputElement;
+                    let inputType = inputElement.getAttribute("type");
+
+                    if (inputType == "checkbox") {
                         EventTypeView.setCheckboxValues(`#eventTypeModalForm input[name='${key}']`, value);
+                        break;
+                    }
+
+                    inputElement.value = value;
+                    break;
+
+
+                case "SELECT":
+                    let selectElement = formElement as HTMLSelectElement;
+                    if (typeof value == "string") {
+                        selectElement.value = value;
+                    } else {
+                        EventTypeView.setMultipleSelectValues(selectElement, value);
                     }
                     break;
 
-                default:
-                    console.log(`--> ignoring ${key} because its value is of type ${typeof value}`);
+                case "TEXTAREA":
+                    let textareaElement = formElement as HTMLTextAreaElement;
+                    textareaElement.value = value;
                     break;
             }
-
         }
-
-        //TODO set inputs elements with object properties...
-
         EventTypeView.setModalVisible(true);
     }
 
@@ -57,7 +60,37 @@ class EventTypeView {
 
         for (const checkboxElem of checkBoxList) {
             checkboxElem.checked = (values.indexOf(checkboxElem.getAttribute("value")) != -1);
+            checkboxElem.dispatchEvent(new Event("change")); //fire change event, to update toggle html
         }
+    }
+
+    static parseFormDataToJsonString(): string {
+        let form = document.getElementById("eventTypeModalForm") as HTMLFormElement;
+        let formData = new FormData(form);
+        let o = [];
+
+        //generate list of multi-select's names
+        let multipleNamesList = [];
+        let elementList = document.querySelectorAll(`#eventTypeModalForm select[multiple]`);
+        elementList.forEach(e => multipleNamesList.push(e.getAttribute("name")));
+
+        //add special multiple keys
+        multipleNamesList.push("visible"); //Mark visible-checkboxes as multiple
+
+
+        for (const [key, value] of formData) {
+            console.log(key + " : " + value);
+
+            let attribute: HttpTransportAttribute = {
+                key: key,
+                value: value as string,
+                isMultiple: multipleNamesList.includes(key)
+            }
+            o.push(attribute);
+        }
+
+        console.log(o);
+        return JSON.stringify(o);
     }
 
     /**
