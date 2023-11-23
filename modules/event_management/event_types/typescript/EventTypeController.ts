@@ -114,7 +114,7 @@ class EventTypeController {
 
 
         for (const [key, value] of formData) {
-            //console.log(key + " : " + value);
+            console.log(key + " : " + value);
 
             let attribute: HttpTransportAttribute = {
                 key: key,

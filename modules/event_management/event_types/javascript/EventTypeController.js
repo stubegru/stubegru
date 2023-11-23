@@ -91,7 +91,7 @@ class EventTypeController {
         //add special multiple keys
         multipleNamesList.push("visible"); //Mark visible-checkboxes as multiple
         for (const [key, value] of formData) {
-            //console.log(key + " : " + value);
+            console.log(key + " : " + value);
             let attribute = {
                 key: key,
                 value: value,
