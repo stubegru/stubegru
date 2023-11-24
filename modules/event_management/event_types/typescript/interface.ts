@@ -109,7 +109,7 @@ interface StubegruHttpResponse {
 
 interface StubegruUserUtilsModule {
     updateAdminElements(): Promise<void>;
-    getAllUsers(): Promise<StubegruUser[]>;
+    getAllUsers(): Promise<StringIndexedList<StubegruUser>>;
 }
 
 interface StubegruUser {

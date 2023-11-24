@@ -10,9 +10,9 @@ class EventTypeController {
     static async init() {
         EventTypeController.config = await EventTypeController.loadConfig();
 
-        EventTypeView.initModalForm(EventTypeController.config.modalForm);
+        await EventTypeView.initModalForm(EventTypeController.config.modalForm);
 
-        EventTypeController.handleGetAllEventTypes(); //Init event view
+        await EventTypeController.handleGetAllEventTypes(); //Init event view
         setInterval(EventTypeController.handleGetAllEventTypes, 1000 * 60 * 15); //Refresh view every 15 minutes
 
         //Reset modal on hide
@@ -32,14 +32,14 @@ class EventTypeController {
         })
 
         //@ts-expect-error Activate multi-selects
-        MultiselectDropdown({ style: { width: "100%", padding: "5px" } });
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Keine Angabe" });
 
     }
 
     static async loadConfig(): Promise<EventTypesConfig> {
         try {
             let resp = await fetch(`${EventTypeController.stubegru.constants.BASE_URL}/custom/event_management_config.json`);
-            let config : eventMgmtConfig = await resp.json();
+            let config: eventMgmtConfig = await resp.json();
             return config.eventTypes;
         } catch (error) {
             console.error(`[Event Types] Could not load config file at 'custom/event_management_config.json'.`);
@@ -84,7 +84,7 @@ class EventTypeController {
         try {
             let eventTypeList = await EventTypeService.getAll();
             EventTypeController.eventTypeList = eventTypeList;
-            EventTypeView.renderListView(eventTypeList);
+            await EventTypeView.renderListView(eventTypeList);
             EventTypeController.registerDeleteButtons();
             EventTypeController.registerEditButtons();
             EventTypeController.stubegru.modules.userUtils.updateAdminElements()
