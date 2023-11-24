@@ -99,12 +99,13 @@
 
                             <div class="alert alert-success">
                                 <label>Anzeige</label>
-                                <div class="row">
+                                <div class="row" style="margin: 10px;">
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" value="intern" name="visible"> ZSB
+                                        <input type="checkbox" data-toggle="toggle" value="intern" name="visible"> <b>ZSB</b>
                                     </label>
+                                    &nbsp;&nbsp;&nbsp;
                                     <label class="checkbox-inline">
-                                        <input type="checkbox" value="extern" name="visible"> Extern
+                                        <input type="checkbox" data-toggle="toggle" value="extern" name="visible"> <b>Extern</b>
                                     </label>
                                 </div>
                             </div>
@@ -117,11 +118,6 @@
 
                                         <div class="form-group"><label>Zielgruppe</label>
                                             <select multiple class="form-control" name="targetGroups">
-                                                <option>Studierende</option>
-                                                <option>Studieninteressierte</option>
-                                                <option>Mitarbeitende</option>
-                                                <option>Fachbereiche</option>
-                                                <option>Verwaltung</option>
                                             </select>
                                         </div>
 
@@ -134,9 +130,7 @@
                                         <!-- Verantwortlich ZSB -->
 
                                         <div class="form-group"><label>Verantwortliche ZSB</label>
-                                            <select class="form-control" name="assigneesInternal">
-                                                <option value="">Keine Angabe</option>
-                                                <option>Verwaltung</option>
+                                            <select multiple class="form-control" name="assigneesInternal">
                                             </select>
                                         </div>
 
@@ -148,11 +142,6 @@
                                         <div class="form-group"><label>Aufwand ZSB</label>
                                             <select class="form-control" name="expenseInternal">
                                                 <option value="">Keine Angabe</option>
-                                                <option value="Sehr wenig" title="" data-option-id="602" data-action="">Sehr wenig</option>
-                                                <option value="Wenig" title="" data-option-id="603" data-action="">Wenig</option>
-                                                <option value="Durchschnittlich" title="" data-option-id="604" data-action="">Durchschnittlich</option>
-                                                <option value="Viel" title="" data-option-id="605" data-action="">Viel</option>
-                                                <option value="Sehr viel" title="" data-option-id="606" data-action="">Sehr viel</option>
                                             </select>
                                         </div>
 
@@ -165,9 +154,7 @@
                                         <!-- Koop Bedarf -->
 
                                         <div class="form-group"><label>Koop Bedarf</label>
-                                            <select class="form-control" name="assigneesExternal">
-                                                <option value="">Keine Angabe</option>
-                                                <option>Verwaltung</option>
+                                            <select multiple class="form-control" name="assigneesExternal">
                                             </select>
                                         </div>
 
@@ -179,11 +166,6 @@
                                         <div class="form-group"><label>Aufwand Koop</label>
                                             <select class="form-control" name="expenseExternal">
                                                 <option value="">Keine Angabe</option>
-                                                <option value="Sehr wenig" title="" data-option-id="607" data-action="">Sehr wenig</option>
-                                                <option value="Wenig" title="" data-option-id="608" data-action="">Wenig</option>
-                                                <option value="Durchschnittlich" title="" data-option-id="609" data-action="">Durchschnittlich</option>
-                                                <option value="Viel" title="" data-option-id="610" data-action="">Viel</option>
-                                                <option value="Sehr viel" title="" data-option-id="611" data-action="">Sehr viel</option>
                                             </select>
                                         </div>
 
@@ -227,9 +209,7 @@
                                         <!-- Verantwortlich PR -->
 
                                         <div class="form-group"><label>Verantwortlich PR</label>
-                                            <select class="form-control" name="assigneesPR">
-                                                <option value="">Keine Angabe</option>
-                                                <option>Verwaltung</option>
+                                            <select multiple class="form-control" name="assigneesPR">
                                             </select>
                                         </div>
 
@@ -239,9 +219,7 @@
                                         <!-- Verteiler PR -->
 
                                         <div class="form-group"><label>Verteiler PR</label>
-                                            <select class="form-control" name="distributerPR">
-                                                <option value="">Keine Angabe</option>
-                                                <option>Verwaltung</option>
+                                            <select multiple class="form-control" name="distributerPR">
                                             </select>
                                         </div>
 
@@ -256,7 +234,6 @@
                                         <div class="form-group"><label>Erinnerungsmail PR</label>
                                             <p class="help-block">Wochen vor dem Termin </p><select class="form-control" name="reminderPR">
                                                 <option value="">Keine Angabe</option>
-                                                <option>Verwaltung</option>
                                             </select>
                                         </div>
 

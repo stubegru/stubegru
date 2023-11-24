@@ -1,4 +1,12 @@
 class EventTypeView {
+    static initModalForm(config) {
+        let presetValues = config.presetValues;
+        for (const inputName in presetValues) {
+            const valueList = presetValues[inputName];
+            const selectElement = document.querySelector(`#eventTypeModalForm [name='${inputName}']`);
+            valueList.forEach(value => selectElement.add(new Option(value)));
+        }
+    }
     static showModalForCreate() {
         EventTypeView.resetModalForm();
         EventTypeController.editMode = EditMode.CREATE;
