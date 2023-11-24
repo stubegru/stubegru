@@ -1,12 +1,22 @@
 class EventTypeView {
 
-    static initModalForm(config: FormConfig) {
+    static async initModalForm(config: FormConfig) {
+        //insert select options from config file
         let presetValues = config.presetValues;
         for (const inputName in presetValues) {
             const valueList = presetValues[inputName];
             const selectElement = document.querySelector(`#eventTypeModalForm [name='${inputName}']`) as HTMLSelectElement;
             valueList.forEach(value => selectElement.add(new Option(value)));
         }
+
+        //insert userLists
+        const allUsersList = await EventTypeController.stubegru.modules.userUtils.getAllUsers();
+        document.querySelectorAll(`#eventTypeModalForm select[data-user="all"]`).forEach((elem: HTMLSelectElement) => {
+            for (const userId in allUsersList) {
+                const user = allUsersList[userId];
+                elem.add(new Option(user.name, user.id));
+            }
+        });
     }
 
     static showModalForCreate() {
@@ -88,8 +98,6 @@ class EventTypeView {
 
 
         for (const [key, value] of formData) {
-            console.log(key + " : " + value);
-
             let attribute: HttpTransportAttribute = {
                 key: key,
                 value: value as string,
@@ -98,7 +106,6 @@ class EventTypeView {
             o.push(attribute);
         }
 
-        console.log(o);
         return JSON.stringify(o);
     }
 
@@ -118,18 +125,22 @@ class EventTypeView {
         EventTypeController.currentEventTypeId = undefined;
     }
 
-    static renderListView(eventTypeList) {
+    static async renderListView(eventTypeList: StringIndexedList<EventType>) {
         let listElement = document.getElementById("eventTypeTableBody") as HTMLElement;
         listElement.innerHTML = "";
+        const allUsersList = await EventTypeController.stubegru.modules.userUtils.getAllUsers();
+
 
         for (let eventTypeId in eventTypeList) {
             let eventType = eventTypeList[eventTypeId];
-            let assignee = "Somebody";
+            let assigneeId = eventType.assigneesInternal[0];
+            let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
+            const isActive = eventType.isPortfolio ? "Ja" : "Nein";
 
             let tableRow = `<tr>
                 <td>${eventType.name}</td>
-                <td>${eventType.isPortfolio ? "Ja" : "Nein"}</td>
-                <td>${assignee}</td>
+                <td>${isActive}</td>
+                <td>${assigneeName}</td>
                 <td>
                     <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
                         <i class="fas fa-plus"></i>

@@ -45,7 +45,8 @@ async function updateUserManagement() { //Tabelle mit den Nutzern updaten
  */
 function renderUserManagementView() {
     let html = "";
-    for (let user of userManagementUserData) {
+    for (let userId in userManagementUserData) {
+        let user = userManagementUserData[userId];
 
         //filter
         let queryRE = new RegExp(userManagementFilterQuery, 'i'); //i for case insensitiv
