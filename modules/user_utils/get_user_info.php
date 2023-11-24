@@ -2,6 +2,7 @@
 // Dieses Script gibt die Daten zur übergebenen Nutzer id zurück
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("USER_READ");
 
 $userId = ($_GET["userId"]);
 if ($userId == "currentUser") {$userId = $_SESSION['id'];}

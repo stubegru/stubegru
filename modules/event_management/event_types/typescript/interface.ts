@@ -109,5 +109,16 @@ interface StubegruHttpResponse {
 
 interface StubegruUserUtilsModule {
     updateAdminElements(): Promise<void>;
+    getAllUsers(): Promise<StubegruUser[]>;
+}
+
+interface StubegruUser {
+    id: string;
+    name: string;
+    mail: string;
+    account: string;
+    role: string;
+    erfassungsdatum: string;
+    erfasser : string;
 }
 

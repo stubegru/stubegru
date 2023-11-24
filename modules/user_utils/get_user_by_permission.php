@@ -1,6 +1,7 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+permissionRequest("USER_READ");
 
 $permissionRequest = $_GET["permissionRequest"];
 

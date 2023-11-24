@@ -35,16 +35,9 @@ async function getRolePresets() {
     return presetsObject;
 }
 
-function updateUserManagement() { //Tabelle mit den Nutzern updaten
-    $.ajax({
-        type: "POST",
-        dataType: "json",
-        url: `${stubegru.constants.BASE_URL}/modules/user_management/get_all_users.php`,
-        success: function (json) {
-            userManagementUserData = json;
-            renderUserManagementView();
-        }
-    });
+async function updateUserManagement() { //Tabelle mit den Nutzern updaten
+    userManagementUserData = await stubegru.modules.userUtils.getAllUsers();
+    renderUserManagementView();
 }
 
 /**

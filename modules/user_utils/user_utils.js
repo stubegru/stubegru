@@ -9,6 +9,21 @@ stubegru.modules.userUtils.getUserInfo = async function (userId) {
     return userData;
 }
 
+let userUtilsAllUsersList = undefined;
+async function fetchAllUsers() {
+    const resp = await fetch(`${stubegru.constants.BASE_URL}/modules/user_utils/get_all_users.php`)
+    const userData = await resp.json();
+    userUtilsAllUsersList = userData;
+}
+
+stubegru.modules.userUtils.getAllUsers = async function () {
+    //if local user list ist already fetched -> return it
+    if (userUtilsAllUsersList) { return userUtilsAllUsersList; }
+    //if not -> fetch it from server:
+    await fetchAllUsers();
+    return userUtilsAllUsersList;
+}
+
 /**
  * @param {string} permissionRequest name of the permissionRequest
  */
