@@ -1,5 +1,7 @@
 class EventTypeController {
-    static init() {
+    static async init() {
+        EventTypeController.config = await EventTypeController.loadConfig();
+        EventTypeView.initModalForm(EventTypeController.config.modalForm);
         EventTypeController.handleGetAllEventTypes(); //Init event view
         setInterval(EventTypeController.handleGetAllEventTypes, 1000 * 60 * 15); //Refresh view every 15 minutes
         //Reset modal on hide
@@ -16,6 +18,17 @@ class EventTypeController {
         });
         //@ts-expect-error Activate multi-selects
         MultiselectDropdown({ style: { width: "100%", padding: "5px" } });
+    }
+    static async loadConfig() {
+        try {
+            let resp = await fetch(`${EventTypeController.stubegru.constants.BASE_URL}/custom/event_management_config.json`);
+            let config = await resp.json();
+            return config.eventTypes;
+        }
+        catch (error) {
+            console.error(`[Event Types] Could not load config file at 'custom/event_management_config.json'.`);
+            throw error;
+        }
     }
     static async handleUpdateEventType(jsonString) {
         try {

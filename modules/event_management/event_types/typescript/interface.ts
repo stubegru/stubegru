@@ -7,7 +7,7 @@ interface EventType {
     visible: string[]; //multiple toggles!
     targetGroups: string[];
     assigneesInternal: string[];
-    assigneesExternal: string[]; 
+    assigneesExternal: string[];
     expenseInternal: string;
     expenseExternal: string;
     notes: string;
@@ -25,8 +25,8 @@ interface HttpTransportAttribute {
     isMultiple: boolean;
 }
 
-enum EditMode{
-    "CREATE","UPDATE"
+enum EditMode {
+    "CREATE", "UPDATE"
 }
 
 interface PublishingChannel {
@@ -46,9 +46,28 @@ interface MailReminder { //????????????
     address: string;
 }
 
-interface EventTypeIndexedList {
-    [index: string]: EventType;
+interface eventMgmtConfig {
+    eventTypes: EventTypesConfig;
 }
+
+interface EventTypesConfig {
+    modalForm: FormConfig;
+}
+
+interface FormConfig {
+    presetValues: StringIndexedList<string[]>
+}
+
+
+
+
+
+
+
+interface StringIndexedList<ListItem> {
+    [index: string]: ListItem;
+}
+
 
 
 
@@ -56,13 +75,9 @@ interface EventTypeIndexedList {
 
 interface StubegruObject {
     modules: StubegruModulesList;
-    constants: StubegruConstantsList;
+    constants: StringIndexedList<String>;
     currentView: string;
     currentUser: object;
-}
-
-interface StubegruConstantsList {
-    [index: string]: string;
 }
 
 interface StubegruModulesList {

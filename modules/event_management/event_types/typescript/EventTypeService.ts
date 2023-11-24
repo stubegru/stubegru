@@ -1,8 +1,8 @@
 class EventTypeService {
 
-    static async getAll(): Promise<EventTypeIndexedList> {
+    static async getAll(): Promise<StringIndexedList<EventType>> {
         let resp = await fetch(`${EventTypeController.stubegru.constants.BASE_URL}/modules/event_management/event_types/backend/get_all_event_types.php`);
-        let eventTypeList: EventTypeIndexedList = await resp.json();
+        let eventTypeList: StringIndexedList<EventType> = await resp.json();
         return eventTypeList;
     }
 
