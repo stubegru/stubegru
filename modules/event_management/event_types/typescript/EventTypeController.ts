@@ -13,7 +13,7 @@ class EventTypeController {
         await EventTypeView.initModalForm(EventTypeController.config.modalForm);
 
         await EventTypeController.handleGetAllEventTypes(); //Init event view
-        setInterval(EventTypeController.handleGetAllEventTypes, 1000 * 60 * 15); //Refresh view every 15 minutes
+        setInterval(EventTypeController.handleGetAllEventTypes, 1000 * 60 * 15); //Refresh the view every 15 minutes
 
         //Reset modal on hide
         let modal = document.getElementById("eventTypeModal");

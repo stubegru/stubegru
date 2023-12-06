@@ -2,3 +2,7 @@
 .git-ftp-ignore
 .git-ftp-include
 .dev/*
+CITATION.cff
+README.md
+**/*.ts
+**/tsconfig.json
