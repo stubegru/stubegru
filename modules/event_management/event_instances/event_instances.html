@@ -1,7 +1,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-            <a class="" href="#collapseEventInstances" data-toggle="collapse" aria-expanded="true">Veranstaltungskategorien</a>
+            <a class="" href="#collapseEventInstances" data-toggle="collapse" aria-expanded="true">Veranstaltungen</a>
         </h4>
     </div>
     <div class="panel-collapse collapse in" style="padding: 15px;" id="collapseEventInstances" aria-expanded="true">
@@ -37,14 +37,14 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                        <h4 class="modal-title">Veranstaltungskategorie bearbeiten</h4>
+                        <h4 class="modal-title">Veranstaltung bearbeiten</h4>
                     </div>
                     <form id="eventInstanceModalForm">
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="alert alert-info">
-                                        <i class="fas fa-info-circle"></i> In diesem Formular kann eine <b>Veranstaltungskategorie</b> bearbeitet werden. Eine Kategorie dient als Vorlage um später verschiedene Veranstaltungen von dieser Kategorie anzulegen. An dieser Stelle können <b>keine Veranstaltungen</b> bearbeitet werden!
+                                        <i class="fas fa-info-circle"></i> In diesem Formular kann eine einzelne <b>Veranstaltung</b> bearbeitet werden. Eine Veranstaltung ist immer einer Veranstaltungskategorie zugeordnet. An dieser Stelle können <b>keine Veranstaltungskategorien</b> bearbeitet werden!
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +55,7 @@
                                     <!-- Name -->
 
                                     <div class="form-group">
-                                        <label>Name der Veranstaltungkategorie</label>
+                                        <label>Name der Veranstaltung</label>
                                         <input type="text" class="form-control" name="name">
                                     </div>
 
@@ -63,66 +63,20 @@
 
                                 <div class="col-sm-6" style="text-align:end;">
                                     <!-- Checkbox -->
-                                    <!-- Im Portfolio...? -->
+                                    <!-- Abgesagt...? -->
 
                                     <div class="form-group">
-                                        <input type="checkbox" data-toggle="toggle" name="isPortfolio" value="isPortfolio">
-                                        <label>Aktuell im Portfolio?</label>
+                                        <input type="checkbox" data-toggle="toggle" name="isCancelled" value="isCancelled">
+                                        <label>Abgesagt?</label>
 
                                     </div>
 
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <!-- Freitext-->
-                                    <!-- Beschreibung intern-->
 
-                                    <div class="form-group">
-                                        <label> Beschreibung (intern)</label>
-                                        <textarea name="descriptionInternal" class="form-control" style="min-width: 100%"></textarea>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-6">
-                                    <!-- Freitext -->
-                                    <!-- Beschreibung extern -->
-
-                                    <div class="form-group">
-                                        <label> Beschreibung (extern)</label>
-                                        <textarea name="descriptionExternal" class="form-control" style="min-width: 100%"></textarea>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="alert alert-success">
-                                <label>Anzeige</label>
-                                <div class="row" style="margin: 10px;">
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" data-toggle="toggle" value="intern" name="visible"> <b>ZSB</b>
-                                    </label>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <label class="checkbox-inline">
-                                        <input type="checkbox" data-toggle="toggle" value="extern" name="visible"> <b>Extern</b>
-                                    </label>
-                                </div>
-                            </div>
 
                             <div class="alert alert-warning">
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <!-- Select -->
-                                        <!-- Zielgruppe -->
-
-                                        <div class="form-group"><label>Zielgruppe</label>
-                                            <select multiple class="form-control" name="targetGroups">
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
 
                                 <div class="row">
                                     <div class="col-sm-6">
@@ -135,42 +89,54 @@
                                         </div>
 
                                     </div>
-                                    <div class="col-sm-6">
-                                        <!-- Select -->
-                                        <!-- Aufwand ZSB -->
-
-                                        <div class="form-group"><label>Aufwand ZSB</label>
-                                            <select class="form-control" name="expenseInternal">
-                                                <option value="">Keine Angabe</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
                                 </div>
 
+                            </div>
+
+
+                            <div class="well">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group"><label>Von:</label>
+                                            <input type="date" class="form-control" name="startDate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group"><label>Startzeit:</label>
+                                            <input type="time" class="form-control" name="startTime">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group"><label>Bis:</label>
+                                            <input type="date" class="form-control" name="endDate">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group"><label>Endzeit:</label>
+                                            <input type="time" class="form-control" name="endTime">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group"><label>Ort:</label>
+                                            <input type="text" class="form-control" name="location">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <!-- Select -->
-                                        <!-- Koop Bedarf -->
-
-                                        <div class="form-group"><label>Koop Bedarf</label>
-                                            <select multiple class="form-control" name="assigneesExternal">
-                                            </select>
+                                        <div class="form-group"><label>Kooperationspartner:</label>
+                                            <input type="text" class="form-control" name="cooperation">
                                         </div>
-
                                     </div>
                                     <div class="col-sm-6">
-                                        <!-- Select -->
-                                        <!-- Aufwand Koop -->
-
-                                        <div class="form-group"><label>Aufwand Koop</label>
-                                            <select class="form-control" name="expenseExternal">
-                                                <option value="">Keine Angabe</option>
-                                            </select>
+                                        <div class="form-group"><label>Maximale Teilnehmer:innenzahl:</label>
+                                            <input type="number" class="form-control" name="maxParticipants">
                                         </div>
-
                                     </div>
                                 </div>
+
                             </div>
 
 
@@ -199,6 +165,36 @@
                                         </select>
                                     </div>
 
+                                </div>
+                            </div>
+
+                            <div class="well">
+                                <h4>Monitoring</h4>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group"><label>Tatsächliche Teilnehmer:innenzahl:</label>
+                                            <input type="number" class="form-control" name="participantsCount">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group"><label>Geschätzter Aufwand ZSB (Stunden):</label>
+                                            <input type="number" class="form-control" name="expenseZSB">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group"><label>Geschätzter Aufwand SHKs (Stunden):</label>
+                                            <input type="number" class="form-control" name="expenseSHK">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>Anmerkungen</label>
+                                            <textarea class="form-control" name="monitoringNotes"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -252,6 +248,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
 
 
                         </div>
