@@ -1,8 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Erstellungszeit: 30. Okt 2022 um 10:51
+-- Host: localhost
+-- Erstellungszeit: 08. Jan 2024 um 11:18
+-- Server-Version: 11.2.2-MariaDB
+-- PHP-Version: 8.2.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -19,11 +22,11 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `Abwesenheiten` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
   `start` timestamp NULL DEFAULT NULL,
   `end` timestamp NULL DEFAULT NULL,
-  `recurring` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `recurring` varchar(30) NOT NULL,
   `wholeDay` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -35,14 +38,42 @@ CREATE TABLE `Abwesenheiten` (
 
 CREATE TABLE `Beratene` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `mail` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `channel` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `mail` varchar(100) NOT NULL,
+  `phone` varchar(100) NOT NULL,
+  `channel` varchar(20) DEFAULT NULL,
   `formular` tinyint(1) NOT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` mediumtext NOT NULL,
   `dateId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `event_mgmt_instances`
+--
+
+CREATE TABLE `event_mgmt_instances` (
+  `id` int(11) NOT NULL,
+  `eventInstanceId` varchar(100) NOT NULL,
+  `multiple` tinyint(1) NOT NULL DEFAULT 0,
+  `attributeKey` varchar(100) NOT NULL,
+  `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `event_mgmt_types`
+--
+
+CREATE TABLE `event_mgmt_types` (
+  `id` int(11) NOT NULL,
+  `eventTypeId` varchar(100) NOT NULL,
+  `multiple` tinyint(1) NOT NULL DEFAULT 0,
+  `attributeKey` varchar(100) NOT NULL,
+  `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -54,7 +85,7 @@ CREATE TABLE `Beratene` (
 CREATE TABLE `Feedback_Mails` (
   `id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `mail` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `mail` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -65,11 +96,11 @@ CREATE TABLE `Feedback_Mails` (
 
 CREATE TABLE `Nachrichten` (
   `id` int(11) NOT NULL,
-  `inhalt` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `titel` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `inhalt` longtext NOT NULL,
+  `titel` mediumtext NOT NULL,
   `prioritaet` tinyint(1) NOT NULL,
-  `erfasser` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `erfassungsdatum` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `erfasser` mediumtext NOT NULL,
+  `erfassungsdatum` mediumtext NOT NULL,
   `beginn` date NOT NULL,
   `ende` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -82,13 +113,13 @@ CREATE TABLE `Nachrichten` (
 
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
-  `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `emitterId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `emitterId` varchar(100) NOT NULL,
   `userId` int(11) NOT NULL,
-  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `action` varchar(100) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
-  `title` tinytext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `title` tinytext NOT NULL,
+  `text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -98,8 +129,8 @@ CREATE TABLE `notifications` (
 --
 
 CREATE TABLE `notification_emitter` (
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `notificationTypeId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `name` varchar(100) NOT NULL,
+  `notificationTypeId` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -109,9 +140,9 @@ CREATE TABLE `notification_emitter` (
 --
 
 CREATE TABLE `notification_types` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -122,7 +153,7 @@ CREATE TABLE `notification_types` (
 
 CREATE TABLE `notification_type_user` (
   `userId` int(11) NOT NULL,
-  `notificationType` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `notificationType` varchar(100) NOT NULL,
   `online` tinyint(1) NOT NULL DEFAULT 0,
   `mail` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -147,13 +178,13 @@ CREATE TABLE `notification_user` (
 
 CREATE TABLE `Nutzer` (
   `id` int(11) NOT NULL,
-  `name` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mail` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `account` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` mediumtext NOT NULL,
+  `mail` varchar(100) NOT NULL,
+  `account` mediumtext NOT NULL,
   `role` int(11) NOT NULL,
-  `erfassungsdatum` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `erfasser` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `passwort` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `erfassungsdatum` mediumtext NOT NULL,
+  `erfasser` mediumtext NOT NULL,
+  `passwort` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -163,8 +194,8 @@ CREATE TABLE `Nutzer` (
 --
 
 CREATE TABLE `permissions` (
-  `id` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` varchar(20) NOT NULL,
+  `description` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -175,7 +206,7 @@ CREATE TABLE `permissions` (
 
 CREATE TABLE `permissions_user` (
   `userId` int(11) NOT NULL,
-  `permissionId` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+  `permissionId` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -185,8 +216,8 @@ CREATE TABLE `permissions_user` (
 --
 
 CREATE TABLE `permission_requests` (
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `permissionId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `name` varchar(100) NOT NULL,
+  `permissionId` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -197,8 +228,8 @@ CREATE TABLE `permission_requests` (
 
 CREATE TABLE `Quicklinks` (
   `id` int(11) NOT NULL,
-  `text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `link` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `text` mediumtext NOT NULL,
+  `link` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -209,18 +240,18 @@ CREATE TABLE `Quicklinks` (
 
 CREATE TABLE `Raeume` (
   `id` int(11) NOT NULL,
-  `kanal` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'personally',
-  `titel` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kanal` varchar(100) NOT NULL DEFAULT 'personally',
+  `titel` varchar(100) NOT NULL,
   `besitzer` int(11) NOT NULL,
-  `raumnummer` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `strasse` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `hausnummer` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `plz` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ort` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `etage` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `link` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `passwort` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `telefon` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `raumnummer` varchar(100) NOT NULL,
+  `strasse` varchar(100) NOT NULL,
+  `hausnummer` varchar(100) NOT NULL,
+  `plz` varchar(100) NOT NULL,
+  `ort` varchar(100) NOT NULL,
+  `etage` varchar(100) NOT NULL,
+  `link` varchar(500) NOT NULL,
+  `passwort` varchar(100) NOT NULL,
+  `telefon` varchar(100) NOT NULL,
   `aktiv` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -232,8 +263,8 @@ CREATE TABLE `Raeume` (
 
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -244,8 +275,8 @@ CREATE TABLE `roles` (
 
 CREATE TABLE `role_presets` (
   `roleId` int(11) NOT NULL,
-  `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `subjectId` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `type` varchar(100) NOT NULL,
+  `subjectId` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -257,11 +288,11 @@ CREATE TABLE `role_presets` (
 CREATE TABLE `survey_answers` (
   `id` int(11) NOT NULL,
   `questionId` int(11) NOT NULL,
-  `userHash` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `userHash` varchar(100) NOT NULL,
+  `value` mediumtext NOT NULL,
   `optionId` int(11) NOT NULL,
   `surveyId` int(11) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+  `timestamp` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -273,10 +304,10 @@ CREATE TABLE `survey_answers` (
 CREATE TABLE `survey_answer_options` (
   `id` int(11) NOT NULL,
   `questionId` int(11) NOT NULL,
-  `title` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `title` varchar(300) NOT NULL,
+  `text` mediumtext NOT NULL,
+  `value` varchar(300) NOT NULL,
+  `action` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -288,7 +319,7 @@ CREATE TABLE `survey_answer_options` (
 CREATE TABLE `survey_keys` (
   `id` int(11) NOT NULL,
   `surveyId` int(11) NOT NULL,
-  `uniqueKey` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `uniqueKey` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -299,12 +330,12 @@ CREATE TABLE `survey_keys` (
 
 CREATE TABLE `survey_questions` (
   `id` int(11) NOT NULL,
-  `title` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `questionGroup` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(300) NOT NULL,
+  `text` mediumtext NOT NULL,
+  `type` varchar(100) NOT NULL,
+  `questionGroup` varchar(100) NOT NULL,
   `surveyId` int(11) NOT NULL,
-  `action` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `action` varchar(100) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -315,9 +346,9 @@ CREATE TABLE `survey_questions` (
 
 CREATE TABLE `survey_survey` (
   `id` int(11) NOT NULL,
-  `title` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `auth` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `adminAuth` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `title` varchar(300) NOT NULL,
+  `auth` varchar(100) NOT NULL,
+  `adminAuth` varchar(100) NOT NULL,
   `uniqueKey` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -329,11 +360,11 @@ CREATE TABLE `survey_survey` (
 
 CREATE TABLE `Templates` (
   `id` int(11) NOT NULL,
-  `titel` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `titel` longtext NOT NULL,
+  `text` mediumtext NOT NULL,
   `letzteaenderung` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `ersteller` int(11) NOT NULL,
-  `betreff` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `betreff` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -345,16 +376,16 @@ CREATE TABLE `Templates` (
 CREATE TABLE `Termine` (
   `id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `owner` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(100) NOT NULL,
   `ownerId` int(11) NOT NULL,
   `free` int(11) NOT NULL DEFAULT 0,
   `room` int(11) NOT NULL,
   `erfassungsdatum` timestamp NOT NULL DEFAULT current_timestamp(),
   `start` time NOT NULL,
   `end` time NOT NULL,
-  `title` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `channel` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'all',
-  `teilnehmer` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `title` mediumtext NOT NULL,
+  `channel` varchar(20) NOT NULL DEFAULT 'all',
+  `teilnehmer` mediumtext DEFAULT NULL,
   `template` int(11) NOT NULL COMMENT 'Id des mail templates das bei terminvergabe an den zu Beratenden versendet wird',
   `blocked` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -367,11 +398,11 @@ CREATE TABLE `Termine` (
 
 CREATE TABLE `wiki_artikel` (
   `id` int(11) NOT NULL,
-  `heading` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `text` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `heading` mediumtext NOT NULL,
+  `text` longtext NOT NULL,
   `lastChanged` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `reminderDate` date DEFAULT NULL,
-  `reminderText` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reminderText` mediumtext DEFAULT NULL,
   `showInSidebar` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -416,7 +447,7 @@ CREATE TABLE `wiki_link_gelesen` (
 
 CREATE TABLE `wiki_tags` (
   `id` int(11) NOT NULL,
-  `name` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `name` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -433,6 +464,18 @@ ALTER TABLE `Abwesenheiten`
 -- Indizes für die Tabelle `Beratene`
 --
 ALTER TABLE `Beratene`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `event_mgmt_instances`
+--
+ALTER TABLE `event_mgmt_instances`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `event_mgmt_types`
+--
+ALTER TABLE `event_mgmt_types`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -613,6 +656,18 @@ ALTER TABLE `Abwesenheiten`
 -- AUTO_INCREMENT für Tabelle `Beratene`
 --
 ALTER TABLE `Beratene`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `event_mgmt_instances`
+--
+ALTER TABLE `event_mgmt_instances`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `event_mgmt_types`
+--
+ALTER TABLE `event_mgmt_types`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

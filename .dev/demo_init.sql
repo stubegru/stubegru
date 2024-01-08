@@ -119,6 +119,8 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('VIEW_ACCESS_EVALUATION', 'anybody'),
 ('EVENT_TYPE_WRITE', 'beratung'),
 ('EVENT_TYPE_READ', 'beratung'),
+('EVENT_INSTANCE_READ', 'beratung'),
+('EVENT_INSTANCE_WRITE', 'beratung'),
 ('WIKI_READ', 'user'),
 ('WIKI_WRITE', 'wiki_autor');
 
