@@ -1,6 +1,6 @@
 {
     "type": "stubegruModule",
-    "name": "event_management/event_list",
+    "name": "event_management/event_instances",
     "description": "Handling events as concrete instances of an event-type. Provides an UI-panel to show all available events in a list or in calendar view. Also provides buttons to edit an event, but the actual event editing is handleed by the 'event_editor' module",
     "author": "Johannes Schnirring",
     "license": "MIT",
@@ -8,19 +8,22 @@
         "blocking": [
             "alerts",
             "user_utils",
-            "event_management/event_editor"
+            "event_management/libs/multi_select_dropdown"
         ],
         "nonBlocking": [],
         "backend": []
     },
     "html": [
-        "event_list.html"
+        "event_instances.html"
     ],
     "js": [
-        "event_list.js"
+        "javascript/interface.js",
+        "javascript/event_instance_service.js",
+        "javascript/event_instance_view.js",
+        "javascript/event_instance_controller.js"
     ],
     "css": [
-        "event_list.css"
+        "event_instances.css"
     ],
     "cronjob": []
 }
