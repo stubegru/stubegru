@@ -18,9 +18,9 @@
     ],
     "js": [
         "javascript/interface.js",
-        "javascript/EventTypeService.js",
-        "javascript/EventTypeView.js",
-        "javascript/EventTypeController.js"
+        "javascript/event_type_service.js",
+        "javascript/event_type_view.js",
+        "javascript/event_type_controller.js"
     ],
     "css": [
         "event_types.css"
