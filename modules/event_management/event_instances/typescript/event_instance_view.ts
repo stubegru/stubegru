@@ -133,7 +133,7 @@ class EventInstanceView {
 
         for (let eventInstanceId in eventInstanceList) {
             let eventInstance = eventInstanceList[eventInstanceId];
-            let assigneeId = eventInstance.assigneesInternal[0];
+            let assigneeId = eventInstance.assigneesInternal ? eventInstance.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
             const isActive = eventInstance.isPortfolio ? "Ja" : "Nein";
 
@@ -142,13 +142,10 @@ class EventInstanceView {
                 <td>${isActive}</td>
                 <td>${assigneeName}</td>
                 <td>
-                    <button class='event-type-create-button btn btn-success' data-event-type-id='${eventInstance.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                    <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventInstance.id}' title="Kategorie bearbeiten">
+                    <button class='event-instance-edit-button btn btn-default' data-event-instance-id='${eventInstance.id}' title="Veranstaltung bearbeiten">
                         <i class='fa fa-pencil-alt'></i>
                     </button>
-                    <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventInstance.id}' title="Kategorie löschen">
+                    <button class='event-instance-delete-button btn btn-danger' data-event-instance-id='${eventInstance.id}' title="Veranstaltung löschen">
                         <i class='fa fa-times'></i>
                     </button>
                 </td>

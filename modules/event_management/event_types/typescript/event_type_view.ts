@@ -133,7 +133,7 @@ class EventTypeView {
 
         for (let eventTypeId in eventTypeList) {
             let eventType = eventTypeList[eventTypeId];
-            let assigneeId = eventType.assigneesInternal[0];
+            let assigneeId = eventType.assigneesInternal ? eventType.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
             const isActive = eventType.isPortfolio ? "Ja" : "Nein";
 
