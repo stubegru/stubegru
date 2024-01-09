@@ -1,7 +1,6 @@
 declare class FullCalendarInstance {
     constructor(el: HTMLElement, optionOverrides?: Object);
     render(): void;
-    destroy(): void;
     removeAllEvents(): void;
     addEventSource(eventSource: FullCalendarEventSource): void;
 }
@@ -27,6 +26,7 @@ class EventInstanceCalendarView {
     static fullCalendar: FullCalendarInstance;
 
     static config = {
+        locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
             // days of week. an array of zero-based day of week integers (0=Sunday)
@@ -54,44 +54,47 @@ class EventInstanceCalendarView {
         },
         eventClick: function (info) {
             info.jsEvent.preventDefault(); // don't let the browser navigate
-            //CalendarController.clickOnMeetingHandler(info.event.extendedProps.id);
+            EventInstanceView.showModalForUpdate(info.event.extendedProps.id);
         }
     }
 
     static init() {
-        //Init Calendar view
         let calendarEl = document.querySelector("#eventInstanceCalendarView");
         //@ts-expect-error
         EventInstanceCalendarView.fullCalendar = new FullCalendar.Calendar(calendarEl, EventInstanceCalendarView.config);
-        EventInstanceCalendarView.fullCalendar.render();
 
-        //Refresh calendar after switching the tab
-        //let calendarBox = document.querySelector("TODO SELCETOR") as HTMLElement;
-        //calendarBox.addEventListener('shown.bs.collapse', EventInstanceCalendarView.fullCalendar.render)
+        //@ts-expect-error --- Re-render calendar after switching the tab
+        $("#eventInstanceCalendarViewButton").on('shown.bs.tab', () => EventInstanceCalendarView.fullCalendar.render())
     }
 
+    static setEvents(eventInstanceList: StringIndexedList<EventInstance>){
+        EventInstanceCalendarView.removeAllEvents();
+        EventInstanceCalendarView.addEvents(eventInstanceList);
+    }
 
     static removeAllEvents() {
         EventInstanceCalendarView.fullCalendar.removeAllEvents();
     }
 
-    static addMeetings(meetingList) {
-        let eventList : FullCalendarEvent[] = [];
+    static addEvents(eventInstanceList: StringIndexedList<EventInstance>) {
+        let fcEventList: FullCalendarEvent[] = [];
 
-        for (let inMeeting of meetingList) {
+        //convert EventInstances to fullcalendar events
+        for (let index in eventInstanceList) {
+            let inMeeting = eventInstanceList[index];
             let outMeeting = {
-                title: inMeeting.owner,
-                start: `${inMeeting.date}T${inMeeting.start}`,
-                end: `${inMeeting.date}T${inMeeting.end}`,
+                title: inMeeting.name,
+                start: `${inMeeting.startDate}T${inMeeting.startTime}`,
+                end: `${inMeeting.endDate}T${inMeeting.endTime}`,
                 extendedProps: inMeeting
             };
-            eventList.push(outMeeting);
+            fcEventList.push(outMeeting);
         }
 
         //Generate and add Eventsource
         EventInstanceCalendarView.fullCalendar.addEventSource({
-            id: "stubegru-own-free-events",
-            events: eventList,
+            id: "event-instances",
+            events: fcEventList,
             color: "#5cb85c",
             classNames: ["pointer"]
         });

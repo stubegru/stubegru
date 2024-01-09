@@ -4,6 +4,7 @@ $('#collapseCalendar').on('shown.bs.collapse', () => { fullCalendarInstance.rend
 
 
 const fullcalendarConfig = {
+    locale: 'de',
     initialView: 'dayGridMonth',
     //handleWindowResize: false,
     businessHours: {
