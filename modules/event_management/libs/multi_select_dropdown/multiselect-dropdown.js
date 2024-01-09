@@ -95,6 +95,7 @@ function MultiselectDropdown(options) {
     txtAll: 'All',
     txtRemove: 'Remove',
     txtSearch: 'search',
+    selector: 'select[multiple]',
     ...options
   };
   function newEl(tag, attrs) {
@@ -113,7 +114,7 @@ function MultiselectDropdown(options) {
   }
 
 
-  document.querySelectorAll("select[multiple]").forEach((el, k) => {
+  document.querySelectorAll(config.selector).forEach((el, k) => {
 
     var div = newEl('div', { class: 'multiselect-dropdown', style: { width: config.style?.width ?? el.clientWidth + 'px', padding: config.style?.padding ?? '' } });
     el.style.display = 'none';

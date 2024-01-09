@@ -32,7 +32,7 @@ class EventTypeController {
         })
 
         //@ts-expect-error Activate multi-selects
-        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Keine Angabe" });
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Keine Angabe", selector: ".event-type-multiple-select"});
 
     }
 

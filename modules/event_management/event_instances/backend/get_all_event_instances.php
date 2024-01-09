@@ -17,7 +17,7 @@ try {
         $isMultiple = $attributeRow["multiple"];
 
         if (empty($eventInstanceList[$eventInstanceId])) {
-            $eventInstanceList[$eventInstanceId] = array(); //Create new event type "object"
+            $eventInstanceList[$eventInstanceId] = array(); //Create new event instance "object"
             $eventInstanceList[$eventInstanceId]["id"] = $eventInstanceId;
         }
         $eventInstance = &$eventInstanceList[$eventInstanceId]; 

@@ -8,7 +8,7 @@ try {
     $jsonString = $_POST["eventInstanceData"];
     $jsonList = json_decode($jsonString,true);
 
-    $eventInstanceId = uniqid(); //Generate a random and mostly unique id for this event type
+    $eventInstanceId = uniqid(); //Generate a random and mostly unique id for this event instance
 
     $insertStatement = $dbPdo->prepare("INSERT INTO event_mgmt_instances(eventInstanceId, multiple, attributeKey, value) VALUES (:eventInstanceId, :multiple, :attributeKey, :value)");
 

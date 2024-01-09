@@ -7,7 +7,7 @@ class EventInstanceController {
         //Reset modal on hide
         let modal = document.getElementById("eventInstanceModal");
         modal.addEventListener("hidden.bs.modal", EventInstanceView.resetModalForm);
-        //Register new event type button
+        //Register new event instance button
         let newBtn = document.getElementById("eventInstanceNewButton");
         newBtn.addEventListener("click", EventInstanceView.showModalForCreate);
         //Register modal's save-button
@@ -17,7 +17,7 @@ class EventInstanceController {
             EventInstanceController.editMode == EditMode.CREATE ? EventInstanceController.handleCreateEventInstance(jsonString) : EventInstanceController.handleUpdateEventInstance(jsonString);
         });
         //@ts-expect-error Activate multi-selects
-        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Keine Angabe" });
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Keine Angabe", selector: ".event-instance-multiple-select" });
     }
     static async loadConfig() {
         try {
@@ -26,7 +26,7 @@ class EventInstanceController {
             return config.eventInstances;
         }
         catch (error) {
-            console.error(`[Event Types] Could not load config file at 'custom/event_management_config.json'.`);
+            console.error(`[event instances] Could not load config file at 'custom/event_management_config.json'.`);
             throw error;
         }
     }
@@ -72,23 +72,23 @@ class EventInstanceController {
             EventInstanceController.stubegru.modules.userUtils.updateAdminElements();
         }
         catch (error) {
-            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungn ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungen ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
     static registerEditButtons() {
-        let editBtnList = document.querySelectorAll(".event-type-edit-button");
+        let editBtnList = document.querySelectorAll(".event-instance-edit-button");
         editBtnList.forEach(btn => {
             btn.addEventListener("click", () => {
-                let eventInstanceId = btn.getAttribute("data-event-type-id");
+                let eventInstanceId = btn.getAttribute("data-event-instance-id");
                 EventInstanceView.showModalForUpdate(eventInstanceId);
             });
         });
     }
     static registerDeleteButtons() {
-        let deleteBtnList = document.querySelectorAll(".event-type-delete-button");
+        let deleteBtnList = document.querySelectorAll(".event-instance-delete-button");
         deleteBtnList.forEach(btn => {
             btn.addEventListener("click", () => {
-                let eventInstanceId = btn.getAttribute("data-event-type-id");
+                let eventInstanceId = btn.getAttribute("data-event-instance-id");
                 EventInstanceController.stubegru.modules.alerts.deleteConfirm("Veranstaltung löschen", "Soll diese Veranstaltung wirklich gelöscht werden?", () => EventInstanceController.handleDeleteEventInstance(eventInstanceId));
             });
         });
