@@ -2,22 +2,22 @@
 try {
     $BASE_PATH = getenv("BASE_PATH");
     require_once "$BASE_PATH/utils/auth_and_database.php";
-    permissionRequest("EVENT_TYPE_READ");
+    permissionRequest("EVENT_INSTANCE_READ");
     $ownId = $_SESSION["id"];
 
     if (isset($_GET["eventInstanceId"])) {
         $eventInstanceId = $_GET["eventInstanceId"];
     } else {
-        throw new Exception("Die Id '" . $_GET['eventInstanceId'] . "' ist keine gültige Id für eine Veranstaltungskategorie.", 404);
+        throw new Exception("Die Id '" . $_GET['eventInstanceId'] . "' ist keine gültige Id für eine Veranstaltung.", 404);
     }
 
-    $selectStatement = $dbPdo->prepare("SELECT * FROM `event_mgmt_types` WHERE eventInstanceId = :eventInstanceId;");
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `event_mgmt_instances` WHERE eventInstanceId = :eventInstanceId;");
     $selectStatement->bindValue(':eventInstanceId', $eventInstanceId);
     $selectStatement->execute();
     $attributeRowList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
     if (count($attributeRowList) <= 0) {
-        throw new Exception("Veranstaltungskategorie mit der id '$eventInstanceId' wurde nicht gefunden.", 404);
+        throw new Exception("Veranstaltung mit der id '$eventInstanceId' wurde nicht gefunden.", 404);
     }
 
     $eventInstance = array();
