@@ -55,7 +55,7 @@ class EventInstanceController {
             EventInstanceView.setModalVisible(false);
             EventInstanceController.handleGetAllEventInstances();
         } catch (error) {
-            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Speichern der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Speichern der Veranstaltung ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
 
@@ -66,7 +66,7 @@ class EventInstanceController {
             EventInstanceView.setModalVisible(false);
             EventInstanceController.handleGetAllEventInstances();
         } catch (error) {
-            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Erstellen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Erstellen der Veranstaltung ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
 
@@ -76,7 +76,7 @@ class EventInstanceController {
             EventInstanceController.stubegru.modules.alerts.alert(resp);
             EventInstanceController.handleGetAllEventInstances();
         } catch (error) {
-            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Löschen der Veranstaltungskategorie ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Löschen der Veranstaltung ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
 
@@ -89,7 +89,7 @@ class EventInstanceController {
             EventInstanceController.registerEditButtons();
             EventInstanceController.stubegru.modules.userUtils.updateAdminElements()
         } catch (error) {
-            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
+            EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungn ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
 
@@ -109,7 +109,7 @@ class EventInstanceController {
         deleteBtnList.forEach(btn => {
             btn.addEventListener("click", () => {
                 let eventInstanceId = btn.getAttribute("data-event-type-id");
-                EventInstanceController.stubegru.modules.alerts.deleteConfirm("Veranstaltungskategorie löschen", "Soll diese Veranstaltungskategorie wirklich gelöscht werden?", () => EventInstanceController.handleDeleteEventInstance(eventInstanceId));
+                EventInstanceController.stubegru.modules.alerts.deleteConfirm("Veranstaltung löschen", "Soll diese Veranstaltung wirklich gelöscht werden?", () => EventInstanceController.handleDeleteEventInstance(eventInstanceId));
             });
         });
     }

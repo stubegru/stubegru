@@ -2,10 +2,10 @@
 try {
     $BASE_PATH = getenv("BASE_PATH");
     require_once "$BASE_PATH/utils/auth_and_database.php";
-    permissionRequest("EVENT_TYPE_READ");
+    permissionRequest("EVENT_INSTANCE_READ");
     $ownId = $_SESSION["id"];
 
-    $selectStatement = $dbPdo->query("SELECT * FROM `event_mgmt_types`;");
+    $selectStatement = $dbPdo->query("SELECT * FROM `event_mgmt_instances`;");
     $attributeRowList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 
     $eventInstanceList = array();
