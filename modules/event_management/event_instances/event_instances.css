@@ -1,0 +1,12 @@
+.tab-content{
+    padding-top: 20px;
+}
+
+.negative-margin-top{
+    margin-top: -30px;
+}
+
+.foreground-button{
+    z-index: 100;
+    position: relative;
+}

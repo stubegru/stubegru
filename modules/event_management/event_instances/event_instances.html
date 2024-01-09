@@ -8,27 +8,52 @@
 
         <div class="row">
             <div class="col-md-12 text-right">
-                <button class="btn btn-primary" id="eventInstanceNewButton">
+                <button class="btn btn-primary foreground-button" id="eventInstanceNewButton">
                     <i class="fas fa-plus-circle"></i> Neuer Eintrag
                 </button>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-sm-12">
-                <table class="table table-striped table-sortable" id="eventInstanceTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Aktiv</th>
-                            <th>Verantwortlich</th>
-                            <th class="permission-EVENT_INSTANCE_WRITE permission-required" data-table-sortable-disable></th>
-                        </tr>
-                    </thead>
-                    <tbody id="eventInstanceTableBody">
-                        <!-- Here are generated all the Event Entries with an AJAX call -->
-                    </tbody>
-                </table>
+            <div class="col-sm-12 negative-margin-top">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#eventInstanceListView" aria-controls="eventInstanceListView" role="tab" data-toggle="tab">
+                            <i class="far fa-list-alt"></i> Liste
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#eventInstanceCalendarView" aria-controls="eventInstanceCalendarView" role="tab" data-toggle="tab">
+                            <i class="far fa-calendar-alt"></i> Kalender
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="eventInstanceListView">
+                        <table class="table table-striped table-sortable" id="eventInstanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Aktiv</th>
+                                    <th>Verantwortlich</th>
+                                    <th class="permission-EVENT_INSTANCE_WRITE permission-required" data-table-sortable-disable></th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventInstanceTableBody">
+                                <!-- Here are generated all the Event Entries with an AJAX call -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="eventInstanceCalendarView">
+                        The calendar view....
+                    </div>
+                </div>
+
+
             </div>
         </div>
 
