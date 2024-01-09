@@ -2,6 +2,7 @@ class EventInstanceController {
     static async init() {
         EventInstanceController.config = await EventInstanceController.loadConfig();
         await EventInstanceView.initModalForm(EventInstanceController.config.modalForm);
+        EventInstanceCalendarView.init();
         await EventInstanceController.handleGetAllEventInstances(); //Init event view
         setInterval(EventInstanceController.handleGetAllEventInstances, 1000 * 60 * 15); //Refresh the view every 15 minutes
         //Reset modal on hide
