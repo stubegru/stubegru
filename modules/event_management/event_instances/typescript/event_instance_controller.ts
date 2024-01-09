@@ -86,6 +86,7 @@ class EventInstanceController {
             let eventInstanceList = await EventInstanceService.getAll();
             EventInstanceController.eventInstanceList = eventInstanceList;
             await EventInstanceView.renderListView(eventInstanceList);
+            EventInstanceCalendarView.setEvents(eventInstanceList);
             EventInstanceController.registerDeleteButtons();
             EventInstanceController.registerEditButtons();
             EventInstanceController.stubegru.modules.userUtils.updateAdminElements()

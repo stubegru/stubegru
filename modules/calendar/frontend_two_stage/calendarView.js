@@ -2,6 +2,7 @@ class CalendarView {
 
 
     static config = {
+        locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
             // days of week. an array of zero-based day of week integers (0=Sunday)

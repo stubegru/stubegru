@@ -1,22 +1,22 @@
 interface EventInstance {
-    id: string;
-    name: string;
-    isPortfolio: boolean;
-    descriptionInternal: string;
-    descriptionExternal: string;
-    visible: string[]; //multiple toggles!
-    targetGroups: string[];
-    assigneesInternal: string[];
-    assigneesExternal: string[];
-    expenseInternal: string;
-    expenseExternal: string;
-    notes: string;
-    reminderInternal: string; //Mailreminder!!!
-    assigneesPR: string[];
-    distributerPR: string[];
-    reminderPR: string;
-    announcementPR: string;
-
+        id: string;
+        name: string;
+        assigneesInternal: number[];
+        startDate: string;
+        startTime: string;
+        endDate: string;
+        endTime: string;
+        location: string;
+        cooperation: string;
+        maxParticipants: string;
+        notes: string;
+        reminderInternal: string;
+        participantsCount: string;
+        expenseZSB: string;
+        expenseSHK: string;
+        monitoringNotes: string;
+        reminderPR: string;
+        announcementPR: string;
 }
 
 interface HttpTransportAttribute {
