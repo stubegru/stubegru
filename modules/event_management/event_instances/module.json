@@ -8,6 +8,7 @@
         "blocking": [
             "alerts",
             "user_utils",
+            "calendar/fullcalendar",
             "event_management/libs/multi_select_dropdown"
         ],
         "nonBlocking": [],
@@ -20,6 +21,7 @@
         "javascript/interface.js",
         "javascript/event_instance_service.js",
         "javascript/event_instance_view.js",
+        "javascript/event_instance_calendar_view.js",
         "javascript/event_instance_controller.js"
     ],
     "css": [
