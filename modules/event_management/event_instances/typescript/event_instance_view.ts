@@ -17,6 +17,34 @@ class EventInstanceView {
                 elem.add(new Option(user.name, user.id));
             }
         });
+
+        //init category select
+        await EventInstanceView.refreshEventTypeSelect();
+    }
+
+    private static async refreshEventTypeSelect() {
+        const eventTypeList = await EventTypeController.getEventTypeList();
+        const categorySelect = document.querySelector(`#eventInstanceModalForm select[name="category"]`) as HTMLSelectElement;
+        categorySelect.innerHTML = ""; //Clear last options
+        categorySelect.add(new Option("Keine Angabe", ""));
+        for (const eventTypeId in eventTypeList) {
+            const eventType = eventTypeList[eventTypeId];
+            categorySelect.add(new Option(eventType.name, eventType.id));
+        }
+        categorySelect.addEventListener("change", function () {
+            const eventType = eventTypeList[this.value];
+            EventInstanceView.applyEventTypeDefaults(eventType);
+        });
+    }
+
+    static applyEventTypeDefaults(eventType: EventType) {
+        if (!eventType) { return }
+        const mapping = EventInstanceController.config.modalForm.presetMapping["eventTypes"];
+        for (const srcKey in mapping) {
+            const destKey = mapping[srcKey];
+            const srcValue = eventType[srcKey];
+            EventInstanceView.setFormInput(destKey, srcValue);
+        }
     }
 
     static showModalForCreate() {
@@ -33,39 +61,43 @@ class EventInstanceView {
 
         for (const key in eventInstance) {
             const value = eventInstance[key];
-            let formElement = document.querySelector(`#eventInstanceModalForm [name='${key}']`) as HTMLElement;
-            if (!formElement) { continue; } //Skip if this attribute is not present
-
-            switch (formElement.nodeName) {
-                case "INPUT":
-                    let inputElement = formElement as HTMLInputElement;
-                    let inputType = inputElement.getAttribute("type");
-
-                    if (inputType == "checkbox") {
-                        EventInstanceView.setCheckboxValues(`#eventInstanceModalForm input[name='${key}']`, value);
-                        break;
-                    }
-
-                    inputElement.value = value;
-                    break;
-
-
-                case "SELECT":
-                    let selectElement = formElement as HTMLSelectElement;
-                    if (typeof value == "string") {
-                        selectElement.value = value;
-                    } else {
-                        EventInstanceView.setMultipleSelectValues(selectElement, value);
-                    }
-                    break;
-
-                case "TEXTAREA":
-                    let textareaElement = formElement as HTMLTextAreaElement;
-                    textareaElement.value = value;
-                    break;
-            }
+            EventInstanceView.setFormInput(key, value);
         }
         EventInstanceView.setModalVisible(true);
+    }
+
+    static setFormInput(key: string, value) {
+        let formElement = document.querySelector(`#eventInstanceModalForm [name='${key}']`) as HTMLElement;
+        if (!formElement || value === undefined) { return; } //Skip if this attribute is not present
+
+        switch (formElement.nodeName) {
+            case "INPUT":
+                let inputElement = formElement as HTMLInputElement;
+                let inputType = inputElement.getAttribute("type");
+
+                if (inputType == "checkbox") {
+                    EventInstanceView.setCheckboxValues(`#eventInstanceModalForm input[name='${key}']`, value);
+                    break;
+                }
+
+                inputElement.value = value;
+                break;
+
+
+            case "SELECT":
+                let selectElement = formElement as HTMLSelectElement;
+                if (typeof value == "string") {
+                    selectElement.value = value;
+                } else {
+                    EventInstanceView.setMultipleSelectValues(selectElement, value);
+                }
+                break;
+
+            case "TEXTAREA":
+                let textareaElement = formElement as HTMLTextAreaElement;
+                textareaElement.value = value;
+                break;
+        }
     }
 
     static setMultipleSelectValues(selectElement: HTMLSelectElement, values: string[]) {
@@ -123,6 +155,7 @@ class EventInstanceView {
         document.querySelectorAll(`#eventInstanceModalForm input[type='checkbox'][data-toggle='toggle']`).forEach(elem => { elem.dispatchEvent(new Event("change")); }); //trigger change event on toggles to update state
         EventInstanceController.editMode = undefined;
         EventInstanceController.currentEventInstanceId = undefined;
+        EventInstanceView.refreshEventTypeSelect();
     }
 
     static async renderListView(eventInstanceList: StringIndexedList<EventInstance>) {

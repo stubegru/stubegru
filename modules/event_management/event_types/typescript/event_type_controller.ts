@@ -47,6 +47,13 @@ class EventTypeController {
         }
     }
 
+    static async getEventTypeList():Promise<StringIndexedList<EventType>>{
+        if(Object.keys(EventTypeController.eventTypeList).length > 0){
+            return EventTypeController.eventTypeList;
+        }
+        else return await EventTypeService.getAll();
+    }
+
 
     static async handleUpdateEventType(jsonString: string) {
         try {

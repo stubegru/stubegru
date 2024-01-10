@@ -9,9 +9,11 @@
             "alerts",
             "user_utils",
             "calendar/fullcalendar",
-            "event_management/libs/multi_select_dropdown"
+            "event_management/libs/multi_select_dropdown",
+            "event_management/event_types"
         ],
-        "nonBlocking": [],
+        "nonBlocking": [
+        ],
         "backend": []
     },
     "html": [
