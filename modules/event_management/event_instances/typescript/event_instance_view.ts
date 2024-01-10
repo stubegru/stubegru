@@ -135,7 +135,7 @@ class EventInstanceView {
             let eventInstance = eventInstanceList[eventInstanceId];
             let assigneeId = eventInstance.assigneesInternal ? eventInstance.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
-            const isActive = eventInstance.isPortfolio ? "Ja" : "Nein";
+            const isActive = "TODO" //eventInstance.isPortfolio ? "Ja" : "Nein";
 
             let tableRow = `<tr>
                 <td>${eventInstance.name}</td>
