@@ -15,6 +15,8 @@ interface EventInstance {
         expenseZSB: string;
         expenseSHK: string;
         monitoringNotes: string;
+        assigneesPR: string[];
+        distributerPR: string[];
         reminderPR: string;
         announcementPR: string;
 }
@@ -56,6 +58,7 @@ interface EventInstancesConfig {
 
 interface FormConfig {
     presetValues: StringIndexedList<string[]>
+    presetMapping: StringIndexedList<StringIndexedList<string>>
 }
 
 
@@ -120,5 +123,30 @@ interface StubegruUser {
     role: string;
     erfassungsdatum: string;
     erfasser : string;
+}
+
+declare class EventTypeController {
+    static getEventTypeList():Promise<StringIndexedList<EventType>>
+}
+
+interface EventType {
+    id: string;
+    name: string;
+    isPortfolio: boolean;
+    descriptionInternal: string;
+    descriptionExternal: string;
+    visible: string[]; //multiple toggles!
+    targetGroups: string[];
+    assigneesInternal: string[];
+    assigneesExternal: string[];
+    expenseInternal: string;
+    expenseExternal: string;
+    notes: string;
+    reminderInternal: string; //Mailreminder!!!
+    assigneesPR: string[];
+    distributerPR: string[];
+    reminderPR: string;
+    announcementPR: string;
+
 }
 

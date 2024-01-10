@@ -30,6 +30,13 @@ class EventTypeController {
             throw error;
         }
     }
+    static async getEventTypeList() {
+        if (Object.keys(EventTypeController.eventTypeList).length > 0) {
+            return EventTypeController.eventTypeList;
+        }
+        else
+            return await EventTypeService.getAll();
+    }
     static async handleUpdateEventType(jsonString) {
         try {
             let resp = await EventTypeService.update(EventTypeController.currentEventTypeId, jsonString);
