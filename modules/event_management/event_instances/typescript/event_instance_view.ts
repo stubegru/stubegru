@@ -173,11 +173,13 @@ class EventInstanceView {
             let eventInstance = eventInstanceList[eventInstanceId];
             let assigneeId = eventInstance.assigneesInternal ? eventInstance.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
-            const isActive = "TODO" //eventInstance.isPortfolio ? "Ja" : "Nein";
+            const isCancelled = eventInstance.isCancelled ? "Ja" : "Nein";
+            const startDate = eventInstance.startDate;
 
             let tableRow = `<tr>
                 <td>${eventInstance.name}</td>
-                <td>${isActive}</td>
+                <td>${startDate}</td>
+                <td>${isCancelled}</td>
                 <td>${assigneeName}</td>
                 <td>
                     <button class='event-instance-edit-button btn btn-default' data-event-instance-id='${eventInstance.id}' title="Veranstaltung bearbeiten">
