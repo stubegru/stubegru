@@ -10,7 +10,9 @@
             "user_utils",
             "event_management/libs/multi_select_dropdown"
         ],
-        "nonBlocking": [],
+        "nonBlocking": [
+            "event_management/event_instances"
+        ],
         "backend": []
     },
     "html": [

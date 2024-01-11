@@ -10,7 +10,7 @@ class EventInstanceController {
         modal.addEventListener("hidden.bs.modal", EventInstanceView.resetModalForm);
         //Register new event instance button
         let newBtn = document.getElementById("eventInstanceNewButton");
-        newBtn.addEventListener("click", EventInstanceView.showModalForCreate);
+        newBtn.addEventListener("click", () => EventInstanceView.showModalForCreate());
         //Register modal's save-button
         document.getElementById("eventInstanceModalForm").addEventListener("submit", event => {
             event.preventDefault(); //Don't trigger default submit actions

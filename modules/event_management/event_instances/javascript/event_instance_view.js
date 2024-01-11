@@ -43,9 +43,13 @@ class EventInstanceView {
             EventInstanceView.setFormInput(destKey, srcValue);
         }
     }
-    static showModalForCreate() {
-        EventInstanceView.resetModalForm();
+    static async showModalForCreate(eventTypeId = "") {
+        await EventInstanceView.resetModalForm();
         EventInstanceController.editMode = EditMode.CREATE;
+        //Pre-select eventType
+        const elem = document.querySelector("#eventInstanceModalForm [name='category']");
+        elem.value = eventTypeId;
+        elem.dispatchEvent(new Event("change"));
         EventInstanceView.setModalVisible(true);
     }
     static showModalForUpdate(eventInstanceId) {
@@ -128,13 +132,13 @@ class EventInstanceView {
         //@ts-expect-error
         $("#eventInstanceModal").modal(visible ? "show" : "hide");
     }
-    static resetModalForm() {
+    static async resetModalForm() {
         let form = document.getElementById("eventInstanceModalForm");
         form.reset();
         document.querySelectorAll(`#eventInstanceModalForm input[type='checkbox'][data-toggle='toggle']`).forEach(elem => { elem.dispatchEvent(new Event("change")); }); //trigger change event on toggles to update state
         EventInstanceController.editMode = undefined;
         EventInstanceController.currentEventInstanceId = undefined;
-        EventInstanceView.refreshEventTypeSelect();
+        await EventInstanceView.refreshEventTypeSelect();
     }
     static async renderListView(eventInstanceList) {
         let listElement = document.getElementById("eventInstanceTableBody");

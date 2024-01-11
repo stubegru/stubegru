@@ -122,3 +122,7 @@ interface StubegruUser {
     erfasser : string;
 }
 
+declare class EventInstanceView{
+    static showModalForCreate(eventTypeId?:string)
+}
+

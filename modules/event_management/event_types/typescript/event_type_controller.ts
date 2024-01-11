@@ -93,6 +93,7 @@ class EventTypeController {
             EventTypeController.eventTypeList = eventTypeList;
             await EventTypeView.renderListView(eventTypeList);
             EventTypeController.registerDeleteButtons();
+            EventTypeController.registerPlusButtons();
             EventTypeController.registerEditButtons();
             EventTypeController.stubegru.modules.userUtils.updateAdminElements()
         } catch (error) {
@@ -107,6 +108,16 @@ class EventTypeController {
             btn.addEventListener("click", () => {
                 let eventTypeId = btn.getAttribute("data-event-type-id");
                 EventTypeView.showModalForUpdate(eventTypeId);
+            });
+        });
+    }
+
+    static registerPlusButtons() {
+        let plusBtnList = document.querySelectorAll(".event-type-plus-button");
+        plusBtnList.forEach(btn => {
+            btn.addEventListener("click", () => {
+                let eventTypeId = btn.getAttribute("data-event-type-id");
+                EventInstanceView.showModalForCreate(eventTypeId);
             });
         });
     }
