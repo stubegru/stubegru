@@ -1,6 +1,8 @@
 interface EventInstance {
         id: string;
         name: string;
+        category: string;
+        isCancelled:boolean;
         assigneesInternal: number[];
         startDate: string;
         startTime: string;
