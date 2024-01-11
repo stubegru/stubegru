@@ -142,7 +142,7 @@ class EventTypeView {
                 <td>${isActive}</td>
                 <td>${assigneeName}</td>
                 <td>
-                    <button class='event-type-create-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
+                    <button class='event-type-plus-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
                         <i class="fas fa-plus"></i>
                     </button>
                     <button class='event-type-edit-button btn btn-default' data-event-type-id='${eventType.id}' title="Kategorie bearbeiten">
