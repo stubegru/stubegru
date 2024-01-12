@@ -139,6 +139,7 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('WIKI_READ', 'user'),
 ('WIKI_WRITE', 'wiki_autor');
 
+
 --
 -- Daten für Tabelle `Quicklinks`
 --
