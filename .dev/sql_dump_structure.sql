@@ -664,6 +664,7 @@ ALTER TABLE `Beratene`
 ALTER TABLE `event_mgmt_instances`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+
 --
 -- AUTO_INCREMENT für Tabelle `event_mgmt_types`
 --
