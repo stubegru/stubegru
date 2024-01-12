@@ -1,6 +1,6 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
-require_once("$BASE_PATH/utils/database_without_auth.php"); //ACHTUNG: dbconnect.php sollte normalerweise nie ohne authorization eingebunden werden. Hier Ausnahme, da der Nutzer beim Login noch nicht eingeloggt ist.
+require_once("$BASE_PATH/utils/database_without_auth.php"); //ACHTUNG: database_without_auth.php sollte normalerweise nie ohne authorization eingebunden werden. Hier Ausnahme, da der Nutzer beim Login noch nicht eingeloggt ist.
 
 $user = $_POST["username"];
 $passwort = $_POST["password"];

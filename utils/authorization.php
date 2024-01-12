@@ -6,7 +6,9 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 
 //Wenn keine Session id gesetzt ist, wird zur Login Seite weitergeleitet bzw bei einem AJAX Call ein 401-Fehler gesendet
-if (!isset($_SESSION['id']) || ($_SESSION["application"] != getenv("APPLICATION_ID"))) {
+if (empty($_SESSION["id"]) || empty($_SESSION['application']) || $_SESSION["application"] != getenv("APPLICATION_ID")) {
+    session_destroy(); // Destroy session from other session
+
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
         //Ajax call => return 401 Error
         header("HTTP/1.1 401 Unauthorized");

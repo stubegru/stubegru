@@ -56,7 +56,8 @@ function permissionRequestWithoutExit($permChannel)
         if (session_status() == PHP_SESSION_NONE) {
             session_start(); //Session starten, falls sie noch nicht läuft
         }
-        if (empty($_SESSION["id"])) {
+        if (empty($_SESSION["id"]) || empty($_SESSION['application']) || $_SESSION["application"] != getenv("APPLICATION_ID")) {
+            session_destroy(); // Destroy session from other sessions
             return array("status" => "error", "message" => "You are not logged in. This resource is only accessible for logged in users", "permission" => $permission, "permissionRequest" => $permChannel);
         }
 
