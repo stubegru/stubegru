@@ -167,19 +167,21 @@ class EventInstanceView {
         let listElement = document.getElementById("eventInstanceTableBody") as HTMLElement;
         listElement.innerHTML = "";
         const allUsersList = await EventInstanceController.stubegru.modules.userUtils.getAllUsers();
+        const eventTypeList = await EventTypeController.getEventTypeList();
 
 
         for (let eventInstanceId in eventInstanceList) {
             let eventInstance = eventInstanceList[eventInstanceId];
             let assigneeId = eventInstance.assigneesInternal ? eventInstance.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
-            const isCancelled = eventInstance.isCancelled ? "Ja" : "Nein";
+            const eventTypeId = eventInstance.category;
+            const eventTypeName = (eventTypeId && eventTypeList[eventTypeId]) ? eventTypeList[eventTypeId].name : "";
             const startDate = eventInstance.startDate;
 
             let tableRow = `<tr>
                 <td>${eventInstance.name}</td>
                 <td>${startDate}</td>
-                <td>${isCancelled}</td>
+                <td>${eventTypeName}</td>
                 <td>${assigneeName}</td>
                 <td>
                     <button class='event-instance-edit-button btn btn-default' data-event-instance-id='${eventInstance.id}' title="Veranstaltung bearbeiten">
