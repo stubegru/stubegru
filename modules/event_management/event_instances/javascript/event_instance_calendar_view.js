@@ -44,7 +44,8 @@ EventInstanceCalendarView.config = {
         startTime: '08:00',
         endTime: '16:00'
     },
-    weekends: false,
+    weekends: true,
+    firstDay: 1,
     headerToolbar: {
         start: 'dayGridMonth timeGridWeek',
         center: 'title',

@@ -34,7 +34,8 @@ class EventInstanceCalendarView {
             startTime: '08:00',
             endTime: '16:00'
         },
-        weekends: false,
+        weekends: true,
+        firstDay: 1, //start week on monday
         headerToolbar: {
             start: 'dayGridMonth timeGridWeek',
             center: 'title',
