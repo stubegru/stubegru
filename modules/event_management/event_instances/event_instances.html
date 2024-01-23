@@ -15,7 +15,7 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-12 negative-margin-top">
+            <div class="col-md-12 negative-margin-top">
 
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
@@ -62,108 +62,26 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                        <h4 class="modal-title">Veranstaltung bearbeiten</h4>
+                        <h4 class="modal-title"><b>
+                                <i class="far fa-calendar-plus"></i> Veranstaltung bearbeiten
+                            </b></h4>
                     </div>
                     <form id="eventInstanceModalForm">
                         <div class="modal-body">
 
-                            <div class="row">
-                                <div class="col-sm-12">
-
-                                    <div class="form-group">
-                                        <label>Kategorie der Veranstaltung</label>
-                                        <select class="form-control" name="category"></select>
-                                    </div>
-
-                                </div>
-                            </div>
-
 
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <!-- Freitext -->
-                                    <!-- Name -->
-
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Name der Veranstaltung</label>
                                         <input type="text" class="form-control" name="name" required>
                                     </div>
-
                                 </div>
 
-                                <div class="col-sm-6" style="text-align:end;">
-                                    <!-- Checkbox -->
-                                    <!-- Abgesagt...? -->
-
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="checkbox" data-toggle="toggle" name="isCancelled" value="isCancelled">
-                                        <label>Abgesagt?</label>
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-
-
-                            <div class="alert alert-warning">
-
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <!-- Select -->
-                                        <!-- Verantwortlich ZSB -->
-
-                                        <div class="form-group"><label>Verantwortliche ZSB</label>
-                                            <select multiple class="form-control event-instance-multiple-select" name="assigneesInternal" data-user="all">
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="well">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="form-group"><label>Von:</label>
-                                            <input type="date" class="form-control" name="startDate" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group"><label>Startzeit:</label>
-                                            <input type="time" class="form-control" name="startTime" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group"><label>Bis:</label>
-                                            <input type="date" class="form-control" name="endDate" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group"><label>Endzeit:</label>
-                                            <input type="time" class="form-control" name="endTime" required>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group"><label>Ort:</label>
-                                            <input type="text" class="form-control" name="location">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group"><label>Kooperationspartner:</label>
-                                            <input type="text" class="form-control" name="cooperation">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group"><label>Maximale Teilnehmer:innenzahl:</label>
-                                            <input type="number" class="form-control" name="maxParticipants">
-                                        </div>
+                                        <label>Kategorie der Veranstaltung</label>
+                                        <select class="form-control" name="category"></select>
                                     </div>
                                 </div>
 
@@ -171,122 +89,205 @@
 
 
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <!-- Freitext -->
-                                    <!-- Notizen -->
-
-                                    <div class="form-group">
-                                        <label> Bemerkungen/Notizen ZSB:</label>
-                                        <textarea name="notes" class="form-control" style="min-width: 100%"></textarea>
+                                <div class="col-md-3">
+                                    <div class="form-group"><label>Von:</label>
+                                        <input type="date" class="form-control" name="startDate" required>
                                     </div>
-
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group"><label>Startzeit:</label>
+                                        <input type="time" class="form-control" name="startTime" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group"><label>Bis:</label>
+                                        <input type="date" class="form-control" name="endDate" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group"><label>Endzeit:</label>
+                                        <input type="time" class="form-control" name="endTime" required>
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="row">
-                                <div class="col-sm-12">
-                                    <!-- Select -->
-                                    <!-- Erinnerungsmail -->
+                                <div class="col-md-12">
+                                    <div class="form-group"><label>Ort:</label>
+                                        <input type="text" class="form-control" name="location">
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <div class="form-group"><label>Erinnerungsmail</label>
-                                        <p class="help-block">Wochen vor dem Termin</p><select class="form-control" name="reminderInternal">
-                                            <option value="">Keine Angabe</option>
-                                            <option>Verwaltung</option>
-                                        </select>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <a role="button" class="text-muted" data-toggle="collapse" href="#eventInstanceModalDetailContainer">
+                                        <i class="fas fa-angle-down"></i> <b>Details</b>
+                                    </a>
+                                </div>
+                                <div class="panel-body collapse" id="eventInstanceModalDetailContainer">
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Verantwortliche ZSB:</label>
+                                                <select multiple class="form-control event-instance-multiple-select" name="assigneesInternal" data-user="all">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Kooperationspartner:</label>
+                                                <input type="text" class="form-control" name="cooperation">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Erinnerungsmail</label>
+                                                <select class="form-control" name="reminderInternal">
+                                                    <option value="">Keine Angabe</option>
+                                                    <option>1 Woche vorher</option>
+                                                    <option>2 Wochen vorher</option>
+                                                    <option>3 Wochen vorher</option>
+                                                    <option>4 Wochen vorher</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Maximale Teilnehmer:innenzahl:</label>
+                                                <input type="number" class="form-control" name="maxParticipants">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label> Bemerkungen/Notizen ZSB:</label>
+                                                <textarea name="notes" class="form-control" style="min-width: 100%"></textarea>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
                             </div>
 
-                            <div class="well">
-                                <h4>Monitoring</h4>
-                                <div class="row">
-                                    <div class="col-sm-4">
-                                        <div class="form-group"><label>Tatsächliche Teilnehmer:innenzahl:</label>
-                                            <input type="number" class="form-control" name="participantsCount">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group"><label>Geschätzter Aufwand ZSB (Stunden):</label>
-                                            <input type="number" class="form-control" name="expenseZSB">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="form-group"><label>Geschätzter Aufwand SHKs (Stunden):</label>
-                                            <input type="number" class="form-control" name="expenseSHK">
-                                        </div>
-                                    </div>
+
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <a role="button" data-toggle="collapse" href="#eventInstanceModalMonitoringContainer">
+                                        <i class="fas fa-angle-down"></i> <b>Monitoring</b>
+                                    </a>
                                 </div>
+                                <div class="panel-body alert-info collapse" id="eventInstanceModalMonitoringContainer">
 
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <div class="form-group">
-                                            <label>Anmerkungen</label>
-                                            <textarea class="form-control" name="monitoringNotes"></textarea>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group"><label>Tatsächliche Teilnehmer:innenzahl:</label>
+                                                <input type="number" class="form-control" name="participantsCount">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group"><label>Aufwand ZSB (Stunden):</label>
+                                                <input type="number" class="form-control" name="expenseZSB">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group"><label>Aufwand SHKs (Stunden):</label>
+                                                <input type="number" class="form-control" name="expenseSHK">
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="well">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <!-- Select -->
-                                        <!-- Verantwortlich PR -->
 
-                                        <div class="form-group"><label>Verantwortlich PR</label>
-                                            <select multiple class="form-control event-instance-multiple-select" name="assigneesPR" data-user="all">
-                                            </select>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Anmerkungen</label>
+                                                <textarea class="form-control" name="monitoringNotes"></textarea>
+                                            </div>
                                         </div>
-
                                     </div>
-                                    <div class="col-sm-6">
-                                        <!-- Select -->
-                                        <!-- Verteiler PR -->
 
-                                        <div class="form-group"><label>Verteiler PR</label>
-                                            <select multiple class="form-control event-instance-multiple-select" name="distributerPR">
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <!-- Select -->
-                                        <!-- Erinnerungsmail PR -->
-
-                                        <div class="form-group"><label>Erinnerungsmail PR</label>
-                                            <p class="help-block">Wochen vor dem Termin </p><select class="form-control" name="reminderPR">
-                                                <option value="">Keine Angabe</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <!-- Select -->
-                                        <!-- PR Ankündigungstext -->
-
-                                        <div class="form-group">
-                                            <label>Ankündigungstext PR</label>
-                                            <textarea class="form-control" name="announcementPR"></textarea>
-                                        </div>
-
-                                    </div>
                                 </div>
                             </div>
 
 
+
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <a role="button" class="text-warning" data-toggle="collapse" href="#eventInstanceModalPRContainer">
+                                        <i class="fas fa-angle-down"></i> <b>Öffentlichkeitsarbeit</b>
+                                    </a>
+                                </div>
+                                <div class="panel-body alert-warning collapse" id="eventInstanceModalPRContainer">
+
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Verantwortlich PR</label>
+                                                <select multiple class="form-control event-instance-multiple-select" name="assigneesPR" data-user="all">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Verteiler PR</label>
+                                                <select multiple class="form-control event-instance-multiple-select" name="distributerPR">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group"><label>Erinnerungsmail PR</label>
+                                                <select class="form-control" name="reminderPR">
+                                                    <option value="">Keine Angabe</option>
+                                                    <option>1 Woche vorher</option>
+                                                    <option>2 Wochen vorher</option>
+                                                    <option>3 Wochen vorher</option>
+                                                    <option>4 Wochen vorher</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Ankündigungstext PR</label>
+                                                <textarea class="form-control" name="announcementPR"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
 
 
                         </div>
 
                         <div class="modal-footer">
                             <div class="row">
-                                <div class="col-sm-12 text-rigth">
+                                <div class="col-md-6 text-left">
+                                    <input type="checkbox" name="isCancelled" value="isCancelled" class="hidden">
+                                    <button class="btn btn-danger">
+                                        <i class="far fa-times-circle"></i> Veranstaltung absagen
+                                    </button>
+                                </div>
+                                <div class="col-md-6 text-rigth">
                                     <button data-dismiss="modal" class="btn btn-default" type="button"><i class="fas fa-times"></i> Abbrechen</button>
                                     <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Eintrag speichern</button>
                                 </div>
