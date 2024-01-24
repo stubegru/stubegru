@@ -1,0 +1,20 @@
+{
+    "type": "stubegruModule",
+    "name": "event_management/menu",
+    "description": "Utility functions for all event management modules",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "html": [],
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "menubar"
+        ],
+        "nonBlocking": []
+    },
+    "js": [
+        "event_management_utils.js"
+    ],
+    "css": [],
+    "cronjob": []
+}

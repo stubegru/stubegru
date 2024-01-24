@@ -1,0 +1,3 @@
+stubegru.modules.menubar.addItem("secondary", `<li class="permission-EVENT_INSTANCE_READ permission-required"><a title="Exportdaten der Veranstaltungsevaluation als CSV herunterladen" href="${stubegru.constants.BASE_URL}/modules/event_management/event_instances/backend/export_monitoring_csv.php"><i class="fas fa-download"></i>&nbsp;Download Veranstaltungen</a></li>`, 5);
+
+stubegru.modules.menubar.addItem("primary", `<li style="display:none" class="permission-EVENT_INSTANCE_READ permission-required"><a title="Veranstaltungsmanagement aufrufen" href="${stubegru.constants.BASE_URL}?view=event_management"><i class="fas fa-calendar-alt"></i>&nbsp;Veranstaltungen</a></li>`, 50);
