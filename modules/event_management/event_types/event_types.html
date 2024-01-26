@@ -8,6 +8,7 @@
 
         <div class="row">
             <div class="col-md-12 text-right">
+                <input class="form-control" id="eventTypeTableFilter" type="text">
                 <button class="btn btn-primary" id="eventTypeNewButton">
                     <i class="fas fa-plus-circle"></i> Neue Kategorie
                 </button>
@@ -16,18 +17,7 @@
 
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-sortable" id="eventTypeTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Verantwortlich</th>
-                            <th class="permission-EVENT_TYPE_WRITE permission-required" data-table-sortable-disable></th>
-                        </tr>
-                    </thead>
-                    <tbody id="eventTypeTableBody">
-                        <!-- Here are generated all the Event Entries with an AJAX call -->
-                    </tbody>
-                </table>
+                <div id="eventTypeTable"></div>
             </div>
         </div>
 
