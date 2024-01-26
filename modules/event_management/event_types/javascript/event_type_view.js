@@ -106,18 +106,14 @@ class EventTypeView {
         EventTypeController.currentEventTypeId = undefined;
     }
     static async renderListView(eventTypeList) {
-        let listElement = document.getElementById("eventTypeTableBody");
-        listElement.innerHTML = "";
         const allUsersList = await EventTypeController.stubegru.modules.userUtils.getAllUsers();
+        let tableDataList = [];
         for (let eventTypeId in eventTypeList) {
             let eventType = eventTypeList[eventTypeId];
             let assigneeId = eventType.assigneesInternal ? eventType.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
             const isActive = eventType.isPortfolio ? "Ja" : "Nein";
-            let tableRow = `<tr>
-                <td>${eventType.name}</td>
-                <td>${assigneeName}</td>
-                <td>
+            let buttonsColumn = `
                     <button class='event-type-plus-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -126,10 +122,25 @@ class EventTypeView {
                     </button>
                     <button class='event-type-delete-button btn btn-danger' data-event-type-id='${eventType.id}' title="Kategorie löschen">
                         <i class='fa fa-times'></i>
-                    </button>
-                </td>
-                </tr>`;
-            listElement.innerHTML += tableRow;
+                    </button>`;
+            tableDataList.push({
+                name: eventType.name,
+                assignee: assigneeName,
+                buttons: buttonsColumn
+            });
         }
+        let tableOptions = {
+            data: tableDataList,
+            columns: {
+                name: "Name",
+                assignee: "Verantwortlich",
+                buttons: ""
+            },
+            rowsPerPage: 10,
+            pagination: true,
+            searchField: document.getElementById("eventTypeTableFilter")
+        };
+        //@ts-expect-error
+        $('#eventTypeTable').tableSortable(tableOptions);
     }
 }
