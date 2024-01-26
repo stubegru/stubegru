@@ -139,7 +139,6 @@ class EventTypeView {
 
             let tableRow = `<tr>
                 <td>${eventType.name}</td>
-                <td>${isActive}</td>
                 <td>${assigneeName}</td>
                 <td>
                     <button class='event-type-plus-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
