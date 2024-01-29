@@ -102,6 +102,25 @@ class EventInstanceController {
             });
         });
     }
+    static async cancelEvent() {
+        let swalOptions = {
+            title: "Veranstaltung absagen?",
+            text: "Möchtest du diese Veranstaltung wirklich absagen? Es werden Absage-Mails an alle organisierenden Personen versendet. Dies kann nicht rückgängig gemacht werden.",
+            type: "error",
+            showCancelButton: true,
+            cancelButtonText: "Abbrechen",
+            confirmButtonText: "Veranstaltung absagen",
+        };
+        let callbackFunction = () => {
+            let checkbox = document.querySelector(`#eventInstanceModalForm [name="isCancelled"]`);
+            checkbox.checked = true;
+            //send mails...
+            //save instance
+            EventInstanceView.renderCancelButton();
+        };
+        //@ts-expect-error
+        swal(swalOptions, callbackFunction);
+    }
 }
 //@ts-expect-error
 EventInstanceController.stubegru = window.stubegru;

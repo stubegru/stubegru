@@ -27,7 +27,7 @@ class EventInstanceController {
         //Register filter clear button
         let clearBtn = document.getElementById("eventInstanceFilterClear");
         let filterInput = document.getElementById("eventInstanceFilter") as HTMLInputElement;
-        clearBtn.addEventListener("click", ()=>{
+        clearBtn.addEventListener("click", () => {
             filterInput.value = "";
             filterInput.dispatchEvent(new Event("input"));
         });
@@ -122,6 +122,26 @@ class EventInstanceController {
                 EventInstanceController.stubegru.modules.alerts.deleteConfirm("Veranstaltung löschen", "Soll diese Veranstaltung wirklich gelöscht werden?", () => EventInstanceController.handleDeleteEventInstance(eventInstanceId));
             });
         });
+    }
+
+    static async cancelEvent() {
+        let swalOptions = {
+            title: "Veranstaltung absagen?",
+            text: "Möchtest du diese Veranstaltung wirklich absagen? Es werden Absage-Mails an alle organisierenden Personen versendet. Dies kann nicht rückgängig gemacht werden.",
+            type: "error",
+            showCancelButton: true,
+            cancelButtonText: "Abbrechen",
+            confirmButtonText: "Veranstaltung absagen",
+        }
+        let callbackFunction = ()=>{
+            let checkbox = document.querySelector(`#eventInstanceModalForm [name="isCancelled"]`) as HTMLInputElement;
+            checkbox.checked = true;
+            //send mails...
+            //save instance
+            EventInstanceView.renderCancelButton();
+        }
+        //@ts-expect-error
+        swal(swalOptions,callbackFunction);
     }
 
 
