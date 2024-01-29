@@ -11,6 +11,13 @@ class EventInstanceController {
         //Register new event instance button
         let newBtn = document.getElementById("eventInstanceNewButton");
         newBtn.addEventListener("click", () => EventInstanceView.showModalForCreate());
+        //Register filter clear button
+        let clearBtn = document.getElementById("eventInstanceFilterClear");
+        let filterInput = document.getElementById("eventInstanceFilter");
+        clearBtn.addEventListener("click", () => {
+            filterInput.value = "";
+            filterInput.dispatchEvent(new Event("input"));
+        });
         //Register modal's save-button
         document.getElementById("eventInstanceModalForm").addEventListener("submit", event => {
             event.preventDefault(); //Don't trigger default submit actions
