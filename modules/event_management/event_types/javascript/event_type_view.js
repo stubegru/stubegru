@@ -136,8 +136,10 @@ class EventTypeView {
                 assignee: "Verantwortlich",
                 buttons: ""
             },
-            rowsPerPage: 10,
+            rowsPerPage: 8,
             pagination: true,
+            nextText: "<i class='fas fa-angle-right'>",
+            prevText: "<i class='fas fa-angle-left'>",
             searchField: document.getElementById("eventTypeTableFilter")
         };
         //@ts-expect-error

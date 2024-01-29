@@ -10,6 +10,13 @@ class EventTypeController {
         //Register new event type button
         let newBtn = document.getElementById("eventTypeNewButton");
         newBtn.addEventListener("click", EventTypeView.showModalForCreate);
+        //Register filter clear button
+        let clearBtn = document.getElementById("eventTypeTableFilterClear");
+        let filterInput = document.getElementById("eventTypeTableFilter");
+        clearBtn.addEventListener("click", () => {
+            filterInput.value = "";
+            filterInput.dispatchEvent(new Event("input"));
+        });
         //Register modal's save-button
         document.getElementById("eventTypeModalForm").addEventListener("submit", event => {
             event.preventDefault(); //Don't trigger default submit actions
