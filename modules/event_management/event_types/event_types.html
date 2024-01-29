@@ -7,13 +7,23 @@
     <div class="panel-collapse collapse in" style="padding: 15px;" id="collapseEventTypes" aria-expanded="true">
 
         <div class="row">
-            <div class="col-md-12 text-right">
-                <input class="form-control" id="eventTypeTableFilter" type="text">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Kategorien Filter" id="eventTypeTableFilter">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" title="Filter zurücksetzen" id="eventTypeTableFilterClear"> 
+                            <i class="fas fa-backspace"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6 text-right">
                 <button class="btn btn-primary" id="eventTypeNewButton">
                     <i class="fas fa-plus-circle"></i> Neue Kategorie
                 </button>
             </div>
         </div>
+        <br>
 
         <div class="row">
             <div class="col-sm-12">
