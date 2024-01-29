@@ -141,10 +141,9 @@ class EventInstanceView {
         await EventInstanceView.refreshEventTypeSelect();
     }
     static async renderListView(eventInstanceList) {
-        let listElement = document.getElementById("eventInstanceTableBody");
-        listElement.innerHTML = "";
         const allUsersList = await EventInstanceController.stubegru.modules.userUtils.getAllUsers();
         const eventTypeList = await EventTypeController.getEventTypeList();
+        let tableDataList = [];
         for (let eventInstanceId in eventInstanceList) {
             let eventInstance = eventInstanceList[eventInstanceId];
             let assigneeId = eventInstance.assigneesInternal ? eventInstance.assigneesInternal[0] : undefined;
@@ -152,12 +151,7 @@ class EventInstanceView {
             const eventTypeId = eventInstance.category;
             const eventTypeName = (eventTypeId && eventTypeList[eventTypeId]) ? eventTypeList[eventTypeId].name : "";
             const startDate = eventInstance.startDate;
-            let tableRow = `<tr>
-                <td>${eventInstance.name}</td>
-                <td>${startDate}</td>
-                <td>${eventTypeName}</td>
-                <td>${assigneeName}</td>
-                <td>
+            let buttonsColumn = `
                     <button class='event-instance-edit-button btn btn-default' data-event-instance-id='${eventInstance.id}' title="Veranstaltung bearbeiten">
                         <i class='fa fa-pencil-alt'></i>
                     </button>
@@ -166,7 +160,30 @@ class EventInstanceView {
                     </button>
                 </td>
                 </tr>`;
-            listElement.innerHTML += tableRow;
+            tableDataList.push({
+                name: eventInstance.name,
+                date: startDate,
+                category: eventTypeName,
+                assignee: assigneeName,
+                buttons: buttonsColumn
+            });
         }
+        let tableOptions = {
+            data: tableDataList,
+            columns: {
+                name: "Name",
+                date: "Datum",
+                category: "Kategorie",
+                assignee: "Verantwortlich",
+                buttons: ""
+            },
+            rowsPerPage: 8,
+            pagination: true,
+            nextText: "<i class='fas fa-angle-right'>",
+            prevText: "<i class='fas fa-angle-left'>",
+            searchField: document.getElementById("eventInstanceFilter")
+        };
+        //@ts-expect-error
+        $('#eventInstanceTable').tableSortable(tableOptions);
     }
 }

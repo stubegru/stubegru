@@ -7,7 +7,18 @@
     <div class="panel-collapse collapse in" style="padding: 15px;" id="collapseEventInstances" aria-expanded="true">
 
         <div class="row">
-            <div class="col-md-12 text-right">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Veranstaltungen Filter" id="eventInstanceFilter">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" title="Filter zurücksetzen" id="eventInstanceFilterClear"> 
+                            <i class="fas fa-backspace"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
                 <button class="btn btn-primary foreground-button" id="eventInstanceNewButton">
                     <i class="fas fa-plus-circle"></i> Neue Veranstaltung
                 </button>
@@ -34,20 +45,7 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="eventInstanceListView">
-                        <table class="table table-striped table-sortable" id="eventInstanceTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Datum</th>
-                                    <th>Kategorie</th>
-                                    <th>Verantwortlich</th>
-                                    <th class="permission-EVENT_INSTANCE_WRITE permission-required" data-table-sortable-disable></th>
-                                </tr>
-                            </thead>
-                            <tbody id="eventInstanceTableBody">
-                                <!-- Here are generated all the Event Entries with an AJAX call -->
-                            </tbody>
-                        </table>
+                        <div id="eventInstanceTable"></div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="eventInstanceCalendarView">
                     </div>
