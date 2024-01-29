@@ -12,7 +12,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Veranstaltungen Filter" id="eventInstanceFilter">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" title="Filter zurücksetzen" id="eventInstanceFilterClear"> 
+                        <button class="btn btn-default" type="button" title="Filter zurücksetzen" id="eventInstanceFilterClear">
                             <i class="fas fa-backspace"></i>
                         </button>
                     </span>
@@ -278,12 +278,10 @@
                         </div>
 
                         <div class="modal-footer">
-                            <div class="row">
-                                <div class="col-md-6 text-left">
-                                    <input type="checkbox" name="isCancelled" value="isCancelled" class="hidden">
-                                    <button class="btn btn-danger">
-                                        <i class="far fa-times-circle"></i> Veranstaltung absagen
-                                    </button>
+                            <div class="row"> 
+                                <input type="checkbox" name="isCancelled" value="isCancelled" class="hidden">
+                                <div class="col-md-6 text-left" id="eventInstanceCancelContainer">
+
                                 </div>
                                 <div class="col-md-6 text-rigth">
                                     <button data-dismiss="modal" class="btn btn-default" type="button"><i class="fas fa-times"></i> Abbrechen</button>

@@ -54,6 +54,7 @@ class EventInstanceView {
         const elem = document.querySelector("#eventInstanceModalForm [name='category']") as HTMLSelectElement;
         elem.value = eventTypeId;
         elem.dispatchEvent(new Event("change"));
+        EventInstanceView.renderCancelButton();
 
         EventInstanceView.setModalVisible(true);
     }
@@ -68,6 +69,7 @@ class EventInstanceView {
             const value = eventInstance[key];
             EventInstanceView.setFormInput(key, value);
         }
+        EventInstanceView.renderCancelButton();
         EventInstanceView.setModalVisible(true);
     }
 
@@ -214,6 +216,24 @@ class EventInstanceView {
 
         //@ts-expect-error
         $('#eventInstanceTable').tableSortable(tableOptions);
+    }
+
+    static renderCancelButton() {
+        let checkbox = document.querySelector(`#eventInstanceModalForm [name="isCancelled"]`) as HTMLInputElement;
+        if (checkbox.checked) {
+            document.getElementById("eventInstanceCancelContainer").innerHTML = 
+            `<div class="alert alert-danger" style="margin-bottom:0px;">
+                 <b><i class="far fa-times-circle"></i> Diese Veranstaltung ist abgesagt!</b>
+             </div>`;
+        }
+        else {
+            document.getElementById("eventInstanceCancelContainer").innerHTML = 
+                `<button class="btn btn-danger" type="button" id="cancelEventInstanceButton">
+                       <i class="far fa-times-circle"></i> Veranstaltung absagen
+                 </button>`;
+            document.getElementById("cancelEventInstanceButton").addEventListener("click", EventInstanceController.cancelEvent);
+        }
+
     }
 
 }
