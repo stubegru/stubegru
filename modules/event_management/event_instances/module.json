@@ -1,7 +1,7 @@
 {
     "type": "stubegruModule",
     "name": "event_management/event_instances",
-    "description": "Handling events as concrete instances of an event-instance. Provides an UI-panel to show all available events in a list or in calendar view. Also provides buttons to edit an event, but the actual event editing is handleed by the 'event_editor' module",
+    "description": "HHandling events as concrete instances of an event-instance. Provides an UI-panel to show all available events in a list or in calendar view. Also provides functionality to create/edit/delete an event",
     "author": "Johannes Schnirring",
     "license": "MIT",
     "dependencies": {

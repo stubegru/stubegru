@@ -1,0 +1,25 @@
+{
+    "type": "stubegruModule",
+    "name": "event_management/portfolio",
+    "description": "List all event instances for a public audience as a portfolio",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts"
+        ],
+        "nonBlocking": [
+        ],
+        "backend": []
+    },
+    "html": [
+        "portfolio.html"
+    ],
+    "js": [
+        "portfolio.js"
+    ],
+    "css": [
+        "portfolio.css"
+    ],
+    "cronjob": []
+}
