@@ -125,23 +125,18 @@
                                 <div class="panel-body collapse" id="eventInstanceModalDetailContainer">
 
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group"><label>Verantwortlich:</label>
-                                                <select multiple class="form-control event-instance-multiple-select" name="assigneesInternal" data-user="all">
-                                                </select>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Zielgruppe: </label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
+                                                <select multiple class="form-control event-type-multiple-select" name="targetGroups"></select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group"><label>Kooperationspartner:</label>
-                                                <input type="text" class="form-control" name="cooperation">
-                                            </div>
-                                        </div>
-                                    </div>
 
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group"><label>Erinnerungsmail</label>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Erinnerungsmail:</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
                                                 <select class="form-control" name="reminderInternal">
                                                     <option value="">Keine Angabe</option>
                                                     <option>1 Woche vorher</option>
@@ -151,7 +146,57 @@
                                                 </select>
                                             </div>
                                         </div>
+                                    </div>
 
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Verantwortlich:</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
+                                                <select multiple class="form-control event-type-multiple-select" name="assigneesInternal" data-user="all">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Aufwand ZSB:</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
+                                                <select class="form-control" name="expenseInternal">
+                                                    <option value="">Keine Angabe</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label>Kooperation mit:</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
+                                                <select multiple class="form-control event-type-multiple-select" name="assigneesExternal">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Aufwand Kooperation:</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
+                                                <select class="form-control" name="expenseExternal">
+                                                    <option value="">Keine Angabe</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group"><label>Namen der Kooperationspartner:</label>
+                                                <input type="text" class="form-control" name="cooperation">
+                                            </div>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="form-group"><label>Maximale Teilnehmer:innenzahl:</label>
                                                 <input type="number" class="form-control" name="maxParticipants">
@@ -163,9 +208,11 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label> Bemerkungen/Notizen ZSB:</label>
-                                                <textarea name="notes" class="form-control" style="min-width: 100%"></textarea>
+                                                <label> Sonstige Bemerkungen / Notizen:</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
+                                                <textarea name="notes" class="form-control" style="min-width: 100%; resize: vertical;"></textarea>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -226,6 +273,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group"><label>Verantwortlich</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
                                                 <select multiple class="form-control event-instance-multiple-select" name="assigneesPR" data-user="all">
                                                 </select>
                                             </div>
@@ -236,12 +284,14 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group"><label>Verteiler</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
                                                 <select multiple class="form-control event-instance-multiple-select" name="distributerPR"></select>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
                                             <div class="form-group"><label>Erinnerungsmail</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
                                                 <select class="form-control" name="reminderPR">
                                                     <option value="">Keine Angabe</option>
                                                     <option>1 Woche vorher</option>
@@ -257,6 +307,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Ankündigungstext</label>
+                                                <div class="label label-success pull-right cursor-info" title="Preset: Dieser Wert wird standardmäßig durch die ausgewählte Veranstaltungskategorie gesetzt."><i class="fas fa-cloud-download-alt"></i> Preset</div>
                                                 <textarea class="form-control" name="announcementPR"></textarea>
                                             </div>
                                         </div>
@@ -269,7 +320,7 @@
                         </div>
 
                         <div class="modal-footer">
-                            <div class="row"> 
+                            <div class="row">
                                 <input type="checkbox" name="isCancelled" value="isCancelled" class="hidden">
                                 <div class="col-md-6 text-left" id="eventInstanceCancelContainer">
 

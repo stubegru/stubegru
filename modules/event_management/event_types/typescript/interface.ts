@@ -1,7 +1,7 @@
 interface EventType {
     id: string;
     name: string;
-    isPortfolio: boolean;
+    // isPortfolio: boolean;
     descriptionInternal: string;
     descriptionExternal: string;
     visible: string[]; //multiple toggles!
