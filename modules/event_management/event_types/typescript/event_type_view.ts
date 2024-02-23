@@ -1,5 +1,7 @@
 class EventTypeView {
 
+    static sortableTable;
+
     static async initModalForm(config: FormConfig) {
         //insert select options from config file
         let presetValues = config.presetValues;
@@ -17,6 +19,26 @@ class EventTypeView {
                 elem.add(new Option(user.name, user.id));
             }
         });
+    }
+
+    static initListView(){
+        let tableOptions = {
+            data: [],
+            columns: {
+                name: "Name",
+                assignee: "Verantwortlich",
+                buttons: ""
+            },
+            rowsPerPage: 8,
+            pagination: true,
+            nextText : "<i class='fas fa-angle-right'>",
+            prevText : "<i class='fas fa-angle-left'>",
+            searchField : document.getElementById("eventTypeTableFilter"),
+            tableDidUpdate: EventTypeController.registerAllTableButtons
+        };
+
+        //@ts-expect-error
+        EventTypeView.sortableTable = $('#eventTypeTable').tableSortable(tableOptions);
     }
 
     static showModalForCreate() {
@@ -133,7 +155,7 @@ class EventTypeView {
             let eventType = eventTypeList[eventTypeId];
             let assigneeId = eventType.assigneesInternal ? eventType.assigneesInternal[0] : undefined;
             let assigneeName = (assigneeId && allUsersList[assigneeId]) ? allUsersList[assigneeId].name : "";
-            const isActive = eventType.isPortfolio ? "Ja" : "Nein";
+            //const isActive = eventType.isPortfolio ? "Ja" : "Nein";
 
             let buttonsColumn = `
                     <button class='event-type-plus-button btn btn-success' data-event-type-id='${eventType.id}' title="Neue Veranstaltung dieser Kategorie anlegen">
@@ -153,22 +175,8 @@ class EventTypeView {
             });
         }
 
-        let tableOptions = {
-            data: tableDataList,
-            columns: {
-                name: "Name",
-                assignee: "Verantwortlich",
-                buttons: ""
-            },
-            rowsPerPage: 8,
-            pagination: true,
-            nextText : "<i class='fas fa-angle-right'>",
-            prevText : "<i class='fas fa-angle-left'>",
-            searchField : document.getElementById("eventTypeTableFilter")
-        };
-
-        //@ts-expect-error
-        $('#eventTypeTable').tableSortable(tableOptions);
+        //Add table data and refresh
+        EventTypeView.sortableTable.setData(tableDataList,null);
 
     }
 

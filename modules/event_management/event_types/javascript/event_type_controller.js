@@ -1,6 +1,7 @@
 class EventTypeController {
     static async init() {
         EventTypeController.config = await EventTypeController.loadConfig();
+        EventTypeView.initListView();
         await EventTypeView.initModalForm(EventTypeController.config.modalForm);
         await EventTypeController.handleGetAllEventTypes(); //Init event view
         setInterval(EventTypeController.handleGetAllEventTypes, 1000 * 60 * 15); //Refresh the view every 15 minutes
@@ -81,14 +82,17 @@ class EventTypeController {
             let eventTypeList = await EventTypeService.getAll();
             EventTypeController.eventTypeList = eventTypeList;
             await EventTypeView.renderListView(eventTypeList);
-            EventTypeController.registerDeleteButtons();
-            EventTypeController.registerPlusButtons();
-            EventTypeController.registerEditButtons();
-            EventTypeController.stubegru.modules.userUtils.updateAdminElements();
+            EventTypeController.registerAllTableButtons();
         }
         catch (error) {
             EventTypeController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
+    }
+    static registerAllTableButtons() {
+        EventTypeController.registerDeleteButtons();
+        EventTypeController.registerPlusButtons();
+        EventTypeController.registerEditButtons();
+        EventTypeController.stubegru.modules.userUtils.updateAdminElements();
     }
     static registerEditButtons() {
         let editBtnList = document.querySelectorAll(".event-type-edit-button");
