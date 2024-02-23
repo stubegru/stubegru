@@ -53,8 +53,8 @@ class EventInstanceView {
         EventInstanceView.renderCancelButton();
         EventInstanceView.setModalVisible(true);
     }
-    static showModalForUpdate(eventInstanceId) {
-        EventInstanceView.resetModalForm();
+    static async showModalForUpdate(eventInstanceId) {
+        await EventInstanceView.resetModalForm();
         let eventInstance = EventInstanceController.eventInstanceList[eventInstanceId];
         EventInstanceController.editMode = EditMode.UPDATE;
         EventInstanceController.currentEventInstanceId = eventInstanceId;
