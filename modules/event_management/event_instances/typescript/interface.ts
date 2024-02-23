@@ -3,12 +3,14 @@ interface EventInstance {
         name: string;
         category: string;
         isCancelled:boolean;
-        assigneesInternal: number[];
+        assigneesInternal: string[];
+        assigneesExternal: string[];
         startDate: string;
         startTime: string;
         endDate: string;
         endTime: string;
         location: string;
+        targetGroups: string[];
         cooperation: string;
         maxParticipants: string;
         notes: string;
@@ -16,12 +18,15 @@ interface EventInstance {
         participantsCount: string;
         expenseZSB: string;
         expenseSHK: string;
+        expenseInternal: string;
+        expenseExternal: string;
         monitoringNotes: string;
         assigneesPR: string[];
         distributerPR: string[];
         reminderPR: string;
         announcementPR: string;
 }
+
 
 interface HttpTransportAttribute {
     key: string;
