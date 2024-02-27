@@ -31,6 +31,77 @@ try {
     permissionRequest("EVENT_INSTANCE_READ");
     $ownId = $_SESSION["id"];
 
+    /**********************************
+     ***** HANDLE USER DATA
+     **********************************/
+
+    //Select all user data
+    $selectStatement = $dbPdo->query("SELECT `id`, `name`, `mail` FROM `Nutzer`;");
+    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    //index by user's id
+    $userList = array();
+    foreach ($resultList as $user) {
+        $userList[$user["id"]] = $user;
+    }
+
+
+
+    /**********************************
+     ***** HANDLE EVENT TYPES
+     **********************************/
+
+    //Define allowed event type props
+    $ALLOWED_EVENT_TYPE_PROPERTIES = [
+        "id",
+        "name",
+        "descriptionInternal",
+        "descriptionExternal",
+        "visible",
+        "targetGroups",
+        "assigneesInternal",
+        "assigneesExternal"
+    ];
+
+    //Select all event type data
+    $selectStatement = $dbPdo->query("SELECT * FROM `event_mgmt_types`;");
+    $attributeRowList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+    $eventTypeList = array();
+
+    //Convert to associative array
+    foreach ($attributeRowList as $attributeRow) {
+        $eventTypeId = $attributeRow["eventTypeId"];
+        $attributeKey = $attributeRow["attributeKey"];
+        $attributeValue = $attributeRow["value"];
+        $isMultiple = $attributeRow["multiple"];
+
+        if (array_search($attributeKey, $ALLOWED_EVENT_TYPE_PROPERTIES) === false) {
+            continue; //Ignore this property, if it is not in the list of allowed props
+        }
+
+        //Inject user data
+        if ($attributeKey == "assigneesInternal" && !empty($attributeValue)) {
+            $attributeValue = $userList[$attributeValue];
+        }
+
+        if (empty($eventTypeList[$eventTypeId])) {
+            $eventTypeList[$eventTypeId] = array(); //Create new event type "object"
+            $eventTypeList[$eventTypeId]["id"] = $eventTypeId;
+        }
+        $eventType = &$eventTypeList[$eventTypeId];
+
+        //Add current value as property to eventType Object. If this property is multiple -> create a list of properties at that point.
+        if ($isMultiple) {
+            if (empty($eventType[$attributeKey])) {
+                $eventType[$attributeKey] = array(); //Create new list of values 
+            }
+            $eventType[$attributeKey][] = $attributeValue; //Add new value to list of values
+        } else {
+            $eventType[$attributeKey] = $attributeValue; //Add value as plain property
+        }
+    }
+
+
     //Fetch all event instance data from DB
     $selectStatement = $dbPdo->query("SELECT * FROM `event_mgmt_instances`;");
     $attributeRowList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -42,6 +113,18 @@ try {
         $attributeKey = $attributeRow["attributeKey"];
         $attributeValue = $attributeRow["value"];
         $isMultiple = $attributeRow["multiple"];
+
+        //Inject user data
+        if (($attributeKey == "assigneesInternal" || $attributeKey == "assigneesPR")  && !empty($attributeValue)) {
+            $attributeValue = $userList[$attributeValue]["name"];
+        }
+
+        //Inject eventType data
+        if ($attributeKey == "category" && !empty($attributeValue)) {
+            $attributeValue = $eventTypeList[$attributeValue]["name"];
+        }
+
+
 
         //check if that eventInstance is already present in the list
         if (empty($eventInstanceList[$eventInstanceId])) {
