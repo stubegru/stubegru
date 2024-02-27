@@ -1,75 +1,115 @@
-async function fetchEventInstances(filter) {
-    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/event_management/portfolio/get_portfolio_event_instances.php?filter=${filter}`);
-    let eventInstanceList = await resp.json();
-    return eventInstanceList;
+async function fetchEventTypes(filter) {
+    let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/event_management/portfolio/get_portfolio_event_types.php?filter=${filter}`);
+    let eventTypeList = await resp.json();
+    return eventTypeList;
 }
 
-async function renderEventInstances(eventInstanceList) {
+async function renderEventTypes(eventTypeList, mode) {
     let html = ``;
 
-    for (const eventId in eventInstanceList) {
-        let e = new EventInstance();
-        e = eventInstanceList[eventId];
+    for (const eventId in eventTypeList) {
+        let e = new EventType();
+        e = eventTypeList[eventId];
 
-        let assigneeHtml = "";
-        if (e.assigneesInternal) {
-            for (const assignee of e.assigneesInternal) {
-                assigneeHtml += `
-                <div class="alert alert-success">
-                    Name: ${assignee.name} <br>
-                    Mail: ${assignee.mail} <br>
+
+        if (mode == "internal") {
+
+            /***********************
+             * INTERNAL RENDERING
+             **********************/
+
+            let assigneeHtml = `<div class="row">`;
+            if (e.assigneesInternal) {
+                for (const assignee of e.assigneesInternal) {
+                    assigneeHtml += `
+                <div class="col-md-4">
+                    <div class="alert alert-success">
+                        <b>Name:</b> ${assignee.name}
+                        <br>
+                        <b>Mail:</b> <a href="mailto:${assignee.mail}">${assignee.mail}</a>
+                    </div>
                 </div>`
+                }
             }
-        }
+            assigneeHtml += "</div>"
 
-        html += `
+            html += `
             <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">${e.name}</h3>
-              </div>
-              <div class="panel-body">
-                Kategorie: ${e.category.name}<br>
-                Datum: ${e.startDate} bis ${e.endDate}<br>
-                Uhrzeit: ${e.startTime} bis ${e.endTime}<br>
-                Ort: ${e.location}<br>
-                Verantwortlich: ${assigneeHtml}<br>
-                <br>
-                ${e.category.descriptionInternal}
-              </div>
+                <div class="panel-heading">
+                    <h3 class="panel-title">${e.name}</h3>
+                </div>
+
+                <div class="panel-body">
+                    <b>Beschreibung:</b>
+                    <div class="well">${e.descriptionInternal}</div>
+                    <br>
+                    <b>Zielgruppe:</b> ${e.targetGroups}
+                    <br>
+                    <b>Verantwortlich:</b> ${assigneeHtml}
+                </div>
             </div>
             `;
+        }
+
+
+        else if (mode == "external") {
+
+            /***********************
+             * EXTERNAL RENDERING
+             **********************/
+
+            html += `
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">${e.name}</h3>
+                    </div>
+    
+                    <div class="panel-body">
+                        <b>Beschreibung:</b>
+                        <div class="well">${e.descriptionExternal}</div>
+                        <br>
+                        <b>Zielgruppe:</b> ${e.targetGroups}
+                    </div>
+                </div>
+                `;
+        }
     }
+
 
     document.getElementById("portfolioContainer").innerHTML = html;
 }
 
 async function initPortfolio() {
     let filter = getParam("filter") || "";
-    let eventInstanceList = await fetchEventInstances(filter);
-    await renderEventInstances(eventInstanceList)
+    let mode = getParam("mode") || "external";
+    let eventTypeList = await fetchEventTypes(filter);
+    await renderEventTypes(eventTypeList, mode);
+
+    if (mode == "external") {
+        document.querySelectorAll(".portfolio-internal").forEach(elem => elem.style.display = "none");
+        document.querySelectorAll(".portfolio-external").forEach(elem => elem.style.removeProperty("display"));
+    }
+    if (mode == "internal") {
+        document.querySelectorAll(".portfolio-external").forEach(elem => elem.style.display = "none");
+        document.querySelectorAll(".portfolio-internal").forEach(elem => elem.style.removeProperty("display"));
+    }
 }
 
 initPortfolio();
 
-class EventInstance {
+class EventType {
     id
     name
-    category
-    isCancelled
+    descriptionInternal
+    descriptionExternal
+    visible
+    targetGroups
     assigneesInternal
-    startDate
-    startTime
-    endDate
-    endTime
-    location
-    cooperation
-    maxParticipants
+    assigneesExternal
+    expenseInternal
+    expenseExternal
     notes
     reminderInternal
-    participantsCount
-    expenseZSB
-    expenseSHK
-    monitoringNotes
     assigneesPR
     distributerPR
     reminderPR
