@@ -15,6 +15,7 @@ class EventInstanceCalendarView {
     }
     static addEvents(eventInstanceList) {
         let fcEventList = [];
+        let fcEventListCancelled = [];
         //convert EventInstances to fullcalendar events
         for (let index in eventInstanceList) {
             let inMeeting = eventInstanceList[index];
@@ -24,13 +25,19 @@ class EventInstanceCalendarView {
                 end: `${inMeeting.endDate}T${inMeeting.endTime}`,
                 extendedProps: inMeeting
             };
-            fcEventList.push(outMeeting);
+            inMeeting.isCancelled ? fcEventListCancelled.push(outMeeting) : fcEventList.push(outMeeting);
         }
         //Generate and add Eventsource
         EventInstanceCalendarView.fullCalendar.addEventSource({
             id: "event-instances",
             events: fcEventList,
             color: "#5cb85c",
+            classNames: ["pointer"]
+        });
+        EventInstanceCalendarView.fullCalendar.addEventSource({
+            id: "event-instances-cancelled",
+            events: fcEventListCancelled,
+            color: "red",
             classNames: ["pointer"]
         });
     }
