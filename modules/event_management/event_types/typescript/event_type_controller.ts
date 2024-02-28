@@ -102,19 +102,13 @@ class EventTypeController {
             let eventTypeList = await EventTypeService.getAll();
             EventTypeController.eventTypeList = eventTypeList;
             await EventTypeView.renderListView(eventTypeList); 
-            EventTypeController.registerAllTableButtons();
+            EventTypeView.onUpdateListView();
         } catch (error) {
             EventTypeController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungskategorien ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });
         }
     }
 
 
-    static registerAllTableButtons() {
-        EventTypeController.registerDeleteButtons();
-        EventTypeController.registerPlusButtons();
-        EventTypeController.registerEditButtons();
-        EventTypeController.stubegru.modules.userUtils.updateAdminElements();
-    }
 
     static registerEditButtons() {
         let editBtnList = document.querySelectorAll(".event-type-edit-button");

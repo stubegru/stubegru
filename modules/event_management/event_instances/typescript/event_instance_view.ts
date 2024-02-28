@@ -1,5 +1,7 @@
 class EventInstanceView {
 
+    static sortableTable;
+
     static async initModalForm(config: FormConfig) {
         //insert select options from config file
         let presetValues = config.presetValues;
@@ -20,6 +22,34 @@ class EventInstanceView {
 
         //init category select
         await EventInstanceView.refreshEventTypeSelect();
+    }
+
+    static initListView() {
+        let tableOptions = {
+            data: [],
+            columns: {
+                name: "Name",
+                date: "Datum",
+                category: "Kategorie",
+                assignee: "Verantwortlich",
+                buttons: ""
+            },
+            rowsPerPage: 8,
+            pagination: true,
+            nextText: "<i class='fas fa-angle-right'>",
+            prevText: "<i class='fas fa-angle-left'>",
+            searchField: document.getElementById("eventInstanceFilter"),
+            tableDidUpdate: EventInstanceView.onUpdateListView
+        };
+
+        //@ts-expect-error
+        EventInstanceView.sortableTable = $('#eventInstanceTable').tableSortable(tableOptions);
+    }
+
+    static onUpdateListView() {
+        EventInstanceController.registerEditButtons();
+        EventInstanceController.registerDeleteButtons();
+        EventInstanceController.stubegru.modules.userUtils.updateAdminElements()
     }
 
     private static async refreshEventTypeSelect() {
@@ -198,36 +228,28 @@ class EventInstanceView {
             });
         }
 
-        let tableOptions = {
-            data: tableDataList,
-            columns: {
-                name: "Name",
-                date: "Datum",
-                category: "Kategorie",
-                assignee: "Verantwortlich",
-                buttons: ""
-            },
-            rowsPerPage: 8,
-            pagination: true,
-            nextText: "<i class='fas fa-angle-right'>",
-            prevText: "<i class='fas fa-angle-left'>",
-            searchField: document.getElementById("eventInstanceFilter")
-        };
 
-        //@ts-expect-error
-        $('#eventInstanceTable').tableSortable(tableOptions);
+
+        //Add table data and refresh
+        EventInstanceView.sortableTable.setData(tableDataList, null);
+
+        //Keep sorting state consistent (the table plugin does not care about this...)
+        let sort = EventInstanceView.sortableTable._sorting;
+        sort.currentCol = sort.currentCol == '' ? "name" : sort.currentCol;
+        sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
+        EventInstanceView.sortableTable.sortData(sort.currentCol, sort.dir);
     }
 
     static renderCancelButton() {
         let checkbox = document.querySelector(`#eventInstanceModalForm [name="isCancelled"]`) as HTMLInputElement;
         if (checkbox.checked) {
-            document.getElementById("eventInstanceCancelContainer").innerHTML = 
-            `<div class="alert alert-danger" style="margin-bottom:0px;">
+            document.getElementById("eventInstanceCancelContainer").innerHTML =
+                `<div class="alert alert-danger" style="margin-bottom:0px;">
                  <b><i class="far fa-times-circle"></i> Diese Veranstaltung ist abgesagt!</b>
              </div>`;
         }
         else {
-            document.getElementById("eventInstanceCancelContainer").innerHTML = 
+            document.getElementById("eventInstanceCancelContainer").innerHTML =
                 `<button class="btn btn-danger" type="button" id="cancelEventInstanceButton">
                        <i class="far fa-times-circle"></i> Veranstaltung absagen
                  </button>`;
