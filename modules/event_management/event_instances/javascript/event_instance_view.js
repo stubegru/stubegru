@@ -18,6 +18,31 @@ class EventInstanceView {
         //init category select
         await EventInstanceView.refreshEventTypeSelect();
     }
+    static initListView() {
+        let tableOptions = {
+            data: [],
+            columns: {
+                name: "Name",
+                date: "Datum",
+                category: "Kategorie",
+                assignee: "Verantwortlich",
+                buttons: ""
+            },
+            rowsPerPage: 8,
+            pagination: true,
+            nextText: "<i class='fas fa-angle-right'>",
+            prevText: "<i class='fas fa-angle-left'>",
+            searchField: document.getElementById("eventInstanceFilter"),
+            tableDidUpdate: EventInstanceView.onUpdateListView
+        };
+        //@ts-expect-error
+        EventInstanceView.sortableTable = $('#eventInstanceTable').tableSortable(tableOptions);
+    }
+    static onUpdateListView() {
+        EventInstanceController.registerEditButtons();
+        EventInstanceController.registerDeleteButtons();
+        EventInstanceController.stubegru.modules.userUtils.updateAdminElements();
+    }
     static async refreshEventTypeSelect() {
         const eventTypeList = await EventTypeController.getEventTypeList();
         const categorySelect = document.querySelector(`#eventInstanceModalForm select[name="category"]`);
@@ -170,23 +195,13 @@ class EventInstanceView {
                 buttons: buttonsColumn
             });
         }
-        let tableOptions = {
-            data: tableDataList,
-            columns: {
-                name: "Name",
-                date: "Datum",
-                category: "Kategorie",
-                assignee: "Verantwortlich",
-                buttons: ""
-            },
-            rowsPerPage: 8,
-            pagination: true,
-            nextText: "<i class='fas fa-angle-right'>",
-            prevText: "<i class='fas fa-angle-left'>",
-            searchField: document.getElementById("eventInstanceFilter")
-        };
-        //@ts-expect-error
-        $('#eventInstanceTable').tableSortable(tableOptions);
+        //Add table data and refresh
+        EventInstanceView.sortableTable.setData(tableDataList, null);
+        //Keep sorting state consistent (the table plugin does not care about this...)
+        let sort = EventInstanceView.sortableTable._sorting;
+        sort.currentCol = sort.currentCol == '' ? "name" : sort.currentCol;
+        sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
+        EventInstanceView.sortableTable.sortData(sort.currentCol, sort.dir);
     }
     static renderCancelButton() {
         let checkbox = document.querySelector(`#eventInstanceModalForm [name="isCancelled"]`);

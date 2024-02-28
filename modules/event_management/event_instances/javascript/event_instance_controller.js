@@ -2,6 +2,7 @@ class EventInstanceController {
     static async init() {
         EventInstanceController.config = await EventInstanceController.loadConfig();
         await EventInstanceView.initModalForm(EventInstanceController.config.modalForm);
+        EventInstanceView.initListView();
         EventInstanceCalendarView.init();
         await EventInstanceController.handleGetAllEventInstances(); //Init event view
         setInterval(EventInstanceController.handleGetAllEventInstances, 1000 * 60 * 15); //Refresh the view every 15 minutes
@@ -76,9 +77,7 @@ class EventInstanceController {
             EventInstanceController.eventInstanceList = eventInstanceList;
             await EventInstanceView.renderListView(eventInstanceList);
             EventInstanceCalendarView.setEvents(eventInstanceList);
-            EventInstanceController.registerDeleteButtons();
-            EventInstanceController.registerEditButtons();
-            EventInstanceController.stubegru.modules.userUtils.updateAdminElements();
+            EventInstanceView.onUpdateListView();
         }
         catch (error) {
             EventInstanceController.stubegru.modules.alerts.alert({ title: "Netzwerkfehler", text: `Beim Abrufen der Veranstaltungen ist ein Fehler aufgetreten. <br><br> Fehler: <i>${error.message}</i>`, type: "error" });

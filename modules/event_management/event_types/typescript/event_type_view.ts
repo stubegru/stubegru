@@ -34,11 +34,19 @@ class EventTypeView {
             nextText : "<i class='fas fa-angle-right'>",
             prevText : "<i class='fas fa-angle-left'>",
             searchField : document.getElementById("eventTypeTableFilter"),
-            tableDidUpdate: EventTypeController.registerAllTableButtons
+            tableDidUpdate: EventTypeView.onUpdateListView
         };
 
         //@ts-expect-error
         EventTypeView.sortableTable = $('#eventTypeTable').tableSortable(tableOptions);
+    }
+
+
+    static onUpdateListView() {
+        EventTypeController.registerDeleteButtons();
+        EventTypeController.registerPlusButtons();
+        EventTypeController.registerEditButtons();
+        EventTypeController.stubegru.modules.userUtils.updateAdminElements();
     }
 
     static showModalForCreate() {
@@ -177,7 +185,11 @@ class EventTypeView {
 
         //Add table data and refresh
         EventTypeView.sortableTable.setData(tableDataList,null);
-
+        //Keep sorting state consistent (the table plugin does not care about this...)
+        let sort = EventTypeView.sortableTable._sorting;
+        sort.currentCol = sort.currentCol == '' ? "name" : sort.currentCol;
+        sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
+        EventTypeView.sortableTable.sortData(sort.currentCol,sort.dir);
     }
 
 }
