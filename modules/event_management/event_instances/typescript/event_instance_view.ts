@@ -235,8 +235,8 @@ class EventInstanceView {
 
         //Keep sorting state consistent (the table plugin does not care about this...)
         let sort = EventInstanceView.sortableTable._sorting;
-        sort.currentCol = sort.currentCol == '' ? "name" : sort.currentCol;
-        sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
+        sort.currentCol = sort.currentCol == '' ? "date" : sort.currentCol;
+        sort.dir = sort.dir == '' ? "asc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
         EventInstanceView.sortableTable.sortData(sort.currentCol, sort.dir);
     }
 
