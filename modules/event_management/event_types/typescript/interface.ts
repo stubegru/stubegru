@@ -16,6 +16,10 @@ interface EventType {
     distributerPR: string[];
     reminderPR: string;
     announcementPR: string;
+    bookableBy : string[];
+    targetGroupsSchool: string[];
+    timeDurations: string[];
+    possibleLocations: string[];
 
 }
 
