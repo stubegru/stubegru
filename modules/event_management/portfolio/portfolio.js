@@ -19,6 +19,10 @@ class EventPortfolio {
         let html = ``;
         for (const eventId in eventTypeList) {
             const e = eventTypeList[eventId];
+            //Check if this eventType is visible in this mode ("internal"/"external")
+            if (!e.visible || e.visible.indexOf(mode) < 0) {
+                continue; //Don't render this item, because it should not be visible in this mode
+            }
             if (mode == "internal") {
                 /***********************
                  * INTERNAL RENDERING
@@ -82,6 +86,17 @@ class EventPortfolio {
         EventPortfolio.eventTypesConfig = await this.loadConfig();
         let eventTypeList = await EventPortfolio.fetchEventTypes(filter);
         await EventPortfolio.renderEventTypes(eventTypeList, mode);
+        //insert select options from config file
+        let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
+        for (const inputName in presetValues) {
+            const valueList = presetValues[inputName];
+            const selectElement = document.querySelector(`.portfolio-filter [name='${inputName}']`);
+            if (selectElement) {
+                valueList.forEach(value => selectElement.add(new Option(value)));
+            }
+        }
+        //@ts-expect-error
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".portfolio-multiple-select" });
         if (mode == "external") {
             document.querySelectorAll(".portfolio-internal").forEach((elem) => elem.style.display = "none");
             document.querySelectorAll(".portfolio-external").forEach((elem) => elem.style.removeProperty("display"));
