@@ -2,7 +2,7 @@ class EventPortfolio {
 
     //@ts-expect-error
     static stubegru = window.stubegru as StubegruObject;
-    static eventTypesConfig:EventTypesConfig;
+    static eventTypesConfig: EventTypesConfig;
 
     static async fetchEventTypes(filter) {
         let resp = await fetch(`${EventPortfolio.stubegru.constants.BASE_URL}/modules/event_management/portfolio/get_portfolio_event_types.php?filter=${filter}`);
@@ -25,7 +25,12 @@ class EventPortfolio {
         let html = ``;
 
         for (const eventId in eventTypeList) {
-            const e = eventTypeList[eventId];
+            const e:EventType = eventTypeList[eventId];
+
+            //Check if this eventType is visible in this mode ("internal"/"external")
+            if(!e.visible || e.visible.indexOf(mode) < 0){
+                continue; //Don't render this item, because it should not be visible in this mode
+            }
 
 
             if (mode == "internal") {
@@ -102,13 +107,25 @@ class EventPortfolio {
         let eventTypeList = await EventPortfolio.fetchEventTypes(filter);
         await EventPortfolio.renderEventTypes(eventTypeList, mode);
 
+        //insert select options from config file
+        let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
+        for (const inputName in presetValues) {
+            const valueList = presetValues[inputName];
+            const selectElement = document.querySelector(`.portfolio-filter [name='${inputName}']`) as HTMLSelectElement;
+            if (selectElement) {
+                valueList.forEach(value => selectElement.add(new Option(value)));
+            }
+        }
+        //@ts-expect-error
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".portfolio-multiple-select"});
+
         if (mode == "external") {
-            document.querySelectorAll(".portfolio-internal").forEach((elem:HTMLElement) => elem.style.display = "none");
-            document.querySelectorAll(".portfolio-external").forEach((elem:HTMLElement) => elem.style.removeProperty("display"));
+            document.querySelectorAll(".portfolio-internal").forEach((elem: HTMLElement) => elem.style.display = "none");
+            document.querySelectorAll(".portfolio-external").forEach((elem: HTMLElement) => elem.style.removeProperty("display"));
         }
         if (mode == "internal") {
-            document.querySelectorAll(".portfolio-external").forEach((elem:HTMLElement) => elem.style.display = "none");
-            document.querySelectorAll(".portfolio-internal").forEach((elem:HTMLElement) => elem.style.removeProperty("display"));
+            document.querySelectorAll(".portfolio-external").forEach((elem: HTMLElement) => elem.style.display = "none");
+            document.querySelectorAll(".portfolio-internal").forEach((elem: HTMLElement) => elem.style.removeProperty("display"));
         }
     }
 }
@@ -132,8 +149,8 @@ interface EventType {
     descriptionExternal: string;
     visible: string[]; //multiple toggles!
     targetGroups: string[];
-    assigneesInternal: string[];
-    assigneesExternal: string[];
+    assigneesInternal: StubegruUser[];
+    assigneesExternal: StubegruUser[];
     expenseInternal: string;
     expenseExternal: string;
     notes: string;
@@ -232,5 +249,5 @@ interface StubegruUser {
     erfasser: string;
 }
 
-declare function getParam(name:string) : string;
+declare function getParam(name: string): string;
 
