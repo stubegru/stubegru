@@ -15,7 +15,7 @@ class EventPortfolio {
             throw error;
         }
     }
-    static async renderEventTypes(eventTypeList, mode) {
+    static async renderEventTypes(eventTypeList, mode, filter) {
         let html = ``;
         for (const eventId in eventTypeList) {
             const e = eventTypeList[eventId];
@@ -23,7 +23,10 @@ class EventPortfolio {
             if (!e.visible || e.visible.indexOf(mode) < 0) {
                 continue; //Don't render this item, because it should not be visible in this mode
             }
-            if (mode == "internal") {
+            if (filter && !EventPortfolio.passedFilter(e, filter)) {
+                continue;
+            }
+            if (mode == PortfolioMode.INTERNAL) {
                 /***********************
                  * INTERNAL RENDERING
                  **********************/
@@ -53,12 +56,16 @@ class EventPortfolio {
                     <br>
                     <b>Zielgruppe:</b> ${e.targetGroups}
                     <br>
+                    <b>Möglicher Ort:</b> ${e.possibleLocations}
+                    <br>
+                    <b>Möglicher Zeitumfang:</b> ${e.timeDurations}
+                    <br>
                     <b>Verantwortlich:</b> ${assigneeHtml}
                 </div>
             </div>
             `;
             }
-            else if (mode == "external") {
+            else if (mode == PortfolioMode.EXTERNAL) {
                 /***********************
                  * EXTERNAL RENDERING
                  **********************/
@@ -80,11 +87,50 @@ class EventPortfolio {
         }
         document.getElementById("portfolioContainer").innerHTML = html;
     }
+    static passedFilter(e, filter) {
+        for (const rule of filter.rules) {
+            const filterKey = rule.key;
+            const currentValueList = e[filterKey];
+            if (!currentValueList) {
+                return false;
+            }
+            let tempReturn = false;
+            for (const currentValue of currentValueList) {
+                if (rule.allowedValues.indexOf(currentValue) >= 0) {
+                    tempReturn = true;
+                }
+            }
+            if (tempReturn == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+    static onChangeFilter() {
+        let filter = { rules: [] };
+        //Select all inputs with filter values
+        document.querySelectorAll(".portfolio-filter-input").forEach((elem) => {
+            //read multi-select values
+            const inputName = elem.name;
+            const selectedOptions = elem.querySelectorAll('option:checked');
+            const selectedValues = Array.from(selectedOptions).map((el) => el.value);
+            if (selectedValues.length > 0) { //only add rule, if there's any value selected
+                //add it's values to filter rule
+                const rule = { key: inputName, allowedValues: selectedValues };
+                filter.rules.push(rule);
+            }
+        });
+        //re-render items with new filter
+        console.log(filter);
+        EventPortfolio.renderEventTypes(EventPortfolio.eventTypeList, EventPortfolio.mode, filter);
+    }
     static async initPortfolio() {
         let filter = getParam("filter") || "";
-        let mode = getParam("mode") || "external";
+        let mode = getParam("mode") || PortfolioMode.EXTERNAL;
         EventPortfolio.eventTypesConfig = await this.loadConfig();
         let eventTypeList = await EventPortfolio.fetchEventTypes(filter);
+        EventPortfolio.eventTypeList = eventTypeList;
+        EventPortfolio.mode = mode;
         await EventPortfolio.renderEventTypes(eventTypeList, mode);
         //insert select options from config file
         let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
@@ -95,13 +141,17 @@ class EventPortfolio {
                 valueList.forEach(value => selectElement.add(new Option(value)));
             }
         }
+        //add eventListener for filter inputs
+        document.querySelectorAll(".portfolio-filter-input").forEach((elem) => {
+            elem.addEventListener("change", EventPortfolio.onChangeFilter);
+        });
         //@ts-expect-error
         MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".portfolio-multiple-select" });
-        if (mode == "external") {
+        if (mode == PortfolioMode.EXTERNAL) {
             document.querySelectorAll(".portfolio-internal").forEach((elem) => elem.style.display = "none");
             document.querySelectorAll(".portfolio-external").forEach((elem) => elem.style.removeProperty("display"));
         }
-        if (mode == "internal") {
+        if (mode == PortfolioMode.INTERNAL) {
             document.querySelectorAll(".portfolio-external").forEach((elem) => elem.style.display = "none");
             document.querySelectorAll(".portfolio-internal").forEach((elem) => elem.style.removeProperty("display"));
         }
@@ -110,3 +160,9 @@ class EventPortfolio {
 //@ts-expect-error
 EventPortfolio.stubegru = window.stubegru;
 EventPortfolio.initPortfolio();
+var PortfolioMode;
+(function (PortfolioMode) {
+    PortfolioMode["INTERNAL"] = "internal";
+    PortfolioMode["EXTERNAL"] = "external";
+})(PortfolioMode || (PortfolioMode = {}));
+;
