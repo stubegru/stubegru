@@ -37,6 +37,8 @@ try {
         "visible",
         "targetGroups",
         "assigneesInternal",
+        "timeDurations",
+        "possibleLocations",
         "assigneesExternal"
     ];
 
