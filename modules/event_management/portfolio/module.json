@@ -16,6 +16,7 @@
         "portfolio.html"
     ],
     "js": [
+        "interface.js",
         "portfolio.js"
     ],
     "css": [
