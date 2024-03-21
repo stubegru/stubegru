@@ -3,12 +3,12 @@ class EventPortfolio {
     //@ts-expect-error
     static stubegru = window.stubegru as StubegruObject;
     static eventTypesConfig: EventTypesConfig;
-    static eventTypeList: EventType[];
+    static eventTypeList: StringIndexedList<EventType>;
     static mode: PortfolioMode;
 
     static async fetchEventTypes(filter) {
         let resp = await fetch(`${EventPortfolio.stubegru.constants.BASE_URL}/modules/event_management/portfolio/get_portfolio_event_types.php?filter=${filter}`);
-        let eventTypeList = await resp.json();
+        let eventTypeList: StringIndexedList<EventType> = await resp.json();
         return eventTypeList;
     }
 
@@ -23,26 +23,37 @@ class EventPortfolio {
         }
     }
 
-    static async renderEventTypes(eventTypeList: EventType[], mode: PortfolioMode, filter?: PortfolioFilter) {
+    static async renderEventTypes(eventTypeList: StringIndexedList<EventType>, mode: PortfolioMode, filter?: PortfolioFilter) {
         let html = ``;
+        let validEventTypes: EventType[] = [];
 
+        //Collect all EventTypes that should be rendered
         for (const eventId in eventTypeList) {
-            const e: EventType = eventTypeList[eventId];
+            const eventType = eventTypeList[eventId];
 
             //Check if this eventType is visible in this mode ("internal"/"external")
-            if (!e.visible || e.visible.indexOf(mode) < 0) {
+            if (!eventType.visible || eventType.visible.indexOf(mode) < 0) {
                 continue; //Don't render this item, because it should not be visible in this mode
             }
 
-            if (filter && !EventPortfolio.passedFilter(e, filter)) {
+            //Skip this item if there is a filter set but this filter is not passed
+            if (filter && !EventPortfolio.passedFilter(eventType, filter)) {
                 continue;
             }
 
+            validEventTypes.push(eventType);
+        }
+
+        //Sort eventTypes by name
+        validEventTypes.sort((x, y) => ((x.name < y.name) ? -1 : ((x.name > y.name) ? 1 : 0)))
+
+        //Render all valid EventTypes
+        for (const e of validEventTypes) {
 
             if (mode == PortfolioMode.INTERNAL) {
 
-                /***********************
-                 * INTERNAL RENDERING
+                /**********************
+                 * INTERNAL RENDERING *
                  **********************/
 
                 let assigneeHtml = `<div class="row">`;
@@ -85,8 +96,8 @@ class EventPortfolio {
 
             else if (mode == PortfolioMode.EXTERNAL) {
 
-                /***********************
-                 * EXTERNAL RENDERING
+                /**********************
+                 * EXTERNAL RENDERING *
                  **********************/
 
                 html += `
@@ -106,23 +117,37 @@ class EventPortfolio {
             }
         }
 
+        if (validEventTypes.length == 0) {
+            html = `<div class="alert alert-warning text-center"> <h5>Für Ihre Filter-Einstellungen wurden keine passenden Veranstaltungen gefunden!</h5></div>`
+        }
 
         document.getElementById("portfolioContainer").innerHTML = html;
     }
 
-    static passedFilter(e: EventType, filter: PortfolioFilter): boolean {
+    static passedFilter(eventType: EventType, filter: PortfolioFilter): boolean {
+        //Rules are interpreted as conjunction (ALL rules must be fulfilled to pass the filter)
         for (const rule of filter.rules) {
             const filterKey = rule.key;
-            const currentValueList:string[] = e[filterKey];
-            if (!currentValueList) { return false; }
+            const eventTypesValueList: string[] = eventType[filterKey];
 
-            let tempReturn = false;
-            for (const currentValue of currentValueList) {
-                if (rule.allowedValues.indexOf(currentValue) >= 0) { tempReturn = true; }
+            //If this property is not set for this eventType -> rule not fulfilled -> filter not passed -> return false
+            if (!eventTypesValueList) { return false; }
+
+            //Check if there's at least one element that is contained in rule's and in eventType's array
+            if (!hasIntersection(rule.allowedValues, eventTypesValueList)) {
+                return false;
             }
-            if(tempReturn == false){return false;}
         }
+
+        //If this statement is reached -> all rules were fulfilled -> filter is passed -> return true
         return true;
+
+
+
+        //Checks wether there's at least one element that is contained in both of the two arrays of strings
+        function hasIntersection(arr1: string[], arr2: string[]) {
+            return (arr1.filter(element => arr2.includes(element)).length > 0);
+        }
     }
 
     static onChangeFilter() {
@@ -132,6 +157,7 @@ class EventPortfolio {
             //read multi-select values
             const inputName = elem.name;
             const selectedOptions = elem.querySelectorAll('option:checked');
+            //Creates an array with all SELECTED values as items. If nothing is selected (no filter set) it creates an empty array
             const selectedValues = Array.from(selectedOptions).map((el: HTMLOptionElement) => el.value);
             if (selectedValues.length > 0) { //only add rule, if there's any value selected
                 //add it's values to filter rule
@@ -140,37 +166,14 @@ class EventPortfolio {
             }
         })
         //re-render items with new filter
-        console.log(filter);
         EventPortfolio.renderEventTypes(EventPortfolio.eventTypeList, EventPortfolio.mode, filter);
     }
 
     static async initPortfolio() {
+        //Set mode (internal/external)
         let filter = getParam("filter") || "";
         let mode: PortfolioMode = getParam("mode") as PortfolioMode || PortfolioMode.EXTERNAL;
-        EventPortfolio.eventTypesConfig = await this.loadConfig();
-        let eventTypeList = await EventPortfolio.fetchEventTypes(filter);
-        EventPortfolio.eventTypeList = eventTypeList;
         EventPortfolio.mode = mode;
-        await EventPortfolio.renderEventTypes(eventTypeList, mode);
-
-        //insert select options from config file
-        let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
-        for (const inputName in presetValues) {
-            const valueList = presetValues[inputName];
-            const selectElement = document.querySelector(`.portfolio-filter [name='${inputName}']`) as HTMLSelectElement;
-            if (selectElement) {
-                valueList.forEach(value => selectElement.add(new Option(value)));
-            }
-        }
-
-        //add eventListener for filter inputs
-        document.querySelectorAll(".portfolio-filter-input").forEach((elem: HTMLSelectElement) => {
-            elem.addEventListener("change", EventPortfolio.onChangeFilter);
-        })
-
-
-        //@ts-expect-error
-        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".portfolio-multiple-select" });
 
         if (mode == PortfolioMode.EXTERNAL) {
             document.querySelectorAll(".portfolio-internal").forEach((elem: HTMLElement) => elem.style.display = "none");
@@ -180,138 +183,39 @@ class EventPortfolio {
             document.querySelectorAll(".portfolio-external").forEach((elem: HTMLElement) => elem.style.display = "none");
             document.querySelectorAll(".portfolio-internal").forEach((elem: HTMLElement) => elem.style.removeProperty("display"));
         }
+
+        //Fetch EventTypes and render them
+        let eventTypeList = await EventPortfolio.fetchEventTypes(filter);
+        EventPortfolio.eventTypeList = eventTypeList;
+        await EventPortfolio.renderEventTypes(eventTypeList, mode);
+
+        //Load json config
+        EventPortfolio.eventTypesConfig = await this.loadConfig();
+
+        //Insert select options from config file
+        let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
+        for (const inputName in presetValues) {
+            const valueList = presetValues[inputName];
+            const selectElement = document.querySelector(`.portfolio-filter-input[name='${inputName}']`) as HTMLSelectElement;
+            if (selectElement) {
+                valueList.forEach(value => selectElement.add(new Option(value)));
+            }
+        }
+
+        //Add eventListener for filter inputs
+        document.querySelectorAll(".portfolio-filter-input").forEach((elem: HTMLSelectElement) => {
+            elem.addEventListener("change", EventPortfolio.onChangeFilter);
+        })
+
+
+        //Init multiple selects
+        //@ts-expect-error
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".portfolio-multiple-select" });
+
+
     }
 }
 
 
 
 EventPortfolio.initPortfolio();
-
-
-
-
-
-
-
-
-interface EventType {
-    id: string;
-    name: string;
-    // isPortfolio: boolean;
-    descriptionInternal: string;
-    descriptionExternal: string;
-    visible: string[]; //multiple toggles!
-    targetGroups: string[];
-    assigneesInternal: StubegruUser[];
-    assigneesExternal: StubegruUser[];
-    expenseInternal: string;
-    expenseExternal: string;
-    notes: string;
-    reminderInternal: string; //Mailreminder!!!
-    assigneesPR: string[];
-    distributerPR: string[];
-    reminderPR: string;
-    announcementPR: string;
-    bookableBy: string[];
-    targetGroupsSchool: string[];
-    timeDurations: string[];
-    possibleLocations: string[];
-
-}
-
-enum PortfolioMode { "INTERNAL" = "internal", "EXTERNAL" = "external" };
-
-interface PortfolioFilter {
-    rules: PortfolioFilterRule[];
-}
-
-interface PortfolioFilterRule {
-    key: string;
-    allowedValues: string[];
-}
-
-interface PublishingChannel {
-    name: string;
-    isVisible: boolean;
-}
-
-interface DropdownOption {
-    value: string;
-    title: string;
-    description: string;
-}
-
-interface MailReminder { //????????????
-    date: Date;
-    name: string;
-    address: string;
-}
-
-interface EventMgmtConfig {
-    eventTypes: EventTypesConfig;
-}
-
-interface EventTypesConfig {
-    modalForm: FormConfig;
-}
-
-interface FormConfig {
-    presetValues: StringIndexedList<string[]>
-}
-
-interface StringIndexedList<ListItem> {
-    [index: string]: ListItem;
-}
-
-
-interface StubegruObject {
-    modules: StubegruModulesList;
-    constants: StringIndexedList<String>;
-    currentView: string;
-    currentUser: object;
-}
-
-interface StubegruModulesList {
-    customEvents: object;
-    alerts: StubegruAlertsModule;
-    survey: object;
-    notifications: object;
-    userUtils: StubegruUserUtilsModule;
-    menubar: object;
-}
-
-interface StubegruAlertsModule {
-    deleteConfirm(pTitle: string, pDescription: string, callback: Function): void;
-    alert(options: string | StubegruAlertOptions | StubegruHttpResponse, title?: string): void;
-}
-
-interface StubegruAlertOptions {
-    text: string;
-    type: string;
-    title: string;
-    mode?: string;
-}
-
-interface StubegruHttpResponse {
-    status: string;
-    message: string;
-}
-
-
-interface StubegruUserUtilsModule {
-    updateAdminElements(): Promise<void>;
-    getAllUsers(): Promise<StringIndexedList<StubegruUser>>;
-}
-
-interface StubegruUser {
-    id: string;
-    name: string;
-    mail: string;
-    account: string;
-    role: string;
-    erfassungsdatum: string;
-    erfasser: string;
-}
-
-declare function getParam(name: string): string;
-
