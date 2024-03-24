@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 08. Jan 2024 um 11:18
--- Server-Version: 11.2.2-MariaDB
--- PHP-Version: 8.2.13
+-- Erstellungszeit: 24. Mrz 2024 um 12:01
+-- Server-Version: 11.3.2-MariaDB
+-- PHP-Version: 8.3.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -46,6 +46,23 @@ CREATE TABLE `Beratene` (
   `formular` tinyint(1) NOT NULL,
   `description` mediumtext NOT NULL,
   `dateId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `cronjob_mails`
+--
+
+CREATE TABLE `cronjob_mails` (
+  `id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `recipient` varchar(500) NOT NULL,
+  `subject` varchar(500) NOT NULL,
+  `body` text NOT NULL,
+  `attachmentName` varchar(300) NOT NULL,
+  `attachmentContent` text NOT NULL,
+  `type` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -467,6 +484,12 @@ ALTER TABLE `Beratene`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `cronjob_mails`
+--
+ALTER TABLE `cronjob_mails`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `event_mgmt_instances`
 --
 ALTER TABLE `event_mgmt_instances`
@@ -659,11 +682,16 @@ ALTER TABLE `Beratene`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT für Tabelle `cronjob_mails`
+--
+ALTER TABLE `cronjob_mails`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT für Tabelle `event_mgmt_instances`
 --
 ALTER TABLE `event_mgmt_instances`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
 
 --
 -- AUTO_INCREMENT für Tabelle `event_mgmt_types`
