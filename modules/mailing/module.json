@@ -11,5 +11,6 @@
     },
     "html" : [],
     "js" : [],
-    "css" : []
+    "css" : [],
+    "cronjob": ["cronjob_mails.php"]
 }
