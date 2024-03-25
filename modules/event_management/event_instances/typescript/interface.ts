@@ -3,7 +3,7 @@ interface EventInstance {
         name: string;
         category: string;
         isCancelled:boolean;
-        assigneesInternal: string[];
+        assigneesInternal: string[]; //Array of user ids
         assigneesExternal: string[];
         startDate: string;
         startTime: string;
@@ -14,16 +14,16 @@ interface EventInstance {
         cooperation: string;
         maxParticipants: string;
         notes: string;
-        reminderInternal: string;
+        reminderInternal: string; // Number of days before the startDate
         participantsCount: string;
         expenseZSB: string;
         expenseSHK: string;
         expenseInternal: string;
         expenseExternal: string;
         monitoringNotes: string;
-        assigneesPR: string[];
+        assigneesPR: string[]; //Array of user ids
         distributerPR: string[];
-        reminderPR: string;
+        reminderPR: string; // Number of days before the startDate
         announcementPR: string;
 }
 
