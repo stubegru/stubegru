@@ -1,28 +1,153 @@
 <?php
+$BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/utils/auth_and_database.php";
+require_once "$BASE_PATH/modules/mailing/mailing.php";
+require_once "$BASE_PATH/modules/event_management/event_instances/backend/event_instance_utils.php";
 
-function loadMailtemplate($name){
+
+function handleMailingOnCreate($eventInstanceId)
+{
+    $eventInstance = getEventInstance($eventInstanceId);
+    $userList = getUserList();
+
+    //Trigger Mail for assignees
+    $addressCollector = array();
+    foreach ($eventInstance["assigneesInternal"] as $userId) {
+        $addressCollector[] = $userList[$userId]["mail"];
+    }
+    $assigneeRecipients = implode(", ",$addressCollector);
+    triggerEventMail("event_create_assignee.html", $assigneeRecipients, $eventInstance, $userList, "CONFIRMED");
+
+    //Trigger Mail for PR
+    $addressCollector = array();
+    foreach ($eventInstance["assigneesPR"] as $userId) {
+        $addressCollector[] = $userList[$userId]["mail"];
+    }
+    $prRecipients = implode(", ",$addressCollector);
+    triggerEventMail("event_create_pr.html", $prRecipients, $eventInstance, $userList, "CONFIRMED");
+}
+
+function handleMailingOnCancel($eventInstanceId)
+{
+    $eventInstance = getEventInstance($eventInstanceId);
+    $userList = getUserList();
+
+    //Trigger Mail for assignees
+    $addressCollector = array();
+    foreach ($eventInstance["assigneesInternal"] as $userId) {
+        $addressCollector[] = $userList[$userId]["mail"];
+    }
+    $assigneeRecipients = implode(", ",$addressCollector);
+    triggerEventMail("event_cancel.html", $assigneeRecipients, $eventInstance, $userList, "CANCELLED");
+
+    //Trigger Mail for PR
+    $addressCollector = array();
+    foreach ($eventInstance["assigneesPR"] as $userId) {
+        $addressCollector[] = $userList[$userId]["mail"];
+    }
+    $prRecipients = implode(", ",$addressCollector);
+    triggerEventMail("event_cancel.html", $prRecipients, $eventInstance, $userList, "CANCELLED");
+}
+
+function triggerEventMail($templateName, $recipient, $eventInstance, $userList, $icsState)
+{
+    $templateRaw = loadMailtemplate($templateName);
+    $mailSubject = extractMailSubject($templateRaw, $templateName);
+    $eventInstance = beautifyEventInstance($eventInstance, $userList);
+    $mailBody = replacePlaceholders($templateRaw, $eventInstance);
+
+    if ($icsState) {
+        $icsAttachment = generateEventIcsAttachment($eventInstance, ($icsState == "CANCELLED"));
+        $mailOptions = array("attachment" => $icsAttachment);
+        stubegruMail($recipient, $mailSubject, $mailBody, $mailOptions);
+    } else {
+        stubegruMail($recipient, $mailSubject, $mailBody);
+    }
+}
+
+function loadMailtemplate($name)
+{
     global $BASE_PATH;
     return file_get_contents("$BASE_PATH/custom/mail_templates/$name");
 }
 
-function replacePlaceholders($templateRaw,$eventInstance){
+function extractMailSubject($templateRaw, $templateName)
+{
+    $dom = new DOMDocument;
+    $dom->loadHTML($templateRaw);
+    foreach ($dom->getElementsByTagName('meta') as $node) {
+        $name = $node->getAttribute('name');
+        $content = $node->getAttribute('content');
+        if ($name == "subject") {
+            return $content;
+        }
+    }
+    trigger_error("No subject found in the mail template '$templateName'. Make sure to set the meta tag: &lt;meta name='subject' content='mySubject'&gt;", E_USER_WARNING);
+    return "";
+}
+
+function getUserList()
+{
+    global $dbPdo;
+
+    //Select all user data
+    $selectStatement = $dbPdo->query("SELECT `id`, `name`, `mail` FROM `Nutzer`;");
+    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    //index by user's id
+    $userList = array();
+    foreach ($resultList as $user) {
+        $userList[$user["id"]] = $user;
+    }
+    return $userList;
+}
+
+function beautifyEventInstance($eventInstance, $userList)
+{
+    //de-reference user ids to user names
+    $eventInstance["assigneesInternal"] = dereferenceUserIds($eventInstance["assigneesInternal"], $userList);
+    $eventInstance["assigneesPR"] = dereferenceUserIds($eventInstance["assigneesPR"], $userList);
+
+    //convert arrays to comma separated lists
     foreach ($eventInstance as $key => $value) {
-        $templateRaw = str_replace("{$key}", $value, $templateRaw);
+        if (is_array($value)) {
+            $eventInstance[$key] = implode(", ", $value);
+        }
+    }
+
+    return $eventInstance;
+}
+
+function dereferenceUserIds($idList, $userList)
+{
+    $userNames = array();
+    foreach ($idList as $userId) {
+        $userNames[] = $userList[$userId]["name"];
+    }
+    return $userNames;
+}
+
+
+
+function replacePlaceholders($templateRaw, $eventInstance)
+{
+    foreach ($eventInstance as $key => $value) {
+        $templateRaw = str_replace("{".$key."}", $value, $templateRaw);
     }
     return $templateRaw;
 }
 
 
-function generateIcsAttachment($eventInstance, $isCancelled = false)
+function generateEventIcsAttachment($eventInstance, $isCancelled = false)
 {
     $eventId = "STUBEGRU-" . getenv("APPLICATION_ID") . "-" . $eventInstance["id"];
 
     $startTimestampLocal = $eventInstance["startDate"] . " " . $eventInstance["startTime"];
-    $startDateObject = DateTime::createFromFormat('Y-m-d H:i:s', $startTimestampLocal);
+    $startDateObject = DateTime::createFromFormat('Y-m-d H:i', $startTimestampLocal);
     $startTimestampUTC = gmdate("Ymd\THis\Z", $startDateObject->getTimestamp());
 
     $endTimestampLocal = $eventInstance["endDate"] . " " . $eventInstance["endTime"];
-    $endDateObject = DateTime::createFromFormat('Y-m-d H:i:s', $endTimestampLocal);
+    $endDateObject = DateTime::createFromFormat('Y-m-d H:i', $endTimestampLocal);
     $endTimestampUTC = gmdate("Ymd\THis\Z", $endDateObject->getTimestamp());
 
     $eventSummary = $eventInstance["name"];
@@ -30,16 +155,16 @@ function generateIcsAttachment($eventInstance, $isCancelled = false)
     $eventDescription = ""; //TODO set event description
 
     if ($isCancelled) {
-        $icsString = generateIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $eventLocation, "100", "CANCELLED");
+        $icsString = generateEventIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $eventLocation, "100", "CANCELLED");
     } else {
-        $icsString = generateIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $eventLocation, "0", "CONFIRMED");
+        $icsString = generateEventIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $eventLocation, "0", "CONFIRMED");
     }
 
     return array("name" => "event.ics", "content" => $icsString);
 }
 
 
-function generateIcsString($uid, $start, $end, $summary, $description, $location, $sequence, $status)
+function generateEventIcsString($uid, $start, $end, $summary, $description, $location, $sequence, $status)
 {
     $nowUTC = gmdate("Ymd\THis\Z");
     $eventData = array();
