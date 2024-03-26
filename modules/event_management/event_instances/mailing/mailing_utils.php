@@ -11,38 +11,14 @@ function handleMailingOnCreate($eventInstanceId)
     $userList = getUserList();
 
     //Trigger Mail for assignees
-    $addressCollector = array();
-    foreach ($eventInstance["assigneesInternal"] as $userId) {
-        $addressCollector[] = $userList[$userId]["mail"];
-    }
-    $assigneeRecipients = implode(", ", $addressCollector);
-
+    $assigneeRecipients = buildRecipients($eventInstance["assigneesInternal"], $userList);
     triggerEventMail("event_create_assignee.html", $assigneeRecipients, $eventInstance, $userList, "CONFIRMED");
-
-    $assigneeReminderDays = $eventInstance["reminderInternal"];
-    if (isset($assigneeReminderDays) && $assigneeReminderDays >= 0) {
-        $assigneeDate = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
-        $assigneeDate = date_sub($assigneeDate, DateInterval::createFromDateString("$assigneeReminderDays days"));
-        $assigneeDate = $assigneeDate->format(("Y-m-d"));
-        scheduleReminderMail("event_reminder_assignee.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderAssignee", $assigneeDate);
-    }
+    scheduleReminderMail("event_reminder_assignee.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderAssignee",  $eventInstance["reminderInternal"]);
 
     //Trigger Mail for PR
-    $addressCollector = array();
-    foreach ($eventInstance["assigneesPR"] as $userId) {
-        $addressCollector[] = $userList[$userId]["mail"];
-    }
-    $prRecipients = implode(", ", $addressCollector);
-
+    $prRecipients = buildRecipients($eventInstance["assigneesPR"], $userList);
     triggerEventMail("event_create_pr.html", $prRecipients, $eventInstance, $userList, "CONFIRMED");
-
-    $prReminderDays = $eventInstance["reminderPR"];
-    if (isset($prReminderDays) && $prReminderDays >= 0) {
-        $prDate = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
-        $prDate = date_sub($prDate, DateInterval::createFromDateString("$prReminderDays days"));
-        $prDate = $prDate->format(("Y-m-d"));
-        scheduleReminderMail("event_reminder_pr.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderPR", $prDate);
-    }
+    scheduleReminderMail("event_reminder_pr.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderPR",  $eventInstance["reminderPR"]);
 }
 
 function handleMailingOnCancel($eventInstanceId)
@@ -51,23 +27,23 @@ function handleMailingOnCancel($eventInstanceId)
     $userList = getUserList();
 
     //Trigger Mail for assignees
-    $addressCollector = array();
-    foreach ($eventInstance["assigneesInternal"] as $userId) {
-        $addressCollector[] = $userList[$userId]["mail"];
-    }
-    $assigneeRecipients = implode(", ", $addressCollector);
+    $assigneeRecipients = buildRecipients($eventInstance["assigneesInternal"], $userList);
     triggerEventMail("event_cancel.html", $assigneeRecipients, $eventInstance, $userList, "CANCELLED");
 
-
     //Trigger Mail for PR
-    $addressCollector = array();
-    foreach ($eventInstance["assigneesPR"] as $userId) {
-        $addressCollector[] = $userList[$userId]["mail"];
-    }
-    $prRecipients = implode(", ", $addressCollector);
+    $prRecipients = buildRecipients($eventInstance["assigneesPR"], $userList);
     triggerEventMail("event_cancel.html", $prRecipients, $eventInstance, $userList, "CANCELLED");
 
     removeScheduledMail($eventInstanceId);
+}
+
+function buildRecipients($idList, $userList)
+{
+    $addressCollector = array();
+    foreach ($idList as $userId) {
+        $addressCollector[] = $userList[$userId]["mail"];
+    }
+    return implode(", ", $addressCollector);
 }
 
 function triggerEventMail($templateName, $recipient, $eventInstance, $userList, $icsState)
@@ -86,25 +62,31 @@ function triggerEventMail($templateName, $recipient, $eventInstance, $userList, 
     }
 }
 
-function scheduleReminderMail($templateName, $recipient, $eventInstance, $userList, $type, $date)
+function scheduleReminderMail($templateName, $recipient, $eventInstance, $userList, $type, $daysBefore)
 {
     global $dbPdo;
 
-    $templateRaw = loadMailtemplate($templateName);
-    $mailSubject = extractMailSubject($templateRaw, $templateName);
-    $eventInstance = beautifyEventInstance($eventInstance, $userList);
-    $mailBody = replacePlaceholders($templateRaw, $eventInstance);
+    if (isset($daysBefore) && $daysBefore >= 0) {
+        $date = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
+        $date = date_sub($date, DateInterval::createFromDateString("$daysBefore days"));
+        $date = $date->format(("Y-m-d"));
 
-    $insertStatement = $dbPdo->prepare("INSERT INTO `cronjob_mails`(`date`, `recipient`, `subject`, `body`, `attachmentName`, `attachmentContent`, `type`, `reference`) VALUES (:date, :recipient, :subject, :body, :attachmentName, :attachmentContent, :type, :reference)");
-    $insertStatement->bindValue(':date', $date);
-    $insertStatement->bindValue(':recipient', $recipient);
-    $insertStatement->bindValue(':subject', $mailSubject);
-    $insertStatement->bindValue(':body', $mailBody);
-    $insertStatement->bindValue(':attachmentName', "");
-    $insertStatement->bindValue(':attachmentContent', "");
-    $insertStatement->bindValue(':type', $type);
-    $insertStatement->bindValue(':reference', $eventInstance["id"]);
-    $insertStatement->execute();
+        $templateRaw = loadMailtemplate($templateName);
+        $mailSubject = extractMailSubject($templateRaw, $templateName);
+        $eventInstance = beautifyEventInstance($eventInstance, $userList);
+        $mailBody = replacePlaceholders($templateRaw, $eventInstance);
+
+        $insertStatement = $dbPdo->prepare("INSERT INTO `cronjob_mails`(`date`, `recipient`, `subject`, `body`, `attachmentName`, `attachmentContent`, `type`, `reference`) VALUES (:date, :recipient, :subject, :body, :attachmentName, :attachmentContent, :type, :reference)");
+        $insertStatement->bindValue(':date', $date);
+        $insertStatement->bindValue(':recipient', $recipient);
+        $insertStatement->bindValue(':subject', $mailSubject);
+        $insertStatement->bindValue(':body', $mailBody);
+        $insertStatement->bindValue(':attachmentName', "");
+        $insertStatement->bindValue(':attachmentContent', "");
+        $insertStatement->bindValue(':type', $type);
+        $insertStatement->bindValue(':reference', $eventInstance["id"]);
+        $insertStatement->execute();
+    }
 }
 
 function removeScheduledMail($eventInstanceId)
