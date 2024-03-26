@@ -110,7 +110,13 @@ class EventPortfolio {
                         <b>Beschreibung:</b>
                         <div class="well">${e.descriptionExternal}</div>
                         <br>
-                        <b>Zielgruppe:</b> ${e.targetGroups}
+                        <b>Zielgruppe:</b> ${e.targetGroups}<br>
+                        <b>Zielgruppe Schule:</b> ${e.targetGroupsSchool}<br>
+                        <b>Möglicher Ort:</b> ${e.possibleLocations}
+                        <br>
+                        <b>Möglicher Zeitumfang:</b> ${e.timeDurations}
+                        <br>
+                        <b>Buchbar für:</b> ${e.bookableBy}<br>
                     </div>
                 </div>
                 `;
@@ -198,7 +204,7 @@ class EventPortfolio {
             const optionsList = presetValues[inputName];
             const selectElement = document.querySelector(`.portfolio-filter-input[name='${inputName}']`) as HTMLSelectElement;
             if (selectElement) {
-                optionsList.forEach(option => selectElement.add(new Option(option.name,option.value)));
+                optionsList.forEach(option => selectElement.add(new Option(option.name, option.value)));
             }
         }
 
