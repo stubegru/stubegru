@@ -34,23 +34,6 @@ interface PortfolioFilterRule {
     allowedValues: string[];
 }
 
-interface PublishingChannel {
-    name: string;
-    isVisible: boolean;
-}
-
-interface DropdownOption {
-    value: string;
-    title: string;
-    description: string;
-}
-
-interface MailReminder { //????????????
-    date: Date;
-    name: string;
-    address: string;
-}
-
 interface EventMgmtConfig {
     eventTypes: EventTypesConfig;
 }
@@ -60,7 +43,13 @@ interface EventTypesConfig {
 }
 
 interface FormConfig {
-    presetValues: StringIndexedList<string[]>
+    presetValues: StringIndexedList<SelectOption[]>
+    presetMapping: StringIndexedList<StringIndexedList<string>>
+}
+
+interface SelectOption {
+    name: string,
+    value: string
 }
 
 interface StringIndexedList<ListItem> {

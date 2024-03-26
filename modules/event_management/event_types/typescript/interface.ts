@@ -16,7 +16,7 @@ interface EventType {
     distributerPR: string[];
     reminderPR: string;
     announcementPR: string;
-    bookableBy : string[];
+    bookableBy: string[];
     targetGroupsSchool: string[];
     timeDurations: string[];
     possibleLocations: string[];
@@ -33,22 +33,6 @@ enum EditMode {
     "CREATE", "UPDATE"
 }
 
-interface PublishingChannel {
-    name: string;
-    isVisible: boolean;
-}
-
-interface DropdownOption {
-    value: string;
-    title: string;
-    description: string;
-}
-
-interface MailReminder { //????????????
-    date: Date;
-    name: string;
-    address: string;
-}
 
 interface eventMgmtConfig {
     eventTypes: EventTypesConfig;
@@ -59,7 +43,13 @@ interface EventTypesConfig {
 }
 
 interface FormConfig {
-    presetValues: StringIndexedList<string[]>
+    presetValues: StringIndexedList<SelectOption[]>
+    presetMapping: StringIndexedList<StringIndexedList<string>>
+}
+
+interface SelectOption {
+    name: string,
+    value: string
 }
 
 
@@ -123,10 +113,10 @@ interface StubegruUser {
     account: string;
     role: string;
     erfassungsdatum: string;
-    erfasser : string;
+    erfasser: string;
 }
 
-declare class EventInstanceView{
-    static showModalForCreate(eventTypeId?:string)
+declare class EventInstanceView {
+    static showModalForCreate(eventTypeId?: string)
 }
 

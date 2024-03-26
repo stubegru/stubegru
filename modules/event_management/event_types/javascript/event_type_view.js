@@ -3,9 +3,9 @@ class EventTypeView {
         //insert select options from config file
         let presetValues = config.presetValues;
         for (const inputName in presetValues) {
-            const valueList = presetValues[inputName];
+            const optionsList = presetValues[inputName];
             const selectElement = document.querySelector(`#eventTypeModalForm [name='${inputName}']`);
-            valueList.forEach(value => selectElement.add(new Option(value)));
+            optionsList.forEach(option => selectElement.add(new Option(option.name, option.value)));
         }
         //insert userLists
         const allUsersList = await EventTypeController.stubegru.modules.userUtils.getAllUsers();
