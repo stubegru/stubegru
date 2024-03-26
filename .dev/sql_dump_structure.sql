@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 26. Mrz 2024 um 09:13
+-- Erstellungszeit: 26. Mrz 2024 um 14:55
 -- Server-Version: 11.3.2-MariaDB
 -- PHP-Version: 8.3.3
 
@@ -92,18 +92,6 @@ CREATE TABLE `event_mgmt_types` (
   `multiple` tinyint(1) NOT NULL DEFAULT 0,
   `attributeKey` varchar(100) NOT NULL,
   `value` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Tabellenstruktur für Tabelle `Feedback_Mails`
---
-
-CREATE TABLE `Feedback_Mails` (
-  `id` int(11) NOT NULL,
-  `date` date NOT NULL,
-  `mail` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -503,12 +491,6 @@ ALTER TABLE `event_mgmt_types`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indizes für die Tabelle `Feedback_Mails`
---
-ALTER TABLE `Feedback_Mails`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indizes für die Tabelle `Nachrichten`
 --
 ALTER TABLE `Nachrichten`
@@ -698,12 +680,6 @@ ALTER TABLE `event_mgmt_instances`
 -- AUTO_INCREMENT für Tabelle `event_mgmt_types`
 --
 ALTER TABLE `event_mgmt_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT für Tabelle `Feedback_Mails`
---
-ALTER TABLE `Feedback_Mails`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

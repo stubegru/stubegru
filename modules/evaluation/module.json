@@ -5,13 +5,17 @@
     "author": "Johannes Schnirring",
     "license": "MIT",
     "dependencies": {
-        "blocking": ["survey"],
+        "blocking": [
+            "survey"
+        ],
         "nonBlocking": []
     },
-    "html": ["module.html"],
-    "js": ["evaluation.js"],
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "evaluation.js"
+    ],
     "css": [],
-    "cronjob": [
-        "send_feedback_mails.php"
-    ]
+    "cronjob": []
 }

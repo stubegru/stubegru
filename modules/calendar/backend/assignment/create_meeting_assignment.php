@@ -58,19 +58,6 @@ try {
     $toReturn["assign"]["message"] = "Der Termin konnte nicht an den Kunden vergeben werden. Die Terminvergabe wird abgebrochen.";
 }
 
-//Add an entry in the Feedback_mails DB, if required
-try {
-    $toReturn["survey"]["message"] = "Auf Wunsch des Kunden wurde <b>keine</b> Mailadresse zum Feedbackfragebogen hinterlegt.";
-    if ($clientData["survey"] == "1") {
-        $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> wurde erfolgreich zum Feedbackfragebogen hinterlegt.";
-        bookmarkFeedbackMail($meetingId, $clientData["mail"]);
-    }
-    $toReturn["survey"]["status"] = "success";
-} catch (Exception $e) {
-    $toReturn["status"] = "warning";
-    $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> konnte nicht für den Feedbackfragebogen hinterlegt werden.";
-}
-
 
 // ----------- 5. Collect data for mails ------------
 $meetingData = getMeetingData($meetingId);
@@ -78,6 +65,22 @@ $roomData = getRoomData($meetingData["room"]);
 
 makeDataPretty($meetingData, $clientData);
 $replaceList = getReplaceList($meetingData,$clientData,$roomData);
+
+
+
+// ----------- 5.1 Schedule evaluation mail ------------
+try {
+    $toReturn["survey"]["message"] = "Auf Wunsch des Kunden wurde <b>keine</b> Mailadresse zum Feedbackfragebogen hinterlegt.";
+    if ($clientData["survey"] == "1") {
+        $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> wurde erfolgreich zum Feedbackfragebogen hinterlegt.";
+        bookmarkEvaluationMail($meetingData["date"], $clientData["mail"]);
+    }
+    $toReturn["survey"]["status"] = "success";
+} catch (Exception $e) {
+    $toReturn["status"] = "warning";
+    $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> konnte nicht für den Feedbackfragebogen hinterlegt werden.";
+    $toReturn["survey"]["error"] = $e;
+}
 
 
 // ----------- 6. Generate ICS File ------------

@@ -4,6 +4,7 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
 require_once "$BASE_PATH/modules/calendar/backend/templates/template_variables.php";
+require_once "$BASE_PATH/modules/evaluation/prepare_evaluation_mails.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 
@@ -110,24 +111,15 @@ function getTemplateData($templateId)
     return $result;
 }
 
-function bookmarkFeedbackMail($meetingId, $mailAdress)
+function bookmarkEvaluationMail($meetingDate, $mailAdress)
 {
-    global $dbPdo;
-
     if (!filter_var($mailAdress, FILTER_VALIDATE_EMAIL)) {
         throw new Exception("Invalid mailadress '$mailAdress'. This mailadress could not be added for Feedbackmails", 1);
         return;
     }
 
-    $selectStatement = $dbPdo->prepare("SELECT `date` FROM `Termine` WHERE id = :meetingId;");
-    $selectStatement->bindValue(':meetingId', $meetingId);
-    $selectStatement->execute();
-    $meetingDate = $selectStatement->fetchColumn();
-
-    $insertStatement = $dbPdo->prepare("INSERT INTO `Feedback_Mails` (`date`, `mail`) VALUES (:meetingDate , :mailAdress);");
-    $insertStatement->bindValue(':meetingDate', $meetingDate);
-    $insertStatement->bindValue(':mailAdress', $mailAdress);
-    $insertStatement->execute();
+    //from modules/evaluation/prepare_evaluation_mails.php
+    scheduleEvaluationMail($mailAdress, $meetingDate);
 }
 
 function prettyChannelName($channel)
@@ -136,19 +128,20 @@ function prettyChannelName($channel)
     return $channelDescriptions[$channel];
 }
 
-function makeDataPretty(&$meetingData, &$clientData){
-     //Translate channel to human readable channel
-     $clientData["channelPretty"] = prettyChannelName($clientData["channel"]);
+function makeDataPretty(&$meetingData, &$clientData)
+{
+    //Translate channel to human readable channel
+    $clientData["channelPretty"] = prettyChannelName($clientData["channel"]);
 
-     //Get advisor's mail address
-     $meetingData["ownerMail"] = getUserMail($meetingData["ownerId"]);
- 
-     //Format date yyyy-mm-dd -> dd.mm.yyyy
-     $meetingData["datePretty"] = DateTime::createFromFormat('Y-m-d', $meetingData["date"])->format('d.m.Y');
- 
-     //Format times to hh:mm:ss -> hh:mm
-     $meetingData["startPretty"] =  substr($meetingData["start"], 0, -3);
-     $meetingData["endPretty"] =  substr($meetingData["end"], 0, -3);
+    //Get advisor's mail address
+    $meetingData["ownerMail"] = getUserMail($meetingData["ownerId"]);
+
+    //Format date yyyy-mm-dd -> dd.mm.yyyy
+    $meetingData["datePretty"] = DateTime::createFromFormat('Y-m-d', $meetingData["date"])->format('d.m.Y');
+
+    //Format times to hh:mm:ss -> hh:mm
+    $meetingData["startPretty"] =  substr($meetingData["start"], 0, -3);
+    $meetingData["endPretty"] =  substr($meetingData["end"], 0, -3);
 }
 
 
