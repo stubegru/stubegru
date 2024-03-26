@@ -39,7 +39,9 @@ try {
         "assigneesInternal",
         "timeDurations",
         "possibleLocations",
-        "assigneesExternal"
+        "assigneesExternal",
+        "targetGroupsSchool",
+        "bookableBy"
     ];
 
     //Select all event type data
