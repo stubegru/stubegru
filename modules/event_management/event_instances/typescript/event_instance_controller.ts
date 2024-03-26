@@ -132,15 +132,21 @@ class EventInstanceController {
             cancelButtonText: "Abbrechen",
             confirmButtonText: "Veranstaltung absagen",
         }
-        let callbackFunction = ()=>{
+        let callbackFunction = async () => {
+            //Set Checkbox
             let checkbox = document.querySelector(`#eventInstanceModalForm [name="isCancelled"]`) as HTMLInputElement;
             checkbox.checked = true;
-            //send mails...
-            //save instance
-            EventInstanceView.renderCancelButton();
+
+            //Send mails
+            let resp = await EventInstanceService.cancel(EventInstanceController.currentEventInstanceId);
+            setTimeout(() => EventInstanceController.stubegru.modules.alerts.alert(resp), 200);
+
+            //Save eventInstance now
+            let jsonString = EventInstanceView.parseFormDataToJsonString();
+            await EventInstanceController.handleUpdateEventInstance(jsonString);
         }
         //@ts-expect-error
-        swal(swalOptions,callbackFunction);
+        swal(swalOptions, callbackFunction);
     }
 
 

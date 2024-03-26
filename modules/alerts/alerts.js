@@ -15,7 +15,7 @@ stubegru.modules.alerts.alert = function (options,title) {
     if(options.message && options.status){
         options.text = options.message;
         options.type = options.status;
-        options.title = title;
+        options.title = title || options.title;
     }
 
     options.type = options.type || "info"; //if type is unset => set to info

@@ -33,9 +33,9 @@ function handleMailingOnCreate($eventInstanceId)
         $addressCollector[] = $userList[$userId]["mail"];
     }
     $prRecipients = implode(", ", $addressCollector);
-    
+
     triggerEventMail("event_create_pr.html", $prRecipients, $eventInstance, $userList, "CONFIRMED");
-   
+
     $prReminderDays = $eventInstance["reminderPR"];
     if (isset($prReminderDays) && $prReminderDays >= 0) {
         $prDate = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
@@ -66,6 +66,8 @@ function handleMailingOnCancel($eventInstanceId)
     }
     $prRecipients = implode(", ", $addressCollector);
     triggerEventMail("event_cancel.html", $prRecipients, $eventInstance, $userList, "CANCELLED");
+
+    removeScheduledMail($eventInstanceId);
 }
 
 function triggerEventMail($templateName, $recipient, $eventInstance, $userList, $icsState)
@@ -103,6 +105,14 @@ function scheduleReminderMail($templateName, $recipient, $eventInstance, $userLi
     $insertStatement->bindValue(':type', $type);
     $insertStatement->bindValue(':reference', $eventInstance["id"]);
     $insertStatement->execute();
+}
+
+function removeScheduledMail($eventInstanceId)
+{
+    global $dbPdo;
+    $deleteStatement = $dbPdo->prepare("DELETE FROM cronjob_mails WHERE reference = :eventInstanceId;");
+    $deleteStatement->bindValue(':eventInstanceId', $eventInstanceId);
+    $deleteStatement->execute();
 }
 
 

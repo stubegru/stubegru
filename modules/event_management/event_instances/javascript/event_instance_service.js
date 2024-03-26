@@ -1,4 +1,12 @@
 class EventInstanceService {
+    static async cancel(eventInstanceId) {
+        let resp = await fetch(`${EventInstanceController.stubegru.constants.BASE_URL}/modules/event_management/event_instances/backend/cancel_event_instance.php?eventInstanceId=${eventInstanceId}`);
+        let parsedResp = await resp.json();
+        if (!parsedResp.status || parsedResp.status == "error") {
+            throw new Error(parsedResp.message);
+        }
+        return parsedResp;
+    }
     static async getAll() {
         let resp = await fetch(`${EventInstanceController.stubegru.constants.BASE_URL}/modules/event_management/event_instances/backend/get_all_event_instances.php`);
         let eventInstanceList = await resp.json();
