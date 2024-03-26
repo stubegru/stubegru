@@ -195,10 +195,10 @@ class EventPortfolio {
         //Insert select options from config file
         let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
         for (const inputName in presetValues) {
-            const valueList = presetValues[inputName];
+            const optionsList = presetValues[inputName];
             const selectElement = document.querySelector(`.portfolio-filter-input[name='${inputName}']`) as HTMLSelectElement;
             if (selectElement) {
-                valueList.forEach(value => selectElement.add(new Option(value)));
+                optionsList.forEach(option => selectElement.add(new Option(option.name,option.value)));
             }
         }
 

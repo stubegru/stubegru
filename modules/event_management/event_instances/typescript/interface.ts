@@ -38,22 +38,7 @@ enum EditMode {
     "CREATE", "UPDATE"
 }
 
-interface PublishingChannel {
-    name: string;
-    isVisible: boolean;
-}
 
-interface DropdownOption {
-    value: string;
-    title: string;
-    description: string;
-}
-
-interface MailReminder { //????????????
-    date: Date;
-    name: string;
-    address: string;
-}
 
 interface eventMgmtConfig {
     eventInstances: EventInstancesConfig;
@@ -64,8 +49,13 @@ interface EventInstancesConfig {
 }
 
 interface FormConfig {
-    presetValues: StringIndexedList<string[]>
+    presetValues: StringIndexedList<SelectOption[]>
     presetMapping: StringIndexedList<StringIndexedList<string>>
+}
+
+interface SelectOption {
+    name: string,
+    value: string
 }
 
 
