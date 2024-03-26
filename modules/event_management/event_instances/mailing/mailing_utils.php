@@ -15,16 +15,34 @@ function handleMailingOnCreate($eventInstanceId)
     foreach ($eventInstance["assigneesInternal"] as $userId) {
         $addressCollector[] = $userList[$userId]["mail"];
     }
-    $assigneeRecipients = implode(", ",$addressCollector);
+    $assigneeRecipients = implode(", ", $addressCollector);
+
     triggerEventMail("event_create_assignee.html", $assigneeRecipients, $eventInstance, $userList, "CONFIRMED");
+
+    $assigneeReminderDays = $eventInstance["reminderInternal"];
+    if (isset($assigneeReminderDays) && $assigneeReminderDays >= 0) {
+        $assigneeDate = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
+        $assigneeDate = date_sub($assigneeDate, DateInterval::createFromDateString("$assigneeReminderDays days"));
+        $assigneeDate = $assigneeDate->format(("Y-m-d"));
+        scheduleReminderMail("event_reminder_assignee.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderAssignee", $assigneeDate);
+    }
 
     //Trigger Mail for PR
     $addressCollector = array();
     foreach ($eventInstance["assigneesPR"] as $userId) {
         $addressCollector[] = $userList[$userId]["mail"];
     }
-    $prRecipients = implode(", ",$addressCollector);
+    $prRecipients = implode(", ", $addressCollector);
+    
     triggerEventMail("event_create_pr.html", $prRecipients, $eventInstance, $userList, "CONFIRMED");
+   
+    $prReminderDays = $eventInstance["reminderPR"];
+    if (isset($prReminderDays) && $prReminderDays >= 0) {
+        $prDate = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
+        $prDate = date_sub($prDate, DateInterval::createFromDateString("$prReminderDays days"));
+        $prDate = $prDate->format(("Y-m-d"));
+        scheduleReminderMail("event_reminder_pr.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderPR", $prDate);
+    }
 }
 
 function handleMailingOnCancel($eventInstanceId)
@@ -37,15 +55,16 @@ function handleMailingOnCancel($eventInstanceId)
     foreach ($eventInstance["assigneesInternal"] as $userId) {
         $addressCollector[] = $userList[$userId]["mail"];
     }
-    $assigneeRecipients = implode(", ",$addressCollector);
+    $assigneeRecipients = implode(", ", $addressCollector);
     triggerEventMail("event_cancel.html", $assigneeRecipients, $eventInstance, $userList, "CANCELLED");
+
 
     //Trigger Mail for PR
     $addressCollector = array();
     foreach ($eventInstance["assigneesPR"] as $userId) {
         $addressCollector[] = $userList[$userId]["mail"];
     }
-    $prRecipients = implode(", ",$addressCollector);
+    $prRecipients = implode(", ", $addressCollector);
     triggerEventMail("event_cancel.html", $prRecipients, $eventInstance, $userList, "CANCELLED");
 }
 
@@ -64,6 +83,28 @@ function triggerEventMail($templateName, $recipient, $eventInstance, $userList, 
         stubegruMail($recipient, $mailSubject, $mailBody);
     }
 }
+
+function scheduleReminderMail($templateName, $recipient, $eventInstance, $userList, $type, $date)
+{
+    global $dbPdo;
+
+    $templateRaw = loadMailtemplate($templateName);
+    $mailSubject = extractMailSubject($templateRaw, $templateName);
+    $eventInstance = beautifyEventInstance($eventInstance, $userList);
+    $mailBody = replacePlaceholders($templateRaw, $eventInstance);
+
+    $insertStatement = $dbPdo->prepare("INSERT INTO `cronjob_mails`(`date`, `recipient`, `subject`, `body`, `attachmentName`, `attachmentContent`, `type`, `reference`) VALUES (:date, :recipient, :subject, :body, :attachmentName, :attachmentContent, :type, :reference)");
+    $insertStatement->bindValue(':date', $date);
+    $insertStatement->bindValue(':recipient', $recipient);
+    $insertStatement->bindValue(':subject', $mailSubject);
+    $insertStatement->bindValue(':body', $mailBody);
+    $insertStatement->bindValue(':attachmentName', "");
+    $insertStatement->bindValue(':attachmentContent', "");
+    $insertStatement->bindValue(':type', $type);
+    $insertStatement->bindValue(':reference', $eventInstance["id"]);
+    $insertStatement->execute();
+}
+
 
 function loadMailtemplate($name)
 {
@@ -132,7 +173,7 @@ function dereferenceUserIds($idList, $userList)
 function replacePlaceholders($templateRaw, $eventInstance)
 {
     foreach ($eventInstance as $key => $value) {
-        $templateRaw = str_replace("{".$key."}", $value, $templateRaw);
+        $templateRaw = str_replace("{" . $key . "}", $value, $templateRaw);
     }
     return $templateRaw;
 }
