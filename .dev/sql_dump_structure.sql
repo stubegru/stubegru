@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 24. Mrz 2024 um 12:01
+-- Erstellungszeit: 26. Mrz 2024 um 09:13
 -- Server-Version: 11.3.2-MariaDB
 -- PHP-Version: 8.3.3
 
@@ -62,7 +62,8 @@ CREATE TABLE `cronjob_mails` (
   `body` text NOT NULL,
   `attachmentName` varchar(300) NOT NULL,
   `attachmentContent` text NOT NULL,
-  `type` varchar(300) NOT NULL
+  `type` varchar(300) NOT NULL,
+  `reference` varchar(300) NOT NULL COMMENT 'field for referencing related datasets'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
