@@ -85,12 +85,12 @@ function sendNotificationMails($typeList, $emitterId, $title, $text, $userId, $a
         $typeName = $notificationTypeResult["name"];
 
         //load mail template and replace variables
-        $mail_text = file_get_contents("$BASE_PATH/modules/notifications/mail_template_notification.html");
+        $mail_text = loadStubegruMailtemplate("mail_template_notification.html");
         $variablen_im_text = array("{title}", "{text}", "{user_name}", "{trigger_type}", "{trigger_description}", "{application_name}", "{application_url}");
         $variablen_daten = array($title, $text, $emitterUserName, $typeName, $typeDescription, $applicationName, getenv("BASE_URL"));
         $mail_text = str_replace($variablen_im_text, $variablen_daten, $mail_text);
         
-        $mail_betreff = $applicationName . " - Benachrichtigung";
+        $mail_betreff = extractMailSubject($mail_text,"mail_template_notification.html");
 
         //select recipients
         $selectRecipients = $dbPdo->prepare("SELECT mail FROM Nutzer WHERE id IN (SELECT userId FROM `notification_type_user` WHERE  notificationType = :notificationType AND `mail`='1');");

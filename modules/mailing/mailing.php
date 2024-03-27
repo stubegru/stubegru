@@ -34,7 +34,7 @@ function stubegruMail($to, $subject, $message, $options = [])
 {
     global $institutionMail, $institutionName, $constants;
     //Add postfix
-    $defaultPostfix = isset($constants["CUSTOM_CONFIG"]["institutionMailPostfix"]) ? $constants["CUSTOM_CONFIG"]["institutionMailPostfix"] : "";
+    $defaultPostfix = loadStubegruMailtemplate("default_mail_postfix.html");
 
     if (isset($options["postfix"])) {
         $message .= "<br>" . $options["postfix"];
@@ -154,4 +154,58 @@ function initPHPMailer()
     $myPHPMailer->Encoding   = 'base64';
 
     return $myPHPMailer;
+}
+
+
+function loadStubegruMailtemplate($name)
+{
+    global $BASE_PATH;
+    //@ suppresses the warning if the file is not found
+    $mailText = @file_get_contents("$BASE_PATH/custom/mail_templates/$name");
+    if ($mailText === false) {
+        //use default mail template if no custom template was found
+        $mailText = file_get_contents("$BASE_PATH/mail_templates/$name");
+    }
+
+    if ($mailText === false) {
+        throw new Exception("Could not load Mailtemplate '$name'", 1);
+    }
+
+    $mailText = replaceDefaultPlaceholders($mailText);
+    return $mailText;
+}
+
+function extractMailSubject($templateRaw, $templateName)
+{
+    $dom = new DOMDocument;
+    $dom->loadHTML($templateRaw);
+    foreach ($dom->getElementsByTagName('meta') as $node) {
+        $name = $node->getAttribute('name');
+        $content = $node->getAttribute('content');
+        if ($name == "subject") {
+            return $content;
+        }
+    }
+    trigger_error("No subject found in the mail template '$templateName'. Make sure to set the meta tag: &lt;meta name='subject' content='mySubject'&gt;", E_USER_WARNING);
+    return "";
+}
+
+/**
+ * Replace constants and custom_config values in curly brackets: {placeholder} => value
+ */
+function replaceDefaultPlaceholders($templateRaw)
+{
+    global $constants;
+
+    foreach ($constants as $key => $value) {
+        if (is_string($value)) {
+            $templateRaw = str_replace("{" . $key . "}", $value, $templateRaw);
+        }
+    }
+    foreach ($constants["CUSTOM_CONFIG"] as $key => $value) {
+        if (is_string($value)) {
+            $templateRaw = str_replace("{" . $key . "}", $value, $templateRaw);
+        }
+    }
+    return $templateRaw;
 }

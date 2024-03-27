@@ -290,59 +290,38 @@ function unblockMeeting($meetingId)
 
 function sendAdvisorMail($meetingData, $replaceList, $icsAttachment)
 {
-    global $institutionName;
     $recipient = $meetingData["ownerMail"];
-    $defaultSubject = "$institutionName Termin vergeben am " . $meetingData["datePretty"];
-    $configKeySubject = "assignMeetingAdvisorMailSubject";
-    $templateName = "assign_meeting_advisor_mail_template";
-    $configKeyText = "assignMeetingAdvisorMailText";
-
-    sendMailWithVariables($recipient, $defaultSubject, $configKeySubject, $templateName, $configKeyText, $replaceList, $icsAttachment);
+    $templateName = "assign_meeting_advisor_mail_template.html";
+    sendMailWithVariables($recipient, $templateName, $replaceList, $icsAttachment);
 }
 
 function sendAdvisorCancelMail($meetingData, $replaceList, $icsAttachment)
 {
-    global $institutionName;
     $recipient = getUserMail($meetingData["ownerId"]);
-    $defaultSubject = "$institutionName Termin abgesagt am " . $meetingData["datePretty"];
-    $configKeySubject = "cancelMeetingAdvisorMailSubject";
-    $templateName = "cancel_meeting_advisor_mail_template";
-    $configKeyText = "cancelMeetingAdvisorMailText";
+    $templateName = "cancel_meeting_advisor_mail_template.html";
 
-    sendMailWithVariables($recipient, $defaultSubject, $configKeySubject, $templateName, $configKeyText, $replaceList, $icsAttachment);
+    sendMailWithVariables($recipient, $templateName, $replaceList, $icsAttachment);
 }
 
 function sendClientCancelMail($recipient, $meetingData, $replaceList, $icsAttachment)
 {
-    global $institutionName;
-    $defaultSubject = "$institutionName Termin abgesagt am " . $meetingData["datePretty"];
-    $configKeySubject = "cancelMeetingClientMailSubject";
-    $templateName = "cancel_meeting_client_mail_template";
-    $configKeyText = "cancelMeetingClientMailText";
-
-    sendMailWithVariables($recipient, $defaultSubject, $configKeySubject, $templateName, $configKeyText, $replaceList, $icsAttachment);
+    $templateName = "cancel_meeting_client_mail_template.html";
+    sendMailWithVariables($recipient, $templateName, $replaceList, $icsAttachment);
 }
 
-function sendMailWithVariables($recipient, $defaultSubject, $configKeySubject, $templateName, $configKeyText, $replaceList, $icsAttachment)
+function sendMailWithVariables($recipient, $templateName, $replaceList, $icsAttachment)
 {
-    global $BASE_PATH, $constants;
     $mailOptions = array("attachment" => $icsAttachment);
 
     //Load default text from template file
-    $mailTextRaw = file_get_contents("$BASE_PATH/modules/calendar/backend/templates/default_mail_texts/$templateName.html");
-    //Replace default text by text from custom/config.json
-    if (isset($constants["CUSTOM_CONFIG"][$configKeyText])) {
-        $mailTextRaw = $constants["CUSTOM_CONFIG"][$configKeyText];
-    }
+    $mailTextRaw = loadStubegruMailtemplate($templateName);
+
     //Replace template variables
     $mailText = replaceVariables($mailTextRaw, $replaceList);
 
     //Set default subject 
-    $mailSubjectRaw = $defaultSubject;
-    //Replace default subject by subject from custom/config.json
-    if (isset($constants["CUSTOM_CONFIG"][$configKeySubject])) {
-        $mailSubjectRaw = $constants["CUSTOM_CONFIG"][$configKeySubject];
-    }
+    $mailSubjectRaw = extractMailSubject($mailText, $templateName);
+
     //Replace template variables
     $mailSubject = replaceVariables($mailSubjectRaw, $replaceList);
 
@@ -361,14 +340,6 @@ function sendClientMail($meetingData, $clientData, $replaceList, $icsAttachment)
     );
 
     stubegruMail($clientData["mail"], $templateData["betreff"], $templateData["text"], $clientMailOptions);
-}
-
-function removeFeedbackMail($mailAdress)
-{
-    global $dbPdo;
-    $feedbackStatement = $dbPdo->prepare("DELETE FROM `Feedback_Mails` WHERE mail = :clientMailAdress;");
-    $feedbackStatement->bindValue(':clientMailAdress', $mailAdress);
-    $feedbackStatement->execute();
 }
 
 function removeClientData($clientId, $meetingId)

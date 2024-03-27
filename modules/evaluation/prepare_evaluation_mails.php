@@ -28,20 +28,8 @@ function scheduleEvaluationMail($recipient, $meetingDate)
     $insertStatement->execute();
 
     //Mail versenden
-    $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
-    $mail_betreff = "$institutionName | Umfrage zu Ihrer Erfahrung";
-
-    $mail_text_default = "Guten Tag,
-    <br><br>
-    Wir möchten Sie bitten sich einen kurzen Moment Zeit zu nehmen und uns ein paar Fragen zu unserer Leistung zu beantworten. Damit helfen Sie uns unseren Service zu verbessern.
-    <br><br>
-    Klicken Sie hierzu bitte auf den untenstehenden Link um den Fragebogen aufzurufen.
-    <h4><a href='{{evaluationLink}}'>Hier geht es zum Fragebogen</a></h4>
-    <br><br>
-    Herzlichen Dank für Ihre Unterstützung und alles Gute!";
-
-    //If a custom mail text template exists => use that instead of the default text
-    $mail_text = isset($constants["CUSTOM_CONFIG"]["evaluationMailText"]) ? $constants["CUSTOM_CONFIG"]["evaluationMailText"] : $mail_text_default;
+    $mail_text = loadStubegruMailtemplate("evaluation_mail.html");
+    $mail_betreff = extractMailSubject($mail_text, "evaluation_mail.html");
 
     $surveyLink = "$BASE_URL/?view=evaluation&uniqueKey=$uniqueKey";
     $mail_text = str_replace("{{evaluationLink}}", $surveyLink, $mail_text);

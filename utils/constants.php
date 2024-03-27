@@ -22,6 +22,7 @@ if (file_exists("$BASE_PATH/custom/config.json")) {
 
 $constants = array();
 $constants["BASE_URL"] = $BASE_URL;
+$constants["BASE_PATH"] = $BASE_PATH;
 $constants["APPLICATION_ID"] = $APPLICATION_ID;
 
 $constants["APPLICATION_VERSION"] = $APPLICATION_VERSION;

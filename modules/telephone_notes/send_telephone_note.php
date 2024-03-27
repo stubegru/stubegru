@@ -20,13 +20,14 @@ $note = $_POST["note"];
 $recipient = $_POST["recipient"];
 
 $sender_name = getUserName($ownId);
-$subject = "Telefonnotiz von $sender_name";
 
 $keywordList = ["{sender_name}", "{time}", "{issue}", "{name}", "{mnumber}", "{phone}", "{mail}", "{note}", "{application_name}"];
 $valueList = [$sender_name, $currentTime, $issue, $name, $mnumber, $phone, $mail, $note, $applicationName];
 
-$mailText = file_get_contents("$BASE_PATH/modules/telephone_notes/mail_template_telephone_note.html");
+$mailText = loadStubegruMailtemplate("mail_template_telephone_note.html");
 $mailText = str_replace($keywordList, $valueList, $mailText);
+$subject = extractMailSubject($mailText,"mail_template_telephone_note.html");
+$subject = str_replace($keywordList, $valueList, $subject);
 
 stubegruMail($recipient,$subject,$mailText); //Send mail
 

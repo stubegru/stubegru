@@ -48,7 +48,7 @@ function buildRecipients($idList, $userList)
 
 function triggerEventMail($templateName, $recipient, $eventInstance, $userList, $icsState)
 {
-    $templateRaw = loadMailtemplate($templateName);
+    $templateRaw = loadStubegruMailtemplate($templateName);
     $mailSubject = extractMailSubject($templateRaw, $templateName);
     $eventInstance = beautifyEventInstance($eventInstance, $userList);
     $mailBody = replacePlaceholders($templateRaw, $eventInstance);
@@ -71,7 +71,7 @@ function scheduleReminderMail($templateName, $recipient, $eventInstance, $userLi
         $date = date_sub($date, DateInterval::createFromDateString("$daysBefore days"));
         $date = $date->format(("Y-m-d"));
 
-        $templateRaw = loadMailtemplate($templateName);
+        $templateRaw = loadStubegruMailtemplate($templateName);
         $mailSubject = extractMailSubject($templateRaw, $templateName);
         $eventInstance = beautifyEventInstance($eventInstance, $userList);
         $mailBody = replacePlaceholders($templateRaw, $eventInstance);
@@ -97,27 +97,6 @@ function removeScheduledMail($eventInstanceId)
     $deleteStatement->execute();
 }
 
-
-function loadMailtemplate($name)
-{
-    global $BASE_PATH;
-    return file_get_contents("$BASE_PATH/custom/mail_templates/$name");
-}
-
-function extractMailSubject($templateRaw, $templateName)
-{
-    $dom = new DOMDocument;
-    $dom->loadHTML($templateRaw);
-    foreach ($dom->getElementsByTagName('meta') as $node) {
-        $name = $node->getAttribute('name');
-        $content = $node->getAttribute('content');
-        if ($name == "subject") {
-            return $content;
-        }
-    }
-    trigger_error("No subject found in the mail template '$templateName'. Make sure to set the meta tag: &lt;meta name='subject' content='mySubject'&gt;", E_USER_WARNING);
-    return "";
-}
 
 function getUserList()
 {

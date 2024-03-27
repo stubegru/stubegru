@@ -31,7 +31,6 @@ $roomData = getRoomData($meetingData["room"]);
 
 
 // --- Remove data and refs in DB ---
-removeFeedbackMail($clientData["mail"]);
 removeClientData($meetingData["teilnehmer"], $meetingId);
 
 
