@@ -217,10 +217,7 @@ function generateIcsAttachment($meetingData, $clientData, $roomData, $isCancelle
     }
 
     //Generate description text (with variables)
-    $rawIcsDescription = "";
-    if (isset($constants["CUSTOM_CONFIG"]["icsDescriptionTemplate"])) {
-        $rawIcsDescription = $constants["CUSTOM_CONFIG"]["icsDescriptionTemplate"];
-    }
+    $rawIcsDescription = loadStubegruMailtemplate("meeting_ics_template.txt");
     $eventDescription = replaceVariables($rawIcsDescription, $replaceList);
 
     if ($isCancelled) {

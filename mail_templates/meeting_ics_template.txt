@@ -1,0 +1,1 @@
+Ihr Termin am {Termin_Datum} um {Termin_Uhrzeit} Uhr bei {Berater_Name} statt.

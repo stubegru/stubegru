@@ -79,7 +79,7 @@ try {
 } catch (Exception $e) {
     $toReturn["status"] = "warning";
     $toReturn["survey"]["message"] = "Die Mailadresse <b>" . $clientData["mail"] . "</b> konnte nicht für den Feedbackfragebogen hinterlegt werden.";
-    $toReturn["survey"]["error"] = $e;
+    $toReturn["survey"]["error"] = $e->getMessage();
 }
 
 
