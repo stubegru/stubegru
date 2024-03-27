@@ -1,0 +1,25 @@
+{
+    "type": "stubegruModule",
+    "name": "admin_tools",
+    "description": "Some handy tools for stubegru admins and key users",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "alerts",
+            "user_utils"
+        ],
+        "nonBlocking": [],
+        "backend": [
+            "mailing"
+        ]
+    },
+    "html": [
+        "admin_tools.html"
+    ],
+    "js": [
+        "admin_tools.js"
+    ],
+    "css": [],
+    "cronjob": []
+}

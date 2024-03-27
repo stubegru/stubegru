@@ -42,6 +42,10 @@ $.ajax({
         }
 });
 
+## --- FETCH TEMPLATE ---
+let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/XXX.php`);
+let result = await resp.json();
+
 ## --- LINK TO WIKI ARTICLE ---
 let link = `${stubegru.constants.BASE_URL}?view=wiki_show_article&artikel=${ARTICLE_ID}`
 

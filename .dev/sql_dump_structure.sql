@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 26. Mrz 2024 um 14:55
+-- Erstellungszeit: 27. Mrz 2024 um 10:40
 -- Server-Version: 11.3.2-MariaDB
 -- PHP-Version: 8.3.3
 
@@ -92,6 +92,23 @@ CREATE TABLE `event_mgmt_types` (
   `multiple` tinyint(1) NOT NULL DEFAULT 0,
   `attributeKey` varchar(100) NOT NULL,
   `value` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `mail_log`
+--
+
+CREATE TABLE `mail_log` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NULL DEFAULT current_timestamp(),
+  `recipient` varchar(500) NOT NULL,
+  `subject` varchar(500) NOT NULL,
+  `attachmentName` varchar(300) NOT NULL,
+  `status` text NOT NULL,
+  `initiator` int(11) NOT NULL COMMENT 'userId',
+  `mailMethod` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -491,6 +508,12 @@ ALTER TABLE `event_mgmt_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indizes für die Tabelle `mail_log`
+--
+ALTER TABLE `mail_log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `Nachrichten`
 --
 ALTER TABLE `Nachrichten`
@@ -680,6 +703,12 @@ ALTER TABLE `event_mgmt_instances`
 -- AUTO_INCREMENT für Tabelle `event_mgmt_types`
 --
 ALTER TABLE `event_mgmt_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `mail_log`
+--
+ALTER TABLE `mail_log`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
