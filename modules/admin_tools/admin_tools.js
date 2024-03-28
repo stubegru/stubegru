@@ -4,7 +4,7 @@ class AdminTools {
     cronjobMailTable;
 
     static init() {
-        document.querySelector("#executeCronjobButton").addEventListener("click",AdminTools.executeCronjob);
+        document.querySelector("#executeCronjobButton").addEventListener("click", AdminTools.executeCronjob);
         document.querySelector("#mailLogKeepMails").innerHTML = `${stubegru.constants.CUSTOM_CONFIG.mailLogKeepDays} Tagen`;
 
         AdminTools.initMailLogTable();
@@ -39,7 +39,6 @@ class AdminTools {
         let tableDataList = [];
 
         let mailList = await this.fetchCronjobMails();
-        if (mailList.length < 1) { return; }
 
         for (const mail of mailList) {
 
@@ -110,7 +109,6 @@ class AdminTools {
         let userList = await stubegru.modules.userUtils.getAllUsers();
 
         let logList = await this.fetchMailLog();
-        if (logList.length < 1) { return; }
         for (const mail of logList) {
             let status = `<span class="label label-${mail.status == "OK" ? "success" : "danger"}">${mail.status}</span>`;
             let userName = (mail.initiator > 0) ? userList[mail.initiator].name : "Stubegru System";
@@ -165,7 +163,7 @@ class AdminTools {
         })
     }
 
-    static async executeCronjob(){
+    static async executeCronjob() {
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/admin_tools/execute_cronjob.php`);
         let parsedResp = await resp.text();
         document.querySelector("#cronjobLog").innerHTML = parsedResp;

@@ -640,6 +640,7 @@
                 }, {
                     key: "sortData",
                     value: function (t) {
+                        if (this._dataset._datasetLen < 1) { return; } //Don't sort an empty dataset, changed by @superjojo140
                         var e = this._sorting
                             , n = e.dir
                             , a = e.currentCol;
