@@ -167,10 +167,9 @@ class EventPortfolio {
         let presetValues = EventPortfolio.eventTypesConfig.modalForm.presetValues;
         for (const inputName in presetValues) {
             const optionsList = presetValues[inputName];
-            const selectElement = document.querySelector(`.portfolio-filter-input[name='${inputName}']`);
-            if (selectElement) {
-                optionsList.forEach(option => selectElement.add(new Option(option.name, option.value)));
-            }
+            document.querySelectorAll(`.portfolio-filter-input[name='${inputName}']`).forEach((elem) => {
+                optionsList.forEach(option => elem.add(new Option(option.name, option.value)));
+            });
         }
         //Add eventListener for filter inputs
         document.querySelectorAll(".portfolio-filter-input").forEach((elem) => {
