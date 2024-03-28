@@ -6,4 +6,107 @@
 <stubegruModule data-name="custom_events"></stubegruModule>
 <stubegruModule data-name="event_management/libs/multi_select_dropdown"></stubegruModule>
 
-<stubegruModule data-name="event_management/portfolio"></stubegruModule>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Logo" src="assets/images/favicon.png" width="20px">
+            </a>
+            <a class="navbar-brand" href="#">
+                Hochschule Stubegru | Portfolio
+                <span class="portfolio-external" style="display: none;"> extern</span>
+                <span class="portfolio-internal" style="display: none;"> intern</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div style="margin: 50px;">
+    <div class="portfolio-external" style="display: none;">
+        <h3>Wir freuen uns auf Sie!</h3>
+
+        <p class="lead">
+            Sie begleiten Studien- oder Berufsorientierung? Sie möchten sich und Ihre Schüler:innen über Studiengänge und den Studienalltag an Hochschulen informieren? Sie möchten bestimmte Studienrichtungen in Ihrem Fach lebendig machen?<br>
+            Die Zentrale Studienberatung bietet unterschiedliche Formate zur Orientierung und Kontakte zu Studiengängen an. Verschaffen Sie sich einen Überblick über unsere Angebote und sprechen Sie uns bei Interesse und bei Fragen gerne an.
+        </p>
+
+        <div class="alert alert-info">
+            <p><i class="fas fa-filter"></i> Filtern Sie die angezeigten Veranstaltungen nach Ihren Wünschen:</p>
+            <br>
+
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Zielgruppe:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="targetGroupsSchool"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Möglicher Zeitumfang:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="timeDurations"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Möglicher Ort:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="possibleLocations"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Buchbar für:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="bookableBy"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="portfolio-internal" style="display: none;">
+        <h3> Stellen Sie Ihren Studiengang vor!</h3>
+
+        <p class="lead">
+            Ihr Studiengang soll bekannter werden oder die zukünftigen Studierenden sollen sich ein besseres Bild von Ihrem Studiengang machen können? Die ZSB bietet unterschiedliche Formate für Studieninteressierte, an denen sich Studiengänge aktiv beteiligen können.<br>
+            Bei Interesse oder Fragen sprechen Sie uns gerne an.
+        </p>
+
+        <div class="alert alert-info">
+            <p><i class="fas fa-filter"></i> Filtern Sie die angezeigten Veranstaltungen nach Ihren Wünschen:</p>
+            <br>
+
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Zielgruppe:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="targetGroups"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Möglicher Zeitumfang:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="timeDurations"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Möglicher Ort:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="possibleLocations"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <br><br>
+
+    <stubegruModule data-name="event_management/portfolio"></stubegruModule>
+
+</div>
