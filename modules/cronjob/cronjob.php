@@ -20,6 +20,7 @@ if (php_sapi_name() == "cli") {
 }
 
 $BASE_PATH = getenv("BASE_PATH");
+
 require_once "$BASE_PATH/modules/cronjob/block_webserver_calls.php";
 require_once "$BASE_PATH/utils/database_without_auth.php"; //Database access without login
 require_once "$BASE_PATH/modules/mailing/mailing.php";
@@ -36,7 +37,7 @@ echo "+++ $NEW_LINE_SYMBOL [" . date("Y-m-d H:i:s") . "] Executing Stubegru Cron
 $cronjobList = array();
 
 
-if (empty($constants["CUSTOM_CONFIG"]["adminMail"])){
+if (empty($constants["CUSTOM_CONFIG"]["adminMail"])) {
     echo "ERROR: No adminMail address is set in custom/config.json. Cant execute cronjob!";
     exit;
 }
@@ -80,7 +81,7 @@ foreach ($cronjobList as $cronInfo) {
     } catch (\Throwable $th) {
         echo "$NEW_LINE_SYMBOL [ERROR] Could not execute Cronjob: <b>$cronName</b>$NEW_LINE_SYMBOL";
         echo $th->getMessage();
-        stubegruMail($adminMail,"Cronjob Error",$th->getMessage());
+        stubegruMail($adminMail, "Cronjob Error", $th->getMessage());
     }
 }
 
