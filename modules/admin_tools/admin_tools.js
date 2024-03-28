@@ -5,6 +5,8 @@ class AdminTools {
 
     static init() {
         document.querySelector("#executeCronjobButton").addEventListener("click",AdminTools.executeCronjob);
+        document.querySelector("#mailLogKeepMails").innerHTML = `${stubegru.constants.CUSTOM_CONFIG.mailLogKeepDays} Tagen`;
+
         AdminTools.initMailLogTable();
         AdminTools.renderMailLogTable();
         AdminTools.initCronjobMailTable();
