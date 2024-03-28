@@ -1,27 +1,81 @@
 <div class="row permission-MAIL_LOG permission-required">
     <div class="col-sm-1"></div>
     <div class="col-sm-10">
-        <h2>Admin Tools </h2>
+        <h2><i class="fas fa-user-shield"></i> Admin Tools </h2>
 
-        <div class="row">
-            <div class="col-md-6">
-                <h3><i class="fas fa-mail-bulk"></i> Mail Log</h3>
-                <div style="margin-top: -10px;"><i>Hier werden alle Mails aufgelistet, die über Stubegru versendet wurden.</i></div>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group">
-                    <span class="input-group-addon" id="userSearchAddon"><i class="fas fa-filter"></i>&nbsp;Mail Log Filtern:</span>
-                    <input type="text" class="form-control" placeholder="Datum, Absender, Status...." aria-describedby="userSearchAddon" id="mailLogFilter">
-                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="mailLogClearFilter"><i class="fas fa-times"></i></span>
+        
+
+        <div class="mail-log">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">
+                        <a href="#collapseMailLog" data-toggle="collapse" aria-expanded="false">
+                            <h3><i class="fas fa-mail-bulk"></i> Mail Log <i class="fas fa-caret-down"></i> </h3>
+                        </a>
+                        <div style="margin-top: -10px;"><i>Hier werden alle Mails aufgelistet, die über Stubegru versendet wurden.</i></div>
+                    </span>
+                </div>
+
+                <div class="panel-collapse collapse" id="collapseMailLog">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="mailLogAddon"><i class="fas fa-filter"></i>&nbsp;Mail Log Filtern:</span>
+                                    <input type="text" class="form-control" placeholder="Datum, Absender, Status...." aria-describedby="mailLogAddon" id="mailLogFilter">
+                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="mailLogClearFilter"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="mailLogTable"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <br>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div id="mailLogTable"></div>
+        <div class="cronjob-mails">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">
+                        <a href="#collapseCronjobMails" data-toggle="collapse" aria-expanded="true">
+                            <h3><i class="fas fa-user-clock"></i> Vorgemerkte Mails <i class="fas fa-caret-down"></i></h3>
+                        </a>
+                        <div style="margin-top: -10px;"><i>Hier werden alle Mails aufgelistet, deren Versand über Stubegru geplant und terminiert ist.</i></div>
+                    </span>
+                </div>
+
+                <div class="panel-collapse collapse in" id="collapseCronjobMails">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="cronjobMailAddon"><i class="fas fa-filter"></i>&nbsp;Vorgemerkte Mails Filtern:</span>
+                                    <input type="text" class="form-control" placeholder="Datum, Empfänger, Typ...." aria-describedby="cronjobMailAddon" id="cronjobMailFilter">
+                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="cronjobMailClearFilter"><i class="fas fa-times"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div id="cronjobMailTable"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
