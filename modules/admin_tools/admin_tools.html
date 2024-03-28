@@ -1,11 +1,11 @@
-<div class="row permission-MAIL_LOG permission-required">
+<div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-10">
         <h2><i class="fas fa-user-shield"></i> Admin Tools </h2>
 
-        
 
-        <div class="mail-log">
+
+        <div class="mail-log permission-MAIL_LOG permission-required">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="panel-title">
@@ -41,20 +41,18 @@
             </div>
         </div>
 
-        <br>
-
-        <div class="cronjob-mails">
+        <div class="cronjob-mails permission-MAIL_LOG permission-required">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="panel-title">
-                        <a href="#collapseCronjobMails" data-toggle="collapse" aria-expanded="true">
+                        <a href="#collapseCronjobMails" data-toggle="collapse" aria-expanded="false">
                             <h3><i class="fas fa-user-clock"></i> Vorgemerkte Mails <i class="fas fa-caret-down"></i></h3>
                         </a>
                         <div style="margin-top: -10px;"><i>Hier werden alle Mails aufgelistet, deren Versand über Stubegru geplant und terminiert ist.</i></div>
                     </span>
                 </div>
 
-                <div class="panel-collapse collapse in" id="collapseCronjobMails">
+                <div class="panel-collapse collapse" id="collapseCronjobMails">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -74,6 +72,51 @@
                                 <div id="cronjobMailTable"></div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="admin-tools-misc">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">
+                        <a href="#collapseAdminToolsMisc" data-toggle="collapse" aria-expanded="false">
+                            <h3><i class="fas fa-cogs"></i> Sonstige Tools für Admins <i class="fas fa-caret-down"></i></h3>
+                        </a>
+                        <div style="margin-top: -10px;"><i>Mailsystem, Cronjob & mehr</i></div>
+                    </span>
+                </div>
+
+                <div class="panel-collapse collapse" id="collapseAdminToolsMisc">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4><i class="fas fa-envelope"></i> Mailsystem testen</h4>
+                                <a target="_blank" href="modules/mailing/mail_test.php">> Hier geht's zur Testseite</a>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4><i class="fas fa-robot"></i> Cronjob manuell ausführen</h4>
+
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Der Cronjob ist ein Skript, das üblicherweise jede Nacht ausgeführt wird. Es führt Aufräumarbeiten im Stubegru System durch. Der Cronjob wird vom Server-Admin konfiguriert. Hier kann der Cronjob manuell ausgeführt werden. Dies kann inkonsistente Datensätze verursachen, wenn gerade Nutzer in Stubegru angemeldet sind. Bitte nur benutzen, wenn du weißt, was du tust...
+                                    <br><br>
+
+                                    <button type="button" class="btn btn-primary" id="executeCronjobButton"><i class="fas fa-play-circle"></i> Cronjob jetzt ausführen</button>
+                                </div>
+
+                                <div class="well" id="cronjobLog" style="display: none; font-family: monospace;"></div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>

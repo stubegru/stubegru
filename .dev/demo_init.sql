@@ -139,6 +139,7 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('VIEW_ACCESS_PORTFOLIO', 'anybody'),
 ('WIKI_READ', 'user'),
 ('MAIL_LOG', 'admin'),
+('EXECUTE_CRONJOB', 'admin'),
 ('WIKI_WRITE', 'wiki_autor');
 
 

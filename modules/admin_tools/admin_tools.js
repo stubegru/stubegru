@@ -4,6 +4,7 @@ class AdminTools {
     cronjobMailTable;
 
     static init() {
+        document.querySelector("#executeCronjobButton").addEventListener("click",AdminTools.executeCronjob);
         AdminTools.initMailLogTable();
         AdminTools.renderMailLogTable();
         AdminTools.initCronjobMailTable();
@@ -160,6 +161,13 @@ class AdminTools {
             document.querySelector("#mailLogFilter").value = "";
             document.querySelector("#mailLogFilter").dispatchEvent(new Event("input"));
         })
+    }
+
+    static async executeCronjob(){
+        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/admin_tools/execute_cronjob.php`);
+        let parsedResp = await resp.text();
+        document.querySelector("#cronjobLog").innerHTML = parsedResp;
+        document.querySelector("#cronjobLog").style.display = "block";
     }
 
 }
