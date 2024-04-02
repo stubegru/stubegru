@@ -19,7 +19,7 @@
         "module.html"
     ],
     "js": [
-        "daily_news.js"
+        "logic/daily_news_module.js"
     ],
     "css": [],
     "cronjob": [
