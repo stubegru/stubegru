@@ -75,9 +75,14 @@ const StubegruModuleLoader = {
      * @param {string} moduleName 
      * @returns module Data
      */
+    //TODO SPRING_UPDATE remove support for old js-modules
     getModuleData: async function (moduleName) {
         try {
-            let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/${moduleName}/module.json`);
+            const moduleSelector = `stubegruModule[data-name='${moduleName}']`;
+            const moduleElem =document.querySelector(moduleSelector);
+            const moduleSource =  moduleElem? moduleElem.getAttribute("data-source") : null;
+
+            let resp = await fetch(`${stubegru.constants.BASE_URL}/${moduleSource || "modules"}/${moduleName}/module.json`);
             moduleData = await resp.json();
             return moduleData;
         } catch (e) {
@@ -161,23 +166,27 @@ const StubegruModuleLoader = {
         }
     },
 
+
+    //TODO SPRING_UPDATE remove support for old js-modules
     loadModuleFiles: async function (moduleData) {
         const moduleName = moduleData.name;
         const moduleSelector = `stubegruModule[data-name='${moduleName}']`;
+        const moduleSource = document.querySelector(moduleSelector).getAttribute("data-source");
+
 
         for (let htmlFileName of moduleData.html) {
-            const htmlPath = `${stubegru.constants.BASE_URL}/modules/${moduleName}/${htmlFileName}`;
+            const htmlPath = `${stubegru.constants.BASE_URL}/${moduleSource || "modules"}/${moduleName}/${htmlFileName}`;
             await this.loadHtml(htmlPath, moduleSelector);
         }
 
         for (let cssFileName of moduleData.css) {
-            const cssPath = `${stubegru.constants.BASE_URL}/modules/${moduleName}/${cssFileName}`;
+            const cssPath = `${stubegru.constants.BASE_URL}/${moduleSource || "modules"}/${moduleName}/${cssFileName}`;
             await this.loadCss(cssPath);
         }
 
         for (let jsFileName of moduleData.js) {
-            const jsPath = `${stubegru.constants.BASE_URL}/modules/${moduleName}/${jsFileName}`;
-            await this.loadJs(jsPath);
+            const jsPath = `${stubegru.constants.BASE_URL}/${moduleSource || "modules"}/${moduleName}/${jsFileName}`;
+            await this.loadJs(jsPath,moduleSource ? true : false);
         }
     },
 
@@ -200,9 +209,10 @@ const StubegruModuleLoader = {
     },
 
     //Load script and execute it
-    loadJs: async function (path) {
+    loadJs: async function (path, module = false) {
         return new Promise(function (resolve, reject) {
             let jsElem = document.createElement("script");
+            if (module) { jsElem.setAttribute("type", "module"); }
             jsElem.src = `${path}?v=${stubegru.constants.APPLICATION_VERSION}`;
             jsElem.addEventListener('error', reject);
             jsElem.addEventListener('load', resolve);
