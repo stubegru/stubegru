@@ -213,7 +213,8 @@ const StubegruModuleLoader = {
         return new Promise(function (resolve, reject) {
             let jsElem = document.createElement("script");
             if (module) { jsElem.setAttribute("type", "module"); }
-            jsElem.src = `${path}?v=${stubegru.constants.APPLICATION_VERSION}`;
+            //jsElem.src = `${path}?v=${stubegru.constants.APPLICATION_VERSION}`;
+            jsElem.src = `${path}`;
             jsElem.addEventListener('error', reject);
             jsElem.addEventListener('load', resolve);
             document.body.appendChild(jsElem);
