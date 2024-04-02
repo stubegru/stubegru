@@ -1,18 +1,21 @@
 import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
 import Utils from "../../stubegru_utils/logic/stubegru_utils.js";
 import DailyNews from "./daily_news_module.js";
+import {Modal} from '../../../assets/libs/bootstrap/bootstrap5.js';
 
 export default class DailyNewsView {
 
 
-     richTextEditor: ClassicEditor;
+    richTextEditor: ClassicEditor;
+    modal:Modal;
 
     async init() {
         const editorPlaceholder = Utils.getElem('#dailyNewsEditor');
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
         //CKEDITOR.replace('dailyNewsEditor', { height: "200px", extraPlugins: "wikiword" }); //Richtexteditor initialisieren
 
-        Utils.getElem("#daily_news_new_button").addEventListener("click",this.showModalForm);
+        Utils.getElem("#daily_news_new_button").addEventListener("click", this.showModalForm);
+        this.modal = new Modal('#daily_news_modal');
     }
 
     resetModalForm() {
@@ -37,7 +40,7 @@ export default class DailyNewsView {
         }
     }
 
-    showModalForm(id) {
+    showModalForm = (id)=> {
         //Vorhandenen Nachricht bearbeiten
         if (id != "new") {
             //         Utils.getElem.ajax({
@@ -65,7 +68,6 @@ export default class DailyNewsView {
             Utils.getInput("#nachricht_id").value = id;
         }
         //TODO Remove this test code vvv
-        //@ts-expect-error
-        $("#meditor").modal("show");
+        this.modal.show();
     }
 }

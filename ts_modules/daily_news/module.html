@@ -1,9 +1,9 @@
 <div class="col-md-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4 class="panel-title"><a href="#collapseActualInfos" data-toggle="collapse" aria-expanded="true">Aktuelles</a></h4>
+            <h4 class="panel-title"><a href="#collapse_daily_news" data-bs-toggle="collapse">Aktuelles</a></h4>
         </div>
-        <div class="panel-collapse collapse in" id="collapseActualInfos" aria-expanded="false">
+        <div class="collapse show" id="collapse_daily_news">
             <div class="panel-body">
 
                 <div class="row">
@@ -15,7 +15,7 @@
 
 
                 <!-- Neue Nachricht modal start-->
-                <div aria-hidden="true" role="dialog" tabindex="-1" id="meditor" class="modal fade" style="display: none;">
+                <div tabindex="-1" id="daily_news_modal" class="modal">
                     <form action="javascript:sendMessage();">
                         <input id="nachricht_id" type="hidden">
                         <div class="modal-dialog" style="min-width:70%;">
