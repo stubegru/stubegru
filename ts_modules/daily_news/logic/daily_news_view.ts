@@ -1,7 +1,7 @@
 import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
 import Utils from "../../stubegru_utils/logic/stubegru_utils.js";
 import DailyNews from "./daily_news_module.js";
-import {Modal} from '../../../assets/libs/bootstrap/bootstrap5.js';
+import {Modal} from '../../../assets/libs/bootstrap5/bootstrap5.js';
 
 export default class DailyNewsView {
 
