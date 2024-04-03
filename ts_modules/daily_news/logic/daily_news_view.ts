@@ -2,6 +2,8 @@ import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
 import Utils from "../../stubegru_utils/logic/stubegru_utils.js";
 import DailyNews from "./daily_news_module.js";
 import {Modal} from '../../../assets/libs/bootstrap5/bootstrap5.js';
+import Alert from '../../alert/alert_module.js';
+import SweetAlert from "../../../assets/libs/sweetalert2/sweetalert2.js"
 
 export default class DailyNewsView {
 
@@ -16,6 +18,12 @@ export default class DailyNewsView {
 
         Utils.getElem("#daily_news_new_button").addEventListener("click", this.showModalForm);
         this.modal = new Modal('#daily_news_modal');
+        SweetAlert.fire({
+            title: 'Error!',
+            text: 'Do you want to continue',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
     }
 
     resetModalForm() {

@@ -1,14 +1,14 @@
 export default class DailyNewsService{
 
 
-    // deleteMessage(id) { //Nachricht löschen
+    // delete(dailyNewsId) {
     //     deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?", function () {
     //         $.ajax({
     //             type: "POST",
     //             dataType: "json",
     //             url: `${stubegru.constants.BASE_URL}/modules/daily_news/delete_message.php`,
     //             data: {
-    //                 id: id
+    //                 id: dailyNewsId
     //             },
     //             success: function (data) {
     //                 stubegru.modules.alerts.alert({
