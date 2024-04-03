@@ -208,6 +208,7 @@ class EventInstanceView {
             const eventTypeId = eventInstance.category;
             const eventTypeName = (eventTypeId && eventTypeList[eventTypeId]) ? eventTypeList[eventTypeId].name : "";
             const startDate = eventInstance.startDate;
+            let eventInstanceName = eventInstance.isCancelled ? `<b style="color: red;">${eventInstance.name}</b>` : eventInstance.name;
 
             let buttonsColumn = `
                     <button class='event-instance-edit-button btn btn-default' data-event-instance-id='${eventInstance.id}' title="Veranstaltung bearbeiten">
@@ -220,7 +221,7 @@ class EventInstanceView {
                 </tr>`;
 
             tableDataList.push({
-                name: eventInstance.name,
+                name: eventInstanceName,
                 date: startDate,
                 category: eventTypeName,
                 assignee: assigneeName,
