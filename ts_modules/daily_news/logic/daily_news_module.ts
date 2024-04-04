@@ -1,29 +1,44 @@
+import { StringIndexedList } from "../../stubegru_core/logic/stubegru_interfaces.js";
 import DailyNewsController from "./daily_news_controller.js";
 import DailyNewsService from "./daily_news_service.js";
 import DailyNewsView from "./daily_news_view.js";
 
-export default class DailyNews {
+export default class DailyNewsModule {
 
     static state = {
         showOnlyCurrentMessages: false
     };
+    static dailyNewsList: DailyNewsObject[]; 
 
     static service: DailyNewsService;
     static controller: DailyNewsController;
     static view: DailyNewsView;
 
     static async init() {
-        DailyNews.service = new DailyNewsService();
-        DailyNews.controller = new DailyNewsController();
-        DailyNews.view = new DailyNewsView();
+        DailyNewsModule.service = new DailyNewsService();
+        DailyNewsModule.controller = new DailyNewsController();
+        DailyNewsModule.view = new DailyNewsView();
 
-        await DailyNews.controller.init();
-        await DailyNews.view.init();
-        //DailyNews.service.init();
+        await DailyNewsModule.controller.init();
+        await DailyNewsModule.view.init();
     }
 }
 
-await DailyNews.init();
+await DailyNewsModule.init();
+
+
+
+export interface DailyNewsObject {
+    id: string;
+    inhalt: string;
+    titel: string;
+    prioritaet: number;
+    erfasser?: string;
+    erfassungsdatum?: string;
+    beginn: string;
+    ende: string;
+  }
+  
 
 
 

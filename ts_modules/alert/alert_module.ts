@@ -1,4 +1,5 @@
 import SweetAlert, { SweetAlertIcon, SweetAlertOptions } from "../../assets/libs/sweetalert2/sweetalert2.js"
+import { StubegruHttpResponse } from "../stubegru_core/logic/stubegru_fetch.js";
 
 
 const TOAST_LIVETIME = 5000 //in milliseconds
@@ -9,7 +10,7 @@ const swalToBootstrapClass = {
     "error": "danger",
 }
 
-export default class Alert {
+export default class AlertModule {
 
     static alertResp(resp: StubegruHttpResponse, title?: string) {
         let options: StubegruAlertOptions;
@@ -19,14 +20,23 @@ export default class Alert {
         options.mode = resp.mode;
         options.title = title || options.title;
 
-        Alert.alert(options);
+        AlertModule.alert(options);
     }
 
     static alertSimple(text: string) {
-        Alert.alert({ text: text });
+        AlertModule.alert({ text: text });
     }
 
-    static alert(options: StubegruAlertOptions) {
+    static alertError(error: Error) {
+        console.error(error);
+        AlertModule.alert({
+            text: error.message,
+            title: "Es ist ein Fehler aufgetreten",
+            type: "error"
+        });
+    }
+
+    static async alert(options: StubegruAlertOptions) {
         options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
 
         if (options.mode == "alert") {
@@ -35,35 +45,23 @@ export default class Alert {
                 title: options.title || "Info",
                 icon: options.type || "info",
             }
-            SweetAlert.fire(swalOptions);
+            await SweetAlert.fire(swalOptions);
         }
+
         else if (options.mode == "toast") {
             options.type = swalToBootstrapClass[options.type];
-            Alert.showToast(options);
-        }
-        else {
-            throw new Error(`[Alerts] Unknown alert mode '${options.mode}'. Can't trigger alert.`)
+            AlertModule.showToast(options);
         }
     }
 
-    static deleteConfirm(pTitle, pDescription, callback) { //Dialog der vor dem Löschen von Einträgen aufgerufen wird. nachricht mit pTitle und pDescription wird angezeigt. falls auf "Löschen" geklickt wird, wird die übergebene Funktion "callback" aufgerufen. Dies ist in der Regel dann die Funktion, die das Element aus der DB löscht.
-        // Swal.fire({
-        //     title: pTitle,
-        //     text: pDescription,
-        //     type: "error",
-        //     showCancelButton: true,
-        //     cancelButtonText: "Abbrechen",
-        //     confirmButtonColor: "#DD6B55",
-        //     confirmButtonText: "Löschen",
-        // }, function () {
-        //     callback();
-        //     /*stubegru.modules.alerts.alert({
-        //         title: "Gelöscht!",
-        //         text: "Der Eintrag wurde erfolgreich gelöscht",
-        //         type: "success",
-        //         timer: 2000
-        //     });*/
-        // });
+    static async deleteConfirm(title: string, text: string, confirmButtonText = "Löschen") {
+        return await SweetAlert.fire({
+            title: title,
+            html: text,
+            showCancelButton: true,
+            cancelButtonText: "Abbrechen",
+            confirmButtonText: confirmButtonText,
+        });
     }
 
 
@@ -93,8 +91,3 @@ export interface StubegruAlertOptions {
     mode?: "alert" | "toast";
 }
 
-interface StubegruHttpResponse {
-    mode?: "alert" | "toast";
-    status: string;
-    message: string;
-}

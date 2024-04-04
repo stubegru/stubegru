@@ -10,11 +10,11 @@ require_once "$BASE_PATH/utils/constants.php";
 $erfasser = $_SESSION["id"];
 $erfassungsdatum = date("d.m.Y");
 
-$titel = $_POST["title"];
-$inhalt = $_POST["text"];
-$beginn = $_POST["start"];
-$ende = $_POST["end"];
-$prioritaet = $_POST["priority"];
+$titel = $_POST["titel"];
+$inhalt = $_POST["inhalt"];
+$beginn = $_POST["beginn"];
+$ende = $_POST["ende"];
+$prioritaet = $_POST["prioritaet"];
 $newsId = $_POST["id"];
 
 $prioritaet = $prioritaet == "true" ? 1 : 0;

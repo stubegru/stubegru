@@ -50,8 +50,9 @@ if ($rowNumbers > 0) {
     newNotification("MOVE_TO_WIKI", $articleId, $notificationTitle, $text, $own_id, "UPDATE");
 
     $toReturn["status"] = "success";
-    $toReturn["message"] = "Tagesaktuelle Info wurde in Artikel umgewandelt";
+    $toReturn["message"] = $text;
     $toReturn["articleId"] = $articleId;
+    $toReturn["mode"] = "alert";
 }
 
 echo json_encode($toReturn);
