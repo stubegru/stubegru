@@ -1,4 +1,4 @@
-import SweetAlert from "../../assets/libs/sweetalert2/sweetalert2.js"
+import SweetAlert, { SweetAlertIcon, SweetAlertOptions } from "../../assets/libs/sweetalert2/sweetalert2.js"
 
 
 const TOAST_LIVETIME = 5000 //in milliseconds
@@ -11,28 +11,39 @@ const swalToBootstrapClass = {
 
 export default class Alert {
 
-    static alert(options, title) {
-        if (typeof options == "string") { options = { text: options }; } //if options param is just a string => use this string as alert's text
+    static alertResp(resp: StubegruHttpResponse, title?: string) {
+        let options: StubegruAlertOptions;
 
-        //if options is a response object of a stubegru backend script, rename props to display correct alert
-        if (options.message && options.status) {
-            options.text = options.message;
-            options.type = options.status;
-            options.title = title || options.title;
-        }
+        options.text = resp.message;
+        options.type = resp.status as SweetAlertIcon;
+        options.mode = resp.mode;
+        options.title = title || options.title;
 
-        options.type = options.type || "info"; //if type is unset => set to info
-        options.title = options.title || "Info"; //if title is unset => set to "Info"
-        options.text = options.text || ""; //if text is unset => set to empty string
+        Alert.alert(options);
+    }
+
+    static alertSimple(text: string) {
+        Alert.alert({ text: text });
+    }
+
+    static alert(options: StubegruAlertOptions) {
         options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
-        options.html = true; //render html tags in title and text property
 
-        if (options.mode == "alert") { SweetAlert.fire(options); }
+        if (options.mode == "alert") {
+            let swalOptions: SweetAlertOptions = {
+                html: options.text || "",
+                title: options.title || "Info",
+                icon: options.type || "info",
+            }
+            SweetAlert.fire(swalOptions);
+        }
         else if (options.mode == "toast") {
             options.type = swalToBootstrapClass[options.type];
             Alert.showToast(options);
         }
-        else { throw new Error(`[Alerts] Unknown alert mode '${options.mode}'. Can't trigger alert.`) }
+        else {
+            throw new Error(`[Alerts] Unknown alert mode '${options.mode}'. Can't trigger alert.`)
+        }
     }
 
     static deleteConfirm(pTitle, pDescription, callback) { //Dialog der vor dem Löschen von Einträgen aufgerufen wird. nachricht mit pTitle und pDescription wird angezeigt. falls auf "Löschen" geklickt wird, wird die übergebene Funktion "callback" aufgerufen. Dies ist in der Regel dann die Funktion, die das Element aus der DB löscht.
@@ -73,4 +84,17 @@ export default class Alert {
         // }, TOAST_LIVETIME);
     }
 
+}
+
+export interface StubegruAlertOptions {
+    text: string;
+    type?: SweetAlertIcon;
+    title?: string;
+    mode?: "alert" | "toast";
+}
+
+interface StubegruHttpResponse {
+    mode?: "alert" | "toast";
+    status: string;
+    message: string;
 }
