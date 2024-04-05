@@ -13,8 +13,8 @@ export default class DailyNewsView {
     modal: Modal;
 
     async init() {
-        const editorPlaceholder = Stubegru.dom.querySelector('#dailyNewsEditor');
-        this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
+        const editorPlaceholder = Stubegru.dom.querySelector('#daily_news_text');
+        this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" }); //TODO: style ckeditor,wikiwordplugin...
         //CKEDITOR.replace('dailyNewsEditor', { height: "200px", extraPlugins: "wikiword" }); //Richtexteditor initialisieren
 
         this.modal = new Modal('#daily_news_modal');
@@ -22,21 +22,25 @@ export default class DailyNewsView {
         this.resetModalForm();
 
         Stubegru.dom.querySelector("#daily_news_create_button").addEventListener("click", DailyNewsModule.controller.showDailyNewsModalForCreate);
+        Stubegru.dom.querySelector("#daily_news_modal_form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            DailyNewsModule.controller.saveDailyNews();
+        });
 
         document.querySelectorAll('stubegruModule[data-name="daily_news"] input[type="checkbox"][data-toggle="toggle"]').forEach(function (ele) {
             //@ts-expect-error
-            ele.bootstrapToggle();
+            ele.bootstrapToggle(); //TODO: write nice ts interface for toggle init
         });
 
     }
 
-    resetModalForm() {
-        Stubegru.dom.querySelectorAsInput('#nachricht_titel').value = "";
+    resetModalForm = () => {
+        Stubegru.dom.querySelectorAsInput('#daily_news_title').value = "";
         this.richTextEditor.setData("");
         var d = new Date();
-        Stubegru.dom.querySelectorAsInput('#beginn_nachricht').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
+        Stubegru.dom.querySelectorAsInput('#daily_news_start').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
         d = new Date(d.getTime() + 1000 * 60 * 60 * 24 * 7); //Add 7 days
-        Stubegru.dom.querySelectorAsInput('#ende_nachricht').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
+        Stubegru.dom.querySelectorAsInput('#daily_news_end').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
     }
 
     toggleMessageView() {
@@ -53,22 +57,23 @@ export default class DailyNewsView {
     }
 
     setFormData(dailyNews: DailyNewsObject) {
-        Stubegru.dom.querySelectorAsInput("#nachricht_id").value = dailyNews.id;
-        Stubegru.dom.querySelectorAsInput("#nachricht_titel").value = dailyNews.titel;
-        Stubegru.dom.querySelectorAsInput("#beginn_nachricht").value = dailyNews.beginn;
-        Stubegru.dom.querySelectorAsInput("#ende_nachricht").value = dailyNews.ende;
-        Stubegru.dom.querySelectorAsInput("#nachricht_prioritaet").checked = (dailyNews.prioritaet == 1);
+        Stubegru.dom.querySelectorAsInput("#daily_news_id").value = dailyNews.id;
+        Stubegru.dom.querySelectorAsInput("#daily_news_title").value = dailyNews.titel;
+        Stubegru.dom.querySelectorAsInput("#daily_news_start").value = dailyNews.beginn;
+        Stubegru.dom.querySelectorAsInput("#daily_news_end").value = dailyNews.ende;
+        Stubegru.dom.querySelectorAsInput("#daily_news_priority").checked = (dailyNews.prioritaet == 1);
         this.richTextEditor.setData(dailyNews.inhalt);
     }
 
-    renderListView(dailyNewsList: DailyNewsObject[]) {
+    async renderListView(dailyNewsList: DailyNewsObject[]) {
         let html = { present: "", future: "" };
 
         for (let currentNews of dailyNewsList) {
             let priorityClass = currentNews.prioritaet == 1 ? "daily-news-important" : "card-default";
             let container = new Date(currentNews.beginn).getTime() > new Date().getTime() ? "future" : "present"
             let currentEnd = Stubegru.utils.formatDate(currentNews.ende, "DD.MM.YYYY");
-            //const text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO handle WIKIWORDS!!!
+            //@ts-expect-error
+            const text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO: refactor handle WIKIWORDS!!!
 
             html[container] += `
             <div class="card my-2">
@@ -110,17 +115,18 @@ export default class DailyNewsView {
 
         Stubegru.dom.querySelector("#message_container").innerHTML = html.present;
         Stubegru.dom.querySelector("#future_message_container").innerHTML = html.future;
-        //stubegru.modules.userUtils.updateAdminElements(); // TODO update admin Elements
+        //@ts-expect-error
+        stubegru.modules.userUtils.updateAdminElements(); // TODO: make update admin Elements sexy
     }
 
     getFormData(): DailyNewsObject {
         return {
-            titel: Stubegru.dom.querySelectorAsInput('#nachricht_titel').value,
+            id: Stubegru.dom.querySelectorAsInput('#daily_news_id').value,
+            titel: Stubegru.dom.querySelectorAsInput('#daily_news_title').value,
             inhalt: DailyNewsModule.view.richTextEditor.getData(),
-            beginn: Stubegru.dom.querySelectorAsInput('#beginn_nachricht').value,
-            ende: Stubegru.dom.querySelectorAsInput('#ende_nachricht').value,
-            prioritaet: Stubegru.dom.querySelectorAsInput('#nachricht_prioritaet').checked ? 1 : 0,
-            id: Stubegru.dom.querySelectorAsInput('#nachricht_id').value
+            beginn: Stubegru.dom.querySelectorAsInput('#daily_news_start').value,
+            ende: Stubegru.dom.querySelectorAsInput('#daily_news_end').value,
+            prioritaet: Stubegru.dom.querySelectorAsInput('#daily_news_priority').checked ? 1 : 0,
         }
     }
 }

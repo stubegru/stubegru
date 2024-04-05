@@ -30,36 +30,40 @@
 
 
             <!-- Neue Nachricht modal start-->
-            <div tabindex="-1" id="daily_news_modal" class="modal">
-                <form action="javascript:sendMessage();">
-                    <input id="nachricht_id" type="hidden">
+            <div tabindex="-1" id="daily_news_modal" class="modal fade">
+                <form id="daily_news_modal_form">
+                    <input id="daily_news_id" type="hidden">
                     <div class="modal-dialog" style="min-width:70%;">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                                <h4 id="myModalLabel" class="modal-title">Nachricht bearbeiten</h4>
+                                <h4 id="daily_news_modal_title" class="modal-title">
+                                    <i class="far fa-newspaper"></i>
+                                    Nachricht bearbeiten
+                                </h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label>Titel</label>
-                                    <input autocomplete="off" class="form-control" id="nachricht_titel" required>
+                                    <label class="form-label">Titel</label>
+                                    <input autocomplete="off" class="form-control" id="daily_news_title" required>
                                 </div>
-                                <div id="nachricht_inhalt" style="display:block; margin-bottom:32px;">
+                                <br>
+                                <div id="daily_news_text" style="display:block; margin-bottom:32px;">
                                     <textarea id="dailyNewsEditor"></textarea>
                                     <!-- txtEditor wird im Javascript zu RichTextEditor -->
                                 </div>
-
+                                <br>
                                 <div class="row">
                                     <div class='col-sm-6'>
                                         <div class="form-group">
-                                            <label>Beginn der Anzeige</label>
-                                            <input autocomplete="off" type='date' id="beginn_nachricht" class="form-control" required />
+                                            <label class="form-label">Beginn der Anzeige</label>
+                                            <input autocomplete="off" type='date' id="daily_news_start" class="form-control" required />
                                         </div>
                                     </div>
                                     <div class='col-sm-6'>
                                         <div class="form-group">
-                                            <label>Ende der Anzeige</label>
-                                            <input autocomplete="off" id="ende_nachricht" type='date' class="form-control" required />
+                                            <label class="form-label">Ende der Anzeige</label>
+                                            <input autocomplete="off" id="daily_news_end" type='date' class="form-control" required />
                                         </div>
 
                                     </div>
@@ -67,21 +71,25 @@
 
 
                             </div>
-                            <div class="modal-footer">
-                                <div class="pull-left">
-                                    <span><b>Priorität:&nbsp;</b></span>
-                                    <input type="checkbox" data-toggle="toggle" id="nachricht_prioritaet" data-on="Wichtig" data-off="Normal" data-width="100px" data-onstyle="danger">
+                            <div class="modal-footer stubegru-modal-footer-wide">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span><b>Priorität:&nbsp;</b></span>
+                                        <input type="checkbox" data-toggle="toggle" id="daily_news_priority" data-on="Wichtig" data-off="Normal" data-width="100" data-height="40" data-onstyle="danger">
+                                    </div>
+                                    <div class="col-6 d-flex justify-content-end">
+                                        <button class="btn btn-light mx-2" data-bs-dismiss="modal" type="button"><i class="fas fa-times"></i>&nbsp; Abbrechen</button>
+                                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i>&nbsp; Speichern</button>
+                                    </div>
                                 </div>
-                                <button class="btn btn-default" data-dismiss="modal" type="button"><i class="fas fa-times"></i>&nbsp; Abbrechen</button>
-                                <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i>&nbsp; Speichern</button>
                             </div>
                         </div>
-                        <!-- /.modal-content -->
                     </div>
-                    <!-- /.modal-dialog -->
                 </form>
             </div>
             <!--Ende des Neue-Nachricht Modals -->
+
+
         </div>
     </div>
 </div>

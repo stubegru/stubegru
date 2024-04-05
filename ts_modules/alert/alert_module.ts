@@ -13,7 +13,7 @@ const swalToBootstrapClass = {
 export default class AlertModule {
 
     static alertResp(resp: StubegruHttpResponse, title?: string) {
-        let options: StubegruAlertOptions;
+        let options = {} as StubegruAlertOptions;
 
         options.text = resp.message;
         options.type = resp.status as SweetAlertIcon;
