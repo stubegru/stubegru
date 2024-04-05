@@ -4,15 +4,15 @@ export default class StubegruDom {
     /**
      * Selects an Element from the DOM as HTMLInputElement
      */
-    getInput(selector: string): HTMLInputElement {
+    querySelectorAsInput(selector: string): HTMLInputElement {
         return document.querySelector(selector) as HTMLInputElement;
     }
-    getElem(selector: string): HTMLElement {
+    querySelector(selector: string): HTMLElement {
         return document.querySelector(selector) as HTMLElement;
     }
 
     slideUp = (target: HTMLElement | string, duration = 500) => {
-        let elem = (typeof (target) == "string") ? this.getElem(target) : target;
+        let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
 
         elem.style.transitionProperty = 'height, margin, padding';
         elem.style.transitionDuration = duration + 'ms';
@@ -40,7 +40,7 @@ export default class StubegruDom {
     }
 
     slideDown = (target: HTMLElement | string, duration = 500) => {
-        let elem = (typeof (target) == "string") ? this.getElem(target) : target;
+        let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
 
         elem.style.removeProperty('display');
         let display = window.getComputedStyle(elem).display;
@@ -71,7 +71,7 @@ export default class StubegruDom {
     }
 
     slideToggle = (target: HTMLElement | string, duration = 500) => {
-        let elem = (typeof (target) == "string") ? this.getElem(target) : target;
+        let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
         
         if (window.getComputedStyle(elem).display === 'none') {
             return this.slideDown(elem, duration);
