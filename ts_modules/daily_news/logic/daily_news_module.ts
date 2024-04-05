@@ -19,8 +19,8 @@ export default class DailyNewsModule {
         DailyNewsModule.controller = new DailyNewsController();
         DailyNewsModule.view = new DailyNewsView();
 
-        await DailyNewsModule.controller.init();
         await DailyNewsModule.view.init();
+        await DailyNewsModule.controller.init();
     }
 }
 

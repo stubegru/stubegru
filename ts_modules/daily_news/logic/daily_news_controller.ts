@@ -76,7 +76,7 @@ export default class DailyNewsController {
 
     async showDailyNewsModalForCreate() {
         try {
-            Stubegru.dom.getInput("nachricht_id").value = "new";
+            Stubegru.dom.querySelectorAsInput("nachricht_id").value = "new";
             DailyNewsModule.view.modal.show();
         }
         catch (error) { AlertModule.alertError(error); }

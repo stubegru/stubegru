@@ -21,7 +21,9 @@
     "js": [
         "logic/daily_news_module.js"
     ],
-    "css": [],
+    "css": [
+        "daily_news.css"
+    ],
     "cronjob": [
         "unlink_broken_wikiwords_cronjob.php"
     ]

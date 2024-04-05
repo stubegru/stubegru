@@ -1,7 +1,10 @@
+///@VSCode:tuwrraphael.queryselector-completion: import html from "../module.html";
 import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
 import DailyNewsModule, { DailyNewsObject } from "./daily_news_module.js";
 import { Modal } from '../../../assets/libs/bootstrap5/bootstrap5.js';
 import Stubegru from '../../stubegru_core/logic/stubegru.js';
+
+
 
 export default class DailyNewsView {
 
@@ -10,46 +13,51 @@ export default class DailyNewsView {
     modal: Modal;
 
     async init() {
-        const editorPlaceholder = Stubegru.dom.getElem('#dailyNewsEditor');
+        const editorPlaceholder = Stubegru.dom.querySelector('#dailyNewsEditor');
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
         //CKEDITOR.replace('dailyNewsEditor', { height: "200px", extraPlugins: "wikiword" }); //Richtexteditor initialisieren
 
         this.modal = new Modal('#daily_news_modal');
-        Stubegru.dom.getElem("#daily_news_modal").addEventListener("hidden.bs.modal", this.resetModalForm);
+        Stubegru.dom.querySelector("#daily_news_modal").addEventListener("hidden.bs.modal", this.resetModalForm);
         this.resetModalForm();
 
-        Stubegru.dom.getElem("#daily_news_new_button").addEventListener("click", DailyNewsModule.controller.showDailyNewsModalForCreate);
+        Stubegru.dom.querySelector("#daily_news_create_button").addEventListener("click", DailyNewsModule.controller.showDailyNewsModalForCreate);
+
+        document.querySelectorAll('stubegruModule[data-name="daily_news"] input[type="checkbox"][data-toggle="toggle"]').forEach(function (ele) {
+            //@ts-expect-error
+            ele.bootstrapToggle();
+        });
 
     }
 
     resetModalForm() {
-        Stubegru.dom.getInput('#nachricht_titel').value = "";
+        Stubegru.dom.querySelectorAsInput('#nachricht_titel').value = "";
         this.richTextEditor.setData("");
         var d = new Date();
-        Stubegru.dom.getInput('#beginn_nachricht').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
+        Stubegru.dom.querySelectorAsInput('#beginn_nachricht').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
         d = new Date(d.getTime() + 1000 * 60 * 60 * 24 * 7); //Add 7 days
-        Stubegru.dom.getInput('#ende_nachricht').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
+        Stubegru.dom.querySelectorAsInput('#ende_nachricht').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
     }
 
     toggleMessageView() {
         let showOnlyCurrent = DailyNewsModule.state.showOnlyCurrentMessages;
         if (showOnlyCurrent) {
-            Stubegru.dom.getElem("#toggleMessageButton").innerHTML = `<i class="fas fa-eye"></i>&nbsp; Alle anzeigen`;
+            Stubegru.dom.querySelector("#toggleMessageButton").innerHTML = `<i class="fas fa-eye"></i>&nbsp; Alle anzeigen`;
             Stubegru.dom.slideDown("#future_message_container");
             showOnlyCurrent = false;
         } else {
-            Stubegru.dom.getElem("#toggleMessageButton").innerHTML = `<i class="fas fa-eye-slash"></i>&nbsp; Nur aktuelle anzeigen`;
+            Stubegru.dom.querySelector("#toggleMessageButton").innerHTML = `<i class="fas fa-eye-slash"></i>&nbsp; Nur aktuelle anzeigen`;
             Stubegru.dom.slideUp("#future_message_container");
             showOnlyCurrent = true;
         }
     }
 
     setFormData(dailyNews: DailyNewsObject) {
-        Stubegru.dom.getInput("#nachricht_id").value = dailyNews.id;
-        Stubegru.dom.getInput("#nachricht_titel").value = dailyNews.titel;
-        Stubegru.dom.getInput("#beginn_nachricht").value = dailyNews.beginn;
-        Stubegru.dom.getInput("#ende_nachricht").value = dailyNews.ende;
-        Stubegru.dom.getInput("#nachricht_prioritaet").checked = (dailyNews.prioritaet == 1);
+        Stubegru.dom.querySelectorAsInput("#nachricht_id").value = dailyNews.id;
+        Stubegru.dom.querySelectorAsInput("#nachricht_titel").value = dailyNews.titel;
+        Stubegru.dom.querySelectorAsInput("#beginn_nachricht").value = dailyNews.beginn;
+        Stubegru.dom.querySelectorAsInput("#ende_nachricht").value = dailyNews.ende;
+        Stubegru.dom.querySelectorAsInput("#nachricht_prioritaet").checked = (dailyNews.prioritaet == 1);
         this.richTextEditor.setData(dailyNews.inhalt);
     }
 
@@ -57,59 +65,62 @@ export default class DailyNewsView {
         let html = { present: "", future: "" };
 
         for (let currentNews of dailyNewsList) {
-            let priorityClass = currentNews.prioritaet == 1 ? "panel-danger" : "panel-default";
+            let priorityClass = currentNews.prioritaet == 1 ? "daily-news-important" : "card-default";
             let container = new Date(currentNews.beginn).getTime() > new Date().getTime() ? "future" : "present"
             let currentEnd = Stubegru.utils.formatDate(currentNews.ende, "DD.MM.YYYY");
             //const text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO handle WIKIWORDS!!!
 
             html[container] += `
-            <div class="panel ${priorityClass}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a  href="#collapseMessage${currentNews.id}" data-toggle="collapse">
-                            ${currentNews.titel}
+            <div class="card my-2">
+                <div class="card-header ${priorityClass}">
+                        <a href="#daily_news_collapse_${currentNews.id}" data-bs-toggle="collapse" class="stubegru-module-title">
+                            <i class="fas fa-caret-down"></i> ${currentNews.titel}
                         </a>
-                    </h4>
                 </div>
-                <div id="collapseMessage${currentNews.id}" class="panel-collapse collapse" aria-expanded="false">
-                      <div class="panel-body">
+                <div id="daily_news_collapse_${currentNews.id}" class="collapse">
+                    <div class="card-body">
                         <p>${currentNews.inhalt}</p>
                         <hr>
-                        <span class="pull-right">
-                            <button class="btn btn-default permission-MOVE_TO_WIKI permission-required" onclick="moveToWiki(${currentNews.id})">
-                                <i class="fas fa-share-square"></i>&nbsp; Ins Wiki schieben
-                            </button>
-                            <button class="btn btn-primary permission-DAILY_NEWS_WRITE permission-required" onclick="showMessageModal(${currentNews.id})">
-                                <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
-                            </button>
-                            <button class="btn btn-danger permission-DAILY_NEWS_WRITE permission-required" onclick="deleteMessage(${currentNews.id})">
-                                <i class="fas fa-times"></i>&nbsp; Löschen
-                            </button>
-                        </span>
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button class="btn btn-secondary mx-2 permission-MOVE_TO_WIKI permission-required" data-daily-news-id="${currentNews.id}">
+                                    <i class="fas fa-share-square"></i>&nbsp; Ins Wiki schieben
+                                </button>
+                                <button class="btn btn-primary mx-2 permission-DAILY_NEWS_WRITE permission-required" data-daily-news-id="${currentNews.id}">
+                                    <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
+                                </button>
+                                <button class="btn btn-danger mx-2 permission-DAILY_NEWS_WRITE permission-required" data-daily-news-id="${currentNews.id}">
+                                    <i class="fas fa-times"></i>&nbsp; Löschen
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="panel-footer">
-                        Wird angezeigt bis: ${currentEnd} 
-                        <span class="pull-right">
-                            Zuletzt geändert: ${currentNews.erfassungsdatum}
-                        </span>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-12 d-flex justify-content-between">
+                                <small>Wird angezeigt bis: <b>${currentEnd}</b></small>
+                                <small> Zuletzt geändert: <b>${currentNews.erfassungsdatum}</b></small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>`;
         }
 
-        Stubegru.dom.getElem("#message_container").innerHTML = html.present;
-        Stubegru.dom.getElem("#future_message_container").innerHTML = html.future;
+        Stubegru.dom.querySelector("#message_container").innerHTML = html.present;
+        Stubegru.dom.querySelector("#future_message_container").innerHTML = html.future;
         //stubegru.modules.userUtils.updateAdminElements(); // TODO update admin Elements
     }
 
     getFormData(): DailyNewsObject {
         return {
-            titel: Stubegru.dom.getInput('#nachricht_titel').value,
+            titel: Stubegru.dom.querySelectorAsInput('#nachricht_titel').value,
             inhalt: DailyNewsModule.view.richTextEditor.getData(),
-            beginn: Stubegru.dom.getInput('#beginn_nachricht').value,
-            ende: Stubegru.dom.getInput('#ende_nachricht').value,
-            prioritaet: Stubegru.dom.getInput('#nachricht_prioritaet').checked ? 1 : 0,
-            id: Stubegru.dom.getInput('#nachricht_id').value
+            beginn: Stubegru.dom.querySelectorAsInput('#beginn_nachricht').value,
+            ende: Stubegru.dom.querySelectorAsInput('#ende_nachricht').value,
+            prioritaet: Stubegru.dom.querySelectorAsInput('#nachricht_prioritaet').checked ? 1 : 0,
+            id: Stubegru.dom.querySelectorAsInput('#nachricht_id').value
         }
     }
 }
