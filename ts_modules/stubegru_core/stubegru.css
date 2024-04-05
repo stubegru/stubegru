@@ -7,3 +7,8 @@
     margin-top: -20px;
     font-style: italic;
 }
+
+.stubegru-modal-footer-wide{
+    padding: 10px;
+    display: block;
+}
