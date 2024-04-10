@@ -14,16 +14,16 @@
                         <i class="fas fa-plus"></i> Neue Nachricht
                     </button>
 
-                    <input type="checkbox" data-toggle="toggle" data-offlabel="<i class='far fa-eye-slash'></i>&nbsp; Nur aktuelle anzeigen</button>" data-onlabel="<i class='far fa-eye'></i>&nbsp; Alle anzeigen</button>">
+                    <input id="daily_news_only_current_toggle" type="checkbox" data-toggle="toggle" data-offlabel="<i class='far fa-eye-slash'></i>&nbsp; Nur aktuelle anzeigen</button>" data-onlabel="<i class='far fa-eye'></i>&nbsp; Alle anzeigen</button>">
                 </div>
             </div>
             <hr>
 
-            <div id="message_container">
+            <div id="daily_news_item_container_present">
 
                 <!-- Here are generated all the messages with an AJAX call -->
             </div>
-            <div id="future_message_container" style="display:none;">
+            <div id="daily_news_item_container_future" style="display:none;">
                 <!-- Here are generated all the messages with an AJAX call -->
             </div>
 

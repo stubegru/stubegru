@@ -19,11 +19,11 @@ export default class StubegruFetch {
         return parsedResp;
     }
 
-     /**
-     * Fetch a resource from Server using fetch API with method GET
-     * @param url Resource's URL relative to BASE_URL/${url}
-     * @param data Payload as key value list (will be converted to queryString)
-     */
+    /**
+    * Fetch a resource from Server using fetch API with method GET
+    * @param url Resource's URL relative to BASE_URL/${url}
+    * @param data Payload as key value list (will be converted to queryString)
+    */
     async get(url: string, data?: Object): Promise<any> {
         let queryString = data ? "?" + new URLSearchParams(Object.entries(data)).toString() : "";
 
@@ -49,6 +49,7 @@ export default class StubegruFetch {
 
 export interface StubegruHttpResponse {
     mode?: "alert" | "toast";
+    title?: string;
     status: string;
     message: string;
 }

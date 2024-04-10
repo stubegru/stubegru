@@ -1,4 +1,4 @@
-import SweetAlert, { SweetAlertIcon, SweetAlertOptions } from "../../assets/libs/sweetalert2/sweetalert2.js"
+import SweetAlert, { SweetAlertIcon, SweetAlertOptions, SweetAlertResult } from "../../assets/libs/sweetalert2/sweetalert2.js"
 import { StubegruHttpResponse } from "../stubegru_core/logic/stubegru_fetch.js";
 
 
@@ -18,7 +18,7 @@ export default class AlertModule {
         options.text = resp.message;
         options.type = resp.status as SweetAlertIcon;
         options.mode = resp.mode;
-        options.title = title || options.title;
+        options.title = title || resp.title;
 
         AlertModule.alert(options);
     }
@@ -58,9 +58,10 @@ export default class AlertModule {
         return await SweetAlert.fire({
             title: title,
             html: text,
+            icon : "error",
+            confirmButtonText: confirmButtonText,
             showCancelButton: true,
             cancelButtonText: "Abbrechen",
-            confirmButtonText: confirmButtonText,
         });
     }
 
