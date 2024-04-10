@@ -17,7 +17,6 @@ $ende = $_POST["ende"];
 $prioritaet = $_POST["prioritaet"];
 $newsId = $_POST["id"];
 
-$prioritaet = $prioritaet == "true" ? 1 : 0;
 $toReturn = array();
 
 

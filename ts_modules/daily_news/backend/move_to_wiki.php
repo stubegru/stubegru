@@ -51,6 +51,7 @@ if ($rowNumbers > 0) {
 
     $toReturn["status"] = "success";
     $toReturn["message"] = $text;
+    $toReturn["title"] = $notificationTitle;
     $toReturn["articleId"] = $articleId;
     $toReturn["mode"] = "alert";
 }

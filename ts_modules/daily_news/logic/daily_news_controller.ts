@@ -48,9 +48,12 @@ export default class DailyNewsController {
     async deleteDailyNews(dailyNewsId) {
         let resp;
         try {
-            resp = await DailyNewsModule.service.delete(dailyNewsId) as StubegruHttpResponse;
-            DailyNewsModule.controller.refreshListView();
-            AlertModule.alertResp(resp);
+            let confirmResp = await AlertModule.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
+            if (confirmResp.isConfirmed) {
+                resp = await DailyNewsModule.service.delete(dailyNewsId) as StubegruHttpResponse;
+                DailyNewsModule.controller.refreshListView();
+                AlertModule.alertResp(resp);
+            }
         }
         catch (error) { AlertModule.alertError(error); }
     }
@@ -58,9 +61,12 @@ export default class DailyNewsController {
     async moveDailyNewsToWiki(dailyNewsId) {
         let resp;
         try {
-            resp = await DailyNewsModule.service.moveToWiki(dailyNewsId) as StubegruHttpResponse;
-            DailyNewsModule.controller.refreshListView();
-            AlertModule.alertResp(resp);
+            let confirmResp = await AlertModule.deleteConfirm("In Wiki Artikel umwandeln?", "Soll diese Tagesaktuelle Info wirklich in einen Wiki Artikel umgewandelt werden? Die Tagesaktuelle Info wird dadurch gelöscht.", "Umwandeln");
+            if (confirmResp.isConfirmed) {
+                resp = await DailyNewsModule.service.moveToWiki(dailyNewsId) as StubegruHttpResponse;
+                DailyNewsModule.controller.refreshListView();
+                AlertModule.alertResp(resp);
+            }
         }
         catch (error) { AlertModule.alertError(error); }
     }

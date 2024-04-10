@@ -203,7 +203,7 @@ function loadStubegruMailtemplate($name)
 function extractMailSubject($templateRaw, $templateName)
 {
     $dom = new DOMDocument;
-    $dom->loadHTML($templateRaw);
+    @$dom->loadHTML($templateRaw); //The @ suppresses any (HTML format) warnings
     foreach ($dom->getElementsByTagName('meta') as $node) {
         $name = $node->getAttribute('name');
         $content = $node->getAttribute('content');

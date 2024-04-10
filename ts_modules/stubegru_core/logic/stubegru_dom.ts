@@ -10,6 +10,9 @@ export default class StubegruDom {
     querySelector(selector: string): HTMLElement {
         return document.querySelector(selector) as HTMLElement;
     }
+    querySelectorAll(selector: string) {
+        return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
+    }
 
     slideUp = (target: HTMLElement | string, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
@@ -68,6 +71,10 @@ export default class StubegruDom {
             elem.style.removeProperty('transition-duration');
             elem.style.removeProperty('transition-property');
         }, duration);
+    }
+
+    slideToState = (target: HTMLElement | string, state:boolean, duration = 500) => {
+        return state ? this.slideDown(target, duration) : this.slideUp(target, duration)
     }
 
     slideToggle = (target: HTMLElement | string, duration = 500) => {
