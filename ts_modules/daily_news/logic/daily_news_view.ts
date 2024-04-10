@@ -1,8 +1,8 @@
 ///@VSCode:tuwrraphael.queryselector-completion: import html from "../module.html";
 import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
 import DailyNewsModule, { DailyNewsObject } from "./daily_news_module.js";
-import { Modal } from '../../../assets/libs/bootstrap5/bootstrap5.js';
 import Stubegru from '../../stubegru_core/logic/stubegru.js';
+import StubegruBackwardsCompatible, { Modal } from '../../stubegru_core/logic/stubegru_backwards_compatible.js';
 
 
 
@@ -29,10 +29,8 @@ export default class DailyNewsView {
             DailyNewsModule.controller.saveDailyNews();
         });
 
-        document.querySelectorAll('stubegruModule[data-name="daily_news"] input[type="checkbox"][data-toggle="toggle"]').forEach(function (ele) {
-            //@ts-expect-error
-            ele.bootstrapToggle(); //TODO: write nice ts interface for toggle init
-        });
+        //TODO: write nice ts interface for toggle init
+        //$('stubegruModule[data-name="daily_news"] input[type="checkbox"][data-toggle="toggle"]').bootstrapToggle(); 
 
     }
 
@@ -49,7 +47,7 @@ export default class DailyNewsView {
         d = new Date(d.getTime() + 1000 * 60 * 60 * 24 * 7); //Add 7 days
         Stubegru.dom.querySelectorAsInput('#daily_news_end').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
         //@ts-expect-error TODO: Use pretty TS interface for bootstrap toggles
-        Stubegru.dom.querySelectorAsInput("#daily_news_priority").bootstrapToggle("off");
+        $("#daily_news_priority").bootstrapToggle("off");
     }
 
     toggleMessageView() {
@@ -89,11 +87,11 @@ export default class DailyNewsView {
             <div class="card my-2">
                 <div class="card-header ${priorityClass}">
                     <a href="#daily_news_collapse_${currentNews.id}" data-bs-toggle="collapse" class="stubegru-module-title">
-                        <div class="row">
-                            <div class="col-10">
+                        <div class="row m-0">
+                            <div class="col-sm-10">
                                 ${currentNews.titel}
                             </div>
-                            <div class="col-2 d-flex justify-content-end">
+                            <div class="col-sm-2 d-flex justify-content-end">
                                 <i class="fas fa-caret-down"></i>
                             </div>
                         </div>
@@ -119,7 +117,7 @@ export default class DailyNewsView {
 
                     </div>
                     <div class="card-footer">
-                        <div class="row">
+                        <div class="row m-0">
                             <div class="col-12 d-flex justify-content-between">
                                 <small>Wird angezeigt bis: <b>${currentEnd}</b></small>
                                 <small> Zuletzt geändert: <b>${currentNews.erfassungsdatum}</b></small>
@@ -135,6 +133,7 @@ export default class DailyNewsView {
         //@ts-expect-error TODO: use new typescript stubegru-core API for updateAdminElements
         stubegru.modules.userUtils.updateAdminElements();
         this.registerButtonEvents();
+        StubegruBackwardsCompatible.replaceBootstrap5Classes();
     }
 
     registerButtonEvents(){

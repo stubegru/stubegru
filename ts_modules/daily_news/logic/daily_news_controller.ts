@@ -6,7 +6,7 @@ import DailyNewsModule from "./daily_news_module.js";
 
 export default class DailyNewsController {
     async init() {
-        this.refreshListView();
+        await this.refreshListView();
     }
 
     getDailyNews(dailyNewsId: string) {
@@ -27,7 +27,7 @@ export default class DailyNewsController {
     async refreshListView() {
         try {
             let list = await this.refreshDailyNewsList();
-            DailyNewsModule.view.renderListView(list);
+            await DailyNewsModule.view.renderListView(list);
         } catch (error) {
             AlertModule.alertError(error);
         }
