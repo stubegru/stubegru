@@ -1,95 +1,97 @@
-<div class="card">
-    <div class="card-header">
-        <a href="#collapse_daily_news" data-bs-toggle="collapse" class="stubegru-module-title">
-            <h4 class="mb-4"><i class="far fa-newspaper"></i> Aktuelles</h4>
-            <div class="stubegru-module-subtitle">Tagesaktuelle Nachrichten und wichtige Infos für Alle</div>
-        </a>
-    </div>
-    <div class="collapse show" id="collapse_daily_news">
-        <div class="card-body">
-
-            <div class="row">
-                <div class="col-md-12 d-flex justify-content-between">
-                    <button class="btn btn-success permission-DAILY_NEWS_WRITE permission-required" type="button" id="daily_news_create_button">
-                        <i class="fas fa-plus"></i> Neue Nachricht
-                    </button>
-
-                    <input id="daily_news_only_current_toggle" type="checkbox" data-toggle="toggle" data-offlabel="<i class='far fa-eye-slash'></i>&nbsp; Nur aktuelle anzeigen</button>" data-onlabel="<i class='far fa-eye'></i>&nbsp; Alle anzeigen</button>">
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <a href="#collapse_daily_news" data-bs-toggle="collapse" aria-expanded="true" class="stubegru-module-title">
+                <h4 class="mb-4"><i class="far fa-newspaper"></i> Aktuelles</h4>
+                <div class="stubegru-module-subtitle">Tagesaktuelle Nachrichten und wichtige Infos für Alle</div>
+            </a>
+        </div>
+        <div class="collapse in" id="collapse_daily_news">
+            <div class="card-body">
+    
+                <div class="row">
+                    <div class="col-md-12 d-flex justify-content-between">
+                        <button class="btn btn-success permission-DAILY_NEWS_WRITE permission-required" type="button" id="daily_news_create_button">
+                            <i class="fas fa-plus"></i> Neue Nachricht
+                        </button>
+    
+                        <input id="daily_news_only_current_toggle" type="checkbox" data-toggle="toggle" data-offlabel="<i class='far fa-eye-slash'></i>&nbsp; Nur aktuelle anzeigen</button>" data-onlabel="<i class='far fa-eye'></i>&nbsp; Alle anzeigen</button>">
+                    </div>
                 </div>
-            </div>
-            <hr>
-
-            <div id="daily_news_item_container_present">
-
-                <!-- Here are generated all the messages with an AJAX call -->
-            </div>
-            <div id="daily_news_item_container_future" style="display:none;">
-                <!-- Here are generated all the messages with an AJAX call -->
-            </div>
-
-
-
-            <!-- Neue Nachricht modal start-->
-            <div tabindex="-1" id="daily_news_modal" class="modal fade">
-                <form id="daily_news_modal_form">
-                    <input id="daily_news_id" type="hidden">
-                    <div class="modal-dialog" style="min-width:70%;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 id="daily_news_modal_title" class="modal-title">
-                                    <i class="far fa-newspaper"></i>
-                                    Nachricht bearbeiten
-                                </h4>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label class="form-label">Titel</label>
-                                    <input autocomplete="off" class="form-control" id="daily_news_title" required>
+                <hr>
+    
+                <div id="daily_news_item_container_present">
+    
+                    <!-- Here are generated all the messages with an AJAX call -->
+                </div>
+                <div id="daily_news_item_container_future" style="display:none;">
+                    <!-- Here are generated all the messages with an AJAX call -->
+                </div>
+    
+    
+    
+                <!-- Neue Nachricht modal start-->
+                <div tabindex="-1" id="daily_news_modal" class="modal fade">
+                    <form id="daily_news_modal_form">
+                        <input id="daily_news_id" type="hidden">
+                        <div class="modal-dialog" style="min-width:70%;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                                    <h4 id="daily_news_modal_title" class="modal-title">
+                                        <i class="far fa-newspaper"></i>
+                                        Nachricht bearbeiten
+                                    </h4>
                                 </div>
-                                <br>
-                                <div id="daily_news_text" style="display:block; margin-bottom:32px;">
-                                    <textarea id="dailyNewsEditor"></textarea>
-                                    <!-- txtEditor wird im Javascript zu RichTextEditor -->
-                                </div>
-                                <br>
-                                <div class="row">
-                                    <div class='col-sm-6'>
-                                        <div class="form-group">
-                                            <label class="form-label">Beginn der Anzeige</label>
-                                            <input autocomplete="off" type='date' id="daily_news_start" class="form-control" required />
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label class="form-label">Titel</label>
+                                        <input autocomplete="off" class="form-control" id="daily_news_title" required>
+                                    </div>
+                                    <br>
+                                    <div id="daily_news_text" style="display:block; margin-bottom:32px;">
+                                        <textarea id="dailyNewsEditor"></textarea>
+                                        <!-- txtEditor wird im Javascript zu RichTextEditor -->
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class='col-sm-6'>
+                                            <div class="form-group">
+                                                <label class="form-label">Beginn der Anzeige</label>
+                                                <input autocomplete="off" type='date' id="daily_news_start" class="form-control" required />
+                                            </div>
+                                        </div>
+                                        <div class='col-sm-6'>
+                                            <div class="form-group">
+                                                <label class="form-label">Ende der Anzeige</label>
+                                                <input autocomplete="off" id="daily_news_end" type='date' class="form-control" required />
+                                            </div>
+    
                                         </div>
                                     </div>
-                                    <div class='col-sm-6'>
-                                        <div class="form-group">
-                                            <label class="form-label">Ende der Anzeige</label>
-                                            <input autocomplete="off" id="daily_news_end" type='date' class="form-control" required />
-                                        </div>
-
-                                    </div>
+    
+    
                                 </div>
-
-
-                            </div>
-                            <div class="modal-footer stubegru-modal-footer-wide">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <span><b>Priorität:&nbsp;</b></span>
-                                        <input type="checkbox" data-toggle="toggle" id="daily_news_priority" data-on="Wichtig" data-off="Normal" data-width="100" data-height="40" data-onstyle="danger">
-                                    </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <button class="btn btn-light mx-2" data-bs-dismiss="modal" type="button"><i class="fas fa-times"></i>&nbsp; Abbrechen</button>
-                                        <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i>&nbsp; Speichern</button>
+                                <div class="modal-footer stubegru-modal-footer-wide">
+                                    <div class="row">
+                                        <div class="col-sm-6 text-left">
+                                            <span><b>Priorität:&nbsp;</b></span>
+                                            <input type="checkbox" data-toggle="toggle" id="daily_news_priority" data-on="Wichtig" data-off="Normal" data-width="100" data-height="40" data-onstyle="danger">
+                                        </div>
+                                        <div class="col-sm-6 d-flex justify-content-end">
+                                            <button class="btn btn-light mx-2" data-bs-dismiss="modal" type="button"><i class="fas fa-times"></i>&nbsp; Abbrechen</button>
+                                            <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i>&nbsp; Speichern</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <!--Ende des Neue-Nachricht Modals -->
+    
+    
             </div>
-            <!--Ende des Neue-Nachricht Modals -->
-
-
         </div>
     </div>
 </div>
