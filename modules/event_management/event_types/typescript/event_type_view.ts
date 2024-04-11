@@ -102,6 +102,8 @@ class EventTypeView {
         for (const option of selectElement) {
             option.selected = (values.indexOf(option.value) != -1);
         }
+        //@ts-expect-error | Refresh display of multi select options
+        selectElement.loadOptions();
     }
 
     static setCheckboxValues(selector: string, values: string[]) {
