@@ -4,7 +4,7 @@ const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Fr
 refreshAbsenceView(); //Init absence view
 setInterval(refreshAbsenceView, 1000 * 60 * 15); //Refresh view every 15 minutes
 
-$('[data-toggle="tooltip"]').tooltip();
+$('[data-toggle="tooltip"]').tooltip(); 
 
 //toggle future table
 $("#absence_view_future_toggle").on("change", function () {

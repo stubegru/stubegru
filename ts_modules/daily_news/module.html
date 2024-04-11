@@ -8,28 +8,28 @@
         </div>
         <div class="collapse in" id="collapse_daily_news">
             <div class="card-body">
-    
+
                 <div class="row">
                     <div class="col-md-12 d-flex justify-content-between">
                         <button class="btn btn-success permission-DAILY_NEWS_WRITE permission-required" type="button" id="daily_news_create_button">
                             <i class="fas fa-plus"></i> Neue Nachricht
                         </button>
-    
-                        <input id="daily_news_only_current_toggle" type="checkbox" data-toggle="toggle" data-offlabel="<i class='far fa-eye-slash'></i>&nbsp; Nur aktuelle anzeigen</button>" data-onlabel="<i class='far fa-eye'></i>&nbsp; Alle anzeigen</button>">
+
+                        <input id="daily_news_only_current_toggle" type="checkbox" data-toggle="toggle" data-off="<i class='fas fa-clock'></i>&nbsp; Nur aktuelle anzeigen</button>" data-on="<i class='fas fa-check-double'></i>&nbsp; Alle anzeigen</button>" data-width="200px">
                     </div>
                 </div>
                 <hr>
-    
+
                 <div id="daily_news_item_container_present">
-    
+
                     <!-- Here are generated all the messages with an AJAX call -->
                 </div>
                 <div id="daily_news_item_container_future" style="display:none;">
                     <!-- Here are generated all the messages with an AJAX call -->
                 </div>
-    
-    
-    
+
+
+
                 <!-- Neue Nachricht modal start-->
                 <div tabindex="-1" id="daily_news_modal" class="modal fade">
                     <form id="daily_news_modal_form">
@@ -66,17 +66,17 @@
                                                 <label class="form-label">Ende der Anzeige</label>
                                                 <input autocomplete="off" id="daily_news_end" type='date' class="form-control" required />
                                             </div>
-    
+
                                         </div>
                                     </div>
-    
-    
+
+
                                 </div>
                                 <div class="modal-footer stubegru-modal-footer-wide">
                                     <div class="row">
                                         <div class="col-sm-6 text-left">
                                             <span><b>Priorität:&nbsp;</b></span>
-                                            <input type="checkbox" data-toggle="toggle" id="daily_news_priority" data-on="Wichtig" data-off="Normal" data-width="100" data-height="40" data-onstyle="danger">
+                                            <input type="checkbox" data-toggle="toggle" id="daily_news_priority" data-on="Wichtig" data-off="Normal" data-width="100px" data-onstyle="danger">
                                         </div>
                                         <div class="col-sm-6 d-flex justify-content-end">
                                             <button class="btn btn-light mx-2" data-bs-dismiss="modal" type="button"><i class="fas fa-times"></i>&nbsp; Abbrechen</button>
@@ -89,8 +89,7 @@
                     </form>
                 </div>
                 <!--Ende des Neue-Nachricht Modals -->
-    
-    
+
             </div>
         </div>
     </div>
