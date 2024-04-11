@@ -4,4 +4,3 @@ env.php
 custom/*
 custom
 *.log
-ts_modules/**/*.js
