@@ -20,7 +20,8 @@ stubegru.modules.customEvents.trigger = function (eventId, data) {
                 resolve(result);
             } catch (error) { reject(error); }
         } else {
-            reject(`[Custom Events] Could not find event with id "${eventId}". Please check your custom_event_config.js file.`)
+            console.warn(`[Custom Events] Could not find event with id "${eventId}". Please check your custom_event_config.js file.`);
+            resolve();
         }
     });
 }

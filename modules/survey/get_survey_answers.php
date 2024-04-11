@@ -40,9 +40,10 @@ $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($resultList as $questionData) {
     $questionId = $questionData["id"];
     $questionTitle = $questionData["title"];
+    $questionType = $questionData["type"];
 
     $csvHeaderList[$csvHeaderListIndex] = $questionTitle; //Add questions title to csvHeader
-    $questionObjectList[$questionId] = array("title" => $questionTitle, "id" => $questionId, "csvIndex" => $csvHeaderListIndex); //generate reference from questionId to csvHeaderIndex
+    $questionObjectList[$questionId] = array("title" => $questionTitle, "id" => $questionId, "csvIndex" => $csvHeaderListIndex, "type" => $questionType); //generate reference from questionId to csvHeaderIndex
     $csvHeaderListIndex++;
 }
 $csvColumnCount = $csvHeaderListIndex;
@@ -57,7 +58,13 @@ $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($resultList as $answerData) {
     $userHash = $answerData["userHash"];
     $questionId = $answerData["questionId"];
+    $questionType = $questionObjectList[$questionId]["type"];
     $value = $answerData["value"];
+
+    //If question type is a toggle => convert 1/0 to Ja/Nein
+    if ($questionType == "toggle") {
+        $value = ($value == 1) ? "Ja" : "Nein";
+    }
 
     if (empty($userList[$userHash])) {
         $userList[$userHash] = array_fill(0, $csvColumnCount, ""); //Init new user row

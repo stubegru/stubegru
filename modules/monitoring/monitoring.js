@@ -23,6 +23,8 @@ async function initMonitoring() {
 
 
 $("#monitoringSubmitButton").on("click", async () => {
+    await stubegru.modules.customEvents.trigger("preMonitoringSubmit");
+
     if (await stubegru.modules.survey.submitSurvey(monitoringTemplatePath)) {
         $("#monitoringModal").modal("hide");
     }
