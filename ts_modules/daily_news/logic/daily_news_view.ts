@@ -3,6 +3,7 @@ import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
 import DailyNewsModule, { DailyNewsObject } from "./daily_news_module.js";
 import Stubegru from '../../stubegru_core/logic/stubegru.js';
 import StubegruBackwardsCompatible, { Modal } from '../../stubegru_core/logic/stubegru_backwards_compatible.js';
+import Toggle from '../../toggles/toggle.js';
 
 
 
@@ -11,6 +12,8 @@ export default class DailyNewsView {
 
     richTextEditor: ClassicEditor;
     modal: Modal;
+    onlyCurrentToggle: Toggle;
+    priorityToggle: Toggle;
 
     async init() {
         const editorPlaceholder = Stubegru.dom.querySelector('#daily_news_text');
@@ -19,9 +22,10 @@ export default class DailyNewsView {
 
         this.modal = new Modal('#daily_news_modal');
         this.modal.addEventListener("show.bs.modal", this.resetModalForm);
-        
-        //@ts-expect-error
-        $("#daily_news_only_current_toggle").on("change", this.updateShowCurrentState);
+
+        this.priorityToggle = new Toggle("#daily_news_priority");
+        this.onlyCurrentToggle = new Toggle("#daily_news_only_current_toggle");
+        this.onlyCurrentToggle.addEventListener("change", this.updateShowCurrentState);
 
         Stubegru.dom.querySelector("#daily_news_create_button").addEventListener("click", DailyNewsModule.controller.showDailyNewsModalForCreate);
         Stubegru.dom.querySelector("#daily_news_modal_form").addEventListener("submit", (event) => {
@@ -34,8 +38,8 @@ export default class DailyNewsView {
 
     }
 
-    updateShowCurrentState() {
-        let state = Stubegru.dom.querySelectorAsInput("#daily_news_only_current_toggle").checked;
+    updateShowCurrentState = () => {
+        let state = this.onlyCurrentToggle.getState();
         Stubegru.dom.slideToState("#daily_news_item_container_future", state);
     }
 
@@ -46,8 +50,7 @@ export default class DailyNewsView {
         Stubegru.dom.querySelectorAsInput('#daily_news_start').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
         d = new Date(d.getTime() + 1000 * 60 * 60 * 24 * 7); //Add 7 days
         Stubegru.dom.querySelectorAsInput('#daily_news_end').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
-        //@ts-expect-error TODO: Use pretty TS interface for bootstrap toggles
-        $("#daily_news_priority").bootstrapToggle("off");
+        this.onlyCurrentToggle.setState(false);
     }
 
     toggleMessageView() {
@@ -63,13 +66,12 @@ export default class DailyNewsView {
         }
     }
 
-    setFormData(dailyNews: DailyNewsObject) {
+    setFormData = (dailyNews: DailyNewsObject) => {
         Stubegru.dom.querySelectorAsInput("#daily_news_id").value = dailyNews.id;
         Stubegru.dom.querySelectorAsInput("#daily_news_title").value = dailyNews.titel;
         Stubegru.dom.querySelectorAsInput("#daily_news_start").value = dailyNews.beginn;
         Stubegru.dom.querySelectorAsInput("#daily_news_end").value = dailyNews.ende;
-        //@ts-expect-error TODO: Use pretty TS interface for bootstrap toggles
-        $("#daily_news_priority").bootstrapToggle(dailyNews.prioritaet == 1 ? "on" : "off");
+        this.priorityToggle.setState(dailyNews.prioritaet == 1);
         this.richTextEditor.setData(dailyNews.inhalt);
     }
 
@@ -136,29 +138,29 @@ export default class DailyNewsView {
         StubegruBackwardsCompatible.replaceBootstrap5Classes();
     }
 
-    registerButtonEvents(){
+    registerButtonEvents() {
         Stubegru.dom.querySelectorAll(".daily-news-delete-button").forEach(elem => {
             const dailyNewsId = elem.getAttribute("data-daily-news-id");
-            elem.addEventListener("click",()=>DailyNewsModule.controller.deleteDailyNews(dailyNewsId));
+            elem.addEventListener("click", () => DailyNewsModule.controller.deleteDailyNews(dailyNewsId));
         });
         Stubegru.dom.querySelectorAll(".daily-news-edit-button").forEach(elem => {
             const dailyNewsId = elem.getAttribute("data-daily-news-id");
-            elem.addEventListener("click",()=>DailyNewsModule.controller.showDailyNewsModalForUpdate(dailyNewsId));
+            elem.addEventListener("click", () => DailyNewsModule.controller.showDailyNewsModalForUpdate(dailyNewsId));
         });
         Stubegru.dom.querySelectorAll(".daily-news-to-wiki-button").forEach(elem => {
             const dailyNewsId = elem.getAttribute("data-daily-news-id");
-            elem.addEventListener("click",()=>DailyNewsModule.controller.moveDailyNewsToWiki(dailyNewsId));
+            elem.addEventListener("click", () => DailyNewsModule.controller.moveDailyNewsToWiki(dailyNewsId));
         });
     }
 
-    getFormData(): DailyNewsObject {
+    getFormData = (): DailyNewsObject => {
         return {
             id: Stubegru.dom.querySelectorAsInput('#daily_news_id').value,
             titel: Stubegru.dom.querySelectorAsInput('#daily_news_title').value,
             inhalt: DailyNewsModule.view.richTextEditor.getData(),
             beginn: Stubegru.dom.querySelectorAsInput('#daily_news_start').value,
             ende: Stubegru.dom.querySelectorAsInput('#daily_news_end').value,
-            prioritaet: Stubegru.dom.querySelectorAsInput('#daily_news_priority').checked ? 1 : 0,
+            prioritaet: this.priorityToggle.getState() ? 1 : 0,
         }
     }
 }
