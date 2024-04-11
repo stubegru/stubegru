@@ -18,10 +18,10 @@ export default class DailyNewsView {
         //CKEDITOR.replace('dailyNewsEditor', { height: "200px", extraPlugins: "wikiword" }); //Richtexteditor initialisieren
 
         this.modal = new Modal('#daily_news_modal');
-        Stubegru.dom.querySelector("#daily_news_modal").addEventListener("hidden.bs.modal", this.resetModalForm);
-        this.resetModalForm();
+        this.modal.addEventListener("show.bs.modal", this.resetModalForm);
         
-        Stubegru.dom.querySelector("#daily_news_only_current_toggle").addEventListener("change", this.updateShowCurrentState);
+        //@ts-expect-error
+        $("#daily_news_only_current_toggle").on("change", this.updateShowCurrentState);
 
         Stubegru.dom.querySelector("#daily_news_create_button").addEventListener("click", DailyNewsModule.controller.showDailyNewsModalForCreate);
         Stubegru.dom.querySelector("#daily_news_modal_form").addEventListener("submit", (event) => {
@@ -69,7 +69,7 @@ export default class DailyNewsView {
         Stubegru.dom.querySelectorAsInput("#daily_news_start").value = dailyNews.beginn;
         Stubegru.dom.querySelectorAsInput("#daily_news_end").value = dailyNews.ende;
         //@ts-expect-error TODO: Use pretty TS interface for bootstrap toggles
-        Stubegru.dom.querySelectorAsInput("#daily_news_priority").bootstrapToggle(dailyNews.prioritaet == 1 ? "on" : "off");
+        $("#daily_news_priority").bootstrapToggle(dailyNews.prioritaet == 1 ? "on" : "off");
         this.richTextEditor.setData(dailyNews.inhalt);
     }
 
@@ -88,8 +88,8 @@ export default class DailyNewsView {
                 <div class="card-header ${priorityClass}">
                     <a href="#daily_news_collapse_${currentNews.id}" data-bs-toggle="collapse" class="stubegru-module-title">
                         <div class="row m-0">
-                            <div class="col-sm-10">
-                                ${currentNews.titel}
+                            <div class="col-sm-10 ${priorityClass}">
+                                <b>${currentNews.titel}</b>
                             </div>
                             <div class="col-sm-2 d-flex justify-content-end">
                                 <i class="fas fa-caret-down"></i>

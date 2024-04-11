@@ -73,9 +73,9 @@ export default class DailyNewsController {
 
     async showDailyNewsModalForUpdate(dailyNewsId: string) {
         try {
+            DailyNewsModule.view.modal.show();
             let dailyNews = this.getDailyNews(dailyNewsId);
             DailyNewsModule.view.setFormData(dailyNews);
-            DailyNewsModule.view.modal.show();
         }
         catch (error) { AlertModule.alertError(error); }
     }

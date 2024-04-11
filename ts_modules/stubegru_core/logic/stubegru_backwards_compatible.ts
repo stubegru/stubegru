@@ -29,7 +29,7 @@ export default class StubegruBackwardsCompatible {
             const replace = replacesDataAttributes[search];
             Stubegru.dom.querySelectorAll(`[${search}]`).forEach(elem => {
                 let attrValue = elem.getAttribute(search);
-                elem.setAttribute(replace,attrValue);
+                elem.setAttribute(replace, attrValue);
             });
         }
 
@@ -53,4 +53,11 @@ export class Modal {
 
     //@ts-expect-error
     toggle() { $(this.selector).modal("toggle"); }
+
+    addEventListener(eventId: ModalEvent, callback: Function) {
+        //@ts-expect-error
+        $(this.selector).on(eventId, callback);
+    }
 }
+
+type ModalEvent = "show.bs.modal" | "shown.bs.modal" | "hide.bs.modal" | "hidden.bs.modal" | "loaded.bs.modal";
