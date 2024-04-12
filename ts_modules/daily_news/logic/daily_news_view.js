@@ -2,7 +2,7 @@
 import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js';
 import DailyNewsModule from "./daily_news_module.js";
 import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
-import StubegruBackwardsCompatible, { Modal } from '../../../components/stubegru_core/logic/stubegru_backwards_compatible.js';
+import { Modal } from '../../../components/stubegru_core/logic/stubegru_backwards_compatible.js';
 import Toggle from '../../../components/toggles/toggle.js';
 export default class DailyNewsView {
     richTextEditor;
@@ -63,15 +63,15 @@ export default class DailyNewsView {
     async renderListView(dailyNewsList) {
         let html = { present: "", future: "" };
         for (let currentNews of dailyNewsList) {
-            let priorityClass = currentNews.prioritaet == 1 ? "daily-news-important" : "card-default";
+            let priorityClass = currentNews.prioritaet == 1 ? "daily-news-important" : "";
             let container = new Date(currentNews.beginn).getTime() > new Date().getTime() ? "future" : "present";
             let currentEnd = Stubegru.utils.formatDate(currentNews.ende, "DD.MM.YYYY");
             //@ts-expect-error
             const text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO: refactor handle WIKIWORDS!!!
             html[container] += `
-            <div class="card my-2">
-                <div class="card-header ${priorityClass}">
-                    <a href="#daily_news_collapse_${currentNews.id}" data-bs-toggle="collapse" class="stubegru-module-title">
+            <div class="panel panel-default my-2">
+                <div class="panel-heading ${priorityClass}">
+                    <a href="#daily_news_collapse_${currentNews.id}" data-toggle="collapse" class="stubegru-module-title">
                         <div class="row m-0">
                             <div class="col-sm-10 ${priorityClass}">
                                 <b>${currentNews.titel}</b>
@@ -83,7 +83,7 @@ export default class DailyNewsView {
                     </a>
                 </div>
                 <div id="daily_news_collapse_${currentNews.id}" class="collapse">
-                    <div class="card-body">
+                    <div class="panel-body">
                         <p>${currentNews.inhalt}</p>
                         <hr>
                         <div class="row">
@@ -101,7 +101,7 @@ export default class DailyNewsView {
                         </div>
 
                     </div>
-                    <div class="card-footer">
+                    <div class="panel-footer">
                         <div class="row m-0">
                             <div class="col-12 d-flex justify-content-between">
                                 <small>Wird angezeigt bis: <b>${currentEnd}</b></small>
@@ -117,7 +117,6 @@ export default class DailyNewsView {
         //@ts-expect-error TODO: use new typescript stubegru-core API for updateAdminElements
         stubegru.modules.userUtils.updateAdminElements();
         this.registerButtonEvents();
-        StubegruBackwardsCompatible.replaceBootstrap5Classes();
     }
     registerButtonEvents() {
         Stubegru.dom.querySelectorAll(".daily-news-delete-button").forEach(elem => {

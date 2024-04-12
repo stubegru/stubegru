@@ -1,4 +1,3 @@
-import StubegruBackwardsCompatible from "../../../components/stubegru_core/logic/stubegru_backwards_compatible.js";
 import DailyNewsController from "./daily_news_controller.js";
 import DailyNewsService from "./daily_news_service.js";
 import DailyNewsView from "./daily_news_view.js";
@@ -16,7 +15,6 @@ class DailyNewsModule {
         DailyNewsModule.view = new DailyNewsView();
         await DailyNewsModule.view.init();
         await DailyNewsModule.controller.init();
-        StubegruBackwardsCompatible.replaceBootstrap5Classes();
     }
 }
 export default DailyNewsModule;

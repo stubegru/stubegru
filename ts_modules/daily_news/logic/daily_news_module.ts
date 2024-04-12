@@ -1,4 +1,3 @@
-import StubegruBackwardsCompatible from "../../../components/stubegru_core/logic/stubegru_backwards_compatible.js";
 import { StringIndexedList } from "../../../components/stubegru_core/logic/stubegru_interfaces.js";
 import DailyNewsController from "./daily_news_controller.js";
 import DailyNewsService from "./daily_news_service.js";
@@ -22,7 +21,6 @@ export default class DailyNewsModule {
 
         await DailyNewsModule.view.init();
         await DailyNewsModule.controller.init();
-        StubegruBackwardsCompatible.replaceBootstrap5Classes();
     }
 }
 
