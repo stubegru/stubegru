@@ -2,7 +2,7 @@
 import ClassicEditor from '../../../components/ckeditor/v5/ckeditor.js'
 import DailyNewsModule, { DailyNewsObject } from "./daily_news_module.js";
 import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
-import { Modal } from '../../../components/stubegru_core/logic/stubegru_backwards_compatible.js';
+import { Modal } from '../../../components/bootstrap/v3/ts_wrapper.js';
 import Toggle from '../../../components/toggles/toggle.js';
 
 
