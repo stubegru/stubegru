@@ -3,7 +3,6 @@ import Stubegru from "../stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../stubegru_core/logic/stubegru_fetch.js";
 
 
-const TOAST_LIVETIME = 5000 //in milliseconds
 const swalToBootstrapClass = {
     "success": "success",
     "info": "info",
@@ -13,8 +12,11 @@ const swalToBootstrapClass = {
 
 
 export default class Alert {
+    
+    static TOAST_LIVETIME = 5000 //in milliseconds
+    static TOAST_ID = 0;
 
-    static async init(){
+    static async init() {
         await Stubegru.dom.loadHtml("components/alert/module.html");
     }
 
@@ -45,18 +47,19 @@ export default class Alert {
     static async alert(options: StubegruAlertOptions) {
         options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
 
+        let swalOptions: SweetAlertOptions = {
+            html: options.text || "",
+            title: options.title || "Info",
+            icon: options.type || "info",
+        }
+
         if (options.mode == "alert") {
-            let swalOptions: SweetAlertOptions = {
-                html: options.text || "",
-                title: options.title || "Info",
-                icon: options.type || "info",
-            }
             await SweetAlert.fire(swalOptions);
         }
 
         else if (options.mode == "toast") {
-            options.type = swalToBootstrapClass[options.type];
-            Alert.showToast(options);
+            swalOptions.icon = swalToBootstrapClass[swalOptions.icon];
+            Alert.showToast(swalOptions);
         }
     }
 
@@ -64,7 +67,7 @@ export default class Alert {
         return await SweetAlert.fire({
             title: title,
             html: text,
-            icon : "error",
+            icon: "error",
             confirmButtonText: confirmButtonText,
             showCancelButton: true,
             cancelButtonText: "Abbrechen",
@@ -72,21 +75,19 @@ export default class Alert {
     }
 
 
-    static showToast(options) {
-        // let html = `<div class="alert alert-${options.type} alert-dismissible" role="alert" style="display:none;">
-        //                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        //                     <span aria-hidden="true">×</span>
-        //                 </button>
-        //                 <strong>${options.title}</strong>
-        //                 ${options.text}
-        //             </div>`;
-        // let jQueryHtml = $(html);
-        // $("#stubegruToastsContainer").append(jQueryHtml);
-        // jQueryHtml.slideDown();
-        // setTimeout(() => {
-        //     jQueryHtml.remove();
-        //     delete jQueryHtml;
-        // }, TOAST_LIVETIME);
+    static showToast(options:SweetAlertOptions) {
+        let toastId = `alert_toast_${Alert.TOAST_ID++}`;
+        let html = `<div class="alert alert-${options.icon} alert-dismissible" role="alert" id="${toastId}" style="display:none;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <strong>${options.title}</strong>
+                        ${options.html}
+                    </div>`;
+
+        Stubegru.dom.querySelector("#stubegruToastsContainer").insertAdjacentHTML("beforeend", html);
+        Stubegru.dom.slideDown(`#${toastId}`);
+        setTimeout(() => Stubegru.dom.querySelector(`#${toastId}`).remove(), Alert.TOAST_LIVETIME);
     }
 
 }
