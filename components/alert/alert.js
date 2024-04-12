@@ -1,4 +1,4 @@
-import SweetAlert from "../../assets/libs/sweetalert2/sweetalert2.js";
+import SweetAlert from "../sweetalert2/sweetalert2.js";
 import Stubegru from "../stubegru_core/logic/stubegru.js";
 const swalToBootstrapClass = {
     "success": "success",

@@ -1,4 +1,4 @@
-import SweetAlert, { SweetAlertIcon, SweetAlertOptions, SweetAlertResult } from "../../assets/libs/sweetalert2/sweetalert2.js"
+import SweetAlert, { SweetAlertIcon, SweetAlertOptions, SweetAlertResult } from "../sweetalert2/sweetalert2.js"
 import Stubegru from "../stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../stubegru_core/logic/stubegru_fetch.js";
 

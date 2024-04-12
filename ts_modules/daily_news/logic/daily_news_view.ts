@@ -1,5 +1,5 @@
 ///@VSCode:tuwrraphael.queryselector-completion: import html from "../module.html";
-import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js'
+import ClassicEditor from '../../../components/ckeditor/v5/ckeditor.js'
 import DailyNewsModule, { DailyNewsObject } from "./daily_news_module.js";
 import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../../components/stubegru_core/logic/stubegru_backwards_compatible.js';
