@@ -1,22 +1,19 @@
+import Stubegru from "./stubegru.js";
 export default class StubegruDom {
-
-
     /**
      * Selects an Element from the DOM as HTMLInputElement
      */
-    querySelectorAsInput(selector: string): HTMLInputElement {
-        return document.querySelector(selector) as HTMLInputElement;
+    querySelectorAsInput(selector) {
+        return document.querySelector(selector);
     }
-    querySelector(selector: string): HTMLElement {
-        return document.querySelector(selector) as HTMLElement;
+    querySelector(selector) {
+        return document.querySelector(selector);
     }
-    querySelectorAll(selector: string) {
-        return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
+    querySelectorAll(selector) {
+        return document.querySelectorAll(selector);
     }
-
-    slideUp = (target: HTMLElement | string, duration = 500) => {
+    slideUp = (target, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
-
         elem.style.transitionProperty = 'height, margin, padding';
         elem.style.transitionDuration = duration + 'ms';
         elem.style.boxSizing = 'border-box';
@@ -40,14 +37,13 @@ export default class StubegruDom {
             elem.style.removeProperty('transition-property');
             //alert("!");
         }, duration);
-    }
-
-    slideDown = (target: HTMLElement | string, duration = 500) => {
+    };
+    slideDown = (target, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
-
         elem.style.removeProperty('display');
         let display = window.getComputedStyle(elem).display;
-        if (display === 'none') display = 'block';
+        if (display === 'none')
+            display = 'block';
         elem.style.display = display;
         let height = elem.offsetHeight;
         elem.style.overflow = 'hidden';
@@ -71,21 +67,39 @@ export default class StubegruDom {
             elem.style.removeProperty('transition-duration');
             elem.style.removeProperty('transition-property');
         }, duration);
-    }
-
-    slideToState = (target: HTMLElement | string, state:boolean, duration = 500) => {
-        return state ? this.slideDown(target, duration) : this.slideUp(target, duration)
-    }
-
-    slideToggle = (target: HTMLElement | string, duration = 500) => {
+    };
+    slideToState = (target, state, duration = 500) => {
+        return state ? this.slideDown(target, duration) : this.slideUp(target, duration);
+    };
+    slideToggle = (target, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
-        
         if (window.getComputedStyle(elem).display === 'none') {
             return this.slideDown(elem, duration);
-        } else {
+        }
+        else {
             return this.slideUp(elem, duration);
         }
+    };
+    /**
+     * Load remote HTML and append to module's DOM element
+     * @param path Path to HTML file relative to BASE_URL/${path}
+     * @param selector Selector of the element to append the loaded html, @default "body"
+     */
+    async loadHtml(path, selector = "body") {
+        let html = await Stubegru.fetch.getText(path);
+        this.querySelector(selector).insertAdjacentHTML("beforeend", html);
     }
-
-    
+    /**
+     * Load remote CSS and append to current document
+     * @param path Path to HTML file relative to BASE_URL/${path}
+     */
+    async loadCss(path) {
+        return new Promise(function (resolve, reject) {
+            let cssElem = document.createElement("link");
+            cssElem.href = `${Stubegru.constants.BASE_URL}/${path}`;
+            cssElem.rel = "stylesheet";
+            cssElem.addEventListener('load', resolve);
+            document.head.appendChild(cssElem);
+        });
+    }
 }

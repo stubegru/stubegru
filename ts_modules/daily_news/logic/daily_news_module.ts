@@ -1,5 +1,5 @@
-import StubegruBackwardsCompatible from "../../stubegru_core/logic/stubegru_backwards_compatible.js";
-import { StringIndexedList } from "../../stubegru_core/logic/stubegru_interfaces.js";
+import StubegruBackwardsCompatible from "../../../components/stubegru_core/logic/stubegru_backwards_compatible.js";
+import { StringIndexedList } from "../../../components/stubegru_core/logic/stubegru_interfaces.js";
 import DailyNewsController from "./daily_news_controller.js";
 import DailyNewsService from "./daily_news_service.js";
 import DailyNewsView from "./daily_news_view.js";

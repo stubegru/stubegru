@@ -1,9 +1,9 @@
 ///@VSCode:tuwrraphael.queryselector-completion: import html from "../module.html";
 import ClassicEditor from '../../../assets/libs/ckeditor5/ckeditor.js';
 import DailyNewsModule from "./daily_news_module.js";
-import Stubegru from '../../stubegru_core/logic/stubegru.js';
-import StubegruBackwardsCompatible, { Modal } from '../../stubegru_core/logic/stubegru_backwards_compatible.js';
-import Toggle from '../../toggles/toggle.js';
+import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
+import StubegruBackwardsCompatible, { Modal } from '../../../components/stubegru_core/logic/stubegru_backwards_compatible.js';
+import Toggle from '../../../components/toggles/toggle.js';
 export default class DailyNewsView {
     richTextEditor;
     modal;

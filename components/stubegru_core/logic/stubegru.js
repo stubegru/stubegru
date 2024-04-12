@@ -11,6 +11,8 @@ export default class Stubegru {
         Stubegru.utils = new StubegruUtils();
         Stubegru.fetch = new StubegruFetch();
         Stubegru.constants = await Stubegru.utils.fetchConstants();
+        Stubegru.dom.loadCss("components/stubegru_core/stubegru.css");
+        Stubegru.dom.loadCss("components/stubegru_core/stubegru_backwards_compatible.css");
     }
 }
 await Stubegru.init();

@@ -1,5 +1,5 @@
-import AlertModule from "../../alert/alert_module.js";
-import Stubegru from "../../stubegru_core/logic/stubegru.js";
+import Alert from "../../../components/alert/alert.js";
+import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
 import DailyNewsModule from "./daily_news_module.js";
 export default class DailyNewsController {
     async init() {
@@ -15,7 +15,7 @@ export default class DailyNewsController {
             return list;
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
     async refreshListView() {
@@ -24,7 +24,7 @@ export default class DailyNewsController {
             await DailyNewsModule.view.renderListView(list);
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
     async saveDailyNews() {
@@ -34,38 +34,38 @@ export default class DailyNewsController {
             resp = await DailyNewsModule.service.update(data);
             DailyNewsModule.view.modal.hide();
             DailyNewsModule.controller.refreshListView();
-            AlertModule.alertResp(resp);
+            Alert.alertResp(resp);
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
     async deleteDailyNews(dailyNewsId) {
         let resp;
         try {
-            let confirmResp = await AlertModule.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
+            let confirmResp = await Alert.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
             if (confirmResp.isConfirmed) {
                 resp = await DailyNewsModule.service.delete(dailyNewsId);
                 DailyNewsModule.controller.refreshListView();
-                AlertModule.alertResp(resp);
+                Alert.alertResp(resp);
             }
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
     async moveDailyNewsToWiki(dailyNewsId) {
         let resp;
         try {
-            let confirmResp = await AlertModule.deleteConfirm("In Wiki Artikel umwandeln?", "Soll diese Tagesaktuelle Info wirklich in einen Wiki Artikel umgewandelt werden? Die Tagesaktuelle Info wird dadurch gelöscht.", "Umwandeln");
+            let confirmResp = await Alert.deleteConfirm("In Wiki Artikel umwandeln?", "Soll diese Tagesaktuelle Info wirklich in einen Wiki Artikel umgewandelt werden? Die Tagesaktuelle Info wird dadurch gelöscht.", "Umwandeln");
             if (confirmResp.isConfirmed) {
                 resp = await DailyNewsModule.service.moveToWiki(dailyNewsId);
                 DailyNewsModule.controller.refreshListView();
-                AlertModule.alertResp(resp);
+                Alert.alertResp(resp);
             }
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
     async showDailyNewsModalForUpdate(dailyNewsId) {
@@ -75,7 +75,7 @@ export default class DailyNewsController {
             DailyNewsModule.view.setFormData(dailyNews);
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
     async showDailyNewsModalForCreate() {
@@ -84,7 +84,7 @@ export default class DailyNewsController {
             DailyNewsModule.view.modal.show();
         }
         catch (error) {
-            AlertModule.alertError(error);
+            Alert.alertError(error);
         }
     }
 }

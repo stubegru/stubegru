@@ -4,5 +4,5 @@
     "module": "esnext", /* Specify what module code is generated. */
     "skipLibCheck": true, /* Skip type checking all .d.ts files. */
   },
-  "include": ["ts_modules"]
+  "include": ["ts_modules", "components"]
 }
