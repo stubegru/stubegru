@@ -18,7 +18,7 @@ function handleMailingOnCreate($eventInstanceId)
     //Trigger Mail for PR
     $prRecipients = buildRecipients($eventInstance["assigneesPR"], $userList);
     triggerEventMail("event_create_pr.html", $prRecipients, $eventInstance, $userList, "CONFIRMED");
-    scheduleReminderMail("event_reminder_pr.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderPR",  $eventInstance["reminderPR"]);
+    scheduleReminderMail("event_reminder_pr.html", $prRecipients, $eventInstance, $userList, "eventInstanceReminderPR",  $eventInstance["reminderPR"]);
 }
 
 function handleMailingOnCancel($eventInstanceId)
