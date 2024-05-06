@@ -12,10 +12,9 @@ class EventInstanceView {
         }
 
         //insert userLists
-        const allUsersList = await EventInstanceController.stubegru.modules.userUtils.getAllUsers();
+        const allUsersList = await EventInstanceController.stubegru.modules.userUtils.getUserByPermission("EVENT_MGMT_ASSIGNEE");
         document.querySelectorAll(`#eventInstanceModalForm select[data-user="all"]`).forEach((elem: HTMLSelectElement) => {
-            for (const userId in allUsersList) {
-                const user = allUsersList[userId];
+            for (const user of allUsersList) {
                 elem.add(new Option(user.name, user.id));
             }
         });
@@ -54,11 +53,11 @@ class EventInstanceView {
 
     private static async refreshEventTypeSelect() {
         const eventTypeList = await EventTypeController.getEventTypeList();
+        const eventTypeArray = Object.values(eventTypeList).sort((x, y) => ((x.name < y.name) ? -1 : ((x.name > y.name) ? 1 : 0))); //Sort items ASC by name
         const categorySelect = document.querySelector(`#eventInstanceModalForm select[name="category"]`) as HTMLSelectElement;
         categorySelect.innerHTML = ""; //Clear last options
         categorySelect.add(new Option("Keine Angabe", ""));
-        for (const eventTypeId in eventTypeList) {
-            const eventType = eventTypeList[eventTypeId];
+        for (const eventType of eventTypeArray) {
             categorySelect.add(new Option(eventType.name, eventType.id));
         }
         categorySelect.addEventListener("change", function () {

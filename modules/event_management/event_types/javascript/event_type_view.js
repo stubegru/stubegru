@@ -8,10 +8,9 @@ class EventTypeView {
             optionsList.forEach(option => selectElement.add(new Option(option.name, option.value)));
         }
         //insert userLists
-        const allUsersList = await EventTypeController.stubegru.modules.userUtils.getAllUsers();
+        const allUsersList = await EventTypeController.stubegru.modules.userUtils.getUserByPermission("EVENT_MGMT_ASSIGNEE");
         document.querySelectorAll(`#eventTypeModalForm select[data-user="all"]`).forEach((elem) => {
-            for (const userId in allUsersList) {
-                const user = allUsersList[userId];
+            for (const user of allUsersList) {
                 elem.add(new Option(user.name, user.id));
             }
         });

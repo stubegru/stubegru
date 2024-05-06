@@ -104,6 +104,7 @@ interface StubegruHttpResponse {
 interface StubegruUserUtilsModule {
     updateAdminElements(): Promise<void>;
     getAllUsers(): Promise<StringIndexedList<StubegruUser>>;
+    getUserByPermission(permissionRequest:string): Promise<StubegruUser[]>;
 }
 
 interface StubegruUser {
