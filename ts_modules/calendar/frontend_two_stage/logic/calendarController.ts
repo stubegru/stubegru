@@ -1,32 +1,46 @@
+import Alert from '../../../../components/alert/alert.js';
+import Stubegru from '../../../../components/stubegru_core/logic/stubegru.js';
+import Toggle from '../../../../components/toggles/toggle.js';
+import CalendarModal from './calendarModal.js';
+import Meeting from './meeting.js';
+
 class CalendarController {
 
-    static modal = new CalendarModal();
-    static view = new CalendarView('#calendarViewContainer');
-    static search = new CalendarSearch();
-    static freeMeetingMode = false;
+    modal = new CalendarModal();
+    view = new CalendarView('#calendarViewContainer');
+    search = new CalendarSearch();
+    freeMeetingMode = false;
 
-    static async init() {
-        let C = CalendarController;
-        await C.modal.init();
-        C.initFilterMenu();
+    async init() {
+        await this.modal.init();
+        this.initFilterMenu();
 
-        $("#calendarNewMeetingButton").on("click", () => C.createMeeting());
+        Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => this.createMeeting());
     }
 
-    static initFilterMenu() {
-        $("#calendarSettingsForeignToggle").on("change", function (event) {
-            const showOthers = !$(this).prop('checked');
-            CalendarController.view.showOthersMeetings(showOthers);
+
+    //TODO: Move to view
+    foreignToggle: Toggle;
+    assignedToggle: Toggle;
+    initFilterMenu() {
+        this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
+        this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
+
+
+        this.foreignToggle.addEventListener("change", (event) => {
+            const showOthers = !this.foreignToggle.getState();
+            this.view.showOthersMeetings(showOthers);
         });
-        $("#calendarSettingsAssignedToggle").on("change", function (event) {
-            const showAssigned = !$(this).prop('checked');
-            CalendarController.view.showAssignedMeetings(showAssigned);
+        this.assignedToggle.addEventListener("change", (event) => {
+            const showAssigned = !this.assignedToggle.getState();
+            this.view.showAssignedMeetings(showAssigned);
         });
 
-        $(document).on('click', '#calendarSettingsDropdown', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        });
+        //TODO: Is this neccessary?
+        // $(document).on('click', '#calendarSettingsDropdown', function (e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // });
     }
 
 
@@ -34,23 +48,23 @@ class CalendarController {
     /**
      * @returns {boolean} wether the current user has write permissions for calendar meetings
      */
-    static isCalendarWriteUser() {
+    isCalendarWriteUser(): boolean {
+        //@ts-expect-error TODO: use new typescript stubegru-core API for userUtils
         const writePermission = stubegru.modules.userUtils.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
         return writePermission.access;
     }
 
-    static async clickOnMeetingHandler(meetingId) {
+    async clickOnMeetingHandler(meetingId) {
         let meeting = Meeting.getById(meetingId);
         await meeting.updateFromServer();
 
         (meeting.teilnehmer && meeting.teilnehmer != "") ?
-            CalendarController.openAssignedMeeting(meeting.id) :
-            CalendarController.openFreeMeeting(meeting.id);
+            this.openAssignedMeeting(meeting.id) :
+            this.openFreeMeeting(meeting.id);
     }
 
-    static async createMeeting(keepValues) {
-        let C = CalendarController;
-        let m = C.modal;
+    async createMeeting(keepValues) {
+        let m = this.modal;
 
         m.setModalVisible(true);
         m.setModalTitle("Termin erstellen");
@@ -61,9 +75,9 @@ class CalendarController {
 
         const createMeetingCallback = async () => {
             let resp = await Meeting.createOnServer(m.getMeetingDetailData());
-            stubegru.modules.alerts.alert(resp, "Termin erstellen");
+            Alert.alertResp(resp, "Termin erstellen");
             if (resp.status == "error") { throw new Error(resp.message); }
-            await C.view.refresh();
+            await this.view.refresh();
             return resp;
         };
 
@@ -72,33 +86,34 @@ class CalendarController {
             m.setUnsavedChanges(false);
 
             if (event.originalEvent.submitter.id == "calendarSaveNextMeetingButton") {
-                C.createMeeting(true);
+                this.createMeeting(true);
             } else {
                 m.setModalVisible(false);
             }
         });
     }
 
-    static async openFreeMeeting(meetingId) {
+    async openFreeMeeting(meetingId) {
         let C = CalendarController;
-        let m = C.modal;
-        let isWrite = C.isCalendarWriteUser();
+        let m = this.modal;
+        let isWrite = this.isCalendarWriteUser();
 
         m.setModalVisible(true);
         m.setModalTitle("Termindetails (Freier Termin)");
         await m.resetAllForms();
-        CalendarController.freeMeetingMode = true;
+        this.freeMeetingMode = true;
 
         const meeting = Meeting.getById(meetingId);
         m.setMeetingDetailData(meeting);
 
         let resp = await meeting.isBlock();
 
+        //@ts-expect-error TODO: use new typescript stubegru-core API for current user id
         if (resp.blockId == stubegru.currentUser.id) {
             //If meeting is blocked by yourself => remove block 
             await meeting.setBlock(false);
             resp = await meeting.isBlock();
-            stubegru.modules.alerts.alert("Die Terminblockierung wurde aufgehoben");
+            Alert.alertSimple("Die Terminblockierung wurde aufgehoben");
         }
 
         let isUnblocked = resp.blockId == "0";
@@ -112,60 +127,60 @@ class CalendarController {
         m.setFooterSaveButtonEvent(async () => {
             meeting.applyProperties(m.getMeetingDetailData());
             let resp = await meeting.updateOnServer();
-            stubegru.modules.alerts.alert(resp, "Termin speichern");
+            Alert.alertResp(resp, "Termin speichern");
             if (resp.status == "error") { throw new Error(resp.message); }
-            await C.view.refresh();
+            await this.view.refresh();
             m.setUnsavedChanges(false);
             m.setModalVisible(false);
         });
 
-        m.setFooterDeleteButtonEvent(() => {
-            deleteConfirm("Termin löschen", "Soll dieser Termin wirklich gelöscht werden?", async () => {
-                let resp = await meeting.deleteOnServer();
-                stubegru.modules.alerts.alert(resp, "Termin löschen");
-                if (resp.status == "error") { throw new Error(resp.message); }
-                await C.view.refresh();
-                m.setUnsavedChanges(false);
-                m.setModalVisible(false);
-            });
+        m.setFooterDeleteButtonEvent(async () => {
+            await Alert.deleteConfirm("Termin löschen", "Soll dieser Termin wirklich gelöscht werden?")
+            let resp = await meeting.deleteOnServer();
+            Alert.alertResp(resp, "Termin löschen");
+            if (resp.status == "error") { throw new Error(resp.message); }
+            await this.view.refresh();
+            m.setUnsavedChanges(false);
+            m.setModalVisible(false);
         });
 
         m.setAssignAssignButtonEvent(() => {
-            C.openMeetingForAssignment(meetingId);
+            this.openMeetingForAssignment(meetingId);
         });
 
     }
 
-    static async openMeetingForAssignment(meetingId) {
+    async openMeetingForAssignment(meetingId) {
         let C = CalendarController;
-        let m = C.modal;
+        let m = this.modal;
         let meeting = Meeting.getById(meetingId);
 
         await meeting.updateFromServer();
         if (meeting.teilnehmer && meeting.teilnehmer != "") {
-            stubegru.modules.alerts.alert({ title: "Termin kann nicht vergeben werden", text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...", type: "error" });
+            Alert.alert({ title: "Termin kann nicht vergeben werden", text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...", type: "error" });
             return;
         }
 
         //Check for block
         let resp = await meeting.isBlock();
+        //@ts-expect-error TODO: use new typescript stubegru-core API for userUtils
         if (resp.blockId == "0" || resp.blockId == stubegru.currentUser.id) {
             //Not blocked => block now and continue
             resp = await meeting.setBlock(true);
             if (resp.status != "success") {
                 m.showBlockError("ubekannt", () => {
-                    C.openFreeMeeting(meetingId);
+                    this.openFreeMeeting(meetingId);
                 })
                 return;
             }
-            $("#terminmodal").on('hidden.bs.modal.remove-block', () => {
+            this.modal.modal.addEventListener('hidden.bs.modal.remove-block', () => {
                 meeting.setBlock(false);
-                stubegru.modules.alerts.alert("Die Terminblockierung wurde aufgehoben.");
+                Alert.alertSimple("Die Terminblockierung wurde aufgehoben.");
                 $("#terminmodal").off('hidden.remove-block');
             });
         } else {
             m.showBlockError(resp.blockName, () => {
-                C.openFreeMeeting(meetingId);
+                this.openFreeMeeting(meetingId);
             });
             return;
         }
@@ -187,10 +202,10 @@ class CalendarController {
             let resp = await meeting.assignClient(m.getClientData());
             AssignFeedbackModal.showFeedback(resp);
 
-            await C.view.refresh();
+            await this.view.refresh();
             m.setUnsavedChanges(false);
             $("#terminmodal").off('hidden.remove-block');
-            C.openAssignedMeeting(meetingId);
+            this.openAssignedMeeting(meetingId);
         });
 
         //Assign cancel button
@@ -198,13 +213,13 @@ class CalendarController {
             m.setUnsavedChanges(false);
             await meeting.setBlock(false);
             $("#terminmodal").off('hidden.remove-block');
-            C.openFreeMeeting(meetingId);
+            this.openFreeMeeting(meetingId);
         })
     }
 
-    static async openAssignedMeeting(meetingId) {
+    async openAssignedMeeting(meetingId) {
         let C = CalendarController;
-        let m = C.modal;
+        let m = this.modal;
 
         m.setModalVisible(true);
         m.setModalTitle("Termindetails (Termin vergeben)");
@@ -214,7 +229,7 @@ class CalendarController {
         m.setMeetingDetailData(meeting);
         m.enableDetailMeetingForm(false);
 
-        m.showAssignButtons(false, false, C.isCalendarWriteUser(), false);
+        m.showAssignButtons(false, false, this.isCalendarWriteUser(), false);
 
         m.setClientVisible(true);
         m.enableClientForm(false);
@@ -228,17 +243,17 @@ class CalendarController {
             deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.", async () => {
                 let resp = await meeting.deleteClient();
                 resp.mode = "alert";
-                await C.wait(200); //Wait until the delete confirm alert is closed
+                await this.wait(200); //Wait until the delete confirm alert is closed
                 stubegru.modules.alerts.alert(resp, "Kundendaten löschen");
                 if (resp.status == "error") { throw new Error(resp.message); }
-                await C.view.refresh();
+                await this.view.refresh();
                 m.setUnsavedChanges(false);
-                C.openFreeMeeting(meetingId);
+                this.openFreeMeeting(meetingId);
             });
         });
     }
 
-    static async wait(ms) {
+    async wait(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 

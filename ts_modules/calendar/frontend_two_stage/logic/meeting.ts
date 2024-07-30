@@ -1,4 +1,6 @@
-class Meeting {
+import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic/stubegru_fetch.js";
+
+export default class Meeting {
 
     static meetingList = [];
 
@@ -91,7 +93,7 @@ class Meeting {
     /**
      * Updates an existing meeting on the server for storage in database
      */
-    static async createOnServer(meetingData) {
+    static async createOnServer(meetingData):Promise<StubegruHttpResponse> {
         meetingData.id = "new";
         let m = new Meeting(meetingData);
         let formData = m.toFormData();

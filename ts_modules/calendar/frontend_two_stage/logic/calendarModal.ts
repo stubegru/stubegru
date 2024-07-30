@@ -1,4 +1,6 @@
-class CalendarModal {
+import { Modal } from "../../../../components/bootstrap/v3/ts_wrapper.js";
+
+export default class CalendarModal {
 
     static channelDescriptions = {
         "personally": "Persönlich",
@@ -8,7 +10,12 @@ class CalendarModal {
         "all": "Alle",
     };
 
+    modal:Modal;
+
     async init() {
+        this.modal = new Modal("#terminmodal"); //TODO: Change naming
+
+
         this.setUnsavedChanges(false);
         this.initFomularChangeListener();
         //ask for unsaved changes

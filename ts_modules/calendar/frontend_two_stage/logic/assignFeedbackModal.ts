@@ -5,7 +5,7 @@ class AssignFeedbackModal {
     modal: Modal;
 
     init() {
-        this.modal = new Modal('#calendar_assign_feedback_modal');
+        this.modal = new Modal('#calendar_assign_feedback_modal'); >>>change in html
     }
 
     resetAndShow() {
