@@ -1,17 +1,23 @@
 class MailTemplate {
+
     static mailTemplateList = [];
+
+
     static async fetchMailTemplates() {
         MailTemplate.mailTemplateList = [];
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_templates.php`);
         let data = await resp.json();
+
         for (const mailTemplateData of data) {
             let r = new MailTemplate(mailTemplateData);
             MailTemplate.mailTemplateList.push(r);
         }
     }
+
     static getById(mailTemplateId) {
         return MailTemplate.mailTemplateList.find(e => e.id == mailTemplateId);
     }
+
     constructor(mailTemplateData) {
         this.id = mailTemplateData.id;
         this.betreff = mailTemplateData.betreff;
@@ -20,13 +26,17 @@ class MailTemplate {
         this.text = mailTemplateData.text;
         this.titel = mailTemplateData.titel;
     }
+
     applyProperties(data) {
         for (const propName in data) {
             this[propName] = data[propName];
         }
     }
+
+
     async updateOnServer() {
         let formData = this.toFormData();
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/save_template.php`;
         let mailTemplateResp = await fetch(url, {
             method: 'POST',
@@ -35,10 +45,12 @@ class MailTemplate {
         mailTemplateResp = await mailTemplateResp.json();
         return mailTemplateResp;
     }
+
     static async createOnServer(mailTemplateData) {
         mailTemplateData.id = "new";
         let m = new MailTemplate(mailTemplateData);
         let formData = m.toFormData();
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/save_template.php`;
         let resp = await fetch(url, {
             method: 'POST',
@@ -47,12 +59,17 @@ class MailTemplate {
         resp = await resp.json();
         return resp;
     }
+
+
     static async getTemplateVariables() {
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_template_variables.php`;
         let resp = await fetch(url);
         resp = await resp.json();
         return resp;
     }
+
+
+
     toFormData() {
         let formData = new FormData();
         formData.append("templateId", this.id);
@@ -63,9 +80,11 @@ class MailTemplate {
         //formData.append("ersteller", this.ersteller);
         return formData;
     }
+
     async deleteOnServer() {
         let formData = new FormData();
         formData.append("templateId", this.id);
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/delete_template.php`;
         let mailTemplateResp = await fetch(url, {
             method: 'POST',
@@ -74,4 +93,5 @@ class MailTemplate {
         mailTemplateResp = await mailTemplateResp.json();
         return mailTemplateResp;
     }
+
 }

@@ -67,4 +67,7 @@ export default class StubegruUtils {
             .replace('ss', seconds)
             .replace('s', shortSeconds);
     }
+    async wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 }

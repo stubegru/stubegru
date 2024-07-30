@@ -1,4 +1,5 @@
 class CalendarModal {
+
     static channelDescriptions = {
         "personally": "Persönlich",
         "phone": "Telefon",
@@ -6,6 +7,7 @@ class CalendarModal {
         "digital": "Nur digital (Fon + Web)",
         "all": "Alle",
     };
+
     async init() {
         this.setUnsavedChanges(false);
         this.initFomularChangeListener();
@@ -13,33 +15,39 @@ class CalendarModal {
         $("#terminmodal").on('hide.bs.modal', this.askForUnsavedChanges);
         //Reset modal forms on hide event
         $("#terminmodal").on('hidden.bs.modal', this.resetAllForms);
+
         await Room.fetchRooms();
         this.setRoomDropdown(Room.roomList);
         this.initRoomEditButtons();
+
         await MailTemplate.fetchMailTemplates();
         this.setTemplateDropdown(MailTemplate.mailTemplateList);
         this.initTemplateEditButtons();
+
         await this.initAdvisorDropdown();
         this.initMeetingDetailChannelDropdown();
+
         //Init richtext editor for mail templates
         CKEDITOR.replace('mailTemplateEditor', { height: "400px" });
     }
+
     askForUnsavedChanges = () => {
-        if (!this.unsavedChanges) {
-            return true;
-        }
+        if (!this.unsavedChanges) { return true; }
         return confirm("Es gibt ungespeicherte Änderungen. Soll das Formular wirklich geschlossen werden?");
-    };
+    }
+
     setUnsavedChanges = (unsavedChanges) => {
         this.unsavedChanges = unsavedChanges;
         unsavedChanges ?
             $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #d9534f"></i> Ungespeicherte Änderungen`) :
             $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`);
+
         if (unsavedChanges && CalendarController.freeMeetingMode) {
             this.showAssignButtons(false, false, false, false);
-            this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.");
+            this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
         }
-    };
+    }
+
     /**
      * Show or hide the meeting appointment modal
      * @param {boolean} state true to show the modal, false to hide
@@ -47,13 +55,17 @@ class CalendarModal {
     setModalVisible(state) {
         $("#terminmodal").modal(state ? "show" : "hide");
     }
+
     /**
      * Set the modals title, displayed in it's header
-     * @param {string} title
+     * @param {string} title 
      */
     setModalTitle(title) {
         $("#terminmodalTitle").html(title);
     }
+
+
+
     /**
      * Resets the meetingDetail-, client-, room- and templateForm
      * Hides the info alert
@@ -73,7 +85,8 @@ class CalendarModal {
         $(".calendar-assign-button").off();
         $("#calendarMeetingDetailForm").off("submit");
         this.setUnsavedChanges(false);
-    };
+    }
+
     initFomularChangeListener() {
         $('.meeting-details').on("change", () => CalendarController.modal.setUnsavedChanges(true));
         $(".meeting-room-input").on("change", () => CalendarController.modal.setUnsavedChanges(true));
@@ -81,6 +94,9 @@ class CalendarModal {
         $(".meeting-client").on("change", () => CalendarController.modal.setUnsavedChanges(true));
         $("#calendarStart").on("change", this.setMeetingEndTimeByStartTime);
     }
+
+
+
     /**
      * Sets the text for the info alert in calendarModal.
      * Alert is hidden if the text is empty or not given
@@ -92,6 +108,7 @@ class CalendarModal {
             $("#calendarModalInfoAlert").hide();
         $("#calendarModalInfoAlert").html(`<i class="fas fa-info-circle"></i> ${text}`);
     }
+
     /**
      * Show / hide buttons for client assignment
      * @param {boolean} assign wether to show the assign button
@@ -104,8 +121,10 @@ class CalendarModal {
         sh($("#calendarAssignSaveButton"), save);
         sh($("#calendarAssignDeleteButton"), remove);
         sh($("#calendarAssignCancelButton"), cancel);
+
         function sh(e, b) { b ? e.show() : e.hide(); }
     }
+
     /**
   * Register eventhandler for click on the assign save button
   * This does automatically clear all currently registered events
@@ -120,6 +139,7 @@ class CalendarModal {
             callback(event);
         });
     }
+
     /**
      * Register eventhandler for click on the assign assign button
      * This does automatically clear all currently registered events
@@ -129,6 +149,7 @@ class CalendarModal {
         $("#calendarAssignAssignButton").off();
         $("#calendarAssignAssignButton").on("click", callback);
     }
+
     /**
      * Register eventhandler for click on the assign delete button
      * This does automatically clear all currently registered events
@@ -138,6 +159,7 @@ class CalendarModal {
         $("#calendarAssignDeleteButton").off();
         $("#calendarAssignDeleteButton").on("click", callback);
     }
+
     /**
      * Register eventhandler for click on the assign cancel button
      * This does automatically clear all currently registered events
@@ -147,6 +169,7 @@ class CalendarModal {
         $("#calendarAssignCancelButton").off();
         $("#calendarAssignCancelButton").on("click", callback);
     }
+
     /**
      * Enable / disable buttons for a meeting
      * @param {boolean} save wether to enable the save button
@@ -160,6 +183,7 @@ class CalendarModal {
         $("#calendarCancelButton").prop("disabled", !cancel);
         saveNext ? $("#calendarSaveNextMeetingButton").show() : $("#calendarSaveNextMeetingButton").hide();
     }
+
     /**
      * Register eventhandler for click on the footer save button
      * This does automatically clear all currently registered events
@@ -174,6 +198,7 @@ class CalendarModal {
             callback(event);
         });
     }
+
     /**
      * Register eventhandler for click on the footer delete button
      * This does automatically clear all currently registered events
@@ -183,12 +208,15 @@ class CalendarModal {
         $("#calendarDeleteMeetingButton").off();
         $("#calendarDeleteMeetingButton").on("click", callback);
     }
+
+
     /**
     * Reset all inputs in the Calendar meeting detail form
     */
     resetMeetingDetailForm = async () => {
         this.enableDetailMeetingForm(true);
         $('.meeting-details').val("");
+
         //load from custom config
         const calendarTitle = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
         $('#calendarTitle').val(calendarTitle);
@@ -196,10 +224,14 @@ class CalendarModal {
         $("#calendarChannel").val("all");
         $("#calendarRoom")[0].selectedIndex = 1; //Select first entry by default
         $("#calendarTemplate")[0].selectedIndex = 1;
-    };
+
+    }
+
     enableDetailMeetingForm(isEnabled) {
         $('.meeting-details').prop("disabled", !isEnabled);
     }
+
+
     getMeetingDetailData() {
         let meetingData = {};
         meetingData["date"] = $('#calendarDate').val();
@@ -212,6 +244,7 @@ class CalendarModal {
         meetingData["channel"] = $('#calendarChannel').val();
         return meetingData;
     }
+
     setMeetingDetailData(meeting) {
         $('#calendarDate').val(meeting.date);
         $('#calendarStart').val(meeting.start);
@@ -219,9 +252,11 @@ class CalendarModal {
         $('#calendarTitle').val(meeting.title);
         $('#calendarOwner').val(meeting.ownerId);
         $('#calendarChannel').val(meeting.channel);
+
         $('#calendarRoom').val(meeting.roomId);
         $('#calendarTemplate').val(meeting.templateId);
     }
+
     /**
      * If the value of the meeting start time input changes, this function is called to set the end time to an according value
      */
@@ -235,6 +270,7 @@ class CalendarModal {
             $("#calendarEnd").val(hours + ":" + minutes);
         }
     }
+
     initMeetingDetailChannelDropdown() {
         let html = `<option value="">Bitte wählen...</option>`;
         const names = CalendarModal.channelDescriptions;
@@ -243,21 +279,31 @@ class CalendarModal {
         }
         $("#calendarChannel").html(html);
     }
+
+
+
+
+
+
     /**
     * Reset all inputs in the client data form
     */
     resetClientForm = () => {
         this.enableClientForm(true);
         $(".meeting-client").val("");
-    };
+    }
+
     enableClientForm(isEnabled) {
         $('.meeting-client').prop("disabled", !isEnabled);
     }
+
     setClientVisible(isVisible) {
         isVisible ?
             $("#calendarClientDataContainer").slideDown() :
             $("#calendarClientDataContainer").slideUp();
     }
+
+
     getClientData() {
         let clientData = {};
         clientData["name"] = $("#calendarClientName").val();
@@ -268,6 +314,7 @@ class CalendarModal {
         clientData["channel"] = $("#calendarClientChannel").val();
         return clientData;
     }
+
     setClientData = (client) => {
         this.initClientChannelDropdown(client.channel);
         $('#calendarClientName').val(client.name);
@@ -276,21 +323,19 @@ class CalendarModal {
         $('#calendarClientSurvey').val(client.formular);
         $('#calendarClientChannel').val(client.channel);
         $('#calendarClientPhone').val(this.prettyPrintPhoneNumber(client.phone));
-    };
+    }
+
     prettyPrintPhoneNumber(phone) {
-        if (!/\d/.test(phone)) {
-            return phone;
-        } //Dont beautify if not contains any number
+        if (!/\d/.test(phone)) { return phone; } //Dont beautify if not contains any number
         let output = "";
         for (const index in phone) {
             let char = phone[index];
             output += char;
-            if (index % 4 == 3) {
-                output += " ";
-            }
+            if (index % 4 == 3) { output += " "; }
         }
         return output;
     }
+
     showBlockError(userName, callback) {
         callback = callback || function () { };
         swal({
@@ -299,24 +344,28 @@ class CalendarModal {
             type: "error"
         }, callback);
     }
+
     initClientChannelDropdown(meetingChannel) {
         let channelOptions = [];
-        if (meetingChannel == "all") {
-            channelOptions.push("personally", "phone", "webmeeting");
-        }
-        else if (meetingChannel == "digital") {
-            channelOptions.push("phone", "webmeeting");
-        }
-        else {
-            channelOptions.push(meetingChannel);
-        }
+
+        if (meetingChannel == "all") { channelOptions.push("personally", "phone", "webmeeting"); }
+        else if (meetingChannel == "digital") { channelOptions.push("phone", "webmeeting"); }
+        else { channelOptions.push(meetingChannel); }
+
         let html = `<option value="">Bitte wählen...</option>`;
         const names = CalendarModal.channelDescriptions;
         for (let channelId of channelOptions) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
-        $("#calendarClientChannel").html(html);
+        $("#calendarClientChannel").html(html)
     }
+
+
+
+
+
+
+
     /**
      * Reset all inputs in the Calendar meeting mail template form
      */
@@ -324,25 +373,27 @@ class CalendarModal {
         $(".meeting-template-input").val("");
         CKEDITOR.instances.mailTemplateEditor.setData(""); //reset WYSIWYG editor
     }
+
     setTemplateDropdown(templateList) {
         let selectHtml = "<option value=''>Bitte wählen...</option>";
         let postHtml;
         for (const template of templateList) {
             const ownId = stubegru.currentUser.id;
-            const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`;
+            const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`
             if (ownId == template.ersteller) { //Add own entry at top
                 selectHtml += optionString;
-            }
-            else {
+            } else {
                 postHtml += optionString;
             }
         }
         selectHtml += postHtml;
         $("#calendarTemplate").html(selectHtml);
     }
+
     async initTemplateEditButtons() {
         $("#calendarEditTemplateButton").on("click", () => {
             const templateId = $("#calendarTemplate").val();
+
             if (templateId == null || templateId == "") {
                 stubegru.modules.alerts.alert({
                     title: "Mailvorlage bearbeiten:",
@@ -352,65 +403,72 @@ class CalendarModal {
                 });
                 return;
             }
+
             const template = MailTemplate.getById(templateId);
             this.setTemplateData(template);
             this.setTemplateFormVisible(true);
         });
+
         $("#calendarNewTemplateButton").on("click", () => {
             this.resetTemplateForm();
             $("#templateId").val("new");
             this.setTemplateFormVisible(true);
         });
+
         $("#calendarTemplateForm").on("submit", async (event) => {
             event.preventDefault();
             let templateId = $("#templateId").val();
             let resp;
+
             if (templateId == "new") {
                 //create new Template
                 resp = await MailTemplate.createOnServer(this.getTemplateData());
                 templateId = resp.optionId;
-            }
-            else {
+            } else {
                 //update existing Template
                 let template = MailTemplate.getById(templateId);
                 template.applyProperties(this.getTemplateData());
                 resp = await template.updateOnServer();
             }
+
             stubegru.modules.alerts.alert({
                 title: "Mailvorlage speichern",
                 text: resp.message,
                 type: resp.status
             });
-            if (resp.status != "success") {
-                return;
-            }
+            if (resp.status != "success") { return }
+
             //Refresh template list
             await MailTemplate.fetchMailTemplates();
             this.setTemplateDropdown(MailTemplate.mailTemplateList);
             this.resetTemplateForm();
             this.setTemplateFormVisible(false);
+
             //auto-select previously edited/created template
             $("#calendarTemplate").val(templateId);
             $("#calendarTemplate").trigger("change");
         });
+
         $("#calendarCancelTemplateButton").on("click", () => {
             this.resetTemplateForm();
             this.setTemplateFormVisible(false);
         });
+
         $("#calendarDeleteTemplateButton").on("click", () => {
             deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?", async () => {
                 let templateId = $("#templateId").val();
                 if (templateId != "new") {
                     let template = MailTemplate.getById(templateId);
                     let resp = await template.deleteOnServer();
+
                     stubegru.modules.alerts.alert({
                         title: "Mailvorlage Löschen",
                         text: resp.message,
                         type: resp.status
                     });
-                    if (resp.status != "success") {
-                        return;
-                    }
+                    if (resp.status != "success") { return }
+
+
                     await MailTemplate.fetchMailTemplates();
                     this.setTemplateDropdown(MailTemplate.mailTemplateList);
                 }
@@ -418,6 +476,8 @@ class CalendarModal {
                 this.setTemplateFormVisible(false);
             });
         });
+
+
         //Show available template variables
         const templateVariableList = await MailTemplate.getTemplateVariables();
         let templateVariableObject = {
@@ -426,9 +486,9 @@ class CalendarModal {
             client: { title: "Kunde", items: [] },
             extra: { title: "Sonstiges", items: [] }
         };
-        for (const t of templateVariableList) {
-            templateVariableObject[t.category].items.push(t);
-        }
+
+        for (const t of templateVariableList) { templateVariableObject[t.category].items.push(t); }
+
         let varHtml = ``;
         for (const categoryId in templateVariableObject) {
             const category = templateVariableObject[categoryId];
@@ -441,17 +501,19 @@ class CalendarModal {
             }
             varHtml += `</ul><br>`;
         }
+
         $("#calendarTemplateVariablesContainer").html(varHtml);
     }
+
     setTemplateFormVisible(isVisible) {
-        if (isVisible) {
+        if (isVisible){
             $("#newmail").slideDown();
             this.setUnsavedChanges(true); //this is not always correct, but seems to be useful
-        }
-        else {
+        }else{
             $("#newmail").slideUp();
         }
     }
+
     getTemplateData() {
         let templateData = {};
         templateData.id = $("#templateId").val();
@@ -460,31 +522,46 @@ class CalendarModal {
         templateData.text = CKEDITOR.instances.mailTemplateEditor.getData();
         return templateData;
     }
+
     setTemplateData(templateData) {
         $("#templateId").val(templateData.id);
         $("#templateTitle").val(templateData.titel);
         $("#templateSubject").val(templateData.betreff);
-        CKEDITOR.instances.mailTemplateEditor.setData(templateData.text);
+        CKEDITOR.instances.mailTemplateEditor.setData(templateData.text)
     }
+
+
+
+
+
+
+
+
+
+
     /**
     * Reset all inputs in the Calendar meeting room form
     */
     resetRoomForm() {
         $(".meeting-room-input").val("");
     }
+
     setRoomDropdown(roomList) {
         let ownId = stubegru.currentUser.id;
+
         let selectHtml = "<option value=''>Bitte wählen...</option>";
         let postHtml;
         for (const room of roomList) {
-            const optionString = `<option value='${room.id}'>${room.titel}</option>`;
+            const optionString = `<option value='${room.id}'>${room.titel}</option>`
             ownId == room.besitzer ? selectHtml += optionString : postHtml += optionString; //Add own entries at top
         }
         $("#calendarRoom").html(selectHtml + postHtml);
     }
+
     initRoomEditButtons() {
         $("#calendarEditRoomButton").on("click", () => {
             const roomId = $("#calendarRoom").val();
+
             if (roomId == null || roomId == "") {
                 stubegru.modules.alerts.alert({
                     title: "Raum bearbeiten:",
@@ -494,65 +571,72 @@ class CalendarModal {
                 });
                 return;
             }
+
             const room = Room.getById(roomId);
             this.setRoomData(room);
             this.setRoomFormVisible(true);
         });
+
         $("#calendarNewRoomButton").on("click", () => {
             this.resetRoomForm();
             $("#raum_id").val("new");
             this.setRoomFormVisible(true);
         });
+
         $("#calendarRoomForm").on("submit", async (event) => {
             event.preventDefault();
             let roomId = $("#raum_id").val();
             let resp;
+
             if (roomId == "new") {
                 //create new Room
                 resp = await Room.createOnServer(this.getRoomData());
                 roomId = resp.roomId;
-            }
-            else {
+            } else {
                 //update existing Room
                 let room = Room.getById(roomId);
                 room.applyProperties(this.getRoomData());
                 resp = await room.updateOnServer();
             }
+
             stubegru.modules.alerts.alert({
                 title: "Raum Speichern",
                 text: resp.message,
                 type: resp.status
             });
-            if (resp.status != "success") {
-                return;
-            }
+            if (resp.status != "success") { return }
+
             //Refresh room list
             await Room.fetchRooms();
             this.setRoomDropdown(Room.roomList);
             this.resetRoomForm();
             this.setRoomFormVisible(false);
+
             //auto-select previously edited/created room
             $("#calendarRoom").val(roomId);
             $("#calendarRoom").trigger("change");
         });
+
         $("#calendarCancelRoomButton").on("click", () => {
             this.resetRoomForm();
             this.setRoomFormVisible(false);
         });
+
         $("#calendarDeleteRoomButton").on("click", () => {
             deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?", async () => {
                 let roomId = $("#raum_id").val();
                 if (roomId != "new") {
                     let room = Room.getById(roomId);
                     let resp = await room.deleteOnServer();
+
                     stubegru.modules.alerts.alert({
                         title: "Raum Löschen",
                         text: resp.message,
                         type: resp.status
                     });
-                    if (resp.status != "success") {
-                        return;
-                    }
+                    if (resp.status != "success") { return }
+
+
                     await Room.fetchRooms();
                     this.setRoomDropdown(Room.roomList);
                 }
@@ -561,11 +645,13 @@ class CalendarModal {
             });
         });
     }
+
     setRoomFormVisible(isVisible) {
         isVisible ?
             $("#newroom").slideDown() :
             $("#newroom").slideUp();
     }
+
     setRoomData(roomData) {
         $("#raum_id").val(roomData.id);
         $("#raum_kanal").val(roomData.kanal);
@@ -580,6 +666,7 @@ class CalendarModal {
         $("#raum_passwort").val(roomData.passwort);
         $("#raum_telefon").val(roomData.telefon);
     }
+
     getRoomData() {
         let roomData = {};
         roomData.id = $("#raum_id").val();
@@ -596,6 +683,17 @@ class CalendarModal {
         roomData.telefon = $("#raum_telefon").val();
         return roomData;
     }
+
+
+
+
+
+
+
+
+
+
+
     async initAdvisorDropdown() {
         let ownId = stubegru.currentUser.id;
         let userList = await stubegru.modules.userUtils.getUserByPermission("MEETING_ADVISOR");
@@ -603,11 +701,12 @@ class CalendarModal {
         for (const user of userList) {
             if (ownId == user.id) { //Add own entry at top (default)
                 selectHtml = `<option value="${user.id}">${user.name}</option>` + selectHtml;
-            }
-            else {
+            } else {
                 selectHtml += `<option value="${user.id}">${user.name}</option>`;
             }
         }
         $("#calendarOwner").html(selectHtml);
+
     }
+
 }

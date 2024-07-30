@@ -1,17 +1,23 @@
 class Room {
+
     static roomList = [];
+
+
     static async fetchRooms() {
         Room.roomList = [];
         let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/get_rooms.php`);
         let data = await resp.json();
+
         for (const roomData of data) {
             let r = new Room(roomData);
             Room.roomList.push(r);
         }
     }
+
     static getById(roomId) {
         return Room.roomList.find(e => e.id == roomId);
     }
+
     constructor(roomData) {
         this.id = roomData.id;
         this.kanal = roomData.kanal;
@@ -26,13 +32,18 @@ class Room {
         this.passwort = roomData.passwort;
         this.telefon = roomData.telefon;
     }
+
+
     applyProperties(data) {
         for (const propName in data) {
             this[propName] = data[propName];
         }
     }
+
+
     async updateOnServer() {
         let formData = this.toFormData();
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/save_room.php`;
         let roomResp = await fetch(url, {
             method: 'POST',
@@ -41,10 +52,12 @@ class Room {
         roomResp = await roomResp.json();
         return roomResp;
     }
+
     static async createOnServer(roomData) {
         roomData.id = "new";
         let m = new Room(roomData);
         let formData = m.toFormData();
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/save_room.php`;
         let resp = await fetch(url, {
             method: 'POST',
@@ -53,6 +66,9 @@ class Room {
         resp = await resp.json();
         return resp;
     }
+
+
+
     toFormData() {
         let formData = new FormData();
         formData.append("id", this.id);
@@ -69,9 +85,11 @@ class Room {
         formData.append("telefon", this.telefon);
         return formData;
     }
+
     async deleteOnServer() {
         let formData = new FormData();
         formData.append("id", this.id);
+
         const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/rooms/delete_room.php`;
         let roomResp = await fetch(url, {
             method: 'POST',
