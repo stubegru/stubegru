@@ -1,1 +1,0 @@
-CalendarController.init();

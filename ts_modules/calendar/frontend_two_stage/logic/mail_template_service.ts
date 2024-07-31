@@ -1,4 +1,4 @@
-class MailTemplate {
+export default class MailTemplateService {
 
     static mailTemplateList = [];
 

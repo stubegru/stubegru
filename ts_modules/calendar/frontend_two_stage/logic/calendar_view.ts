@@ -1,10 +1,18 @@
-class CalendarView {
+import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
+import Toggle from "../../../../components/toggles/toggle.js";
+import AssignFeedbackModal from "./assign_feedback_modal.js";
+import CalendarController from "./calendar_controller.js";
+import CalendarModal from "./calendar_modal.js";
+
+export default class CalendarView {
+
+
     static config = {
         locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
             // days of week. an array of zero-based day of week integers (0=Sunday)
-            daysOfWeek: [1, 2, 3, 4, 5],
+            daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
             startTime: '08:00',
             endTime: '16:00'
         },
@@ -30,17 +38,63 @@ class CalendarView {
             info.jsEvent.preventDefault(); // don't let the browser navigate
             CalendarController.clickOnMeetingHandler(info.event.extendedProps.id);
         }
-    };
-    constructor(elemSelector) {
+    }
+    assignedVisible: boolean;
+    othersVisible: boolean;
+    fullCalendar: any;
+    assignFeedbackModal: AssignFeedbackModal;
+     foreignToggle: Toggle;
+     assignedToggle: Toggle;
+
+
+    init(elemSelector) {
+        modal = new CalendarModal();
+        search = new CalendarSearch();
+
+        
+        
+        await this.modal.init();
+        this.initFilterMenu();
+
+
         this.assignedVisible = true;
         this.othersVisible = true;
         let calendarEl = document.querySelector(elemSelector);
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, CalendarView.config);
         this.fullCalendar.render();
+        this.assignFeedbackModal = new AssignFeedbackModal();
         this.refresh();
+
+        Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => this.createMeeting());
+        
         //render calendar when the calendar box collapses to open
-        $('#collapseCalendar').on('shown.bs.collapse', () => { this.fullCalendar.render(); });
+        $('#collapseCalendar').on('shown.bs.collapse', () => { this.fullCalendar.render(); })
     }
+
+    
+     initFilterMenu() {
+         this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
+         this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
+ 
+ 
+         this.foreignToggle.addEventListener("change", (event) => {
+             const showOthers = !this.foreignToggle.getState();
+             this.view.showOthersMeetings(showOthers);
+         });
+         this.assignedToggle.addEventListener("change", (event) => {
+             const showAssigned = !this.assignedToggle.getState();
+             this.view.showAssignedMeetings(showAssigned);
+         });
+ 
+         //TODO: Is this neccessary?
+         // $(document).on('click', '#calendarSettingsDropdown', function (e) {
+         //     e.preventDefault();
+         //     e.stopPropagation();
+         // });
+     }
+ 
+ 
+
     refresh = async () => {
         this.fullCalendar.removeAllEvents();
         await Meeting.fetchMeetings();
@@ -48,12 +102,15 @@ class CalendarView {
         this.addMeetings(meetingList);
         this.showAssignedMeetings(this.assignedVisible);
         this.showOthersMeetings(this.othersVisible);
-    };
+    }
+
+
     addMeetings(meetingList) {
         //Generate events for fullcalendar
-        let ownUserId = stubegru.currentUser.id;
+        let ownUserId = Stubegru.currentUser.id;
         let ownEvents = { free: [], assigned: [] };
         let othersEvents = { free: [], assigned: [] };
+
         for (let inMeeting of meetingList) {
             let outMeeting = {
                 title: inMeeting.owner,
@@ -61,18 +118,19 @@ class CalendarView {
                 end: `${inMeeting.date}T${inMeeting.end}`,
                 extendedProps: inMeeting
             };
+
             //Sort meetings by free/assigned and own/others
             if (inMeeting.ownerId == ownUserId) {
                 (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
                     ownEvents.assigned.push(outMeeting) :
                     ownEvents.free.push(outMeeting);
-            }
-            else {
+            } else {
                 (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
                     othersEvents.assigned.push(outMeeting) :
                     othersEvents.free.push(outMeeting);
             }
         }
+
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
             id: "stubegru-own-free-events",
@@ -99,6 +157,7 @@ class CalendarView {
             classNames: ["pointer"]
         });
     }
+
     setEventVisibility(eventSourceId, visible) {
         let allEvents = this.fullCalendar.getEvents();
         for (let ev of allEvents) {
@@ -107,18 +166,22 @@ class CalendarView {
             }
         }
     }
+
     showOthersMeetings = (isVisible) => {
         this.othersVisible = isVisible;
         this.setEventVisibility("stubegru-others-free-events", isVisible);
         if (!isVisible || this.assignedVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
         }
-    };
+    }
+
     showAssignedMeetings = (isVisible) => {
         this.assignedVisible = isVisible;
         this.setEventVisibility("stubegru-own-assigned-events", isVisible);
         if (!isVisible || this.othersVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
         }
-    };
+    }
+
+
 }

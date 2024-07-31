@@ -1,50 +1,20 @@
 import Alert from '../../../../components/alert/alert.js';
 import Stubegru from '../../../../components/stubegru_core/logic/stubegru.js';
-import Toggle from '../../../../components/toggles/toggle.js';
-import CalendarModal from './calendar_modal.js';
-import CalendarView from './calendar_view.js';
-import Meeting from './meeting.js';
+import Meeting from './meeting_service.js';
 
 export default class CalendarController {
 
-    modal = new CalendarModal();
-    view = new CalendarView('#calendarViewContainer');
-    search = new CalendarSearch();
+    
     freeMeetingMode = false;
 
     async init() {
-        await this.modal.init();
-        this.initFilterMenu();
+        
 
-        Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => this.createMeeting());
+        
     }
 
 
-    //TODO: Move to view
-    foreignToggle: Toggle;
-    assignedToggle: Toggle;
-    initFilterMenu() {
-        this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
-        this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
-
-
-        this.foreignToggle.addEventListener("change", (event) => {
-            const showOthers = !this.foreignToggle.getState();
-            this.view.showOthersMeetings(showOthers);
-        });
-        this.assignedToggle.addEventListener("change", (event) => {
-            const showAssigned = !this.assignedToggle.getState();
-            this.view.showAssignedMeetings(showAssigned);
-        });
-
-        //TODO: Is this neccessary?
-        // $(document).on('click', '#calendarSettingsDropdown', function (e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        // });
-    }
-
-
+   
 
     /**
      * @returns {boolean} wether the current user has write permissions for calendar meetings

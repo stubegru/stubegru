@@ -1,7 +1,7 @@
 import Stubegru from '../../../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../../../components/bootstrap/v3/ts_wrapper.js';
 
-class AssignFeedbackModal {
+export default class AssignFeedbackModal {
     modal: Modal;
 
     init() {
