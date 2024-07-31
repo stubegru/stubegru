@@ -1,10 +1,11 @@
 import Alert from '../../../../components/alert/alert.js';
 import Stubegru from '../../../../components/stubegru_core/logic/stubegru.js';
 import Toggle from '../../../../components/toggles/toggle.js';
-import CalendarModal from './calendarModal.js';
+import CalendarModal from './calendar_modal.js';
+import CalendarView from './calendar_view.js';
 import Meeting from './meeting.js';
 
-class CalendarController {
+export default class CalendarController {
 
     modal = new CalendarModal();
     view = new CalendarView('#calendarViewContainer');
@@ -63,7 +64,7 @@ class CalendarController {
             this.openFreeMeeting(meeting.id);
     }
 
-    async createMeeting(keepValues) {
+    async createMeeting(keepValues = false) {
         let m = this.modal;
 
         m.setModalVisible(true);
@@ -173,10 +174,11 @@ class CalendarController {
                 })
                 return;
             }
+            //@ts-expect-error TODO: Unterstand and fix events...
             this.modal.modal.addEventListener('hidden.bs.modal.remove-block', () => {
                 meeting.setBlock(false);
                 Alert.alertSimple("Die Terminblockierung wurde aufgehoben.");
-                $("#terminmodal").off('hidden.remove-block');
+                // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
             });
         } else {
             m.showBlockError(resp.blockName, () => {
@@ -198,13 +200,13 @@ class CalendarController {
 
         //Assign save button
         m.setAssignSaveButtonEvent(async () => {
-            AssignFeedbackModal.resetAndShow();
+            this.view.assignFeedbackModal.resetAndShow();
             let resp = await meeting.assignClient(m.getClientData());
-            AssignFeedbackModal.showFeedback(resp);
+            this.view.assignFeedbackModal.showFeedback(resp);
 
             await this.view.refresh();
             m.setUnsavedChanges(false);
-            $("#terminmodal").off('hidden.remove-block');
+            // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
             this.openAssignedMeeting(meetingId);
         });
 
@@ -212,7 +214,7 @@ class CalendarController {
         m.setAssignCancelButtonEvent(async () => {
             m.setUnsavedChanges(false);
             await meeting.setBlock(false);
-            $("#terminmodal").off('hidden.remove-block');
+            // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
             this.openFreeMeeting(meetingId);
         })
     }
@@ -239,24 +241,17 @@ class CalendarController {
 
         m.setInfoAlert(`Dieser Termin ist bereits an einen Kunden vergeben. Bearbeiten des Termins ist nur möglich, nachdem die Kundendaten gelöscht wurden.`);
 
-        m.setAssignDeleteButtonEvent(() => {
-            deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.", async () => {
-                let resp = await meeting.deleteClient();
-                resp.mode = "alert";
-                await this.wait(200); //Wait until the delete confirm alert is closed
-                stubegru.modules.alerts.alert(resp, "Kundendaten löschen");
-                if (resp.status == "error") { throw new Error(resp.message); }
-                await this.view.refresh();
-                m.setUnsavedChanges(false);
-                this.openFreeMeeting(meetingId);
-            });
+        m.setAssignDeleteButtonEvent(async () => {
+            await Alert.deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.");
+            let resp = await meeting.deleteClient();
+            resp.mode = "alert";
+            await Stubegru.utils.wait(200); //Wait until the delete confirm alert is closed
+            Alert.alertResp(resp, "Kundendaten löschen");
+            if (resp.status == "error") { throw new Error(resp.message); }
+            await this.view.refresh();
+            m.setUnsavedChanges(false);
+            this.openFreeMeeting(meetingId);
         });
     }
-
-    async wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms))
-    }
-
-
 
 }
