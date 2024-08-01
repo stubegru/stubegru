@@ -13,7 +13,7 @@ export default class RoomView {
         Stubegru.dom.querySelectorAsInput(".meeting-room-input").value = "";
     }
 
-    setRoomDropdown(roomList) {
+    setRoomDropdown(roomList: Room[]) {
         let ownId = UserUtils.currentUser.id;
 
         let selectHtml = "<option value=''>Bitte wählen...</option>";
@@ -33,11 +33,11 @@ export default class RoomView {
         Stubegru.dom.querySelector("#calendarDeleteRoomButton").addEventListener("click", CalendarModule.roomController.deleteRoom);
     }
 
-    setRoomFormVisible(isVisible) {
+    setRoomFormVisible(isVisible: boolean) {
         Stubegru.dom.slideToState("#newroom", isVisible);
     }
 
-    setRoomData(roomData) {
+    setRoomData(roomData: Room) {
         Stubegru.dom.querySelectorAsInput("#raum_id").value = roomData.id;
         Stubegru.dom.querySelectorAsInput("#raum_kanal").value = roomData.kanal;
         Stubegru.dom.querySelectorAsInput("#raum_titel").value = roomData.titel;

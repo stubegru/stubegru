@@ -3,7 +3,7 @@ import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic
 
 export default class RoomService {
 
-    async delete(roomId) {
+    async delete(roomId: string) {
         let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/rooms/delete_room.php", { id: roomId }) as StubegruHttpResponse;
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
