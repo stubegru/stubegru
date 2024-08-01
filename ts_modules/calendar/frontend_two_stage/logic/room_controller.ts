@@ -1,21 +1,24 @@
+import Alert from "../../../../components/alert/alert.js";
+import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
+import CalendarModule from "./calendar_module.js";
 import { Room } from "./room_service.js";
 
 export default class RoomController {
 
-    roomList : Room[];
+    roomList: Room[];
 
     async init() {
-        await this.refreshListView();
+        await this.refreshRoomDropdown();
     }
 
-    getDailyNews(dailyNewsId: string) {
-        return DailyNewsModule.dailyNewsList.find(elem => (elem.id == dailyNewsId));
+    getRoom(roomId: string) {
+        return this.roomList.find(elem => (elem.id == roomId));
     }
 
-    async refreshDailyNewsList() {
+    async refreshRoomList() {
         try {
-            let list = await DailyNewsModule.service.getAll();
-            DailyNewsModule.dailyNewsList = list;
+            let list = await CalendarModule.roomService.getAll();
+            this.roomList = list;
             return list;
         } catch (error) {
             Alert.alertError(error);
@@ -23,67 +26,108 @@ export default class RoomController {
     }
 
 
-    async refreshListView() {
+    async refreshRoomDropdown() {
         try {
-            let list = await this.refreshDailyNewsList();
-            await DailyNewsModule.view.renderListView(list);
+            let list = await this.refreshRoomList();
+            await CalendarModule.roomView.setRoomDropdown(list);
         } catch (error) {
             Alert.alertError(error);
         }
     }
 
-    async saveDailyNews() {
-        let resp;
+    async showRoomFormForUpdate() {
         try {
-            let data = DailyNewsModule.view.getFormData();
-            resp = await DailyNewsModule.service.update(data) as StubegruHttpResponse;
-            DailyNewsModule.view.modal.hide();
-            DailyNewsModule.controller.refreshListView();
-            Alert.alertResp(resp);
-        }
-        catch (error) { Alert.alertError(error); }
-    }
+            const roomId = Stubegru.dom.querySelectorAsInput("#calendarRoom").value;
 
-    async deleteDailyNews(dailyNewsId) {
-        let resp;
-        try {
-            let confirmResp = await Alert.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
-            if (confirmResp.isConfirmed) {
-                resp = await DailyNewsModule.service.delete(dailyNewsId) as StubegruHttpResponse;
-                DailyNewsModule.controller.refreshListView();
-                Alert.alertResp(resp);
+            if (roomId == null || roomId == "") {
+                Alert.alert({
+                    title: "Raum bearbeiten:",
+                    text: "Bitte erst einen Raum auswählen",
+                    type: "warning",
+                    mode: "toast"
+                });
+                return;
             }
+
+            const room = CalendarModule.roomController.getRoom(roomId);
+            CalendarModule.roomView.setRoomData(room);
+            CalendarModule.roomView.setRoomFormVisible(true);
+        } catch (error) {
+            Alert.alertError(error);
         }
-        catch (error) { Alert.alertError(error); }
     }
 
-    async moveDailyNewsToWiki(dailyNewsId) {
-        let resp;
+    async showRoomFormForCreate() {
         try {
-            let confirmResp = await Alert.deleteConfirm("In Wiki Artikel umwandeln?", "Soll diese Tagesaktuelle Info wirklich in einen Wiki Artikel umgewandelt werden? Die Tagesaktuelle Info wird dadurch gelöscht.", "Umwandeln");
-            if (confirmResp.isConfirmed) {
-                resp = await DailyNewsModule.service.moveToWiki(dailyNewsId) as StubegruHttpResponse;
-                DailyNewsModule.controller.refreshListView();
-                Alert.alertResp(resp);
+            CalendarModule.roomView.resetRoomForm();
+            Stubegru.dom.querySelectorAsInput("#raum_id").value = "new";
+            CalendarModule.roomView.setRoomFormVisible(true);
+        } catch (error) {
+            Alert.alertError(error);
+        }
+    }
+
+
+    async saveRoom(event: Event) {
+        try {
+            event.preventDefault();
+            let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
+            const roomData = CalendarModule.roomView.getRoomData();
+            let resp;
+
+            if (roomId == "new") {
+                //create new Room
+                resp = await CalendarModule.roomService.create(roomData);
+                roomId = resp.roomId; //TODO: Typed resp
+            } else {
+                //update existing Room
+                resp = await CalendarModule.roomService.update(roomData);
             }
+
+            Alert.alertResp(resp, "Raum Speichern");
+            if (resp.status != "success") { return }
+
+            //Refresh room list
+            await CalendarModule.roomController.refreshRoomDropdown();
+            CalendarModule.roomView.resetRoomForm();
+            CalendarModule.roomView.setRoomFormVisible(false);
+
+            //auto-select previously edited/created room
+            Stubegru.dom.querySelectorAsInput("#calendarRoom").value = roomId;
+            Stubegru.dom.querySelector("#calendarRoom").dispatchEvent(new Event("change"));
+        } catch (error) {
+            Alert.alertError(error);
         }
-        catch (error) { Alert.alertError(error); }
     }
 
-    async showDailyNewsModalForUpdate(dailyNewsId: string) {
+
+    async cancelRoomEdit() {
         try {
-            DailyNewsModule.view.modal.show();
-            let dailyNews = this.getDailyNews(dailyNewsId);
-            DailyNewsModule.view.setFormData(dailyNews);
+            CalendarModule.roomView.resetRoomForm();
+            CalendarModule.roomView.setRoomFormVisible(false);
+        } catch (error) {
+            Alert.alertError(error);
         }
-        catch (error) { Alert.alertError(error); }
     }
 
-    async showDailyNewsModalForCreate() {
+
+    async deleteRoom() {
         try {
-            Stubegru.dom.querySelectorAsInput("#daily_news_id").value = "new";
-            DailyNewsModule.view.modal.show();
+            await Alert.deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?");
+            let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
+            if (roomId != "new") {
+                let resp = await CalendarModule.roomService.delete(roomId);
+
+                Alert.alertResp(resp, "Raum Löschen");
+                if (resp.status != "success") { return }
+
+                await CalendarModule.roomController.refreshRoomDropdown();
+            }
+            CalendarModule.roomView.resetRoomForm();
+            CalendarModule.roomView.setRoomFormVisible(false);
+        } catch (error) {
+            Alert.alertError(error);
         }
-        catch (error) { Alert.alertError(error); }
     }
+
 }
