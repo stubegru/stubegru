@@ -7,7 +7,7 @@ permissionRequest("USER_READ");
 $userId = ($_GET["userId"]);
 if ($userId == "currentUser") {$userId = $_SESSION['id'];}
 
-$selectStatement = $dbPdo->prepare("SELECT `id`, `name`, `mail`, `account`, `role` FROM `Nutzer` WHERE id=:userId;");
+$selectStatement = $dbPdo->prepare("SELECT `id`, `name`, `mail`, `account`, `role`, `erfassungsdatum`, `erfasser` FROM `Nutzer` WHERE id=:userId;");
 $selectStatement->bindValue(':userId', $userId);
 $selectStatement->execute();
 $userData = $selectStatement->fetch(PDO::FETCH_ASSOC);
