@@ -1,5 +1,5 @@
-import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
-import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic/stubegru_fetch.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import { StubegruHttpResponse } from "../../../../../components/stubegru_core/logic/stubegru_fetch.js";
 
 export default class MailTemplateService {
 

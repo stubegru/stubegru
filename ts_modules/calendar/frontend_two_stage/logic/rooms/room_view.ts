@@ -1,6 +1,6 @@
-import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
-import UserUtils from "../../../../components/user_utils/user_utils.js";
-import CalendarModule from "./calendar_module.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import UserUtils from "../../../../../components/user_utils/user_utils.js";
+import CalendarModule from "../calendar_module.js";
 import { Room } from "./room_service.js";
 
 export default class RoomView {

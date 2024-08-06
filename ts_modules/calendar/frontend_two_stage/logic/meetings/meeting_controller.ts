@@ -1,9 +1,9 @@
-import Alert from '../../../../components/alert/alert.js';
-import Stubegru from '../../../../components/stubegru_core/logic/stubegru.js';
-import UserUtils from '../../../../components/user_utils/user_utils.js';
+import Alert from '../../../../../components/alert/alert.js';
+import Stubegru from '../../../../../components/stubegru_core/logic/stubegru.js';
+import UserUtils from '../../../../../components/user_utils/user_utils.js';
 import Meeting from './meeting_service.js';
 
-export default class CalendarController {
+export default class MeetingController {
 
     
     freeMeetingMode = false;
@@ -65,7 +65,7 @@ export default class CalendarController {
     }
 
     async openFreeMeeting(meetingId) {
-        let C = CalendarController;
+        let C = MeetingController;
         let m = this.modal;
         let isWrite = this.isCalendarWriteUser();
 
@@ -121,7 +121,7 @@ export default class CalendarController {
     }
 
     async openMeetingForAssignment(meetingId) {
-        let C = CalendarController;
+        let C = MeetingController;
         let m = this.modal;
         let meeting = Meeting.getById(meetingId);
 
@@ -188,7 +188,7 @@ export default class CalendarController {
     }
 
     async openAssignedMeeting(meetingId) {
-        let C = CalendarController;
+        let C = MeetingController;
         let m = this.modal;
 
         m.setModalVisible(true);

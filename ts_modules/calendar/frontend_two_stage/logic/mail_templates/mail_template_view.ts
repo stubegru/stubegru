@@ -1,9 +1,9 @@
-import Alert from "../../../../components/alert/alert.js";
-import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
-import UserUtils from "../../../../components/user_utils/user_utils.js";
-import CalendarModule from "./calendar_module.js";
+import Alert from "../../../../../components/alert/alert.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import UserUtils from "../../../../../components/user_utils/user_utils.js";
+import CalendarModule from "../calendar_module.js";
 import { MailTemplate } from "./mail_template_service.js";
-import ClassicEditor from '../../../../components/ckeditor/v5/ckeditor.js'
+import ClassicEditor from '../../../../../components/ckeditor/v5/ckeditor.js'
 
 
 export default class MailTemplateView {

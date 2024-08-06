@@ -1,4 +1,4 @@
-import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic/stubegru_fetch.js";
+import { StubegruHttpResponse } from "../../../../../components/stubegru_core/logic/stubegru_fetch.js";
 
 export default class MeetingService {
 

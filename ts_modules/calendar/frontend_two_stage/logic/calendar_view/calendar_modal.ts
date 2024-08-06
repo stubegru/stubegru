@@ -1,4 +1,4 @@
-import { Modal } from "../../../../components/bootstrap/v3/ts_wrapper.js";
+import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
 
 export default class CalendarModal {
 

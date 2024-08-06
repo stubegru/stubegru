@@ -1,7 +1,7 @@
-import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
-import Toggle from "../../../../components/toggles/toggle.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import Toggle from "../../../../../components/toggles/toggle.js";
 import AssignFeedbackModal from "./assign_feedback_modal.js";
-import CalendarController from "./calendar_controller.js";
+import MeetingController from "../meetings/meeting_controller.js";
 import CalendarModal from "./calendar_modal.js";
 
 export default class CalendarView {
@@ -36,7 +36,7 @@ export default class CalendarView {
         },
         eventClick: function (info) {
             info.jsEvent.preventDefault(); // don't let the browser navigate
-            CalendarController.clickOnMeetingHandler(info.event.extendedProps.id);
+            MeetingController.clickOnMeetingHandler(info.event.extendedProps.id);
         }
     }
     assignedVisible: boolean;

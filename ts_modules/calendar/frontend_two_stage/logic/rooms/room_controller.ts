@@ -1,7 +1,7 @@
-import Alert from "../../../../components/alert/alert.js";
-import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
-import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic/stubegru_fetch.js";
-import CalendarModule from "./calendar_module.js";
+import Alert from "../../../../../components/alert/alert.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import { StubegruHttpResponse } from "../../../../../components/stubegru_core/logic/stubegru_fetch.js";
+import CalendarModule from "../calendar_module.js";
 import { Room } from "./room_service.js";
 
 export default class RoomController {
