@@ -1,97 +1,53 @@
+import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
+import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic/stubegru_fetch.js";
+
 export default class MailTemplateService {
 
-    static mailTemplateList = [];
 
-
-    static async fetchMailTemplates() {
-        MailTemplate.mailTemplateList = [];
-        let resp = await fetch(`${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_templates.php`);
-        let data = await resp.json();
-
-        for (const mailTemplateData of data) {
-            let r = new MailTemplate(mailTemplateData);
-            MailTemplate.mailTemplateList.push(r);
-        }
-    }
-
-    static getById(mailTemplateId) {
-        return MailTemplate.mailTemplateList.find(e => e.id == mailTemplateId);
-    }
-
-    constructor(mailTemplateData) {
-        this.id = mailTemplateData.id;
-        this.betreff = mailTemplateData.betreff;
-        this.ersteller = mailTemplateData.ersteller;
-        this.letzteaenderung = mailTemplateData.letzteaenderung;
-        this.text = mailTemplateData.text;
-        this.titel = mailTemplateData.titel;
-    }
-
-    applyProperties(data) {
-        for (const propName in data) {
-            this[propName] = data[propName];
-        }
-    }
-
-
-    async updateOnServer() {
-        let formData = this.toFormData();
-
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/save_template.php`;
-        let mailTemplateResp = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
-        mailTemplateResp = await mailTemplateResp.json();
-        return mailTemplateResp;
-    }
-
-    static async createOnServer(mailTemplateData) {
-        mailTemplateData.id = "new";
-        let m = new MailTemplate(mailTemplateData);
-        let formData = m.toFormData();
-
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/save_template.php`;
-        let resp = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
-        resp = await resp.json();
+    async delete(templateId: string) {
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/templates/delete_template.php", { id: templateId }) as StubegruHttpResponse;
+        if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }
 
+    async getAll() {
+        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/templates/get_templates.php") as MailTemplate[];
+    }
 
-    static async getTemplateVariables() {
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/get_template_variables.php`;
-        let resp = await fetch(url);
-        resp = await resp.json();
+    async update(data: MailTemplate) {
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/templates/save_template.php", data) as StubegruHttpResponse;
+        if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }
 
-
-
-    toFormData() {
-        let formData = new FormData();
-        formData.append("templateId", this.id);
-        formData.append("subject", this.betreff);
-        formData.append("text", this.text);
-        formData.append("title", this.titel);
-        //formData.append("letzteaenderung", this.letzteaenderung);
-        //formData.append("ersteller", this.ersteller);
-        return formData;
+    async create(data: MailTemplate) {
+        data.id = "new";
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/templates/save_template.php", data) as CreateMailTemplateHttpResponse;
+        if (resp.status == "error") { throw new Error(resp.message) };
+        return resp;
     }
 
-    async deleteOnServer() {
-        let formData = new FormData();
-        formData.append("templateId", this.id);
-
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/templates/delete_template.php`;
-        let mailTemplateResp = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
-        mailTemplateResp = await mailTemplateResp.json();
-        return mailTemplateResp;
+    async getTemplateVariables() {
+        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/templates/get_template_variables.php") as MailTemplateVariable[];
     }
+}
 
+export interface MailTemplate {
+    betreff: string;
+    ersteller: string;
+    id: string;
+    letzteaenderung: string;
+    text: string;
+    titel: string;
+}
+
+export interface CreateMailTemplateHttpResponse extends StubegruHttpResponse {
+    templateId: string;
+}
+
+export interface MailTemplateVariable {
+    category: string;
+    description: string;
+    placeholder: string;
+    property: string;
 }

@@ -9,7 +9,8 @@ export default class RoomView {
     * Reset all inputs in the Calendar meeting room form
     */
     resetRoomForm() {
-        Stubegru.dom.querySelectorAsInput(".meeting-room-input").value = "";
+        let form = Stubegru.dom.querySelector("#calendarRoomForm") as HTMLFormElement;
+        form.reset();
     }
 
     setRoomDropdown(roomList: Room[]) {
