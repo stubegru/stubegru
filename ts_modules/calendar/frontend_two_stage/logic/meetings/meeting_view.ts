@@ -1,6 +1,6 @@
 import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
 
-export default class CalendarModal {
+export default class MeetingView {
 
     static channelDescriptions = {
         "personally": "Persönlich",
@@ -280,7 +280,7 @@ export default class CalendarModal {
 
     initMeetingDetailChannelDropdown() {
         let html = `<option value="">Bitte wählen...</option>`;
-        const names = CalendarModal.channelDescriptions;
+        const names = MeetingView.channelDescriptions;
         for (let channelId in names) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
@@ -360,7 +360,7 @@ export default class CalendarModal {
         else { channelOptions.push(meetingChannel); }
 
         let html = `<option value="">Bitte wählen...</option>`;
-        const names = CalendarModal.channelDescriptions;
+        const names = MeetingView.channelDescriptions;
         for (let channelId of channelOptions) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }

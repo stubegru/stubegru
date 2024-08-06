@@ -1,5 +1,5 @@
 import MeetingController from "./meetings/meeting_controller.js";
-import CalendarView from "./calendar_view/calendar_view.js";
+import CalendarView from "./calendar/calendar_view.js";
 import MailTemplateController from "./mail_templates/mail_template_controller.js";
 import MailTemplateService from "./mail_templates/mail_template_service.js";
 import MailTemplateView from "./mail_templates/mail_template_view.js";
@@ -7,6 +7,7 @@ import MeetingService from "./meetings/meeting_service.js";
 import RoomController from "./rooms/room_controller.js";
 import RoomService from "./rooms/room_service.js";
 import RoomView from "./rooms/room_view.js";
+import MeetingView from "./meetings/meeting_view.js";
 
 export default class CalendarModule {
 
@@ -14,15 +15,16 @@ export default class CalendarModule {
         someProp: false
     };
 
-    static CalendarList: CalendarObject[]; 
-
     static meetingService: MeetingService;
     static roomService: RoomService;
     static mailTemplateService: MailTemplateService;
-    static calendarController: MeetingController;
+
+    static meetingController: MeetingController;
     static roomController: RoomController;
     static mailTemplateController: MailTemplateController;
+
     static calendarView: CalendarView;
+    static meetingView: MeetingView;
     static roomView: RoomView;
     static mailTemplateView: MailTemplateView;
 
@@ -30,16 +32,27 @@ export default class CalendarModule {
         CalendarModule.meetingService = new MeetingService();
         CalendarModule.roomService = new RoomService();
         CalendarModule.mailTemplateService = new MailTemplateService();
-        CalendarModule.controller = new MeetingController();
-        CalendarModule.view = new CalendarView();
 
-        await CalendarModule.view.init('#calendarViewContainer');
-        await CalendarModule.controller.init();
+        CalendarModule.meetingController = new MeetingController();
+        await CalendarModule.meetingController.init();
+        CalendarModule.roomController = new RoomController();
+        await CalendarModule.roomController.init();
+        CalendarModule.mailTemplateController = new MailTemplateController();
+        await CalendarModule.mailTemplateController.init();
+
+        CalendarModule.calendarView = new CalendarView();
+        await CalendarModule.calendarView.init();
+        CalendarModule.meetingView = new MeetingView();
+        await CalendarModule.meetingView.init();
+        CalendarModule.roomView = new RoomView();
+        await CalendarModule.roomView.init();
+        CalendarModule.mailTemplateView = new MailTemplateView();
+        await CalendarModule.mailTemplateView.init();
     }
 }
 
 await CalendarModule.init();
-  
+
 
 
 

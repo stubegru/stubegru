@@ -1,8 +1,8 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import Toggle from "../../../../../components/toggles/toggle.js";
-import AssignFeedbackModal from "./assign_feedback_modal.js";
+import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 import MeetingController from "../meetings/meeting_controller.js";
-import CalendarModal from "./calendar_modal.js";
+import MeetingView from "../meetings/meeting_view.js";
 
 export default class CalendarView {
 
@@ -48,7 +48,7 @@ export default class CalendarView {
 
 
     init(elemSelector) {
-        modal = new CalendarModal();
+        modal = new MeetingView();
         search = new CalendarSearch();
 
         
