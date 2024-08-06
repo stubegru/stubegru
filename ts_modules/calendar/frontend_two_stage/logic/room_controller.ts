@@ -1,5 +1,6 @@
 import Alert from "../../../../components/alert/alert.js";
 import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
+import { StubegruHttpResponse } from "../../../../components/stubegru_core/logic/stubegru_fetch.js";
 import CalendarModule from "./calendar_module.js";
 import { Room } from "./room_service.js";
 
@@ -73,12 +74,13 @@ export default class RoomController {
             event.preventDefault();
             let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
             const roomData = CalendarModule.roomView.getRoomData();
-            let resp;
+            let resp:StubegruHttpResponse;
 
             if (roomId == "new") {
                 //create new Room
-                resp = await CalendarModule.roomService.create(roomData);
-                roomId = resp.roomId; //TODO: Typed resp
+                const roomResp = await CalendarModule.roomService.create(roomData);
+                roomId = roomResp.roomId;
+                resp = roomResp;
             } else {
                 //update existing Room
                 resp = await CalendarModule.roomService.update(roomData);

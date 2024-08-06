@@ -21,7 +21,7 @@ export default class RoomService {
 
     async create(data: Room) {
         data.id = "new";
-        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/rooms/save_room.php", data) as StubegruHttpResponse;
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/rooms/save_room.php", data) as CreateRoomHttpResponse;
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }
@@ -42,4 +42,8 @@ export interface Room {
     passwort: string;
     telefon: string;
     aktiv: number; // 0/1 for false/true
+}
+
+export interface CreateRoomHttpResponse extends StubegruHttpResponse{
+    roomId : string;
 }

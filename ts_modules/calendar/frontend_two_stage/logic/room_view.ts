@@ -1,4 +1,3 @@
-import Alert from "../../../../components/alert/alert.js";
 import Stubegru from "../../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../../components/user_utils/user_utils.js";
 import CalendarModule from "./calendar_module.js";
