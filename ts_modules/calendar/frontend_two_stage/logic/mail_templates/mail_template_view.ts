@@ -1,4 +1,3 @@
-import Alert from "../../../../../components/alert/alert.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
@@ -10,9 +9,11 @@ export default class MailTemplateView {
 
     richTextEditor: ClassicEditor;
 
-    async init(){
+    async init() {
         const editorPlaceholder = Stubegru.dom.querySelector('#mailTemplateEditor'); //TODO: Refactor html ids to design rules
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" });
+        await this.showTemplateVariables(); //Show available template variables
+        await this.initTemplateEditButtons();
     }
 
     /**
@@ -24,7 +25,7 @@ export default class MailTemplateView {
         this.richTextEditor.setData("");
     }
 
-    setTemplateDropdown(templateList: MailTemplate[]) {
+    setMailTemplateDropdown(templateList: MailTemplate[]) {
         let selectHtml = "<option value=''>Bitte wählen...</option>";
         let postHtml;
         for (const template of templateList) {
@@ -41,82 +42,18 @@ export default class MailTemplateView {
     }
 
     async initTemplateEditButtons() {
-        Stubegru.dom.querySelector("#calendarEditTemplateButton").addEventListener("click", () => {
-            const templateId = Stubegru.dom.querySelectorAsInput("#calendarTemplate").value;
+        Stubegru.dom.querySelector("#calendarEditTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
 
-            if (templateId == null || templateId == "") {
-                Alert.alert({
-                    title: "Mailvorlage bearbeiten:",
-                    text: "Bitte erst eine Mailvorlage auswählen",
-                    type: "warning",
-                    mode: "toast"
-                });
-                return;
-            }
+        Stubegru.dom.querySelector("#calendarNewTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
 
-            const template = CalendarModule.mailTemplateController.getMailTemplate(templateId);
-            this.setTemplateData(template);
-            this.setTemplateFormVisible(true);
-        });
+        Stubegru.dom.querySelector("#calendarTemplateForm").addEventListener("submit", CalendarModule.mailTemplateController.saveMailTemplate);
 
-        Stubegru.dom.querySelector("#calendarNewTemplateButton").addEventListener("click", () => {
-            this.resetTemplateForm();
-            Stubegru.dom.querySelectorAsInput("#templateId").value = "new";
-            this.setTemplateFormVisible(true);
-        });
+        Stubegru.dom.querySelector("#calendarCancelTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
 
-        Stubegru.dom.querySelector("#calendarTemplateForm").addEventListener("submit", async (event) => {
-            event.preventDefault();
-            let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
-            let templateData = this.getTemplateData();
-            let resp;
+        Stubegru.dom.querySelector("#calendarDeleteTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.deleteMailTemplate);
+    }
 
-            if (templateId == "new") {
-                //create new Template
-                resp = await CalendarModule.mailTemplateService.create(templateData);
-                templateId = resp.optionId;
-            } else {
-                //update existing Template
-                resp = await CalendarModule.mailTemplateService.update(templateData);
-            }
-
-            Alert.alertResp(resp, "Mailvorlage speichern")
-            if (resp.status != "success") { return }
-
-            //Refresh template list
-            await MailTemplate.fetchMailTemplates();
-            this.setTemplateDropdown(MailTemplate.mailTemplateList);
-            this.resetTemplateForm();
-            this.setTemplateFormVisible(false);
-
-            //auto-select previously edited/created template
-            Stubegru.dom.querySelectorAsInput("#calendarTemplate").value = templateId;
-            Stubegru.dom.querySelector("#calendarTemplate").dispatchEvent(new Event("change"));
-        });
-
-        Stubegru.dom.querySelector("#calendarCancelTemplateButton").addEventListener("click", () => {
-            this.resetTemplateForm();
-            this.setTemplateFormVisible(false);
-        });
-
-        Stubegru.dom.querySelector("#calendarDeleteTemplateButton").addEventListener("click", async () => {
-            await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
-            let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
-            if (templateId != "new") {
-                let resp = await CalendarModule.mailTemplateService.delete(templateId);
-
-                Alert.alertResp(resp, "Mailvorlage Löschen")
-                if (resp.status != "success") { return }
-
-                await MailTemplate.fetchMailTemplates();
-                this.setTemplateDropdown(MailTemplate.mailTemplateList);
-            }
-            this.resetTemplateForm();
-            this.setTemplateFormVisible(false);
-        });
-
-
-        //Show available template variables
+    private async showTemplateVariables() {
         const templateVariableList = await CalendarModule.mailTemplateService.getTemplateVariables();
         let templateVariableObject = {
             meeting: { title: "Termin", items: [] },

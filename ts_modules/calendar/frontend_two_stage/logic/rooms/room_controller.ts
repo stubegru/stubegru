@@ -16,7 +16,7 @@ export default class RoomController {
         return this.roomList.find(elem => (elem.id == roomId));
     }
 
-    async refreshRoomList() {
+    private async refreshRoomList() {
         try {
             let list = await CalendarModule.roomService.getAll();
             this.roomList = list;
