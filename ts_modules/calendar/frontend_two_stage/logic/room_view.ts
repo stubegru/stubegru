@@ -71,8 +71,7 @@ export default class RoomView {
 
     async initAdvisorDropdown() {
         let ownId = UserUtils.currentUser.id;
-        //@ts-expect-error TODO: Use new user Utils
-        let userList = await stubegru.modules.userUtils.getUserByPermission("MEETING_ADVISOR");
+        let userList = await UserUtils.getUserListByPermission("MEETING_ADVISOR");
         let selectHtml = "";
         for (const user of userList) {
             if (ownId == user.id) { //Add own entry at top (default)

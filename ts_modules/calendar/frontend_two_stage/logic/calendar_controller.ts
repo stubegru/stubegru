@@ -1,5 +1,6 @@
 import Alert from '../../../../components/alert/alert.js';
 import Stubegru from '../../../../components/stubegru_core/logic/stubegru.js';
+import UserUtils from '../../../../components/user_utils/user_utils.js';
 import Meeting from './meeting_service.js';
 
 export default class CalendarController {
@@ -20,8 +21,7 @@ export default class CalendarController {
      * @returns {boolean} wether the current user has write permissions for calendar meetings
      */
     isCalendarWriteUser(): boolean {
-        //@ts-expect-error TODO: use new typescript stubegru-core API for userUtils
-        const writePermission = stubegru.modules.userUtils.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
+        const writePermission = UserUtils.currentUser.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
         return writePermission.access;
     }
 
@@ -79,8 +79,7 @@ export default class CalendarController {
 
         let resp = await meeting.isBlock();
 
-        //@ts-expect-error TODO: use new typescript stubegru-core API for current user id
-        if (resp.blockId == stubegru.currentUser.id) {
+        if (resp.blockId == UserUtils.currentUser.id) {
             //If meeting is blocked by yourself => remove block 
             await meeting.setBlock(false);
             resp = await meeting.isBlock();
@@ -134,8 +133,7 @@ export default class CalendarController {
 
         //Check for block
         let resp = await meeting.isBlock();
-        //@ts-expect-error TODO: use new typescript stubegru-core API for userUtils
-        if (resp.blockId == "0" || resp.blockId == stubegru.currentUser.id) {
+        if (resp.blockId == "0" || resp.blockId == UserUtils.currentUser.id) {
             //Not blocked => block now and continue
             resp = await meeting.setBlock(true);
             if (resp.status != "success") {
