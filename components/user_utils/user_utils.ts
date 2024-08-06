@@ -2,7 +2,7 @@ import Stubegru from "../stubegru_core/logic/stubegru.js";
 import { Permission, PermissionRequest, PermissionRequestAccess } from "./permission_request.js";
 
 export default class UserUtils {
-    static currentUser: StubegruUserWithPermReq; //TODO: SEt attributes
+    static currentUser: StubegruUserWithPermReq;
     static allUsersList: StubegruUser[];
 
     /**
@@ -13,7 +13,7 @@ export default class UserUtils {
         return userData;
     }
 
-    static private async fetchAllUsers() {
+    private static async fetchAllUsers() {
         const resp = await Stubegru.fetch.getJson(`modules/user_utils/get_all_users.php`) as StubegruUser[];
         UserUtils.allUsersList = resp;
     }
@@ -26,12 +26,12 @@ export default class UserUtils {
         return UserUtils.allUsersList;
     }
 
-    static async getUserByPermission(permissionRequest: PermissionRequest) {
+    static async getUserListByPermission(permissionRequest: PermissionRequest) {
         const userData = await Stubegru.fetch.getJson(`modules/user_utils/get_user_by_permission.php`, { permissionRequest: permissionRequest }) as StubegruUser[];
         return userData;
     }
 
-    static async getUserPermissionRequests() {
+    private static async getUsersPermissionRequests() {
         const permissionList = await Stubegru.fetch.getJson(`modules/user_utils/get_users_permission_requests.php`) as PermissionRequestAccess[];
         return permissionList;
     }
@@ -46,19 +46,15 @@ export default class UserUtils {
         }
     }
 
-    static async function initUserManagement() {
-        const userData = await static getUserInfo();
-        stubegru.currentUser = userData;
-        stubegru.modules.menubar.addItem("secondary", `<li><a style="cursor:default;"><i class="fas fa-user"></i>&nbsp;Nutzer: <b>${userData.name}</b></a></li>`, -1000);
-        stubegru.modules.menubar.addItem("secondary", `<li><a data-toggle="modal" data-target="#userUtilsModal" title="Name, Mailadresse und Passwort konfigurieren"><i class="fas fa-cog"></i>&nbsp;Eigenen Account bearbeiten</a></li>`, -999);
-        stubegru.modules.menubar.addDivider("secondary", -900);
-        stubegru.modules.menubar.addItem("secondary", `<li class="permission-USER_WRITE permission-required"><a href="${stubegru.constants.BASE_URL}?view=user_management" title="Alle Benutzer verwalten"><i class="fas fa-users-cog"></i>&nbsp;Nutzerverwaltung</a></li>`, 10);
-        stubegru.modules.menubar.registerPostRenderHook("-Update Admin Elements-", static updateAdminElements, 100);
-        userUtilsModalReset();
-        updateAdminElements();
+    static async init() {
+        const userData = await UserUtils.getUserInfo() as StubegruUserWithPermReq;
+        const permReq = await UserUtils.getUsersPermissionRequests();
+        userData.permissionRequests = permReq;
+        UserUtils.currentUser = userData;
     };
-    initUserManagement();
+}
 
+await UserUtils.init();
 
 
 
