@@ -16,6 +16,13 @@ export default class StubegruDom {
         return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
     }
 
+    removeEventListener(selector: string) {
+        this.querySelectorAll(selector).forEach(element => {
+            const newElement = element.cloneNode(true);
+            element.replaceWith(newElement);
+        });
+    }
+
     slideUp = (target: HTMLElement | string, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
 
@@ -89,6 +96,18 @@ export default class StubegruDom {
         }
     }
 
+    show(selector: string) {
+        this.querySelector(selector).style.removeProperty("display");
+    }
+
+    hide(selector: string) {
+        this.querySelector(selector).style.display = "none";
+    }
+
+    setVisibility(selector: string, state: boolean) {
+        state ? this.show(selector) : this.hide(selector);
+    }
+
     /**
      * Load remote HTML and append to module's DOM element
      * @param path Path to HTML file relative to BASE_URL/${path}
@@ -96,7 +115,7 @@ export default class StubegruDom {
      */
     async loadHtml(path, selector = "body") {
         let html = await Stubegru.fetch.getText(path);
-        this.querySelector(selector).insertAdjacentHTML("beforeend",html);
+        this.querySelector(selector).insertAdjacentHTML("beforeend", html);
     }
 
     /**

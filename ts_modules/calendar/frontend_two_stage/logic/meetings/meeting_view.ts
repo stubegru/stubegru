@@ -1,5 +1,8 @@
 import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import CalendarModule from "../calendar_module.js";
 
+const MC = CalendarModule.meetingController;
 export default class MeetingView {
 
     static channelDescriptions = {
@@ -10,46 +13,34 @@ export default class MeetingView {
         "all": "Alle",
     };
 
-    modal:Modal;
+    modal: Modal;
 
     async init() {
         this.modal = new Modal("#terminmodal"); //TODO: Change naming
 
-
         this.setUnsavedChanges(false);
         this.initFomularChangeListener();
         //ask for unsaved changes
-        $("#terminmodal").on('hide.bs.modal', this.askForUnsavedChanges);
+        this.modal.addEventListener('hide.bs.modal', this.askForUnsavedChanges);
         //Reset modal forms on hide event
-        $("#terminmodal").on('hidden.bs.modal', this.resetAllForms);
-
-        await Room.fetchRooms();
-        this.setRoomDropdown(Room.roomList);
-        this.initRoomEditButtons();
-
-        await MailTemplate.fetchMailTemplates();
-        this.setTemplateDropdown(MailTemplate.mailTemplateList);
-        this.initTemplateEditButtons();
+        this.modal.addEventListener('hidden.bs.modal', this.resetAllForms);
 
         await this.initAdvisorDropdown();
         this.initMeetingDetailChannelDropdown();
-
-        //Init richtext editor for mail templates
-        CKEDITOR.replace('mailTemplateEditor', { height: "400px" });
     }
 
-    askForUnsavedChanges = () => {
-        if (!this.unsavedChanges) { return true; }
-        return confirm("Es gibt ungespeicherte Änderungen. Soll das Formular wirklich geschlossen werden?");
+    askForUnsavedChanges() {
+        if (!MC.state.unsavedChanges) { return true; }
+        return confirm("Es gibt ungesicherte Änderungen. Soll das Formular wirklich geschlossen werden?");
     }
 
-    setUnsavedChanges = (unsavedChanges) => {
-        this.unsavedChanges = unsavedChanges;
-        unsavedChanges ?
-            $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #d9534f"></i> Ungespeicherte Änderungen`) :
-            $("#calendarModalChangesInfo").html(`<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`);
+    setUnsavedChanges(hasUnsavedChanges: boolean) {
+        MC.state.unsavedChanges = hasUnsavedChanges;
+        hasUnsavedChanges ?
+            Stubegru.dom.querySelector("#calendarModalChangesInfo").innerHTML = `<i class="fas fa-circle" style="color: #d9534f"></i> Ungesicherte Änderungen` :
+            Stubegru.dom.querySelector("#calendarModalChangesInfo").innerHTML = `<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`;
 
-        if (unsavedChanges && CalendarController.freeMeetingMode) {
+        if (hasUnsavedChanges && MC.state.freeMeetingMode) {
             this.showAssignButtons(false, false, false, false);
             this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
         }
@@ -60,7 +51,7 @@ export default class MeetingView {
      * @param {boolean} state true to show the modal, false to hide
      */
     setModalVisible(state) {
-        $("#terminmodal").modal(state ? "show" : "hide");
+        state ? this.modal.show() : this.modal.hide();
     }
 
     /**
@@ -68,10 +59,8 @@ export default class MeetingView {
      * @param {string} title 
      */
     setModalTitle(title) {
-        $("#terminmodalTitle").html(title);
+        Stubegru.dom.querySelector("#terminmodalTitle").innerHTML = title;
     }
-
-
 
     /**
      * Resets the meetingDetail-, client-, room- and templateForm
@@ -81,25 +70,25 @@ export default class MeetingView {
     resetAllForms = async () => {
         await this.resetMeetingDetailForm();
         this.resetClientForm();
-        this.resetRoomForm();
-        this.setRoomFormVisible(false);
-        this.resetTemplateForm();
-        this.setTemplateFormVisible(false);
-        this.setInfoAlert(false);
-        CalendarController.freeMeetingMode = false;
-        CalendarController.blockedMeeting = false;
-        $(".calendar-footer-button").off();
-        $(".calendar-assign-button").off();
-        $("#calendarMeetingDetailForm").off("submit");
+        CalendarModule.roomView.resetRoomForm();
+        CalendarModule.roomView.setRoomFormVisible(false);
+        CalendarModule.mailTemplateView.resetTemplateForm();
+        CalendarModule.mailTemplateView.setTemplateFormVisible(false);
+        this.setInfoAlert("");
+        MC.state.freeMeetingMode = false;
+        MC.state.blockedMeeting = false;
+        Stubegru.dom.removeEventListener(".calendar-footer-button");
+        Stubegru.dom.removeEventListener(".calendar-assign-button");
+        Stubegru.dom.removeEventListener("#calendarMeetingDetailForm"); //TODO: Originally only the submit event was removed... Check if this is okay
         this.setUnsavedChanges(false);
     }
 
     initFomularChangeListener() {
-        $('.meeting-details').on("change", () => CalendarController.modal.setUnsavedChanges(true));
-        $(".meeting-room-input").on("change", () => CalendarController.modal.setUnsavedChanges(true));
-        $(".meeting-template-input").on("change", () => CalendarController.modal.setUnsavedChanges(true));
-        $(".meeting-client").on("change", () => CalendarController.modal.setUnsavedChanges(true));
-        $("#calendarStart").on("change", this.setMeetingEndTimeByStartTime);
+        Stubegru.dom.querySelector('.meeting-details').addEventListener("change", () => this.setUnsavedChanges(true));
+        Stubegru.dom.querySelector(".meeting-room-input").addEventListener("change", () => this.setUnsavedChanges(true));
+        Stubegru.dom.querySelector(".meeting-template-input").addEventListener("change", () => this.setUnsavedChanges(true));
+        Stubegru.dom.querySelector(".meeting-client").addEventListener("change", () => this.setUnsavedChanges(true));
+        Stubegru.dom.querySelector("#calendarStart").addEventListener("change", this.setMeetingEndTimeByStartTime);
     }
 
 
@@ -109,11 +98,9 @@ export default class MeetingView {
      * Alert is hidden if the text is empty or not given
      * @param {string} text Text to be displayed in the alert (HTML allowed)
      */
-    setInfoAlert(text) {
-        (text && text.length > 0) ?
-            $("#calendarModalInfoAlert").show() :
-            $("#calendarModalInfoAlert").hide();
-        $("#calendarModalInfoAlert").html(`<i class="fas fa-info-circle"></i> ${text}`);
+    setInfoAlert(text?: string) {
+        Stubegru.dom.setVisibility("#calendarModalInfoAlert", text && text.length > 0);
+        Stubegru.dom.querySelector("#calendarModalInfoAlert").innerHTML = `<i class="fas fa-info-circle"></i> ${text}`;
     }
 
     /**
@@ -123,13 +110,11 @@ export default class MeetingView {
      * @param {boolean} remove wether to show the delete button
      * @param {boolean} cancel wether to show the cancel button
      */
-    showAssignButtons(assign, save, remove, cancel) {
-        sh($("#calendarAssignAssignButton"), assign);
-        sh($("#calendarAssignSaveButton"), save);
-        sh($("#calendarAssignDeleteButton"), remove);
-        sh($("#calendarAssignCancelButton"), cancel);
-
-        function sh(e, b) { b ? e.show() : e.hide(); }
+    showAssignButtons(assign: boolean, save: boolean, remove: boolean, cancel: boolean) {
+        Stubegru.dom.setVisibility("#calendarAssignAssignButton", assign);
+        Stubegru.dom.setVisibility("#calendarAssignSaveButton", save);
+        Stubegru.dom.setVisibility("#calendarAssignDeleteButton", remove);
+        Stubegru.dom.setVisibility("#calendarAssignCancelButton", cancel);
     }
 
     /**
@@ -138,10 +123,10 @@ export default class MeetingView {
   * Assign Save button acts as submit button for client detail form
   * @param {function} callback Function to be executed if the button is clicked
   */
-    setAssignSaveButtonEvent(callback) {
+    setAssignSaveButtonEvent(callback: (event: SubmitEvent) => void) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
-        $("#calendarClientDataForm").off("submit");
-        $("#calendarClientDataForm").on("submit", (event) => {
+        Stubegru.dom.removeEventListener("#calendarClientDataForm");
+        Stubegru.dom.querySelector("#calendarClientDataForm").addEventListener("submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -152,9 +137,9 @@ export default class MeetingView {
      * This does automatically clear all currently registered events
      * @param {function} callback Function to be executed if the button is clicked
      */
-    setAssignAssignButtonEvent(callback) {
-        $("#calendarAssignAssignButton").off();
-        $("#calendarAssignAssignButton").on("click", callback);
+    setAssignAssignButtonEvent(callback: (event: Event) => void) {
+        Stubegru.dom.removeEventListener("#calendarAssignAssignButton");
+        Stubegru.dom.querySelector("#calendarAssignAssignButton").addEventListener("click", callback);
     }
 
     /**
@@ -162,9 +147,9 @@ export default class MeetingView {
      * This does automatically clear all currently registered events
      * @param {function} callback Function to be executed if the button is clicked
      */
-    setAssignDeleteButtonEvent(callback) {
-        $("#calendarAssignDeleteButton").off();
-        $("#calendarAssignDeleteButton").on("click", callback);
+    setAssignDeleteButtonEvent(callback: (event: Event) => void) {
+        Stubegru.dom.removeEventListener("#calendarAssignDeleteButton");
+        Stubegru.dom.querySelector("#calendarAssignDeleteButton").addEventListener("click", callback);
     }
 
     /**
@@ -172,9 +157,9 @@ export default class MeetingView {
      * This does automatically clear all currently registered events
      * @param {function} callback Function to be executed if the button is clicked
      */
-    setAssignCancelButtonEvent(callback) {
-        $("#calendarAssignCancelButton").off();
-        $("#calendarAssignCancelButton").on("click", callback);
+    setAssignCancelButtonEvent(callback: (event: Event) => void) {
+        Stubegru.dom.removeEventListener("#calendarAssignCancelButton");
+        Stubegru.dom.querySelector("#calendarAssignCancelButton").addEventListener("click", callback);
     }
 
     /**
@@ -184,11 +169,11 @@ export default class MeetingView {
      * @param {boolean} remove wether to enable the delete button
      * @param {boolean} cancel wether to enable the cancel button
      */
-    enableFooterButtons(save, saveNext, remove, cancel) {
-        $("#calendarSaveMeetingButton").prop("disabled", !save);
-        $("#calendarDeleteMeetingButton").prop("disabled", !remove);
-        $("#calendarCancelButton").prop("disabled", !cancel);
-        saveNext ? $("#calendarSaveNextMeetingButton").show() : $("#calendarSaveNextMeetingButton").hide();
+    enableFooterButtons(save: boolean, saveNext: boolean, remove: boolean, cancel: boolean) {
+        Stubegru.dom.querySelectorAsInput("#calendarSaveMeetingButton").disabled = !save;
+        Stubegru.dom.querySelectorAsInput("#calendarDeleteMeetingButton").disabled = !remove;
+        Stubegru.dom.querySelectorAsInput("#calendarCancelButton").disabled = !cancel;
+        Stubegru.dom.setVisibility("#calendarSaveNextMeetingButton", saveNext);
     }
 
     /**
@@ -197,10 +182,10 @@ export default class MeetingView {
      * Footer Save button acts as submit button for meeting detail form
      * @param {function} callback Function to be executed if the button is clicked
      */
-    setFooterSaveButtonEvent(callback) {
+    setFooterSaveButtonEvent(callback: (event: Event) => void) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
-        $("#calendarMeetingDetailForm").off("submit");
-        $("#calendarMeetingDetailForm").on("submit", (event) => {
+        Stubegru.dom.removeEventListener("#calendarMeetingDetailForm");
+        Stubegru.dom.querySelector("#calendarMeetingDetailForm").addEventListener("submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -211,9 +196,9 @@ export default class MeetingView {
      * This does automatically clear all currently registered events
      * @param {function} callback Function to be executed if the button is clicked
      */
-    setFooterDeleteButtonEvent(callback) {
-        $("#calendarDeleteMeetingButton").off();
-        $("#calendarDeleteMeetingButton").on("click", callback);
+    setFooterDeleteButtonEvent(callback: (event: Event) => void) {
+        Stubegru.dom.removeEventListener("#calendarDeleteMeetingButton");
+        Stubegru.dom.querySelector("#calendarDeleteMeetingButton").addEventListener("click", callback);
     }
 
 
@@ -222,59 +207,59 @@ export default class MeetingView {
     */
     resetMeetingDetailForm = async () => {
         this.enableDetailMeetingForm(true);
-        $('.meeting-details').val("");
+        Stubegru.dom.querySelector('.meeting-details').val("");
 
         //load from custom config
         const calendarTitle = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
-        $('#calendarTitle').val(calendarTitle);
-        $("#calendarOwner").val(stubegru.currentUser.id);
-        $("#calendarChannel").val("all");
-        $("#calendarRoom")[0].selectedIndex = 1; //Select first entry by default
-        $("#calendarTemplate")[0].selectedIndex = 1;
+        Stubegru.dom.querySelector('#calendarTitle').val(calendarTitle);
+        Stubegru.dom.querySelector("#calendarOwner").val(stubegru.currentUser.id);
+        Stubegru.dom.querySelector("#calendarChannel").val("all");
+        Stubegru.dom.querySelector("#calendarRoom")[0].selectedIndex = 1; //Select first entry by default
+        Stubegru.dom.querySelector("#calendarTemplate")[0].selectedIndex = 1;
 
     }
 
     enableDetailMeetingForm(isEnabled) {
-        $('.meeting-details').prop("disabled", !isEnabled);
+        Stubegru.dom.querySelectorAsInput('.meeting-details').disabled = !isEnabled;
     }
 
 
     getMeetingDetailData() {
         let meetingData = {};
-        meetingData["date"] = $('#calendarDate').val();
-        meetingData["start"] = $('#calendarStart').val();
-        meetingData["end"] = $('#calendarEnd').val();
-        meetingData["title"] = $('#calendarTitle').val();
-        meetingData["ownerId"] = $('#calendarOwner').val();
-        meetingData["roomId"] = $('#calendarRoom').val();
-        meetingData["templateId"] = $('#calendarTemplate').val();
-        meetingData["channel"] = $('#calendarChannel').val();
+        meetingData["date"] = Stubegru.dom.querySelector('#calendarDate').val();
+        meetingData["start"] = Stubegru.dom.querySelector('#calendarStart').val();
+        meetingData["end"] = Stubegru.dom.querySelector('#calendarEnd').val();
+        meetingData["title"] = Stubegru.dom.querySelector('#calendarTitle').val();
+        meetingData["ownerId"] = Stubegru.dom.querySelector('#calendarOwner').val();
+        meetingData["roomId"] = Stubegru.dom.querySelector('#calendarRoom').val();
+        meetingData["templateId"] = Stubegru.dom.querySelector('#calendarTemplate').val();
+        meetingData["channel"] = Stubegru.dom.querySelector('#calendarChannel').val();
         return meetingData;
     }
 
     setMeetingDetailData(meeting) {
-        $('#calendarDate').val(meeting.date);
-        $('#calendarStart').val(meeting.start);
-        $('#calendarEnd').val(meeting.end);
-        $('#calendarTitle').val(meeting.title);
-        $('#calendarOwner').val(meeting.ownerId);
-        $('#calendarChannel').val(meeting.channel);
+        Stubegru.dom.querySelector('#calendarDate').val(meeting.date);
+        Stubegru.dom.querySelector('#calendarStart').val(meeting.start);
+        Stubegru.dom.querySelector('#calendarEnd').val(meeting.end);
+        Stubegru.dom.querySelector('#calendarTitle').val(meeting.title);
+        Stubegru.dom.querySelector('#calendarOwner').val(meeting.ownerId);
+        Stubegru.dom.querySelector('#calendarChannel').val(meeting.channel);
 
-        $('#calendarRoom').val(meeting.roomId);
-        $('#calendarTemplate').val(meeting.templateId);
+        Stubegru.dom.querySelector('#calendarRoom').val(meeting.roomId);
+        Stubegru.dom.querySelector('#calendarTemplate').val(meeting.templateId);
     }
 
     /**
      * If the value of the meeting start time input changes, this function is called to set the end time to an according value
      */
     setMeetingEndTimeByStartTime() {
-        let startTime = $("#calendarStart").val();
+        let startTime = Stubegru.dom.querySelector("#calendarStart").val();
         if (startTime.length == 5) {
             let hours = startTime.substr(0, 2);
             let minutes = startTime.substr(3, 2);
             hours++;
             hours = hours < 10 ? `0${hours}` : hours;
-            $("#calendarEnd").val(hours + ":" + minutes);
+            Stubegru.dom.querySelector("#calendarEnd").val(hours + ":" + minutes);
         }
     }
 
@@ -284,7 +269,7 @@ export default class MeetingView {
         for (let channelId in names) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
-        $("#calendarChannel").html(html);
+        Stubegru.dom.querySelector("#calendarChannel").html(html);
     }
 
 
@@ -297,39 +282,39 @@ export default class MeetingView {
     */
     resetClientForm = () => {
         this.enableClientForm(true);
-        $(".meeting-client").val("");
+        Stubegru.dom.querySelector(".meeting-client").val("");
     }
 
     enableClientForm(isEnabled) {
-        $('.meeting-client').prop("disabled", !isEnabled);
+        Stubegru.dom.querySelectorAsInput('.meeting-client').disabled = !isEnabled;
     }
 
     setClientVisible(isVisible) {
         isVisible ?
-            $("#calendarClientDataContainer").slideDown() :
-            $("#calendarClientDataContainer").slideUp();
+            Stubegru.dom.querySelector("#calendarClientDataContainer").slideDown() :
+            Stubegru.dom.querySelector("#calendarClientDataContainer").slideUp();
     }
 
 
     getClientData() {
         let clientData = {};
-        clientData["name"] = $("#calendarClientName").val();
-        clientData["mail"] = $("#calendarClientMail").val();
-        clientData["phone"] = $("#calendarClientPhone").val();
-        clientData["survey"] = $("#calendarClientSurvey").val();
-        clientData["issue"] = $("#calendarClientIssue").val();
-        clientData["channel"] = $("#calendarClientChannel").val();
+        clientData["name"] = Stubegru.dom.querySelector("#calendarClientName").val();
+        clientData["mail"] = Stubegru.dom.querySelector("#calendarClientMail").val();
+        clientData["phone"] = Stubegru.dom.querySelector("#calendarClientPhone").val();
+        clientData["survey"] = Stubegru.dom.querySelector("#calendarClientSurvey").val();
+        clientData["issue"] = Stubegru.dom.querySelector("#calendarClientIssue").val();
+        clientData["channel"] = Stubegru.dom.querySelector("#calendarClientChannel").val();
         return clientData;
     }
 
     setClientData = (client) => {
         this.initClientChannelDropdown(client.channel);
-        $('#calendarClientName').val(client.name);
-        $('#calendarClientMail').val(client.mail);
-        $('#calendarClientIssue').val(client.description);
-        $('#calendarClientSurvey').val(client.formular);
-        $('#calendarClientChannel').val(client.channel);
-        $('#calendarClientPhone').val(this.prettyPrintPhoneNumber(client.phone));
+        Stubegru.dom.querySelector('#calendarClientName').val(client.name);
+        Stubegru.dom.querySelector('#calendarClientMail').val(client.mail);
+        Stubegru.dom.querySelector('#calendarClientIssue').val(client.description);
+        Stubegru.dom.querySelector('#calendarClientSurvey').val(client.formular);
+        Stubegru.dom.querySelector('#calendarClientChannel').val(client.channel);
+        Stubegru.dom.querySelector('#calendarClientPhone').val(this.prettyPrintPhoneNumber(client.phone));
     }
 
     prettyPrintPhoneNumber(phone) {
@@ -364,7 +349,7 @@ export default class MeetingView {
         for (let channelId of channelOptions) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
-        $("#calendarClientChannel").html(html)
+        Stubegru.dom.querySelector("#calendarClientChannel").html(html)
     }
 
 
@@ -373,7 +358,6 @@ export default class MeetingView {
 
 
 
-   
 
 
 
@@ -384,6 +368,7 @@ export default class MeetingView {
 
 
 
-    
+
+
 
 }

@@ -1,21 +1,30 @@
 import Alert from '../../../../../components/alert/alert.js';
 import Stubegru from '../../../../../components/stubegru_core/logic/stubegru.js';
 import UserUtils from '../../../../../components/user_utils/user_utils.js';
-import Meeting from './meeting_service.js';
+import { Meeting } from './meeting_service.js';
 
 export default class MeetingController {
 
-    
-    freeMeetingMode = false;
+    meetingList: Meeting[];
+    state = {
+        freeMeetingMode : false,
+        unsavedChanges : false,
+        blockedMeeting: false,
+    }
 
-    async init() {
-        
-
-        
+    getMeeting(meetingId: string) {
+        return this.meetingList.find(e => e.id == meetingId);
     }
 
 
-   
+    async init() {
+
+
+
+    }
+
+
+
 
     /**
      * @returns {boolean} wether the current user has write permissions for calendar meetings
