@@ -47,7 +47,7 @@ export default class CalendarView {
      assignedToggle: Toggle;
 
 
-    init(elemSelector) {
+    init() {
         modal = new MeetingView();
         search = new CalendarSearch();
 
@@ -59,7 +59,7 @@ export default class CalendarView {
 
         this.assignedVisible = true;
         this.othersVisible = true;
-        let calendarEl = document.querySelector(elemSelector);
+        let calendarEl = document.querySelector(elemSelector); //TODO: hardcode selector
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, CalendarView.config);
         this.fullCalendar.render();
         this.assignFeedbackModal = new AssignFeedbackModal();

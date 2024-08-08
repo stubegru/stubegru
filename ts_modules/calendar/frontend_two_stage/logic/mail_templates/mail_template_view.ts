@@ -14,6 +14,8 @@ export default class MailTemplateView {
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" });
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
+
+        Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
     }
 
     /**

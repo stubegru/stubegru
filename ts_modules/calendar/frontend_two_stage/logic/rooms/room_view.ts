@@ -5,9 +5,20 @@ import { Room } from "./room_service.js";
 
 export default class RoomView {
 
-    /**
-    * Reset all inputs in the Calendar meeting room form
-    */
+    init() {
+        this.initAdvisorDropdown();
+        Stubegru.dom.querySelectorAll(".meeting-room-input").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
+        this.initRoomEditButtons();
+    }
+
+    private initRoomEditButtons() {
+        Stubegru.dom.querySelector("#calendarEditRoomButton").addEventListener("click", CalendarModule.roomController.showRoomFormForUpdate);
+        Stubegru.dom.querySelector("#calendarNewRoomButton").addEventListener("click", CalendarModule.roomController.showRoomFormForCreate);
+        Stubegru.dom.querySelector("#calendarRoomForm").addEventListener("submit", CalendarModule.roomController.saveRoom);
+        Stubegru.dom.querySelector("#calendarCancelRoomButton").addEventListener("click", CalendarModule.roomController.cancelRoomEdit);
+        Stubegru.dom.querySelector("#calendarDeleteRoomButton").addEventListener("click", CalendarModule.roomController.deleteRoom);
+    }
+
     resetRoomForm() {
         let form = Stubegru.dom.querySelector("#calendarRoomForm") as HTMLFormElement;
         form.reset();
@@ -23,14 +34,6 @@ export default class RoomView {
             ownId == room.besitzer ? selectHtml += optionString : postHtml += optionString; //Add own entries at top
         }
         Stubegru.dom.querySelector("#calendarRoom").innerHTML = selectHtml + postHtml;
-    }
-
-    initRoomEditButtons() {
-        Stubegru.dom.querySelector("#calendarEditRoomButton").addEventListener("click", CalendarModule.roomController.showRoomFormForUpdate);
-        Stubegru.dom.querySelector("#calendarNewRoomButton").addEventListener("click", CalendarModule.roomController.showRoomFormForCreate);
-        Stubegru.dom.querySelector("#calendarRoomForm").addEventListener("submit", CalendarModule.roomController.saveRoom);
-        Stubegru.dom.querySelector("#calendarCancelRoomButton").addEventListener("click", CalendarModule.roomController.cancelRoomEdit);
-        Stubegru.dom.querySelector("#calendarDeleteRoomButton").addEventListener("click", CalendarModule.roomController.deleteRoom);
     }
 
     setRoomFormVisible(isVisible: boolean) {

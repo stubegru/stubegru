@@ -7,8 +7,8 @@ export default class MeetingController {
 
     meetingList: Meeting[];
     state = {
-        freeMeetingMode : false,
-        unsavedChanges : false,
+        freeMeetingMode: false,
+        unsavedChanges: false,
         blockedMeeting: false,
     }
 
@@ -146,9 +146,8 @@ export default class MeetingController {
             //Not blocked => block now and continue
             resp = await meeting.setBlock(true);
             if (resp.status != "success") {
-                m.showBlockError("ubekannt", () => {
-                    this.openFreeMeeting(meetingId);
-                })
+                await m.showBlockError("unbekannt");
+                this.openFreeMeeting(meetingId);
                 return;
             }
             //@ts-expect-error TODO: Unterstand and fix events...
@@ -158,9 +157,8 @@ export default class MeetingController {
                 // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
             });
         } else {
-            m.showBlockError(resp.blockName, () => {
-                this.openFreeMeeting(meetingId);
-            });
+            await m.showBlockError(resp.blockName);
+            this.openFreeMeeting(meetingId);
             return;
         }
 

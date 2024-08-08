@@ -12,7 +12,7 @@ const swalToBootstrapClass = {
 
 
 export default class Alert {
-    
+
     static TOAST_LIVETIME = 5000 //in milliseconds
     static TOAST_ID = 0;
 
@@ -20,7 +20,7 @@ export default class Alert {
         await Stubegru.dom.loadHtml("components/alert/module.html");
     }
 
-    static alertResp(resp: StubegruHttpResponse, title?: string) {
+    static async alertResp(resp: StubegruHttpResponse, title?: string) {
         let options = {} as StubegruAlertOptions;
 
         options.text = resp.message;
@@ -28,16 +28,16 @@ export default class Alert {
         options.mode = resp.mode;
         options.title = title || resp.title;
 
-        Alert.alert(options);
+        await Alert.alert(options);
     }
 
-    static alertSimple(text: string) {
-        Alert.alert({ text: text });
+    static async alertSimple(text: string) {
+        await Alert.alert({ text: text });
     }
 
-    static alertError(error: Error) {
+    static async alertError(error: Error) {
         console.error(error);
-        Alert.alert({
+        await Alert.alert({
             text: error.message,
             title: "Es ist ein Fehler aufgetreten",
             type: "error"
@@ -75,7 +75,7 @@ export default class Alert {
     }
 
 
-    static showToast(options:SweetAlertOptions) {
+    static showToast(options: SweetAlertOptions) {
         let toastId = `alert_toast_${Alert.TOAST_ID++}`;
         let html = `<div class="alert alert-${options.icon} alert-dismissible" role="alert" id="${toastId}" style="display:none;">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">

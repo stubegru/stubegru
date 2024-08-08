@@ -1,5 +1,6 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../../../../../components/stubegru_core/logic/stubegru_fetch.js";
+import { MeetingClient } from "../meeting_clients/meeting_client_service.js";
 
 export default class MeetingService {
 
@@ -41,33 +42,6 @@ export default class MeetingService {
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }
-
-    async deleteClient(meetingId: string) {
-        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/assignment/cancel_meeting_assignment.php", { meetingId: meetingId }) as StubegruHttpResponse;
-        if (resp.status == "error") { throw new Error(resp.message) };
-        return resp;
-    }
-
-    async assignClient(clientData: MeetingClient) {
-        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/assignment/create_meeting_assignment.php", clientData) as StubegruHttpResponse;
-        if (resp.status == "error") { throw new Error(resp.message) };
-        return resp;
-    }
-
-}
-
-
-
-export interface MeetingClient {
-    id: string;
-    name: string;
-    gender: string | null;
-    mail: string;
-    phone: string;
-    channel: string;
-    formular: number;
-    description: string;
-    dateId: number;
 }
 
 export interface Meeting {
@@ -75,7 +49,7 @@ export interface Meeting {
     date: string;
     owner: string;
     ownerId: string;
-    free: number;
+    free: string;
     room: string;
     erfassungsdatum: string;
     start: string;
@@ -83,6 +57,6 @@ export interface Meeting {
     title: string;
     channel: string;
     template: string;
-    blocked: number;
+    blocked: string;
     teilnehmer?: MeetingClient;
 }
