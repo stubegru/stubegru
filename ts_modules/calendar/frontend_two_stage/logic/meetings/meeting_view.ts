@@ -3,6 +3,7 @@ import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
+import { Meeting } from "./meeting_service.js";
 
 const MC = CalendarModule.meetingController;
 export default class MeetingView {
@@ -32,17 +33,17 @@ export default class MeetingView {
     }
 
     askForUnsavedChanges() {
-        if (!MC.state.unsavedChanges) { return true; }
+        if (!CalendarModule.state.unsavedChanges) { return true; }
         return confirm("Es gibt ungesicherte Änderungen. Soll das Formular wirklich geschlossen werden?");
     }
 
     setUnsavedChanges(hasUnsavedChanges: boolean) {
-        MC.state.unsavedChanges = hasUnsavedChanges;
+        CalendarModule.state.unsavedChanges = hasUnsavedChanges;
         hasUnsavedChanges ?
             Stubegru.dom.querySelector("#calendarModalChangesInfo").innerHTML = `<i class="fas fa-circle" style="color: #d9534f"></i> Ungesicherte Änderungen` :
             Stubegru.dom.querySelector("#calendarModalChangesInfo").innerHTML = `<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`;
 
-        if (hasUnsavedChanges && MC.state.freeMeetingMode) {
+        if (hasUnsavedChanges && CalendarModule.state.freeMeetingMode) {
             CalendarModule.meetingClientView.showAssignButtons(false, false, false, false);
             this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.")
         }
@@ -77,8 +78,8 @@ export default class MeetingView {
         CalendarModule.mailTemplateView.resetTemplateForm();
         CalendarModule.mailTemplateView.setTemplateFormVisible(false);
         this.setInfoAlert("");
-        MC.state.freeMeetingMode = false;
-        MC.state.blockedMeeting = false;
+        CalendarModule.state.freeMeetingMode = false;
+        CalendarModule.state.blockedMeeting = false;
         Stubegru.dom.removeEventListener(".calendar-footer-button");
         Stubegru.dom.removeEventListener(".calendar-assign-button");
         Stubegru.dom.removeEventListener("#calendarMeetingDetailForm"); //TODO: Originally only the submit event was removed... Check if this is okay
@@ -161,7 +162,7 @@ export default class MeetingView {
 
 
     getMeetingDetailData() {
-        let meetingData = {};
+        let meetingData = {} as Meeting;
         meetingData["date"] = Stubegru.dom.querySelectorAsInput('#calendarDate').value;
         meetingData["start"] = Stubegru.dom.querySelectorAsInput('#calendarStart').value;
         meetingData["end"] = Stubegru.dom.querySelectorAsInput('#calendarEnd').value;
@@ -173,7 +174,7 @@ export default class MeetingView {
         return meetingData;
     }
 
-    setMeetingDetailData(meeting) {
+    setMeetingDetailData(meeting: Meeting) {
         Stubegru.dom.querySelectorAsInput('#calendarDate').value = meeting.date;
         Stubegru.dom.querySelectorAsInput('#calendarStart').value = meeting.start;
         Stubegru.dom.querySelectorAsInput('#calendarEnd').value = meeting.end;
@@ -181,8 +182,8 @@ export default class MeetingView {
         Stubegru.dom.querySelectorAsInput('#calendarOwner').value = meeting.ownerId;
         Stubegru.dom.querySelectorAsInput('#calendarChannel').value = meeting.channel;
 
-        Stubegru.dom.querySelectorAsInput('#calendarRoom').value = meeting.roomId;
-        Stubegru.dom.querySelectorAsInput('#calendarTemplate').value = meeting.templateId;
+        Stubegru.dom.querySelectorAsInput('#calendarRoom').value = meeting.room;
+        Stubegru.dom.querySelectorAsInput('#calendarTemplate').value = meeting.template;
     }
 
     /**

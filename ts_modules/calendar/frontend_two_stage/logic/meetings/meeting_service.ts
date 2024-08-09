@@ -31,7 +31,7 @@ export default class MeetingService {
     }
 
     async isBlock(meetingId: string) {
-        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/is_meeting_block.php", { meetingId: meetingId }) as StubegruHttpResponse;
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/is_meeting_block.php", { meetingId: meetingId }) as MeetingBlockResponse;
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }
@@ -42,6 +42,11 @@ export default class MeetingService {
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }
+}
+
+export interface MeetingBlockResponse extends StubegruHttpResponse {
+    blockId: string;
+    blockName: string;
 }
 
 export interface Meeting {

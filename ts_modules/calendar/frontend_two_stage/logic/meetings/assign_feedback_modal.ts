@@ -1,11 +1,12 @@
 import Stubegru from '../../../../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../../../../components/bootstrap/v3/ts_wrapper.js';
+import { AssignClientResponse } from '../meeting_clients/meeting_client_service.js';
 
 export default class AssignFeedbackModal {
     modal: Modal;
 
     init() {
-        this.modal = new Modal('#calendar_assign_feedback_modal'); >>>change in html
+        this.modal = new Modal('#calendar_assign_feedback_modal');
     }
 
     resetAndShow() {
@@ -48,7 +49,7 @@ export default class AssignFeedbackModal {
         this.modal.show();
     }
 
-    async showFeedback(statusObject) {
+    async showFeedback(statusObject:AssignClientResponse) {
 
         if (statusObject.status == "error") {
             this.setTask("overall", "error", `${statusObject.message || ""}<br>Der Termin konnte nicht vergeben werden. Die Terminvergabe wurde abgebrochen!<br>Dieses Fenster kann nun geschlossen werden.`);

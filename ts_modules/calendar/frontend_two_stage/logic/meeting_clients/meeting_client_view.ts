@@ -1,12 +1,16 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 import { MeetingClient } from "../meeting_clients/meeting_client_service.js";
+import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 import MeetingView from "../meetings/meeting_view.js";
 
 export default class MeetingClientView {
 
+    assignFeedbackModal: AssignFeedbackModal;
+
     init() {
         Stubegru.dom.querySelectorAll(".meeting-client").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
+        this.assignFeedbackModal = new AssignFeedbackModal();
     }
 
     resetClientForm = () => {

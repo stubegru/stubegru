@@ -15,8 +15,10 @@ import RoomView from "./rooms/room_view.js";
 export default class CalendarModule {
 
     static state = {
-        someProp: false
-    };
+        freeMeetingMode: false,
+        unsavedChanges: false,
+        blockedMeeting: false,
+    }
 
     static meetingService: MeetingService;
     static meetingClientService: MeetingClientService;
