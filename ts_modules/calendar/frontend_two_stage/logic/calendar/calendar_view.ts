@@ -6,9 +6,7 @@ import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarSearch from "./calendar_search.js";
 
 //Manually load fullcalendar files
-import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
-import "../../../../../components/fullcalendar/main.min.js"
-Stubegru.dom.loadCss("components/fullcalendar/main.min.css");
+import { CalendarOptions, FullCalendarInstance } from "../../fullcalendar/ts_wrapper.js";
 
 export default class CalendarView {
 

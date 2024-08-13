@@ -4,8 +4,6 @@ import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarSearch from "./calendar_search.js";
-import "../../../../../components/fullcalendar/main.min.js";
-Stubegru.dom.loadCss("components/fullcalendar/main.min.css");
 export default class CalendarView {
     calendarConfig = {
         locale: 'de',

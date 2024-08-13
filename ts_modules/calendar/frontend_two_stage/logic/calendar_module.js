@@ -23,28 +23,20 @@ class CalendarModule {
     static meetingClientService;
     static roomService;
     static mailTemplateService;
-    static meetingController;
-    static meetingClientController;
-    static roomController;
-    static mailTemplateController;
     static calendarView;
     static meetingView;
     static meetingClientView;
     static roomView;
     static mailTemplateView;
+    static meetingController;
+    static meetingClientController;
+    static roomController;
+    static mailTemplateController;
     static async init() {
         CalendarModule.meetingService = new MeetingService();
         CalendarModule.meetingClientService = new MeetingClientService();
         CalendarModule.roomService = new RoomService();
         CalendarModule.mailTemplateService = new MailTemplateService();
-        CalendarModule.meetingController = new MeetingController();
-        await CalendarModule.meetingController.init();
-        CalendarModule.meetingClientController = new MeetingClientController();
-        await CalendarModule.meetingClientController.init();
-        CalendarModule.roomController = new RoomController();
-        await CalendarModule.roomController.init();
-        CalendarModule.mailTemplateController = new MailTemplateController();
-        await CalendarModule.mailTemplateController.init();
         CalendarModule.calendarView = new CalendarView();
         await CalendarModule.calendarView.init();
         CalendarModule.meetingView = new MeetingView();
@@ -55,6 +47,14 @@ class CalendarModule {
         await CalendarModule.roomView.init();
         CalendarModule.mailTemplateView = new MailTemplateView();
         await CalendarModule.mailTemplateView.init();
+        CalendarModule.meetingController = new MeetingController();
+        await CalendarModule.meetingController.init();
+        CalendarModule.meetingClientController = new MeetingClientController();
+        await CalendarModule.meetingClientController.init();
+        CalendarModule.roomController = new RoomController();
+        await CalendarModule.roomController.init();
+        CalendarModule.mailTemplateController = new MailTemplateController();
+        await CalendarModule.mailTemplateController.init();
     }
 }
 export default CalendarModule;

@@ -3,7 +3,6 @@ import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
-const MC = CalendarModule.meetingController;
 class MeetingView {
     static channelDescriptions = {
         "personally": "Persönlich",

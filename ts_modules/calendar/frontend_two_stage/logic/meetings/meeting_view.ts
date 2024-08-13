@@ -5,7 +5,6 @@ import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
 import { Meeting } from "./meeting_service.js";
 
-const MC = CalendarModule.meetingController;
 export default class MeetingView {
 
     static channelDescriptions = {

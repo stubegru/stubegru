@@ -5,7 +5,9 @@
     "author": "Johannes Schnirring",
     "license": "MIT",
     "dependencies": {
-        "blocking": [],
+        "blocking": [
+            "calendar/fullcalendar"
+        ],
         "nonBlocking": [],
         "backend": []
     },
