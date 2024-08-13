@@ -1,0 +1,19 @@
+{
+    "type": "stubegruModule",
+    "name": "calendar/backend",
+    "description": "Backend to handle requests for meetings, meeting assignment, meeting rooms and mail templates. Use this backend module with an appropriate calendar frontend module",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [],
+    "js": [],
+    "css": [],
+    "cronjob": [
+        "cronjobs/clean_calendar.php",
+        "cronjobs/remove_all_blocks.php"
+    ]
+}
