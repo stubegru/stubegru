@@ -74,7 +74,8 @@ export default class CalendarView {
     }
     refresh = async () => {
         this.fullCalendar.removeAllEvents();
-        let meetingList = await CalendarModule.meetingService.getAll();
+        await CalendarModule.meetingController.refreshMeetingList();
+        let meetingList = CalendarModule.meetingController.meetingList;
         this.addMeetings(meetingList);
         this.showAssignedMeetings(CalendarModule.state.assignedVisible);
         this.showOthersMeetings(CalendarModule.state.othersVisible);

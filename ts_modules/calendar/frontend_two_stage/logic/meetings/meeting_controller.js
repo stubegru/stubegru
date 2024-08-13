@@ -4,7 +4,11 @@ import CalendarModule from '../calendar_module.js';
 export default class MeetingController {
     meetingList;
     async init() {
-        //TODO: Refresh meetings regurlly
+        await this.refreshMeetingList();
+        setInterval(this.refreshMeetingList, 1000 * 60 * 5); //Refresh meetingList every 5 minutes
+    }
+    async refreshMeetingList() {
+        this.meetingList = await CalendarModule.meetingService.getAll();
     }
     getMeeting(meetingId) {
         return this.meetingList.find(e => e.id == meetingId);

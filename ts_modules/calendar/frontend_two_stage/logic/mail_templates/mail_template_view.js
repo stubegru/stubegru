@@ -24,7 +24,7 @@ export default class MailTemplateView {
         let postHtml;
         for (const template of templateList) {
             const ownId = UserUtils.currentUser.id;
-            const optionString = `<option value='Stubegru.dom.querySelector{template.id}' title='Stubegru.dom.querySelector{template.text}' id='templateSelectOptionStubegru.dom.querySelector{template.id}'>Stubegru.dom.querySelector{template.titel}</option>`;
+            const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`;
             if (ownId == template.ersteller) { //Add own entry at top
                 selectHtml += optionString;
             }
@@ -56,11 +56,11 @@ export default class MailTemplateView {
         let varHtml = ``;
         for (const categoryId in templateVariableObject) {
             const category = templateVariableObject[categoryId];
-            varHtml += `<h4><b>Stubegru.dom.querySelector{category.title}</b></h4><ul style="padding-inline-start: 10px">`;
+            varHtml += `<h4><b>${category.title}</b></h4><ul style="padding-inline-start: 10px">`;
             for (const t of category.items) {
                 varHtml += `<li>
-                                <b>Stubegru.dom.querySelector{t.placeholder}</b> <br>
-                                <small>Stubegru.dom.querySelector{t.description}</small>
+                                <b>${t.placeholder}</b> <br>
+                                <small>${t.description}</small>
                             </li>`;
             }
             varHtml += `</ul><br>`;

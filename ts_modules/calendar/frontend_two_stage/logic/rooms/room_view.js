@@ -23,7 +23,7 @@ export default class RoomView {
         let selectHtml = "<option value=''>Bitte wählen...</option>";
         let postHtml;
         for (const room of roomList) {
-            const optionString = `<option value='Stubegru.dom.querySelector{room.id}'>Stubegru.dom.querySelector{room.titel}</option>`;
+            const optionString = `<option value='${room.id}'>${room.titel}</option>`;
             ownId == room.besitzer ? selectHtml += optionString : postHtml += optionString; //Add own entries at top
         }
         Stubegru.dom.querySelector("#calendarRoom").innerHTML = selectHtml + postHtml;
@@ -67,10 +67,10 @@ export default class RoomView {
         let selectHtml = "";
         for (const user of userList) {
             if (ownId == user.id) { //Add own entry at top (default)
-                selectHtml = `<option value="Stubegru.dom.querySelector{user.id}">Stubegru.dom.querySelector{user.name}</option>` + selectHtml;
+                selectHtml = `<option value="${user.id}">${user.name}</option>` + selectHtml;
             }
             else {
-                selectHtml += `<option value="Stubegru.dom.querySelector{user.id}">Stubegru.dom.querySelector{user.name}</option>`;
+                selectHtml += `<option value="${user.id}">${user.name}</option>`;
             }
         }
         Stubegru.dom.querySelector("#calendarOwner").innerHTML = selectHtml;

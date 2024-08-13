@@ -2,11 +2,11 @@ import Stubegru from '../../../../../components/stubegru_core/logic/stubegru.js'
 import { Modal } from '../../../../../components/bootstrap/v3/ts_wrapper.js';
 export default class AssignFeedbackModal {
     modal;
-    init() {
+    constructor() {
         this.modal = new Modal('#calendar_assign_feedback_modal');
     }
     resetAndShow() {
-        Stubegru.dom.querySelector("#calendarAssignFeedbackModal .modal-body").innerHTML = `
+        Stubegru.dom.querySelector("#calendar_assign_feedback_modal .modal-body").innerHTML = `
                 <ul class="list-group">
                     <li class="list-group-item" data-task="clientData">
                         <i class="fas fa-spinner fa-spin"></i> Kundendaten gespeichert

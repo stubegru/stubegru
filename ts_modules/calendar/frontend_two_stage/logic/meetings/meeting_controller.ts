@@ -8,7 +8,12 @@ export default class MeetingController {
     meetingList: Meeting[];
 
     async init() {
-        //TODO: Refresh meetings regurlly
+        await this.refreshMeetingList();
+        setInterval(this.refreshMeetingList, 1000 * 60 * 5); //Refresh meetingList every 5 minutes
+    }
+
+    async refreshMeetingList() {
+        this.meetingList = await CalendarModule.meetingService.getAll();
     }
 
     getMeeting(meetingId: string) {
@@ -120,6 +125,6 @@ export default class MeetingController {
 
     }
 
-   
+
 
 }

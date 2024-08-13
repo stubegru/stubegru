@@ -5,12 +5,12 @@ import { AssignClientResponse } from '../meeting_clients/meeting_client_service.
 export default class AssignFeedbackModal {
     modal: Modal;
 
-    init() {
+    constructor() {
         this.modal = new Modal('#calendar_assign_feedback_modal');
     }
 
     resetAndShow() {
-        Stubegru.dom.querySelector("#calendarAssignFeedbackModal .modal-body").innerHTML = `
+        Stubegru.dom.querySelector("#calendar_assign_feedback_modal .modal-body").innerHTML = `
                 <ul class="list-group">
                     <li class="list-group-item" data-task="clientData">
                         <i class="fas fa-spinner fa-spin"></i> Kundendaten gespeichert
