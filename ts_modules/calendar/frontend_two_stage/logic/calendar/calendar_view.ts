@@ -2,13 +2,18 @@ import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js"
 import Toggle from "../../../../../components/toggles/toggle.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
-import { FullCalendarInstance } from "../../../../../components/fullcalendar/ts-wrapper.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
+
+import { CalendarOptions, Calendar as FullCalendar } from '../../../../../components/fullcalendar/core/index.js';
+import dayGridPlugin from '../../../../../components/fullcalendar/daygrid/index.js';
+import timeGridPlugin from '../../../../../components/fullcalendar/timegrid/index.js';
+import listPlugin from '../../../../../components/fullcalendar/list/index.js';
 
 export default class CalendarView {
 
 
-    config = {
+    calendarConfig: CalendarOptions = {
+        plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
         locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
@@ -41,7 +46,7 @@ export default class CalendarView {
         }
     };
 
-    fullCalendar: FullCalendarInstance;
+    fullCalendar: FullCalendar;
     assignFeedbackModal: AssignFeedbackModal;
     foreignToggle: Toggle;
     assignedToggle: Toggle;
@@ -52,9 +57,8 @@ export default class CalendarView {
         this.search = new CalendarSearch();
         this.assignFeedbackModal = new AssignFeedbackModal();
 
-        let calendarEl = document.querySelector("#calendarViewContainer");
-        //@ts-expect-error
-        this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.config);
+        let calendarEl = document.querySelector("#calendarViewContainer") as HTMLElement;
+        this.fullCalendar = new FullCalendar(calendarEl, this.calendarConfig);
         this.fullCalendar.render();
 
         this.initFilterMenu();
