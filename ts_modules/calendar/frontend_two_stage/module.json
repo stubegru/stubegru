@@ -5,11 +5,7 @@
     "author": "Johannes Schnirring",
     "license": "MIT",
     "dependencies": {
-        "blocking": [
-            "alerts",
-            "user_utils",
-            "calendar/fullcalendar"
-        ],
+        "blocking": [],
         "nonBlocking": [],
         "backend": [
             "calendar/backend"
@@ -19,15 +15,7 @@
         "module.html"
     ],
     "js": [
-        "meeting.js",
-        "room.js",
-        "mailTemplate.js",
-        "calendarView.js",
-        "calendarModal.js",
-        "assignFeedbackModal.js",
-        "calendarSearch.js",
-        "calendarController.js",
-        "calendar.js"
+        "logic/calendar_module.js"
     ],
     "css": [
         "calendar.css"

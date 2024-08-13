@@ -4,6 +4,7 @@ import DailyNewsModule from "./daily_news_module.js";
 import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../../components/bootstrap/v3/ts_wrapper.js';
 import Toggle from '../../../components/toggles/toggle.js';
+import UserUtils from '../../../components/user_utils/user_utils.js';
 export default class DailyNewsView {
     richTextEditor;
     modal;
@@ -114,8 +115,7 @@ export default class DailyNewsView {
         }
         Stubegru.dom.querySelector("#daily_news_item_container_present").innerHTML = html.present;
         Stubegru.dom.querySelector("#daily_news_item_container_future").innerHTML = html.future;
-        //@ts-expect-error TODO: use new typescript stubegru-core API for updateAdminElements
-        stubegru.modules.userUtils.updateAdminElements();
+        UserUtils.updateAdminElements();
         this.registerButtonEvents();
     }
     registerButtonEvents() {

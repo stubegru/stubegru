@@ -12,6 +12,12 @@ export default class StubegruDom {
     querySelectorAll(selector) {
         return document.querySelectorAll(selector);
     }
+    removeEventListener(selector) {
+        this.querySelectorAll(selector).forEach(element => {
+            const newElement = element.cloneNode(true);
+            element.replaceWith(newElement);
+        });
+    }
     slideUp = (target, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;
         elem.style.transitionProperty = 'height, margin, padding';
@@ -80,6 +86,15 @@ export default class StubegruDom {
             return this.slideUp(elem, duration);
         }
     };
+    show(selector) {
+        this.querySelector(selector).style.removeProperty("display");
+    }
+    hide(selector) {
+        this.querySelector(selector).style.display = "none";
+    }
+    setVisibility(selector, state) {
+        state ? this.show(selector) : this.hide(selector);
+    }
     /**
      * Load remote HTML and append to module's DOM element
      * @param path Path to HTML file relative to BASE_URL/${path}

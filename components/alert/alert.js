@@ -12,20 +12,20 @@ class Alert {
     static async init() {
         await Stubegru.dom.loadHtml("components/alert/module.html");
     }
-    static alertResp(resp, title) {
+    static async alertResp(resp, title) {
         let options = {};
         options.text = resp.message;
         options.type = resp.status;
         options.mode = resp.mode;
         options.title = title || resp.title;
-        Alert.alert(options);
+        await Alert.alert(options);
     }
-    static alertSimple(text) {
-        Alert.alert({ text: text });
+    static async alertSimple(text) {
+        await Alert.alert({ text: text });
     }
-    static alertError(error) {
+    static async alertError(error) {
         console.error(error);
-        Alert.alert({
+        await Alert.alert({
             text: error.message,
             title: "Es ist ein Fehler aufgetreten",
             type: "error"

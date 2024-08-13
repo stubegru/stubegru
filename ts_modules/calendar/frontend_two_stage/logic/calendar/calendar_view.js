@@ -3,23 +3,19 @@ import Toggle from "../../../../../components/toggles/toggle.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
-
-import { CalendarOptions, Calendar as FullCalendar } from '../../../../../components/fullcalendar/core/index.js';
+import { Calendar as FullCalendar } from '../../../../../components/fullcalendar/core/index.js';
 import dayGridPlugin from '../../../../../components/fullcalendar/daygrid/index.js';
 import timeGridPlugin from '../../../../../components/fullcalendar/timegrid/index.js';
 import listPlugin from '../../../../../components/fullcalendar/list/index.js';
 import CalendarSearch from "./calendar_search.js";
-
 export default class CalendarView {
-
-
-    calendarConfig: CalendarOptions = {
+    calendarConfig = {
         plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
         locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
             // days of week. an array of zero-based day of week integers (0=Sunday)
-            daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
+            daysOfWeek: [1, 2, 3, 4, 5],
             startTime: '08:00',
             endTime: '16:00'
         },
@@ -46,37 +42,26 @@ export default class CalendarView {
             CalendarModule.meetingController.clickOnMeetingHandler(info.event.extendedProps.id);
         }
     };
-
-    fullCalendar: FullCalendar;
-    assignFeedbackModal: AssignFeedbackModal;
-    foreignToggle: Toggle;
-    assignedToggle: Toggle;
-    search: CalendarSearch;
-
-
+    fullCalendar;
+    assignFeedbackModal;
+    foreignToggle;
+    assignedToggle;
+    search;
     init() {
         this.search = new CalendarSearch();
         this.assignFeedbackModal = new AssignFeedbackModal();
-
-        let calendarEl = document.querySelector("#calendarViewContainer") as HTMLElement;
+        let calendarEl = document.querySelector("#calendarViewContainer");
         this.fullCalendar = new FullCalendar(calendarEl, this.calendarConfig);
         this.fullCalendar.render();
-
         this.initFilterMenu();
         this.refresh();
-
         Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => CalendarModule.meetingController.createMeeting());
-
         //render calendar when the calendar box collapses to open
-        Stubegru.dom.querySelector('#collapseCalendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }) //TODO: Check if this bs specific event is handled without jquery
+        Stubegru.dom.querySelector('#collapseCalendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }); //TODO: Check if this bs specific event is handled without jquery
     }
-
-
     initFilterMenu() {
         this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
         this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
-
-
         this.foreignToggle.addEventListener("change", (event) => {
             const showOthers = !this.foreignToggle.getState();
             this.showOthersMeetings(showOthers);
@@ -85,31 +70,24 @@ export default class CalendarView {
             const showAssigned = !this.assignedToggle.getState();
             this.showAssignedMeetings(showAssigned);
         });
-
         //TODO: Is this neccessary?
         // $(document).on('click', '#calendarSettingsDropdown', function (e) {
         //     e.preventDefault();
         //     e.stopPropagation();
         // });
     }
-
-
-
     refresh = async () => {
         this.fullCalendar.removeAllEvents();
         let meetingList = await CalendarModule.meetingService.getAll();
         this.addMeetings(meetingList);
         this.showAssignedMeetings(CalendarModule.state.assignedVisible);
         this.showOthersMeetings(CalendarModule.state.othersVisible);
-    }
-
-
+    };
     addMeetings(meetingList) {
         //Generate events for fullcalendar
         let ownUserId = UserUtils.currentUser.id;
         let ownEvents = { free: [], assigned: [] };
         let othersEvents = { free: [], assigned: [] };
-
         for (let inMeeting of meetingList) {
             let outMeeting = {
                 title: inMeeting.owner,
@@ -117,19 +95,18 @@ export default class CalendarView {
                 end: `${inMeeting.date}T${inMeeting.end}`,
                 extendedProps: inMeeting
             };
-
             //Sort meetings by free/assigned and own/others
             if (inMeeting.ownerId == ownUserId) {
                 (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
                     ownEvents.assigned.push(outMeeting) :
                     ownEvents.free.push(outMeeting);
-            } else {
+            }
+            else {
                 (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
                     othersEvents.assigned.push(outMeeting) :
                     othersEvents.free.push(outMeeting);
             }
         }
-
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
             id: "stubegru-own-free-events",
@@ -156,7 +133,6 @@ export default class CalendarView {
             classNames: ["pointer"]
         });
     }
-
     setEventVisibility(eventSourceId, visible) {
         let allEvents = this.fullCalendar.getEvents();
         for (let ev of allEvents) {
@@ -165,22 +141,18 @@ export default class CalendarView {
             }
         }
     }
-
     showOthersMeetings = (isVisible) => {
         CalendarModule.state.othersVisible = isVisible;
         this.setEventVisibility("stubegru-others-free-events", isVisible);
         if (!isVisible || CalendarModule.state.assignedVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
         }
-    }
-
+    };
     showAssignedMeetings = (isVisible) => {
         CalendarModule.state.assignedVisible = isVisible;
         this.setEventVisibility("stubegru-own-assigned-events", isVisible);
         if (!isVisible || CalendarModule.state.othersVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
         }
-    }
-
-
+    };
 }
