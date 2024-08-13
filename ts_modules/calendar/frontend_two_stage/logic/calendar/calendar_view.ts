@@ -1,13 +1,14 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import Toggle from "../../../../../components/toggles/toggle.js";
+import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
-import MeetingController from "../meetings/meeting_controller.js";
-import MeetingView from "../meetings/meeting_view.js";
+import { FullCalendarInstance } from "../../../../../components/fullcalendar/ts-wrapper.js";
+import UserUtils from "../../../../../components/user_utils/user_utils.js";
 
 export default class CalendarView {
 
 
-    static config = {
+    config = {
         locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
@@ -36,78 +37,71 @@ export default class CalendarView {
         },
         eventClick: function (info) {
             info.jsEvent.preventDefault(); // don't let the browser navigate
-            MeetingController.clickOnMeetingHandler(info.event.extendedProps.id);
+            CalendarModule.meetingController.clickOnMeetingHandler(info.event.extendedProps.id);
         }
-    }
-    assignedVisible: boolean;
-    othersVisible: boolean;
-    fullCalendar: any;
+    };
+
+    fullCalendar: FullCalendarInstance;
     assignFeedbackModal: AssignFeedbackModal;
-     foreignToggle: Toggle;
-     assignedToggle: Toggle;
+    foreignToggle: Toggle;
+    assignedToggle: Toggle;
+    search: CalendarSearch;
 
 
     init() {
-        modal = new MeetingView();
-        search = new CalendarSearch();
-
-        
-        
-        await this.modal.init();
-        this.initFilterMenu();
-
-
-        this.assignedVisible = true;
-        this.othersVisible = true;
-        let calendarEl = document.querySelector(elemSelector); //TODO: hardcode selector
-        this.fullCalendar = new FullCalendar.Calendar(calendarEl, CalendarView.config);
-        this.fullCalendar.render();
+        this.search = new CalendarSearch();
         this.assignFeedbackModal = new AssignFeedbackModal();
+
+        let calendarEl = document.querySelector("#calendarViewContainer");
+        //@ts-expect-error
+        this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.config);
+        this.fullCalendar.render();
+
+        this.initFilterMenu();
         this.refresh();
 
-        Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => this.createMeeting());
-        
+        Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => CalendarModule.meetingController.createMeeting());
+
         //render calendar when the calendar box collapses to open
-        $('#collapseCalendar').on('shown.bs.collapse', () => { this.fullCalendar.render(); })
+        Stubegru.dom.querySelector('#collapseCalendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }) //TODO: Check if this bs specific event is handled without jquery
     }
 
-    
-     initFilterMenu() {
-         this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
-         this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
- 
- 
-         this.foreignToggle.addEventListener("change", (event) => {
-             const showOthers = !this.foreignToggle.getState();
-             this.view.showOthersMeetings(showOthers);
-         });
-         this.assignedToggle.addEventListener("change", (event) => {
-             const showAssigned = !this.assignedToggle.getState();
-             this.view.showAssignedMeetings(showAssigned);
-         });
- 
-         //TODO: Is this neccessary?
-         // $(document).on('click', '#calendarSettingsDropdown', function (e) {
-         //     e.preventDefault();
-         //     e.stopPropagation();
-         // });
-     }
- 
- 
+
+    initFilterMenu() {
+        this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
+        this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
+
+
+        this.foreignToggle.addEventListener("change", (event) => {
+            const showOthers = !this.foreignToggle.getState();
+            this.showOthersMeetings(showOthers);
+        });
+        this.assignedToggle.addEventListener("change", (event) => {
+            const showAssigned = !this.assignedToggle.getState();
+            this.showAssignedMeetings(showAssigned);
+        });
+
+        //TODO: Is this neccessary?
+        // $(document).on('click', '#calendarSettingsDropdown', function (e) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // });
+    }
+
+
 
     refresh = async () => {
         this.fullCalendar.removeAllEvents();
-        await Meeting.fetchMeetings();
-        let meetingList = Meeting.meetingList;
+        let meetingList = await CalendarModule.meetingService.getAll();
         this.addMeetings(meetingList);
-        this.showAssignedMeetings(this.assignedVisible);
-        this.showOthersMeetings(this.othersVisible);
+        this.showAssignedMeetings(CalendarModule.state.assignedVisible);
+        this.showOthersMeetings(CalendarModule.state.othersVisible);
     }
 
 
     addMeetings(meetingList) {
         //Generate events for fullcalendar
-        let ownUserId = Stubegru.currentUser.id;
+        let ownUserId = UserUtils.currentUser.id;
         let ownEvents = { free: [], assigned: [] };
         let othersEvents = { free: [], assigned: [] };
 
@@ -168,17 +162,17 @@ export default class CalendarView {
     }
 
     showOthersMeetings = (isVisible) => {
-        this.othersVisible = isVisible;
+        CalendarModule.state.othersVisible = isVisible;
         this.setEventVisibility("stubegru-others-free-events", isVisible);
-        if (!isVisible || this.assignedVisible) {
+        if (!isVisible || CalendarModule.state.assignedVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
         }
     }
 
     showAssignedMeetings = (isVisible) => {
-        this.assignedVisible = isVisible;
+        CalendarModule.state.assignedVisible = isVisible;
         this.setEventVisibility("stubegru-own-assigned-events", isVisible);
-        if (!isVisible || this.othersVisible) {
+        if (!isVisible || CalendarModule.state.othersVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
         }
     }

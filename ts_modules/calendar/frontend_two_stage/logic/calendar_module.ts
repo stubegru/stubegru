@@ -18,6 +18,8 @@ export default class CalendarModule {
         freeMeetingMode: false,
         unsavedChanges: false,
         blockedMeeting: false,
+        assignedVisible: true,
+        othersVisible: true,
     }
 
     static meetingService: MeetingService;
