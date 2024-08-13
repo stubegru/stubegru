@@ -3,7 +3,7 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("MEETINGS_WRITE");
-$ownUserId = $_SESSION['id'];
+$besitzer = $_SESSION['id'];
 
 $raumId = $_POST["id"];
 $kanal = $_POST["kanal"];
@@ -23,7 +23,7 @@ if ($raumId == "new") {
     $insertStatement = $dbPdo->prepare("INSERT INTO `Raeume` (`kanal`, `titel`, `besitzer`, `raumnummer`, `strasse`, `hausnummer`, `plz`, `ort`, `etage`, `link`, `passwort`, `telefon`) VALUES (:kanal,:titel,:besitzer,:raumnummer,:strasse,:hausnummer,:plz,:ort,:etage,:link,:passwort,:telefon);");
     $insertStatement->bindValue(':kanal', $kanal);
     $insertStatement->bindValue(':titel', $titel);
-    $insertStatement->bindValue(':besitzer', $ownUserId);
+    $insertStatement->bindValue(':besitzer', $besitzer);
     $insertStatement->bindValue(':raumnummer', $raumnummer);
     $insertStatement->bindValue(':strasse', $strasse);
     $insertStatement->bindValue(':hausnummer', $hausnummer);

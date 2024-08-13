@@ -4,10 +4,10 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("MEETINGS_WRITE");
 $ownId = $_SESSION["id"];
 
-$titel = $_POST["title"];
-$betreff = $_POST["subject"];
+$titel = $_POST["titel"];
+$betreff = $_POST["betreff"];
 $text = $_POST["text"];
-$id = $_POST["templateId"];
+$id = $_POST["id"];
 
 
 if ($titel != "" && $betreff != "" && $text != "") {

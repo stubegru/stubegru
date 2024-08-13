@@ -162,14 +162,14 @@ export default class MeetingView {
 
     getMeetingDetailData() {
         let meetingData = {} as Meeting;
-        meetingData["date"] = Stubegru.dom.querySelectorAsInput('#calendarDate').value;
-        meetingData["start"] = Stubegru.dom.querySelectorAsInput('#calendarStart').value;
-        meetingData["end"] = Stubegru.dom.querySelectorAsInput('#calendarEnd').value;
-        meetingData["title"] = Stubegru.dom.querySelectorAsInput('#calendarTitle').value;
-        meetingData["ownerId"] = Stubegru.dom.querySelectorAsInput('#calendarOwner').value;
-        meetingData["roomId"] = Stubegru.dom.querySelectorAsInput('#calendarRoom').value;
-        meetingData["templateId"] = Stubegru.dom.querySelectorAsInput('#calendarTemplate').value;
-        meetingData["channel"] = Stubegru.dom.querySelectorAsInput('#calendarChannel').value;
+        meetingData.date = Stubegru.dom.querySelectorAsInput('#calendarDate').value;
+        meetingData.start = Stubegru.dom.querySelectorAsInput('#calendarStart').value;
+        meetingData.end = Stubegru.dom.querySelectorAsInput('#calendarEnd').value;
+        meetingData.title = Stubegru.dom.querySelectorAsInput('#calendarTitle').value;
+        meetingData.ownerId = Stubegru.dom.querySelectorAsInput('#calendarOwner').value;
+        meetingData.room = Stubegru.dom.querySelectorAsInput('#calendarRoom').value;
+        meetingData.template = Stubegru.dom.querySelectorAsInput('#calendarTemplate').value;
+        meetingData.channel = Stubegru.dom.querySelectorAsInput('#calendarChannel').value;
         return meetingData;
     }
 

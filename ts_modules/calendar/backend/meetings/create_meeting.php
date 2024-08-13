@@ -9,11 +9,11 @@ $creatorId = $_SESSION["id"];
 
 $date = $_POST["date"];
 $ownerId = $_POST["ownerId"];
-$room = $_POST["roomId"];
+$room = $_POST["room"];
 $start = $_POST["start"];
 $end = $_POST["end"];
 $title = $_POST["title"];
-$template = $_POST["templateId"];
+$template = $_POST["template"];
 
 //Channel attribute will only be set by calendar2 frontend
 $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
