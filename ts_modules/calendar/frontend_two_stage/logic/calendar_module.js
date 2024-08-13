@@ -38,22 +38,22 @@ class CalendarModule {
         CalendarModule.roomService = new RoomService();
         CalendarModule.mailTemplateService = new MailTemplateService();
         CalendarModule.calendarView = new CalendarView();
-        await CalendarModule.calendarView.init();
         CalendarModule.meetingView = new MeetingView();
-        await CalendarModule.meetingView.init();
         CalendarModule.meetingClientView = new MeetingClientView();
-        await CalendarModule.meetingClientView.init();
         CalendarModule.roomView = new RoomView();
-        await CalendarModule.roomView.init();
         CalendarModule.mailTemplateView = new MailTemplateView();
-        await CalendarModule.mailTemplateView.init();
         CalendarModule.meetingController = new MeetingController();
-        await CalendarModule.meetingController.init();
         CalendarModule.meetingClientController = new MeetingClientController();
-        await CalendarModule.meetingClientController.init();
         CalendarModule.roomController = new RoomController();
-        await CalendarModule.roomController.init();
         CalendarModule.mailTemplateController = new MailTemplateController();
+        await CalendarModule.calendarView.init();
+        await CalendarModule.meetingView.init();
+        await CalendarModule.meetingClientView.init();
+        await CalendarModule.roomView.init();
+        await CalendarModule.mailTemplateView.init();
+        await CalendarModule.meetingController.init();
+        await CalendarModule.meetingClientController.init();
+        await CalendarModule.roomController.init();
         await CalendarModule.mailTemplateController.init();
     }
 }
