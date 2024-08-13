@@ -1,22 +1,26 @@
-class CalendarSearch {
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
+import CalendarModule from "../calendar_module.js";
+import { Meeting } from "../meetings/meeting_service.js";
+
+export default class CalendarSearch {
 
     searchTimeout;
 
     constructor() {
-        $("#calendarSearchClearButton").on("click", () => {
+        Stubegru.dom.querySelector("#calendarSearchClearButton").addEventListener("click", () => {
             this.setQuery("");
         })
 
-        $("#calendarSearchInput").on("keyup change", this.triggerSearch);
+        Stubegru.dom.querySelector("#calendarSearchInput").addEventListener("keyup change", this.triggerSearch);
     }
 
-    triggerSearch = () => {
+    triggerSearch() {
         if (this.searchTimeout) { clearTimeout(this.searchTimeout) }
         this.searchTimeout = setTimeout(this.doSearch, 500);
     }
 
-    doSearch = async () => {
-        $("#calendarSearchInfo").html(""); //Clear alert
+    async doSearch() {
+        Stubegru.dom.querySelector("#calendarSearchInfo").innerHTML = ""; //Clear alert
 
         let query = this.getQuery();
         if (!query || query.length < 1) {
@@ -25,13 +29,11 @@ class CalendarSearch {
         }
 
         query = encodeURI(query);
-        const url = `${stubegru.constants.BASE_URL}/modules/calendar/backend/assignment/search_for_client.php?query=${query}`;
-        let resp = await fetch(url);
-        resp = await resp.json();
+        let resp = await Stubegru.fetch.getJson("ts_modules/calendar/backend/assignment/search_for_client.php", { query: query }) as CalendarClientSearchResult[];
         this.handleResult(resp);
     }
 
-    handleResult = (meetingList) => {
+    handleResult(meetingList: CalendarClientSearchResult[]) {
         if (meetingList.length < 1) {
             this.showEmptyResultMessage();
             return;
@@ -43,15 +45,15 @@ class CalendarSearch {
                         <td>${meeting.title}</td>
                         <td>${meeting.name}</td>
                         <td>${meeting.owner}</td>
-                        <td>${formatDate(meeting.date,"DD.MM.YYYY")}</td>
-                        <td>${meeting.start.substr(0,5)}</td>
+                        <td>${Stubegru.utils.formatDate(meeting.date, "DD.MM.YYYY")}</td>
+                        <td>${meeting.start.substring(0, 5)}</td>
                     </tr>`;
         }
-        $("#calendarSearchResultTable").html(html);
-        $(".calendar-search-result-button").on("click", function () {
-            let meetingId = $(this).attr("data-meeting-id");
-            CalendarController.openAssignedMeeting(meetingId);
-        });
+        Stubegru.dom.querySelector("#calendarSearchResultTable").innerHTML = html;
+        Stubegru.dom.querySelectorAll(".calendar-search-result-button").forEach(elem => elem.addEventListener("click", function () {
+            let meetingId = elem.getAttribute("data-meeting-id");
+            CalendarModule.meetingClientController.openAssignedMeeting(meetingId);
+        }));
         this.setResultVisible(true);
     }
 
@@ -60,29 +62,25 @@ class CalendarSearch {
                         Es wurden leider keine passenden Ergebnisse zur Suchanfrage "${this.getQuery()}" gefunden<br>
                         Zum Suchen bitte den Namen eines Kunde eingeben...
                     </div>`;
-        $("#calendarSearchInfo").html(html);
+        Stubegru.dom.querySelector("#calendarSearchInfo").innerHTML = html;
     }
 
-    setQuery(query) {
-        $("#calendarSearchInput").val(query);
+    setQuery(query: string) {
+        Stubegru.dom.querySelectorAsInput("#calendarSearchInput").value = query;
     }
 
     getQuery() {
-        return $("#calendarSearchInput").val();
+        return Stubegru.dom.querySelectorAsInput("#calendarSearchInput").value;
     }
 
     setResultVisible(isVisible) {
-        isVisible ?
-            $("#searchResultContainer").slideDown() :
-            $("#searchResultContainer").slideUp();
+        Stubegru.dom.slideToState("#searchResultContainer", isVisible);
     }
 
 
 
+}
 
-
-
-
-
-
+interface CalendarClientSearchResult extends Meeting {
+    name: string; //The client's name
 }
