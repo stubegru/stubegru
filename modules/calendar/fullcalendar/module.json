@@ -1,0 +1,19 @@
+{
+    "type": "externalLibrary",
+    "name": "calendar/fullcalendar",
+    "description": "Library for displaying calendar views",
+    "author": "Adam Shaw",
+    "license": "MIT",
+    "url" : "https://github.com/fullcalendar/fullcalendar",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": []
+    },
+    "html": [],
+    "js": [
+        "main.min.js"
+    ],
+    "css": [
+        "main.min.css"
+    ]
+}
