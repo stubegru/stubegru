@@ -21,8 +21,8 @@ export default class MeetingView {
         this.modal = new Modal("#terminmodal"); //TODO: Change naming
 
         this.setUnsavedChanges(false);
-        Stubegru.dom.querySelectorAll('.meeting-details').forEach(elem => elem.addEventListener("change", () => this.setUnsavedChanges(true)));
-        Stubegru.dom.querySelector("#calendarStart").addEventListener("change", CalendarModule.meetingView.setMeetingEndTimeByStartTime);
+        Stubegru.dom.querySelectorAll('.meeting-details').forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => this.setUnsavedChanges(true)));
+        Stubegru.dom.addEventListener("#calendarStart", "change", CalendarModule.meetingView.setMeetingEndTimeByStartTime);
         //ask for unsaved changes
         this.modal.addEventListener('hide.bs.modal', this.askForUnsavedChanges);
         //Reset modal forms on hide event
@@ -121,7 +121,7 @@ export default class MeetingView {
     setFooterSaveButtonEvent(callback: (event: Event) => void) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
         Stubegru.dom.removeEventListener("#calendarMeetingDetailForm");
-        Stubegru.dom.querySelector("#calendarMeetingDetailForm").addEventListener("submit", (event) => {
+        Stubegru.dom.addEventListener("#calendarMeetingDetailForm", "submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -134,7 +134,7 @@ export default class MeetingView {
      */
     setFooterDeleteButtonEvent(callback: (event: Event) => void) {
         Stubegru.dom.removeEventListener("#calendarDeleteMeetingButton");
-        Stubegru.dom.querySelector("#calendarDeleteMeetingButton").addEventListener("click", callback);
+        Stubegru.dom.addEventListener("#calendarDeleteMeetingButton", "click", callback);
     }
 
 

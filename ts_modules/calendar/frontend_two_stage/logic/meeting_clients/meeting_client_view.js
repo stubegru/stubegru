@@ -5,7 +5,7 @@ import MeetingView from "../meetings/meeting_view.js";
 export default class MeetingClientView {
     assignFeedbackModal;
     init() {
-        Stubegru.dom.querySelectorAll(".meeting-client").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
+        Stubegru.dom.querySelectorAll(".meeting-client").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
         this.assignFeedbackModal = new AssignFeedbackModal();
     }
     resetClientForm = () => {
@@ -40,7 +40,7 @@ export default class MeetingClientView {
     setAssignSaveButtonEvent(callback) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
         Stubegru.dom.removeEventListener("#calendarClientDataForm");
-        Stubegru.dom.querySelector("#calendarClientDataForm").addEventListener("submit", (event) => {
+        Stubegru.dom.addEventListener("#calendarClientDataForm", "submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -52,7 +52,7 @@ export default class MeetingClientView {
      */
     setAssignAssignButtonEvent(callback) {
         Stubegru.dom.removeEventListener("#calendarAssignAssignButton");
-        Stubegru.dom.querySelector("#calendarAssignAssignButton").addEventListener("click", callback);
+        Stubegru.dom.addEventListener("#calendarAssignAssignButton", "click", callback);
     }
     /**
      * Register eventhandler for click on the assign delete button
@@ -61,7 +61,7 @@ export default class MeetingClientView {
      */
     setAssignDeleteButtonEvent(callback) {
         Stubegru.dom.removeEventListener("#calendarAssignDeleteButton");
-        Stubegru.dom.querySelector("#calendarAssignDeleteButton").addEventListener("click", callback);
+        Stubegru.dom.addEventListener("#calendarAssignDeleteButton", "click", callback);
     }
     /**
      * Register eventhandler for click on the assign cancel button
@@ -70,7 +70,7 @@ export default class MeetingClientView {
      */
     setAssignCancelButtonEvent(callback) {
         Stubegru.dom.removeEventListener("#calendarAssignCancelButton");
-        Stubegru.dom.querySelector("#calendarAssignCancelButton").addEventListener("click", callback);
+        Stubegru.dom.addEventListener("#calendarAssignCancelButton", "click", callback);
     }
     getClientData() {
         let clientData = {};

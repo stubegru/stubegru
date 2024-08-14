@@ -7,11 +7,11 @@ export default class CalendarSearch {
     searchTimeout;
 
     constructor() {
-        Stubegru.dom.querySelector("#calendarSearchClearButton").addEventListener("click", () => {
+        Stubegru.dom.addEventListener("#calendarSearchClearButton","click", () => {
             this.setQuery("");
         })
 
-        Stubegru.dom.querySelector("#calendarSearchInput").addEventListener("keyup change", this.triggerSearch);
+        Stubegru.dom.addEventListener("#calendarSearchInput","keyup change", this.triggerSearch);
     }
 
     triggerSearch() {
@@ -50,7 +50,7 @@ export default class CalendarSearch {
                     </tr>`;
         }
         Stubegru.dom.querySelector("#calendarSearchResultTable").innerHTML = html;
-        Stubegru.dom.querySelectorAll(".calendar-search-result-button").forEach(elem => elem.addEventListener("click", function () {
+        Stubegru.dom.querySelectorAll(".calendar-search-result-button").forEach(elem =>  Stubegru.dom.addEventListener(elem,"click", function () {
             let meetingId = elem.getAttribute("data-meeting-id");
             CalendarModule.meetingClientController.openAssignedMeeting(meetingId);
         }));

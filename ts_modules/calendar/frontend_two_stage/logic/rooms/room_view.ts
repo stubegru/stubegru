@@ -6,16 +6,16 @@ import { Room } from "./room_service.js";
 export default class RoomView {
 
     init() {
-        Stubegru.dom.querySelectorAll(".meeting-room-input").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
+        Stubegru.dom.querySelectorAll(".meeting-room-input").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
         this.initRoomEditButtons();
     }
 
     private initRoomEditButtons() {
-        Stubegru.dom.querySelector("#calendarEditRoomButton").addEventListener("click", CalendarModule.roomController.showRoomFormForUpdate);
-        Stubegru.dom.querySelector("#calendarNewRoomButton").addEventListener("click", CalendarModule.roomController.showRoomFormForCreate);
-        Stubegru.dom.querySelector("#calendarCancelRoomButton").addEventListener("click", CalendarModule.roomController.cancelRoomEdit);
-        Stubegru.dom.querySelector("#calendarDeleteRoomButton").addEventListener("click", CalendarModule.roomController.deleteRoom);
-        Stubegru.dom.querySelector("#calendarRoomForm").addEventListener("submit", CalendarModule.roomController.saveRoom);
+        Stubegru.dom.addEventListener("#calendarEditRoomButton", "click", CalendarModule.roomController.showRoomFormForUpdate);
+        Stubegru.dom.addEventListener("#calendarNewRoomButton", "click", CalendarModule.roomController.showRoomFormForCreate);
+        Stubegru.dom.addEventListener("#calendarCancelRoomButton", "click", CalendarModule.roomController.cancelRoomEdit);
+        Stubegru.dom.addEventListener("#calendarDeleteRoomButton", "click", CalendarModule.roomController.deleteRoom);
+        Stubegru.dom.addEventListener("#calendarRoomForm", "submit", CalendarModule.roomController.saveRoom);
     }
 
     resetRoomForm() {
@@ -71,5 +71,5 @@ export default class RoomView {
         return roomData;
     }
 
-   
+
 }

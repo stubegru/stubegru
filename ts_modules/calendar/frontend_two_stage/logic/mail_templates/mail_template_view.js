@@ -9,7 +9,7 @@ export default class MailTemplateView {
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" });
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
-        Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
+        Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
     }
     /**
     * Reset all inputs in the Calendar meeting mail template form
@@ -36,11 +36,11 @@ export default class MailTemplateView {
         Stubegru.dom.querySelector("#calendarTemplate").innerHTML = selectHtml;
     }
     async initTemplateEditButtons() {
-        Stubegru.dom.querySelector("#calendarEditTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
-        Stubegru.dom.querySelector("#calendarNewTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
-        Stubegru.dom.querySelector("#calendarTemplateForm").addEventListener("submit", CalendarModule.mailTemplateController.saveMailTemplate);
-        Stubegru.dom.querySelector("#calendarCancelTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
-        Stubegru.dom.querySelector("#calendarDeleteTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.deleteMailTemplate);
+        Stubegru.dom.addEventListener("#calendarEditTemplateButton", "click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
+        Stubegru.dom.addEventListener("#calendarNewTemplateButton", "click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
+        Stubegru.dom.addEventListener("#calendarTemplateForm", "submit", CalendarModule.mailTemplateController.saveMailTemplate);
+        Stubegru.dom.addEventListener("#calendarCancelTemplateButton", "click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
+        Stubegru.dom.addEventListener("#calendarDeleteTemplateButton", "click", CalendarModule.mailTemplateController.deleteMailTemplate);
     }
     async showTemplateVariables() {
         const templateVariableList = await CalendarModule.mailTemplateService.getTemplateVariables();

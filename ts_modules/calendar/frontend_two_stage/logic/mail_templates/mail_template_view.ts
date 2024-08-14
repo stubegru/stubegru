@@ -15,7 +15,7 @@ export default class MailTemplateView {
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
 
-        Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => elem.addEventListener("change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
+        Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
     }
 
     /**
@@ -44,15 +44,15 @@ export default class MailTemplateView {
     }
 
     async initTemplateEditButtons() {
-        Stubegru.dom.querySelector("#calendarEditTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
+        Stubegru.dom.addEventListener("#calendarEditTemplateButton", "click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
 
-        Stubegru.dom.querySelector("#calendarNewTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
+        Stubegru.dom.addEventListener("#calendarNewTemplateButton", "click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
 
-        Stubegru.dom.querySelector("#calendarTemplateForm").addEventListener("submit", CalendarModule.mailTemplateController.saveMailTemplate);
+        Stubegru.dom.addEventListener("#calendarTemplateForm", "submit", CalendarModule.mailTemplateController.saveMailTemplate);
 
-        Stubegru.dom.querySelector("#calendarCancelTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
+        Stubegru.dom.addEventListener("#calendarCancelTemplateButton", "click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
 
-        Stubegru.dom.querySelector("#calendarDeleteTemplateButton").addEventListener("click", CalendarModule.mailTemplateController.deleteMailTemplate);
+        Stubegru.dom.addEventListener("#calendarDeleteTemplateButton", "click", CalendarModule.mailTemplateController.deleteMailTemplate);
     }
 
     private async showTemplateVariables() {

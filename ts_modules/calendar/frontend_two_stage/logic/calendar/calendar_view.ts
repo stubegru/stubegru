@@ -63,7 +63,7 @@ export default class CalendarView {
         this.initFilterMenu();
         this.refresh();
 
-        Stubegru.dom.querySelector("#calendarNewMeetingButton").addEventListener("click", () => CalendarModule.meetingController.createMeeting());
+        Stubegru.dom.addEventListener("#calendarNewMeetingButton","click", () => CalendarModule.meetingController.createMeeting());
 
         //render calendar when the calendar box collapses to open
         Stubegru.dom.querySelector('#collapseCalendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }) //TODO: Check if this bs specific event is handled without jquery
