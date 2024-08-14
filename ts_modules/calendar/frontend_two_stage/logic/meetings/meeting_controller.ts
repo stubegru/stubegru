@@ -57,11 +57,12 @@ export default class MeetingController {
             } catch (error) { Alert.alertError(error); }
         };
 
-        m.setFooterSaveButtonEvent(async (event) => {
+        m.setFooterSaveButtonEvent(async (event: any) => {
             let resp = await createMeetingCallback();
             m.setUnsavedChanges(false);
 
-            if (event.target.id == "calendarSaveNextMeetingButton") {
+            let jsEvent = (event.originalEvent || event) as SubmitEvent; //JQUERY: Extract originalEvent if the submitted event is an capsulated jQuery Event Object
+            if (jsEvent.submitter.id == "calendarSaveNextMeetingButton") {
                 this.createMeeting(true);
             } else {
                 m.setModalVisible(false);
