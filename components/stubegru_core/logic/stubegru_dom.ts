@@ -16,11 +16,14 @@ export default class StubegruDom {
         return document.querySelectorAll(selector) as NodeListOf<HTMLElement>;
     }
 
-    removeEventListener(selector: string) {
-        this.querySelectorAll(selector).forEach(element => {
-            const newElement = element.cloneNode(true);
-            element.replaceWith(newElement);
-        });
+    addEventListener(target: HTMLElement | string, eventType: string, callback: Function) {
+        //@ts-expect-error
+        $(target).on(eventType, callback);
+    }
+
+    removeEventListener(target: HTMLElement | string, eventType?: string) {
+        //@ts-expect-error
+        $(target).off(eventType);
     }
 
     slideUp = (target: HTMLElement | string, duration = 500) => {

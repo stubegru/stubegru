@@ -12,11 +12,13 @@ export default class StubegruDom {
     querySelectorAll(selector) {
         return document.querySelectorAll(selector);
     }
-    removeEventListener(selector) {
-        this.querySelectorAll(selector).forEach(element => {
-            const newElement = element.cloneNode(true);
-            element.replaceWith(newElement);
-        });
+    addEventListener(target, eventType, callback) {
+        //@ts-expect-error
+        $(target).on(eventType, callback);
+    }
+    removeEventListener(target, eventType) {
+        //@ts-expect-error
+        $(target).off(eventType);
     }
     slideUp = (target, duration = 500) => {
         let elem = (typeof (target) == "string") ? this.querySelector(target) : target;

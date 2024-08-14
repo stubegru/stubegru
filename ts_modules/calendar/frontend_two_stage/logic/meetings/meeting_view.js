@@ -22,6 +22,7 @@ class MeetingView {
         //Reset modal forms on hide event
         this.modal.addEventListener('hidden.bs.modal', this.resetAllForms);
         this.initMeetingDetailChannelDropdown();
+        this.initAdvisorDropdown();
     }
     askForUnsavedChanges() {
         if (!CalendarModule.state.unsavedChanges) {
@@ -70,7 +71,7 @@ class MeetingView {
         CalendarModule.state.blockedMeeting = false;
         Stubegru.dom.removeEventListener(".calendar-footer-button");
         Stubegru.dom.removeEventListener(".calendar-assign-button");
-        Stubegru.dom.removeEventListener("#calendarMeetingDetailForm"); //TODO: Originally only the submit event was removed... Check if this is okay
+        Stubegru.dom.removeEventListener("#calendarMeetingDetailForm", "submit");
         this.setUnsavedChanges(false);
     };
     /**
@@ -178,6 +179,20 @@ class MeetingView {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
         Stubegru.dom.querySelector("#calendarChannel").innerHTML = html;
+    }
+    async initAdvisorDropdown() {
+        let ownId = UserUtils.currentUser.id;
+        let userList = await UserUtils.getUserListByPermission("MEETING_ADVISOR");
+        let selectHtml = "";
+        for (const user of userList) {
+            if (ownId == user.id) { //Add own entry at top (default)
+                selectHtml = `<option value="${user.id}">${user.name}</option>` + selectHtml;
+            }
+            else {
+                selectHtml += `<option value="${user.id}">${user.name}</option>`;
+            }
+        }
+        Stubegru.dom.querySelector("#calendarOwner").innerHTML = selectHtml;
     }
     async showBlockError(userName) {
         await Alert.alert({
