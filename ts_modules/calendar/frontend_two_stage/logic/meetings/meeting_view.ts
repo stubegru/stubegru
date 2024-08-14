@@ -157,7 +157,7 @@ export default class MeetingView {
     }
 
     enableDetailMeetingForm(isEnabled) {
-        Stubegru.dom.querySelectorAsInput('.meeting-details').disabled = !isEnabled;
+        Stubegru.dom.querySelectorAll('.meeting-details').forEach(elem => (elem as HTMLInputElement).disabled = !isEnabled);
     }
 
 

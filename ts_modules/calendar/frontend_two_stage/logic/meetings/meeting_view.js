@@ -135,7 +135,7 @@ class MeetingView {
         Stubegru.dom.querySelector("#calendarTemplate").selectedIndex = 1;
     };
     enableDetailMeetingForm(isEnabled) {
-        Stubegru.dom.querySelectorAsInput('.meeting-details').disabled = !isEnabled;
+        Stubegru.dom.querySelectorAll('.meeting-details').forEach(elem => elem.disabled = !isEnabled);
     }
     getMeetingDetailData() {
         let meetingData = {};
