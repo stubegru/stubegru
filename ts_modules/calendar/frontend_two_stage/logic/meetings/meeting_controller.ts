@@ -100,7 +100,7 @@ export default class MeetingController {
 
         m.setFooterSaveButtonEvent(async () => {
             try {
-                let resp = await CalendarModule.meetingService.update(m.getMeetingDetailData());
+                let resp = await CalendarModule.meetingService.update(meetingId, m.getMeetingDetailData());
                 Alert.alertResp(resp, "Termin speichern");
                 await CalendarModule.calendarView.refresh();
                 m.setUnsavedChanges(false);

@@ -14,7 +14,8 @@ export default class MeetingService {
         ;
         return resp;
     }
-    async update(data) {
+    async update(meetingId, data) {
+        data.id = meetingId;
         let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/update_meeting.php", data);
         if (resp.status == "error") {
             throw new Error(resp.message);
