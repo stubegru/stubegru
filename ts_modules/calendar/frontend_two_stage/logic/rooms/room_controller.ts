@@ -74,7 +74,7 @@ export default class RoomController {
             event.preventDefault();
             let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
             const roomData = CalendarModule.roomView.getRoomData();
-            let resp:StubegruHttpResponse;
+            let resp: StubegruHttpResponse;
 
             if (roomId == "new") {
                 //create new Room
@@ -115,18 +115,20 @@ export default class RoomController {
 
     async deleteRoom() {
         try {
-            await Alert.deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?");
-            let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
-            if (roomId != "new") {
-                let resp = await CalendarModule.roomService.delete(roomId);
+            let confirmResp = await Alert.deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?");
+            if (confirmResp.isConfirmed) {
+                let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
+                if (roomId != "new") {
+                    let resp = await CalendarModule.roomService.delete(roomId);
 
-                Alert.alertResp(resp, "Raum Löschen");
-                if (resp.status != "success") { return }
+                    Alert.alertResp(resp, "Raum Löschen");
+                    if (resp.status != "success") { return }
 
-                await CalendarModule.roomController.refreshRoomDropdown();
+                    await CalendarModule.roomController.refreshRoomDropdown();
+                }
+                CalendarModule.roomView.resetRoomForm();
+                CalendarModule.roomView.setRoomFormVisible(false);
             }
-            CalendarModule.roomView.resetRoomForm();
-            CalendarModule.roomView.setRoomFormVisible(false);
         } catch (error) {
             Alert.alertError(error);
         }

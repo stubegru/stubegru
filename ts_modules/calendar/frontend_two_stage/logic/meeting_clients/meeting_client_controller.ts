@@ -95,15 +95,17 @@ export default class MeetingClientController {
 
         cv.setAssignDeleteButtonEvent(async () => {
             try {
-                await Alert.deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.");
-                let resp = await CalendarModule.meetingClientService.deleteClient(meetingId);
-                resp.mode = "alert";
-                await Stubegru.utils.wait(200); //Wait until the delete confirm alert is closed
-                Alert.alertResp(resp, "Kundendaten löschen");
-                if (resp.status == "error") { throw new Error(resp.message); }
-                await CalendarModule.calendarView.refresh();
-                m.setUnsavedChanges(false);
-                CalendarModule.meetingController.openFreeMeeting(meetingId);
+                let confirmResp = await Alert.deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.");
+                if (confirmResp.isConfirmed) {
+                    let resp = await CalendarModule.meetingClientService.deleteClient(meetingId);
+                    resp.mode = "alert";
+                    await Stubegru.utils.wait(200); //Wait until the delete confirm alert is closed
+                    Alert.alertResp(resp, "Kundendaten löschen");
+                    if (resp.status == "error") { throw new Error(resp.message); }
+                    await CalendarModule.calendarView.refresh();
+                    m.setUnsavedChanges(false);
+                    CalendarModule.meetingController.openFreeMeeting(meetingId);
+                }
             } catch (error) { Alert.alertError(error); }
         });
     }

@@ -100,18 +100,20 @@ export default class MailTemplateController {
     }
     async deleteMailTemplate() {
         try {
-            await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
-            let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
-            if (templateId != "new") {
-                let resp = await CalendarModule.mailTemplateService.delete(templateId);
-                Alert.alertResp(resp, "Mailvorlage Löschen");
-                if (resp.status != "success") {
-                    return;
+            let confirmResp = await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
+            if (confirmResp.isConfirmed) {
+                let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
+                if (templateId != "new") {
+                    let resp = await CalendarModule.mailTemplateService.delete(templateId);
+                    Alert.alertResp(resp, "Mailvorlage Löschen");
+                    if (resp.status != "success") {
+                        return;
+                    }
+                    CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
                 }
-                CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
+                CalendarModule.mailTemplateView.resetTemplateForm();
+                CalendarModule.mailTemplateView.setTemplateFormVisible(false);
             }
-            CalendarModule.mailTemplateView.resetTemplateForm();
-            CalendarModule.mailTemplateView.setTemplateFormVisible(false);
         }
         catch (error) {
             Alert.alertError(error);

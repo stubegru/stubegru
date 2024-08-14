@@ -5,7 +5,7 @@ import { MailTemplate } from "./mail_template_service.js";
 
 export default class MailTemplateController {
 
-    mailTemplateList : MailTemplate[];
+    mailTemplateList: MailTemplate[];
 
     getMailTemplate(mailTemplateId) {
         return this.mailTemplateList.find(e => e.id == mailTemplateId);
@@ -113,18 +113,20 @@ export default class MailTemplateController {
 
     async deleteMailTemplate() {
         try {
-            await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
-            let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
-            if (templateId != "new") {
-                let resp = await CalendarModule.mailTemplateService.delete(templateId);
+            let confirmResp = await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
+            if (confirmResp.isConfirmed) {
+                let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
+                if (templateId != "new") {
+                    let resp = await CalendarModule.mailTemplateService.delete(templateId);
 
-                Alert.alertResp(resp, "Mailvorlage Löschen")
-                if (resp.status != "success") { return }
+                    Alert.alertResp(resp, "Mailvorlage Löschen")
+                    if (resp.status != "success") { return }
 
-                CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
+                    CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
+                }
+                CalendarModule.mailTemplateView.resetTemplateForm();
+                CalendarModule.mailTemplateView.setTemplateFormVisible(false);
             }
-            CalendarModule.mailTemplateView.resetTemplateForm();
-            CalendarModule.mailTemplateView.setTemplateFormVisible(false);
         } catch (error) {
             Alert.alertError(error);
         }

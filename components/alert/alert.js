@@ -46,6 +46,10 @@ class Alert {
             Alert.showToast(swalOptions);
         }
     }
+    /**
+     * @example let confirmResp = await Alert.deleteConfirm("Element löschen", "Soll dieses Element wirklich gelöscht werden?");
+                if (confirmResp.isConfirmed) { ... }
+     */
     static async deleteConfirm(title, text, confirmButtonText = "Löschen") {
         return await SweetAlert.fire({
             title: title,
