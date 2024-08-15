@@ -6,7 +6,7 @@ export default class MailTemplateView {
     richTextEditor;
     async init() {
         const editorPlaceholder = Stubegru.dom.querySelector('#mailTemplateEditor'); //TODO: Refactor html ids to design rules
-        this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" });
+        this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
         Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));

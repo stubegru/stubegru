@@ -11,7 +11,7 @@ export default class MailTemplateView {
 
     async init() {
         const editorPlaceholder = Stubegru.dom.querySelector('#mailTemplateEditor'); //TODO: Refactor html ids to design rules
-        this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" });
+        this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
 

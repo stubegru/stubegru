@@ -21,3 +21,9 @@
 .border-top{
     border-top: 2px solid #78909C;
 }
+
+/* CK Editor for mail template editing */
+#calendarTemplateForm .ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 500px;
+    overflow-y: auto;
+}
