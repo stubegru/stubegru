@@ -15,7 +15,7 @@ export default class MeetingClientView {
 
     resetClientForm = () => {
         this.enableClientForm(true);
-        (Stubegru.dom.querySelector("#calendarClientDataForm") as HTMLFormElement).reset();
+        (Stubegru.dom.querySelector("#meeting_client_data_form") as HTMLFormElement).reset();
     }
 
     enableClientForm(isEnabled) {
@@ -23,7 +23,7 @@ export default class MeetingClientView {
     }
 
     setClientVisible(isVisible) {
-        Stubegru.dom.slideToState("#calendarClientDataContainer", isVisible);
+        Stubegru.dom.slideToState("#meeting_client_data_container", isVisible);
     }
 
     /**
@@ -34,10 +34,10 @@ export default class MeetingClientView {
      * @param {boolean} cancel wether to show the cancel button
      */
     showAssignButtons(assign: boolean, save: boolean, remove: boolean, cancel: boolean) {
-        Stubegru.dom.setVisibility("#calendarAssignAssignButton", assign);
-        Stubegru.dom.setVisibility("#calendarAssignSaveButton", save);
-        Stubegru.dom.setVisibility("#calendarAssignDeleteButton", remove);
-        Stubegru.dom.setVisibility("#calendarAssignCancelButton", cancel);
+        Stubegru.dom.setVisibility("#meeting_assign_assign_button", assign);
+        Stubegru.dom.setVisibility("#meeting_assign_save_button", save);
+        Stubegru.dom.setVisibility("#meeting_assign_delete_button", remove);
+        Stubegru.dom.setVisibility("#meeting_assign_cancel_button", cancel);
     }
 
     /**
@@ -48,8 +48,8 @@ export default class MeetingClientView {
   */
     setAssignSaveButtonEvent(callback: (event: SubmitEvent) => void) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
-        Stubegru.dom.removeEventListener("#calendarClientDataForm");
-        Stubegru.dom.addEventListener("#calendarClientDataForm", "submit", (event) => {
+        Stubegru.dom.removeEventListener("#meeting_client_data_form");
+        Stubegru.dom.addEventListener("#meeting_client_data_form", "submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -61,8 +61,8 @@ export default class MeetingClientView {
      * @param {function} callback Function to be executed if the button is clicked
      */
     setAssignAssignButtonEvent(callback: (event: Event) => void) {
-        Stubegru.dom.removeEventListener("#calendarAssignAssignButton");
-        Stubegru.dom.addEventListener("#calendarAssignAssignButton", "click", callback);
+        Stubegru.dom.removeEventListener("#meeting_assign_assign_button");
+        Stubegru.dom.addEventListener("#meeting_assign_assign_button", "click", callback);
     }
 
     /**
@@ -71,8 +71,8 @@ export default class MeetingClientView {
      * @param {function} callback Function to be executed if the button is clicked
      */
     setAssignDeleteButtonEvent(callback: (event: Event) => void) {
-        Stubegru.dom.removeEventListener("#calendarAssignDeleteButton");
-        Stubegru.dom.addEventListener("#calendarAssignDeleteButton", "click", callback);
+        Stubegru.dom.removeEventListener("#meeting_assign_delete_button");
+        Stubegru.dom.addEventListener("#meeting_assign_delete_button", "click", callback);
     }
 
     /**
@@ -81,30 +81,30 @@ export default class MeetingClientView {
      * @param {function} callback Function to be executed if the button is clicked
      */
     setAssignCancelButtonEvent(callback: (event: Event) => void) {
-        Stubegru.dom.removeEventListener("#calendarAssignCancelButton");
-        Stubegru.dom.addEventListener("#calendarAssignCancelButton", "click", callback);
+        Stubegru.dom.removeEventListener("#meeting_assign_cancel_button");
+        Stubegru.dom.addEventListener("#meeting_assign_cancel_button", "click", callback);
     }
 
 
     getClientData() {
         let clientData = {} as MeetingClient;
-        clientData.name = Stubegru.dom.querySelectorAsInput("#calendarClientName").value;
-        clientData.mail = Stubegru.dom.querySelectorAsInput("#calendarClientMail").value;
-        clientData.phone = Stubegru.dom.querySelectorAsInput("#calendarClientPhone").value;
-        clientData.formular = Stubegru.dom.querySelectorAsInput("#calendarClientSurvey").value;
-        clientData.description = Stubegru.dom.querySelectorAsInput("#calendarClientIssue").value;
-        clientData.channel = Stubegru.dom.querySelectorAsInput("#calendarClientChannel").value;
+        clientData.name = Stubegru.dom.querySelectorAsInput("#meeting_client_name").value;
+        clientData.mail = Stubegru.dom.querySelectorAsInput("#meeting_client_mail").value;
+        clientData.phone = Stubegru.dom.querySelectorAsInput("#meeting_client_phone").value;
+        clientData.formular = Stubegru.dom.querySelectorAsInput("#meeting_client_survey").value;
+        clientData.description = Stubegru.dom.querySelectorAsInput("#meeting_client_issue").value;
+        clientData.channel = Stubegru.dom.querySelectorAsInput("#meeting_client_channel").value;
         return clientData;
     }
 
     setClientData = (client: MeetingClient) => {
         this.initClientChannelDropdown(client.channel);
-        Stubegru.dom.querySelectorAsInput('#calendarClientName').value = client.name;
-        Stubegru.dom.querySelectorAsInput('#calendarClientMail').value = client.mail;
-        Stubegru.dom.querySelectorAsInput('#calendarClientIssue').value = client.description;
-        Stubegru.dom.querySelectorAsInput('#calendarClientSurvey').value = client.formular;
-        Stubegru.dom.querySelectorAsInput('#calendarClientChannel').value = client.channel;
-        Stubegru.dom.querySelectorAsInput('#calendarClientPhone').value = this.prettyPrintPhoneNumber(client.phone);
+        Stubegru.dom.querySelectorAsInput('#meeting_client_name').value = client.name;
+        Stubegru.dom.querySelectorAsInput('#meeting_client_mail').value = client.mail;
+        Stubegru.dom.querySelectorAsInput('#meeting_client_issue').value = client.description;
+        Stubegru.dom.querySelectorAsInput('#meeting_client_survey').value = client.formular;
+        Stubegru.dom.querySelectorAsInput('#meeting_client_channel').value = client.channel;
+        Stubegru.dom.querySelectorAsInput('#meeting_client_phone').value = this.prettyPrintPhoneNumber(client.phone);
     }
 
     prettyPrintPhoneNumber(phone: string) {
@@ -132,6 +132,6 @@ export default class MeetingClientView {
         for (let channelId of channelOptions) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
-        Stubegru.dom.querySelector("#calendarClientChannel").innerHTML = html;
+        Stubegru.dom.querySelector("#meeting_client_channel").innerHTML = html;
     }
 }

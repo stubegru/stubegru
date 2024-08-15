@@ -10,7 +10,7 @@ export default class MailTemplateView {
     richTextEditor: ClassicEditor;
 
     async init() {
-        const editorPlaceholder = Stubegru.dom.querySelector('#mailTemplateEditor'); //TODO: Refactor html ids to design rules
+        const editorPlaceholder = Stubegru.dom.querySelector('#mail_template_editor'); //TODO: Refactor html ids to design rules
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
@@ -22,7 +22,7 @@ export default class MailTemplateView {
     * Reset all inputs in the Calendar meeting mail template form
     */
     resetTemplateForm() {
-        let form = Stubegru.dom.querySelector("#calendarTemplateForm") as HTMLFormElement;
+        let form = Stubegru.dom.querySelector("#meeting_detail_mail_template_form") as HTMLFormElement;
         form.reset();
         this.richTextEditor.setData("");
     }
@@ -40,19 +40,19 @@ export default class MailTemplateView {
             }
         }
         selectHtml += postHtml;
-        Stubegru.dom.querySelector("#calendarTemplate").innerHTML = selectHtml;
+        Stubegru.dom.querySelector("#meeting_detail_mail_template").innerHTML = selectHtml;
     }
 
     async initTemplateEditButtons() {
-        Stubegru.dom.addEventListener("#calendarEditTemplateButton", "click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
+        Stubegru.dom.addEventListener("#meeting_detail_edit_mail_template_button", "click", CalendarModule.mailTemplateController.showMailTemplateFormForUpdate);
 
-        Stubegru.dom.addEventListener("#calendarNewTemplateButton", "click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
+        Stubegru.dom.addEventListener("#meeting_detail_new_mail_template_button", "click", CalendarModule.mailTemplateController.showMailTemplateFormForCreate);
 
-        Stubegru.dom.addEventListener("#calendarTemplateForm", "submit", CalendarModule.mailTemplateController.saveMailTemplate);
+        Stubegru.dom.addEventListener("#meeting_detail_mail_template_form", "submit", CalendarModule.mailTemplateController.saveMailTemplate);
 
-        Stubegru.dom.addEventListener("#calendarCancelTemplateButton", "click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
+        Stubegru.dom.addEventListener("#calendar_cancel_mail_template_button", "click", CalendarModule.mailTemplateController.cancelMailTemplateEdit);
 
-        Stubegru.dom.addEventListener("#calendarDeleteTemplateButton", "click", CalendarModule.mailTemplateController.deleteMailTemplate);
+        Stubegru.dom.addEventListener("#calendar_delete_mail_template_button", "click", CalendarModule.mailTemplateController.deleteMailTemplate);
     }
 
     private async showTemplateVariables() {
@@ -79,26 +79,26 @@ export default class MailTemplateView {
             varHtml += `</ul><br>`;
         }
 
-        Stubegru.dom.querySelector("#calendarTemplateVariablesContainer").innerHTML = varHtml;
+        Stubegru.dom.querySelector("#mail_template_variables_container").innerHTML = varHtml;
     }
 
     setTemplateFormVisible(isVisible: boolean) {
-        Stubegru.dom.slideToState("#newmail", isVisible);
+        Stubegru.dom.slideToState("#meeting_mail_template_form_container", isVisible);
     }
 
     getTemplateData() {
         let templateData = {} as MailTemplate;
-        templateData.id = Stubegru.dom.querySelectorAsInput("#templateId").value;
-        templateData.titel = Stubegru.dom.querySelectorAsInput("#templateTitle").value;
-        templateData.betreff = Stubegru.dom.querySelectorAsInput("#templateSubject").value;
+        templateData.id = Stubegru.dom.querySelectorAsInput("#mail_template_id").value;
+        templateData.titel = Stubegru.dom.querySelectorAsInput("#mail_template_title").value;
+        templateData.betreff = Stubegru.dom.querySelectorAsInput("#mail_template_subject").value;
         templateData.text = this.richTextEditor.getData();
         return templateData;
     }
 
     setTemplateData(templateData: MailTemplate) {
-        Stubegru.dom.querySelectorAsInput("#templateId").value = templateData.id;
-        Stubegru.dom.querySelectorAsInput("#templateTitle").value = templateData.titel;
-        Stubegru.dom.querySelectorAsInput("#templateSubject").value = templateData.betreff;
+        Stubegru.dom.querySelectorAsInput("#mail_template_id").value = templateData.id;
+        Stubegru.dom.querySelectorAsInput("#mail_template_title").value = templateData.titel;
+        Stubegru.dom.querySelectorAsInput("#mail_template_subject").value = templateData.betreff;
         this.richTextEditor.setData(templateData.text)
     }
 }

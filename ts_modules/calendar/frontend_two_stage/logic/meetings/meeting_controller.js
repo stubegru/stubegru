@@ -52,7 +52,7 @@ export default class MeetingController {
             let resp = await createMeetingCallback();
             m.setUnsavedChanges(false);
             let jsEvent = (event.originalEvent || event); //JQUERY: Extract originalEvent if the submitted event is an capsulated jQuery Event Object
-            if (jsEvent.submitter.id == "calendarSaveNextMeetingButton") {
+            if (jsEvent.submitter.id == "meeting_save_next_button") {
                 this.createMeeting(true);
             }
             else {

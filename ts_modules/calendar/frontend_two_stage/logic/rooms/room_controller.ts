@@ -38,7 +38,7 @@ export default class RoomController {
 
     async showRoomFormForUpdate() {
         try {
-            const roomId = Stubegru.dom.querySelectorAsInput("#calendarRoom").value;
+            const roomId = Stubegru.dom.querySelectorAsInput("#meeting_detail_room").value;
 
             if (roomId == null || roomId == "") {
                 Alert.alert({
@@ -95,8 +95,8 @@ export default class RoomController {
             CalendarModule.roomView.setRoomFormVisible(false);
 
             //auto-select previously edited/created room
-            Stubegru.dom.querySelectorAsInput("#calendarRoom").value = roomId;
-            Stubegru.dom.querySelector("#calendarRoom").dispatchEvent(new Event("change"));
+            Stubegru.dom.querySelectorAsInput("#meeting_detail_room").value = roomId;
+            Stubegru.dom.querySelector("#meeting_detail_room").dispatchEvent(new Event("change"));
         } catch (error) {
             Alert.alertError(error);
         }

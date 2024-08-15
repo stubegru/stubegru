@@ -4,32 +4,32 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <a href="#collapseCalendar" data-toggle="collapse" aria-expanded="true">Kalender</a>
+                <a href="#collapse_calendar" data-toggle="collapse" aria-expanded="true">Kalender</a>
             </h4>
         </div>
-        <div class="panel-collapse collapse in" id="collapseCalendar" aria-expanded="false">
+        <div class="panel-collapse collapse in" id="collapse_calendar" aria-expanded="false">
             <div class="panel-body">
 
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-3">
-                                <button id="calendarNewMeetingButton" type="button" class="btn btn-success btn-block permission-MEETINGS_WRITE permission-required">
+                                <button id="calendar_new_meeting_button" type="button" class="btn btn-success btn-block permission-MEETINGS_WRITE permission-required">
                                     <i class="far fa-calendar-plus"></i>&nbsp; Neuer Termin
                                 </button>
                             </div>
                             <div class="col-md-7">
                                 <div class="input-group">
 
-                                    <input type="text" class="form-control" placeholder="Suche nach Kunden" id="calendarSearchInput">
-                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="calendarSearchClearButton"><i class="fas fa-times"></i></span>
+                                    <input type="text" class="form-control" placeholder="Suche nach Kunden" id="calendar_search_input">
+                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="calendar_search_clear_button"><i class="fas fa-times"></i></span>
                                 </div>
                             </div>
                             <div class="col-md-2 text-right">
                                 <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                     <i class="fas fa-cog"></i><i class="fas fa-caret-down"></i>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-right calendar-dropdown" id="calendarSettingsDropdown">
+                                <ul class="dropdown-menu dropdown-menu-right calendar-dropdown" id="calendar_settings_dropdown">
                                     <li>Kalender Einstellungen</li>
                                     <li role="separator" class="divider"></li>
                                     <br>
@@ -39,7 +39,7 @@
                                                 Nur eigene Termine
                                             </div>
                                             <div class="col-xs-4 pull-right">
-                                                <input id="calendarSettingsForeignToggle" type="checkbox" data-toggle="toggle">
+                                                <input id="calendar_settings_foreign_toggle" type="checkbox" data-toggle="toggle">
                                             </div>
                                         </div>
                                     </li>
@@ -50,15 +50,15 @@
                                                 Nur freie Termine
                                             </div>
                                             <div class="col-xs-4 pull-right">
-                                                <input id="calendarSettingsAssignedToggle" type="checkbox" data-toggle="toggle">
+                                                <input id="calendar_settings_assigned_toggle" type="checkbox" data-toggle="toggle">
                                             </div>
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <div id="calendarSearchInfo" style="margin-top: 10px;"></div>
-                        <div style="margin-top: 10px; display: none;" id="searchResultContainer">
+                        <div id="calendar_search_info" style="margin-top: 10px;"></div>
+                        <div style="margin-top: 10px; display: none;" id="search_result_container">
                             <table class="table table-striped table-hover">
                                 <tr>
                                     <th>Termin</th>
@@ -67,7 +67,7 @@
                                     <th>Datum</th>
                                     <th>Uhrzeit</th>
                                 </tr>
-                                <tbody id="calendarSearchResultTable">
+                                <tbody id="calendar_search_result_table">
 
                                 </tbody>
                             </table>
@@ -76,45 +76,45 @@
                 </div>
 
 
-                <div id="calendarBody">
-                    <div id="calendarViewContainer"></div>
+                <div id="calendar_body">
+                    <div id="calendar_view_container"></div>
                 </div>
 
 
 
-                <div id="terminmodal" class="modal fade" style="display: none;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div id="meeting_detail_view_modal" class="modal fade" style="display: none;" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" style="min-width : 80%;">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <div class="row">
                                     <div class="col-xs-8">
-                                        <h4 class="modal-title" id="terminmodalTitle">Termin Details</h4>
+                                        <h4 class="modal-title" id="meeting_detail_view_title">Termin Details</h4>
                                     </div>
                                     <div class="col-xs-4">
-                                        <div id="calendarModalChangesInfo" class="text-right"><i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert</div>
+                                        <div id="calendar_modal_changes_info" class="text-right"><i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-body">
                                 <div class="calendar-detail-container">
-                                    <form id="calendarMeetingDetailForm">
+                                    <form id="calendar_meeting_detail_form">
                                         <div class="row">
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Datum</label>
-                                                    <input autocomplete="off" type='date' id="calendarDate" class="form-control meeting-details" required>
+                                                    <input autocomplete="off" type='date' id="meeting_detail_date" class="form-control meeting-details" required>
                                                 </div>
                                             </div>
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Beginn</label>
-                                                    <input autocomplete="off" type='time' id="calendarStart" class="form-control meeting-details" required>
+                                                    <input autocomplete="off" type='time' id="meeting_detail_start" class="form-control meeting-details" required>
                                                 </div>
                                             </div>
                                             <div class='col-sm-4'>
                                                 <div class="form-group">
                                                     <label>Ende</label>
-                                                    <input autocomplete="off" id="calendarEnd" type='time' class="form-control meeting-details" required>
+                                                    <input autocomplete="off" id="meeting_detail_end" type='time' class="form-control meeting-details" required>
                                                 </div>
 
                                             </div>
@@ -123,20 +123,20 @@
                                             <div class="col-sm-4" style="display:block;">
                                                 <div class="form-group">
                                                     <label>Titel</label>
-                                                    <input class="form-control meeting-details" id="calendarTitle" required>
+                                                    <input class="form-control meeting-details" id="meeting_detail_title" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label>Berater*in</label>
-                                                    <select id="calendarOwner" class="form-control meeting-details" required>
+                                                    <select id="meeting_detail_owner" class="form-control meeting-details" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label>Kontaktkanal</label>
-                                                    <select id="calendarChannel" class="form-control meeting-details" required>
+                                                    <select id="meeting_detail_channel" class="form-control meeting-details" required>
                                                     </select>
                                                 </div>
                                             </div>
@@ -149,13 +149,13 @@
                                                 <div class="row">
                                                     <div class="col-lg-8">
                                                         <div class="form-group">
-                                                            <select id="calendarRoom" class="form-control meeting-details" required="">
+                                                            <select id="meeting_detail_room" class="form-control meeting-details" required="">
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                        <button class="btn btn-info meeting-details" type="button" id="calendarEditRoomButton"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                        <button class="btn btn-primary meeting-details" type="button" id="calendarNewRoomButton"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                        <button class="btn btn-info meeting-details" type="button" id="meeting_detail_edit_room_button"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary meeting-details" type="button" id="meeting_detail_new_room_button"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -165,27 +165,27 @@
                                                 <div class="row">
                                                     <div class="col-lg-8">
                                                         <div class="form-group">
-                                                            <select id="calendarTemplate" class="form-control meeting-details" required="">
+                                                            <select id="meeting_detail_mail_template" class="form-control meeting-details" required="">
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-4" style="display: flex; justify-content: space-between;">
-                                                        <button class="btn btn-info meeting-details" type="button" id="calendarEditTemplateButton"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
-                                                        <button class="btn btn-primary meeting-details" type="button" id="calendarNewTemplateButton"><i class="fas fa-plus"></i>&nbsp;New</button>
+                                                        <button class="btn btn-info meeting-details" type="button" id="meeting_detail_edit_mail_template_button"><i class="fas fa-pencil-alt"></i>&nbsp;Edit</button>
+                                                        <button class="btn btn-primary meeting-details" type="button" id="meeting_detail_new_mail_template_button"><i class="fas fa-plus"></i>&nbsp;New</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </form>
 
-                                    <div id="newroom" class="calendarForm calendar-form-blue" style="display:none;">
+                                    <div id="meeting_room_form_container" class="calendar-form calendar-form-blue" style="display:none;">
                                         <div class="row">
                                             <div class='col-sm-12'>
                                                 <h3><b>Editor für Beratungsräume</b></h3>
                                             </div>
                                         </div>
                                         <br>
-                                        <form id="calendarRoomForm">
+                                        <form id="meeting_detail_room_form">
                                             <input autocomplete="off" type="hidden" id="raum_id">
                                             <div class="row">
                                                 <div class='col-sm-4'>
@@ -268,9 +268,9 @@
                                             <hr class="border-top">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <button class="btn btn-lg btn-primary pull-right meeting-room-input" type="submit" id="calendarSaveRoomButton"><i class="far fa-save"></i> Raum Speichern</button>
-                                                    <button class="btn btn-lg btn-default meeting-room-input pull-right" style="margin-right: 10px;" type="button" id="calendarCancelRoomButton"><i class="far fa-times-circle"></i> Bearbeitung abbrechen</button>
-                                                    <button class="btn btn-lg btn-danger meeting-room-input" type="button" id="calendarDeleteRoomButton"><i class="far fa-trash-alt"></i> Diesen Raum löschen</button>
+                                                    <button class="btn btn-lg btn-primary pull-right meeting-room-input" type="submit" id="calendar_save_room_button"><i class="far fa-save"></i> Raum Speichern</button>
+                                                    <button class="btn btn-lg btn-default meeting-room-input pull-right" style="margin-right: 10px;" type="button" id="calendar_cancel_room_button"><i class="far fa-times-circle"></i> Bearbeitung abbrechen</button>
+                                                    <button class="btn btn-lg btn-danger meeting-room-input" type="button" id="calendar_delete_room_button"><i class="far fa-trash-alt"></i> Diesen Raum löschen</button>
                                                 </div>
                                             </div>
 
@@ -280,26 +280,26 @@
 
 
 
-                                    <div id="newmail" class="calendarForm calendar-form-blue" style="display:none">
+                                    <div id="meeting_mail_template_form_container" class="calendar-form calendar-form-blue" style="display:none">
                                         <div class="row">
                                             <div class='col-sm-12'>
                                                 <h3><b>Editor für Mailtemplates</b></h3>
                                             </div>
                                         </div>
                                         <br>
-                                        <form id="calendarTemplateForm">
-                                            <div class="row"> 
+                                        <form id="meeting_detail_mail_template_form">
+                                            <div class="row">
                                                 <div class='col-sm-6'>
-                                                    <input autocomplete="off" id=templateId type="hidden" value="new">
+                                                    <input autocomplete="off" id="mail_template_id" type="hidden" value="new">
                                                     <div class="form-group">
                                                         <label>Titel der Vorlage</label>
-                                                        <input autocomplete="off" id="templateTitle" class="form-control meeting-template-input" required>
+                                                        <input autocomplete="off" id="mail_template_title" class="form-control meeting-template-input" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="form-group">
                                                         <label>Betreff der Mail</label>
-                                                        <input autocomplete="off" id="templateSubject" class="form-control meeting-template-input" required>
+                                                        <input autocomplete="off" id="mail_template_subject" class="form-control meeting-template-input" required>
                                                     </div>
                                                 </div>
 
@@ -309,25 +309,25 @@
                                                 <div class='col-md-9'>
                                                     <div class="form-group">
                                                         <label><b>Mailtext</b></label>
-                                                        <textarea id="mailTemplateEditor"></textarea>
+                                                        <textarea id="mail_template_editor"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <h5><b>Verfügbare Variablen:</b></h5>
-                                                    <div class="well" id="calendarTemplateVariablesContainer" style="overflow-y: auto; height: 550px;"></div>
+                                                    <div class="well" id="mail_template_variables_container" style="overflow-y: auto; height: 550px;"></div>
 
                                                 </div>
                                             </div>
                                             <hr class="border-top">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <button class="btn btn-lg btn-primary pull-right meeting-template-input" type="submit" id="calendarSaveTemplateButton">
+                                                    <button class="btn btn-lg btn-primary pull-right meeting-template-input" type="submit" id="calendar_save_mail_template_button">
                                                         <i class="far fa-save"></i> Vorlage speichern
                                                     </button>
-                                                    <button class="btn btn-lg btn-default meeting-template-input pull-right" style="margin-right: 10px;" type="button" id="calendarCancelTemplateButton">
+                                                    <button class="btn btn-lg btn-default meeting-template-input pull-right" style="margin-right: 10px;" type="button" id="calendar_cancel_mail_template_button">
                                                         <i class="far fa-times-circle"></i> Bearbeitung abbrechen
                                                     </button>
-                                                    <button type="button" class="btn btn-lg btn-danger pull-center meeting-template-input" id="calendarDeleteTemplateButton">
+                                                    <button type="button" class="btn btn-lg btn-danger pull-center meeting-template-input" id="calendar_delete_mail_template_button">
                                                         <i class="far fa-trash-alt"></i> Diese Vorlage löschen
                                                     </button>
                                                 </div>
@@ -338,23 +338,23 @@
 
                                 </div>
 
-                                <div id="calendarClientDataContainer">
+                                <div id="meeting_client_data_container">
                                     <div class="text-center">
                                         <h3 style="margin-bottom:0px;">Kundendaten</h3>
                                     </div>
                                     <hr style="margin-top:0px;">
-                                    <form id="calendarClientDataForm">
+                                    <form id="meeting_client_data_form">
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Vor- und Nachname:</label>
-                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientName" required>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_name" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label>Fragebogen:</label>
-                                                    <select id="calendarClientSurvey" class="form-control terminmodal-input meeting-client" required>
+                                                    <select id="meeting_client_survey" class="form-control terminmodal-input meeting-client" required>
                                                         <option value="0">Nein</option>
                                                         <option value="1">Ja</option>
                                                     </select>
@@ -363,7 +363,7 @@
                                             <div class="col-sm-3">
                                                 <div class="form-group">
                                                     <label>Kanal:</label>
-                                                    <select id="calendarClientChannel" class="form-control terminmodal-input meeting-client" required>
+                                                    <select id="meeting_client_channel" class="form-control terminmodal-input meeting-client" required>
 
                                                     </select>
                                                 </div>
@@ -373,18 +373,18 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Anliegen:</label>
-                                                    <textarea id="calendarClientIssue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
+                                                    <textarea id="meeting_client_issue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
 
                                                 <div class="form-group">
                                                     <label>Telefon:</label>
-                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientPhone">
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_phone">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>E-Mail:</label>
-                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="calendarClientMail" required="">
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_mail" required="">
                                                 </div>
 
                                             </div>
@@ -395,14 +395,14 @@
                                 <br>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-lg btn-primary calendar-assign-button" id="calendarAssignAssignButton"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
-                                        <button class="btn btn-lg btn-secondary calendar-assign-button" id="calendarAssignCancelButton"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
-                                        <button class="btn btn-lg btn-success calendar-assign-button" id="calendarAssignSaveButton" type="submit" form="calendarClientDataForm"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
-                                        <button class="btn btn-lg btn-danger calendar-assign-button" id="calendarAssignDeleteButton"><i class="far fa-trash-alt"></i>&nbsp;Kundendaten löschen</button>
+                                        <button class="btn btn-lg btn-primary calendar-assign-button" id="meeting_assign_assign_button"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
+                                        <button class="btn btn-lg btn-secondary calendar-assign-button" id="meeting_assign_cancel_button"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
+                                        <button class="btn btn-lg btn-success calendar-assign-button" id="meeting_assign_save_button" type="submit" form="meeting_client_data_form"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
+                                        <button class="btn btn-lg btn-danger calendar-assign-button" id="meeting_assign_delete_button"><i class="far fa-trash-alt"></i>&nbsp;Kundendaten löschen</button>
                                     </div>
                                 </div>
                                 <br>
-                                <div class="alert alert-info text-center" id="calendarModalInfoAlert" style="display: none;"></div>
+                                <div class="alert alert-info text-center" id="meeting_modal_info_alert" style="display: none;"></div>
 
 
                             </div>
@@ -410,10 +410,10 @@
                             <div class="modal-footer">
                                 <div class="row">
                                     <div class='col-sm-12'>
-                                        <button class="btn btn-danger pull-left calendar-footer-button" type="button" id="calendarDeleteMeetingButton"><i class="far fa-trash-alt"></i> Termin löschen</button>
-                                        <button data-dismiss="modal" class="btn btn-default" id="calendarCancelButton" type="button"><i class="fas fa-times"></i> Termineditor schließen</button>
-                                        <button id="calendarSaveMeetingButton" class="btn btn-success pull-right calendar-footer-button" type="submit" form="calendarMeetingDetailForm"><i class="fas fa-save"></i> Termin speichern</button>
-                                        <button id="calendarSaveNextMeetingButton" class="btn btn-default pull-right calendar-footer-button" type="submit" form="calendarMeetingDetailForm"><i class="fas fa-check-circle"></i> Speichern und Nächster</button>
+                                        <button class="btn btn-danger pull-left calendar-footer-button" type="button" id="meeting_delete_button"><i class="far fa-trash-alt"></i> Termin löschen</button>
+                                        <button data-dismiss="modal" class="btn btn-default" id="meeting_cancel_button" type="button"><i class="fas fa-times"></i> Termineditor schließen</button>
+                                        <button id="meeting_save_button" class="btn btn-success pull-right calendar-footer-button" type="submit" form="calendar_meeting_detail_form"><i class="fas fa-save"></i> Termin speichern</button>
+                                        <button id="meeting_save_next_button" class="btn btn-default pull-right calendar-footer-button" type="submit" form="calendar_meeting_detail_form"><i class="fas fa-check-circle"></i> Speichern und Nächster</button>
                                     </div>
                                 </div>
                             </div>
@@ -426,7 +426,7 @@
 </div>
 
 <!-- Modal for Assign meeting feedback -->
-<div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" id="calendar_assign_feedback_modal">
+<div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" id="meeting_assign_feedback_modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">

@@ -30,7 +30,7 @@ export default class MailTemplateController {
     }
     async showMailTemplateFormForUpdate() {
         try {
-            const templateId = Stubegru.dom.querySelectorAsInput("#calendarTemplate").value;
+            const templateId = Stubegru.dom.querySelectorAsInput("#meeting_detail_mail_template").value;
             if (templateId == null || templateId == "") {
                 Alert.alert({
                     title: "Mailvorlage bearbeiten:",
@@ -51,7 +51,7 @@ export default class MailTemplateController {
     async showMailTemplateFormForCreate() {
         try {
             CalendarModule.mailTemplateView.resetTemplateForm();
-            Stubegru.dom.querySelectorAsInput("#templateId").value = "new";
+            Stubegru.dom.querySelectorAsInput("#mail_template_id").value = "new";
             CalendarModule.mailTemplateView.setTemplateFormVisible(true);
         }
         catch (error) {
@@ -61,7 +61,7 @@ export default class MailTemplateController {
     async saveMailTemplate(event) {
         try {
             event.preventDefault();
-            let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
+            let templateId = Stubegru.dom.querySelectorAsInput("#mail_template_id").value;
             let templateData = CalendarModule.mailTemplateView.getTemplateData();
             let resp;
             if (templateId == "new") {
@@ -82,8 +82,8 @@ export default class MailTemplateController {
             CalendarModule.mailTemplateView.resetTemplateForm();
             CalendarModule.mailTemplateView.setTemplateFormVisible(false);
             //auto-select previously edited/created template
-            Stubegru.dom.querySelectorAsInput("#calendarTemplate").value = templateId;
-            Stubegru.dom.querySelector("#calendarTemplate").dispatchEvent(new Event("change"));
+            Stubegru.dom.querySelectorAsInput("#meeting_detail_mail_template").value = templateId;
+            Stubegru.dom.querySelector("#meeting_detail_mail_template").dispatchEvent(new Event("change"));
         }
         catch (error) {
             Alert.alertError(error);
@@ -102,7 +102,7 @@ export default class MailTemplateController {
         try {
             let confirmResp = await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
             if (confirmResp.isConfirmed) {
-                let templateId = Stubegru.dom.querySelectorAsInput("#templateId").value;
+                let templateId = Stubegru.dom.querySelectorAsInput("#mail_template_id").value;
                 if (templateId != "new") {
                     let resp = await CalendarModule.mailTemplateService.delete(templateId);
                     Alert.alertResp(resp, "Mailvorlage Löschen");

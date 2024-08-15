@@ -18,11 +18,11 @@ export default class MeetingView {
     modal: Modal;
 
     async init() {
-        this.modal = new Modal("#terminmodal"); //TODO: Change naming
+        this.modal = new Modal("#meeting_detail_view_modal"); //TODO: Change naming
 
         this.setUnsavedChanges(false);
         Stubegru.dom.querySelectorAll('.meeting-details').forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => this.setUnsavedChanges(true)));
-        Stubegru.dom.addEventListener("#calendarStart", "change", CalendarModule.meetingView.setMeetingEndTimeByStartTime);
+        Stubegru.dom.addEventListener("#meeting_detail_start", "change", CalendarModule.meetingView.setMeetingEndTimeByStartTime);
         //ask for unsaved changes
         this.modal.addEventListener('hide.bs.modal', this.askForUnsavedChanges);
         //Reset modal forms on hide event
@@ -40,8 +40,8 @@ export default class MeetingView {
     setUnsavedChanges(hasUnsavedChanges: boolean) {
         CalendarModule.state.unsavedChanges = hasUnsavedChanges;
         hasUnsavedChanges ?
-            Stubegru.dom.querySelector("#calendarModalChangesInfo").innerHTML = `<i class="fas fa-circle" style="color: #d9534f"></i> Ungesicherte Änderungen` :
-            Stubegru.dom.querySelector("#calendarModalChangesInfo").innerHTML = `<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`;
+            Stubegru.dom.querySelector("#calendar_modal_changes_info").innerHTML = `<i class="fas fa-circle" style="color: #d9534f"></i> Ungesicherte Änderungen` :
+            Stubegru.dom.querySelector("#calendar_modal_changes_info").innerHTML = `<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`;
 
         if (hasUnsavedChanges && CalendarModule.state.freeMeetingMode) {
             CalendarModule.meetingClientView.showAssignButtons(false, false, false, false);
@@ -62,7 +62,7 @@ export default class MeetingView {
      * @param {string} title 
      */
     setModalTitle(title) {
-        Stubegru.dom.querySelector("#terminmodalTitle").innerHTML = title;
+        Stubegru.dom.querySelector("#meeting_detail_view_title").innerHTML = title;
     }
 
     /**
@@ -82,7 +82,7 @@ export default class MeetingView {
         CalendarModule.state.blockedMeeting = false;
         Stubegru.dom.removeEventListener(".calendar-footer-button");
         Stubegru.dom.removeEventListener(".calendar-assign-button");
-        Stubegru.dom.removeEventListener("#calendarMeetingDetailForm", "submit");
+        Stubegru.dom.removeEventListener("#calendar_meeting_detail_form", "submit");
         this.setUnsavedChanges(false);
     }
 
@@ -92,8 +92,8 @@ export default class MeetingView {
      * @param {string} text Text to be displayed in the alert (HTML allowed)
      */
     setInfoAlert(text?: string) {
-        Stubegru.dom.setVisibility("#calendarModalInfoAlert", text && text.length > 0);
-        Stubegru.dom.querySelector("#calendarModalInfoAlert").innerHTML = `<i class="fas fa-info-circle"></i> ${text}`;
+        Stubegru.dom.setVisibility("#meeting_modal_info_alert", text && text.length > 0);
+        Stubegru.dom.querySelector("#meeting_modal_info_alert").innerHTML = `<i class="fas fa-info-circle"></i> ${text}`;
     }
 
 
@@ -106,10 +106,10 @@ export default class MeetingView {
      * @param {boolean} cancel wether to enable the cancel button
      */
     enableFooterButtons(save: boolean, saveNext: boolean, remove: boolean, cancel: boolean) {
-        Stubegru.dom.querySelectorAsInput("#calendarSaveMeetingButton").disabled = !save;
-        Stubegru.dom.querySelectorAsInput("#calendarDeleteMeetingButton").disabled = !remove;
-        Stubegru.dom.querySelectorAsInput("#calendarCancelButton").disabled = !cancel;
-        Stubegru.dom.setVisibility("#calendarSaveNextMeetingButton", saveNext);
+        Stubegru.dom.querySelectorAsInput("#meeting_save_button").disabled = !save;
+        Stubegru.dom.querySelectorAsInput("#meeting_delete_button").disabled = !remove;
+        Stubegru.dom.querySelectorAsInput("#meeting_cancel_button").disabled = !cancel;
+        Stubegru.dom.setVisibility("#meeting_save_next_button", saveNext);
     }
 
     /**
@@ -120,8 +120,8 @@ export default class MeetingView {
      */
     setFooterSaveButtonEvent(callback: (event: Event) => void) {
         //Set action as form submit and NOT as button click to make use of checking for required inputs etc.
-        Stubegru.dom.removeEventListener("#calendarMeetingDetailForm");
-        Stubegru.dom.addEventListener("#calendarMeetingDetailForm", "submit", (event) => {
+        Stubegru.dom.removeEventListener("#calendar_meeting_detail_form");
+        Stubegru.dom.addEventListener("#calendar_meeting_detail_form", "submit", (event) => {
             event.preventDefault();
             callback(event);
         });
@@ -133,8 +133,8 @@ export default class MeetingView {
      * @param {function} callback Function to be executed if the button is clicked
      */
     setFooterDeleteButtonEvent(callback: (event: Event) => void) {
-        Stubegru.dom.removeEventListener("#calendarDeleteMeetingButton");
-        Stubegru.dom.addEventListener("#calendarDeleteMeetingButton", "click", callback);
+        Stubegru.dom.removeEventListener("#meeting_delete_button");
+        Stubegru.dom.addEventListener("#meeting_delete_button", "click", callback);
     }
 
 
@@ -143,16 +143,16 @@ export default class MeetingView {
     */
     resetMeetingDetailForm = async () => {
         this.enableDetailMeetingForm(true);
-        (Stubegru.dom.querySelector('#calendarMeetingDetailForm') as HTMLFormElement).reset(); //TODO: Check if that also resets the embedded room and template forms
+        (Stubegru.dom.querySelector('#calendar_meeting_detail_form') as HTMLFormElement).reset(); //TODO: Check if that also resets the embedded room and template forms
 
         //load from custom config
         //@ts-expect-error TODO: refactor customEvents to TS-component
-        const calendarTitle = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
-        Stubegru.dom.querySelectorAsInput('#calendarTitle').value = calendarTitle;
-        Stubegru.dom.querySelectorAsInput("#calendarOwner").value = UserUtils.currentUser.id;
-        Stubegru.dom.querySelectorAsInput("#calendarChannel").value = "all";
-        (Stubegru.dom.querySelector("#calendarRoom") as HTMLSelectElement).selectedIndex = 1; //Select first entry by default
-        (Stubegru.dom.querySelector("#calendarTemplate") as HTMLSelectElement).selectedIndex = 1;
+        const meeting_detail_title = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_title').value = meeting_detail_title;
+        Stubegru.dom.querySelectorAsInput("#meeting_detail_owner").value = UserUtils.currentUser.id;
+        Stubegru.dom.querySelectorAsInput("#meeting_detail_channel").value = "all";
+        (Stubegru.dom.querySelector("#meeting_detail_room") as HTMLSelectElement).selectedIndex = 1; //Select first entry by default
+        (Stubegru.dom.querySelector("#meeting_detail_mail_template") as HTMLSelectElement).selectedIndex = 1;
 
     }
 
@@ -163,40 +163,40 @@ export default class MeetingView {
 
     getMeetingDetailData() {
         let meetingData = {} as Meeting;
-        meetingData.date = Stubegru.dom.querySelectorAsInput('#calendarDate').value;
-        meetingData.start = Stubegru.dom.querySelectorAsInput('#calendarStart').value;
-        meetingData.end = Stubegru.dom.querySelectorAsInput('#calendarEnd').value;
-        meetingData.title = Stubegru.dom.querySelectorAsInput('#calendarTitle').value;
-        meetingData.ownerId = Stubegru.dom.querySelectorAsInput('#calendarOwner').value;
-        meetingData.room = Stubegru.dom.querySelectorAsInput('#calendarRoom').value;
-        meetingData.template = Stubegru.dom.querySelectorAsInput('#calendarTemplate').value;
-        meetingData.channel = Stubegru.dom.querySelectorAsInput('#calendarChannel').value;
+        meetingData.date = Stubegru.dom.querySelectorAsInput('#meeting_detail_date').value;
+        meetingData.start = Stubegru.dom.querySelectorAsInput('#meeting_detail_start').value;
+        meetingData.end = Stubegru.dom.querySelectorAsInput('#meeting_detail_end').value;
+        meetingData.title = Stubegru.dom.querySelectorAsInput('#meeting_detail_title').value;
+        meetingData.ownerId = Stubegru.dom.querySelectorAsInput('#meeting_detail_owner').value;
+        meetingData.room = Stubegru.dom.querySelectorAsInput('#meeting_detail_room').value;
+        meetingData.template = Stubegru.dom.querySelectorAsInput('#meeting_detail_mail_template').value;
+        meetingData.channel = Stubegru.dom.querySelectorAsInput('#meeting_detail_channel').value;
         return meetingData;
     }
 
     setMeetingDetailData(meeting: Meeting) {
-        Stubegru.dom.querySelectorAsInput('#calendarDate').value = meeting.date;
-        Stubegru.dom.querySelectorAsInput('#calendarStart').value = meeting.start;
-        Stubegru.dom.querySelectorAsInput('#calendarEnd').value = meeting.end;
-        Stubegru.dom.querySelectorAsInput('#calendarTitle').value = meeting.title;
-        Stubegru.dom.querySelectorAsInput('#calendarOwner').value = meeting.ownerId;
-        Stubegru.dom.querySelectorAsInput('#calendarChannel').value = meeting.channel;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_date').value = meeting.date;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_start').value = meeting.start;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_end').value = meeting.end;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_title').value = meeting.title;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_owner').value = meeting.ownerId;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_channel').value = meeting.channel;
 
-        Stubegru.dom.querySelectorAsInput('#calendarRoom').value = meeting.room;
-        Stubegru.dom.querySelectorAsInput('#calendarTemplate').value = meeting.template;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_room').value = meeting.room;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_mail_template').value = meeting.template;
     }
 
     /**
      * If the value of the meeting start time input changes, this function is called to set the end time to an according value
      */
     setMeetingEndTimeByStartTime() {
-        let startTime = Stubegru.dom.querySelectorAsInput("#calendarStart").value;
+        let startTime = Stubegru.dom.querySelectorAsInput("#meeting_detail_start").value;
         if (startTime.length == 5) {
             let hours: any = Number(startTime.substring(0, 2));
             let minutes = startTime.substring(3, 5); //TODO: Check if substr => substring refactor is correct
             hours++;
             hours = hours < 10 ? `0${hours}` : hours;
-            Stubegru.dom.querySelectorAsInput("#calendarEnd").value = hours + ":" + minutes;
+            Stubegru.dom.querySelectorAsInput("#meeting_detail_end").value = hours + ":" + minutes;
         }
     }
 
@@ -206,7 +206,7 @@ export default class MeetingView {
         for (let channelId in names) {
             html += `<option value="${channelId}">${names[channelId]}</option>`;
         }
-        Stubegru.dom.querySelector("#calendarChannel").innerHTML = html;
+        Stubegru.dom.querySelector("#meeting_detail_channel").innerHTML = html;
     }
 
     async initAdvisorDropdown() {
@@ -220,7 +220,7 @@ export default class MeetingView {
                 selectHtml += `<option value="${user.id}">${user.name}</option>`;
             }
         }
-        Stubegru.dom.querySelector("#calendarOwner").innerHTML = selectHtml;
+        Stubegru.dom.querySelector("#meeting_detail_owner").innerHTML = selectHtml;
 
     }
 

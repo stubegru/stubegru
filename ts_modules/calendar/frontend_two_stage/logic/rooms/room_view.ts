@@ -11,15 +11,15 @@ export default class RoomView {
     }
 
     private initRoomEditButtons() {
-        Stubegru.dom.addEventListener("#calendarEditRoomButton", "click", CalendarModule.roomController.showRoomFormForUpdate);
-        Stubegru.dom.addEventListener("#calendarNewRoomButton", "click", CalendarModule.roomController.showRoomFormForCreate);
-        Stubegru.dom.addEventListener("#calendarCancelRoomButton", "click", CalendarModule.roomController.cancelRoomEdit);
-        Stubegru.dom.addEventListener("#calendarDeleteRoomButton", "click", CalendarModule.roomController.deleteRoom);
-        Stubegru.dom.addEventListener("#calendarRoomForm", "submit", CalendarModule.roomController.saveRoom);
+        Stubegru.dom.addEventListener("#meeting_detail_edit_room_button", "click", CalendarModule.roomController.showRoomFormForUpdate);
+        Stubegru.dom.addEventListener("#meeting_detail_new_room_button", "click", CalendarModule.roomController.showRoomFormForCreate);
+        Stubegru.dom.addEventListener("#calendar_cancel_room_button", "click", CalendarModule.roomController.cancelRoomEdit);
+        Stubegru.dom.addEventListener("#calendar_delete_room_button", "click", CalendarModule.roomController.deleteRoom);
+        Stubegru.dom.addEventListener("#meeting_detail_room_form", "submit", CalendarModule.roomController.saveRoom);
     }
 
     resetRoomForm() {
-        let form = Stubegru.dom.querySelector("#calendarRoomForm") as HTMLFormElement;
+        let form = Stubegru.dom.querySelector("#meeting_detail_room_form") as HTMLFormElement;
         form.reset();
     }
 
@@ -32,11 +32,11 @@ export default class RoomView {
             const optionString = `<option value='${room.id}'>${room.titel}</option>`
             ownId == room.besitzer ? selectHtml += optionString : postHtml += optionString; //Add own entries at top
         }
-        Stubegru.dom.querySelector("#calendarRoom").innerHTML = selectHtml + postHtml;
+        Stubegru.dom.querySelector("#meeting_detail_room").innerHTML = selectHtml + postHtml;
     }
 
     setRoomFormVisible(isVisible: boolean) {
-        Stubegru.dom.slideToState("#newroom", isVisible);
+        Stubegru.dom.slideToState("#meeting_room_form_container", isVisible);
     }
 
     setRoomData(roomData: Room) {

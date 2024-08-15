@@ -55,7 +55,7 @@ export default class CalendarView {
         this.search = new CalendarSearch();
         this.assignFeedbackModal = new AssignFeedbackModal();
 
-        let calendarEl = document.querySelector("#calendarViewContainer") as HTMLElement;
+        let calendarEl = document.querySelector("#calendar_view_container") as HTMLElement;
         //@ts-expect-error
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.calendarConfig);
         this.fullCalendar.render();
@@ -63,16 +63,16 @@ export default class CalendarView {
         this.initFilterMenu();
         this.refresh();
 
-        Stubegru.dom.addEventListener("#calendarNewMeetingButton","click", () => CalendarModule.meetingController.createMeeting());
+        Stubegru.dom.addEventListener("#calendar_new_meeting_button","click", () => CalendarModule.meetingController.createMeeting());
 
         //render calendar when the calendar box collapses to open
-        Stubegru.dom.querySelector('#collapseCalendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }) //TODO: Check if this bs specific event is handled without jquery
+        Stubegru.dom.querySelector('#collapse_calendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }) //TODO: Check if this bs specific event is handled without jquery
     }
 
 
     initFilterMenu() {
-        this.foreignToggle = new Toggle("#calendarSettingsForeignToggle");
-        this.assignedToggle = new Toggle("#calendarSettingsAssignedToggle");
+        this.foreignToggle = new Toggle("#calendar_settings_foreign_toggle");
+        this.assignedToggle = new Toggle("#calendar_settings_assigned_toggle");
 
 
         this.foreignToggle.addEventListener("change", (event) => {
@@ -85,7 +85,7 @@ export default class CalendarView {
         });
 
         //TODO: Is this neccessary?
-        // $(document).on('click', '#calendarSettingsDropdown', function (e) {
+        // $(document).on('click', '#calendar_settings_dropdown', function (e) {
         //     e.preventDefault();
         //     e.stopPropagation();
         // });

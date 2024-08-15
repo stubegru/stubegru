@@ -3,10 +3,10 @@ import CalendarModule from "../calendar_module.js";
 export default class CalendarSearch {
     searchTimeout;
     constructor() {
-        Stubegru.dom.addEventListener("#calendarSearchClearButton", "click", () => {
+        Stubegru.dom.addEventListener("#calendar_search_clear_button", "click", () => {
             this.setQuery("");
         });
-        Stubegru.dom.addEventListener("#calendarSearchInput", "keyup change", this.triggerSearch);
+        Stubegru.dom.addEventListener("#calendar_search_input", "keyup change", this.triggerSearch);
     }
     triggerSearch() {
         if (this.searchTimeout) {
@@ -15,7 +15,7 @@ export default class CalendarSearch {
         this.searchTimeout = setTimeout(this.doSearch, 500);
     }
     async doSearch() {
-        Stubegru.dom.querySelector("#calendarSearchInfo").innerHTML = ""; //Clear alert
+        Stubegru.dom.querySelector("#calendar_search_info").innerHTML = ""; //Clear alert
         let query = this.getQuery();
         if (!query || query.length < 1) {
             this.setResultVisible(false);
@@ -40,7 +40,7 @@ export default class CalendarSearch {
                         <td>${meeting.start.substring(0, 5)}</td>
                     </tr>`;
         }
-        Stubegru.dom.querySelector("#calendarSearchResultTable").innerHTML = html;
+        Stubegru.dom.querySelector("#calendar_search_result_table").innerHTML = html;
         Stubegru.dom.querySelectorAll(".calendar-search-result-button").forEach(elem => Stubegru.dom.addEventListener(elem, "click", function () {
             let meetingId = elem.getAttribute("data-meeting-id");
             CalendarModule.meetingClientController.openAssignedMeeting(meetingId);
@@ -52,15 +52,15 @@ export default class CalendarSearch {
                         Es wurden leider keine passenden Ergebnisse zur Suchanfrage "${this.getQuery()}" gefunden<br>
                         Zum Suchen bitte den Namen eines Kunde eingeben...
                     </div>`;
-        Stubegru.dom.querySelector("#calendarSearchInfo").innerHTML = html;
+        Stubegru.dom.querySelector("#calendar_search_info").innerHTML = html;
     };
     setQuery(query) {
-        Stubegru.dom.querySelectorAsInput("#calendarSearchInput").value = query;
+        Stubegru.dom.querySelectorAsInput("#calendar_search_input").value = query;
     }
     getQuery() {
-        return Stubegru.dom.querySelectorAsInput("#calendarSearchInput").value;
+        return Stubegru.dom.querySelectorAsInput("#calendar_search_input").value;
     }
     setResultVisible(isVisible) {
-        Stubegru.dom.slideToState("#searchResultContainer", isVisible);
+        Stubegru.dom.slideToState("#search_result_container", isVisible);
     }
 }
