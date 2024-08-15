@@ -4,7 +4,7 @@ $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("MEETINGS_WRITE");
 
-$id=$_POST["templateId"]; //Id des zu löschenden Templates
+$id = $_POST["id"]; //Id des zu löschenden Templates
 
 $deleteStatement = $dbPdo->prepare("DELETE FROM Templates WHERE id=:id;");
 $deleteStatement->bindValue(':id', $id);

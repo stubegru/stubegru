@@ -63,10 +63,10 @@ export default class CalendarView {
         this.initFilterMenu();
         this.refresh();
 
-        Stubegru.dom.addEventListener("#calendar_new_meeting_button","click", () => CalendarModule.meetingController.createMeeting());
+        Stubegru.dom.addEventListener("#calendar_new_meeting_button", "click", () => CalendarModule.meetingController.createMeeting());
 
         //render calendar when the calendar box collapses to open
-        Stubegru.dom.querySelector('#collapse_calendar').addEventListener('shown.bs.collapse', () => { this.fullCalendar.render(); }) //TODO: Check if this bs specific event is handled without jquery
+        Stubegru.dom.addEventListener('#collapse_calendar', 'shown.bs.collapse', () => { this.fullCalendar.render(); })
     }
 
 
@@ -84,11 +84,9 @@ export default class CalendarView {
             this.showAssignedMeetings(showAssigned);
         });
 
-        //TODO: Is this neccessary?
-        // $(document).on('click', '#calendar_settings_dropdown', function (e) {
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        // });
+        //Dont hide Calendar Settings dropdown when clicking on a toggle
+        //@ts-expect-error
+        $(document).on('click', '#calendar_settings_dropdown', function (e) { e.preventDefault(); e.stopPropagation(); });
     }
 
 
