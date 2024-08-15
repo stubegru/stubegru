@@ -8,7 +8,8 @@ export default class MeetingClientService {
         return resp;
     }
 
-    async assignClient(clientData: MeetingClient) {
+    async assignClient(meetingId: string, clientData: MeetingClient) {
+        (clientData as MeetingClientAssignData).meetingId = meetingId;
         let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/assignment/create_meeting_assignment.php", clientData) as AssignClientResponse;
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
@@ -27,6 +28,10 @@ export interface AssignClientResponse extends StubegruHttpResponse {
     clientData: AssignFeedback;
     clientMail: AssignFeedback;
     survey: AssignFeedback;
+}
+
+export interface MeetingClientAssignData extends MeetingClient {
+    meetingId: string;
 }
 
 export interface MeetingClient {

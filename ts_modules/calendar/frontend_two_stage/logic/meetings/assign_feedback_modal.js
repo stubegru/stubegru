@@ -71,7 +71,7 @@ export default class AssignFeedbackModal {
         }
     }
     setTask(task, status, message) {
-        let li = Stubegru.dom.querySelector(`#calendarAssignFeedbackModal li[data-task="${task}"]`);
+        let li = Stubegru.dom.querySelector(`#calendar_assign_feedback_modal li[data-task="${task}"]`);
         li.querySelector('small').innerHTML = message;
         if (status === "success") {
             li.classList.add('list-group-item-success');

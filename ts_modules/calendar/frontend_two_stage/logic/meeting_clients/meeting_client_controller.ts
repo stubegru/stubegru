@@ -52,7 +52,7 @@ export default class MeetingClientController {
             try {
                 CalendarModule.meetingClientView.assignFeedbackModal.resetAndShow();
                 const clientData = CalendarModule.meetingClientView.getClientData();
-                let resp = await CalendarModule.meetingClientService.assignClient(clientData);
+                let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
 
                 await CalendarModule.calendarView.refresh();

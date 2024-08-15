@@ -22,10 +22,10 @@ $meetingId = $_POST["meetingId"];
 
 $clientData = array();
 $clientData["name"] = $_POST["name"];
-$clientData["description"] = $_POST["issue"];
+$clientData["description"] = $_POST["description"];
 $clientData["mail"] = $_POST["mail"];
 $clientData["phone"] = $_POST["phone"];
-$clientData["survey"] = $_POST["survey"];
+$clientData["survey"] = $_POST["formular"]; //!Naming!
 $clientData["channel"] = isset($_POST["channel"]) ? $_POST["channel"] : "unknown"; //Channel attribute will only be set by calendar2 frontend
 
 
