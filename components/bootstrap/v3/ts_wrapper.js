@@ -14,4 +14,8 @@ export class Modal {
         //@ts-expect-error
         $(this.selector).on(eventId, callback);
     }
+    removeEventListener(eventId, callback) {
+        //@ts-expect-error
+        $(this.selector).off(eventId, callback);
+    }
 }

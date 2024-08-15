@@ -24,7 +24,7 @@ export default class MeetingClientController {
             CalendarModule.meetingView.modal.addEventListener('hidden.bs.modal.remove-block', () => {
                 CalendarModule.meetingService.setBlock(meeting.id, false);
                 Alert.alertSimple("Die Terminblockierung wurde aufgehoben.");
-                // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
+                CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
             });
         }
         else {
@@ -51,7 +51,7 @@ export default class MeetingClientController {
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
                 await CalendarModule.calendarView.refresh();
                 m.setUnsavedChanges(false);
-                // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
+                CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
                 this.openAssignedMeeting(meetingId);
             }
             catch (error) {
@@ -62,7 +62,7 @@ export default class MeetingClientController {
         CalendarModule.meetingClientView.setAssignCancelButtonEvent(async () => {
             m.setUnsavedChanges(false);
             await CalendarModule.meetingService.setBlock(meeting.id, false);
-            // TODO: what is happening here? $("#terminmodal").off('hidden.remove-block');
+            CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
             CalendarModule.meetingController.openFreeMeeting(meetingId);
         });
     }

@@ -20,6 +20,11 @@ export class Modal {
         //@ts-expect-error
         $(this.selector).on(eventId, callback);
     }
+
+    removeEventListener(eventId: ModalEvent, callback?: Function) {
+        //@ts-expect-error
+        $(this.selector).off(eventId, callback);
+    }
 }
 
-type ModalEvent = "show.bs.modal" | "shown.bs.modal" | "hide.bs.modal" | "hidden.bs.modal" | "loaded.bs.modal";
+type ModalEvent = "show.bs.modal" | "shown.bs.modal" | "hide.bs.modal" | "hidden.bs.modal" | "loaded.bs.modal" | "hidden.bs.modal.remove-block";
