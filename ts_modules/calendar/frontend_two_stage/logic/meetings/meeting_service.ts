@@ -5,7 +5,8 @@ import { MeetingClient } from "../meeting_clients/meeting_client_service.js";
 export default class MeetingService {
 
     async get(meetingId: string) {
-        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings.php", { meetingId: meetingId }) as Meeting;
+        let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings.php", { meetingId: meetingId }) as Meeting[];
+        return meetingList[0];
     }
 
     async getAll() {

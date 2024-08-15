@@ -8,7 +8,7 @@ export default class MeetingClientController {
 
     async openMeetingForAssignment(meetingId) {
         let m = CalendarModule.meetingView;
-        let meeting = CalendarModule.meetingController.getMeeting(meetingId); //TODO: refresh from server?
+        let meeting = await CalendarModule.meetingService.get(meetingId);
 
         if (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) {
             Alert.alert({ title: "Termin kann nicht vergeben werden", text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...", type: "error" });

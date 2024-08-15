@@ -13,7 +13,7 @@ class MeetingView {
     };
     modal;
     async init() {
-        this.modal = new Modal("#meeting_detail_view_modal"); //TODO: Change naming
+        this.modal = new Modal("#meeting_detail_view_modal");
         this.setUnsavedChanges(false);
         Stubegru.dom.querySelectorAll('.meeting-details').forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => this.setUnsavedChanges(true)));
         Stubegru.dom.addEventListener("#meeting_detail_start", "change", CalendarModule.meetingView.setMeetingEndTimeByStartTime);
@@ -124,7 +124,7 @@ class MeetingView {
     */
     resetMeetingDetailForm = async () => {
         this.enableDetailMeetingForm(true);
-        Stubegru.dom.querySelector('#calendar_meeting_detail_form').reset(); //TODO: Check if that also resets the embedded room and template forms
+        Stubegru.dom.querySelector('#calendar_meeting_detail_form').reset();
         //load from custom config
         //@ts-expect-error TODO: refactor customEvents to TS-component
         const meeting_detail_title = await stubegru.modules.customEvents.trigger("generateMeetingTitle");
@@ -166,7 +166,7 @@ class MeetingView {
         let startTime = Stubegru.dom.querySelectorAsInput("#meeting_detail_start").value;
         if (startTime.length == 5) {
             let hours = Number(startTime.substring(0, 2));
-            let minutes = startTime.substring(3, 5); //TODO: Check if substr => substring refactor is correct
+            let minutes = startTime.substring(3, 5);
             hours++;
             hours = hours < 10 ? `0${hours}` : hours;
             Stubegru.dom.querySelectorAsInput("#meeting_detail_end").value = hours + ":" + minutes;

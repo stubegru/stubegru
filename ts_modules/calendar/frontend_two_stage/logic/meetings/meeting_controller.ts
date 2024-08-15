@@ -30,7 +30,7 @@ export default class MeetingController {
     }
 
     async clickOnMeetingHandler(meetingId: string) {
-        let meeting = this.getMeeting(meetingId); //TODO:refresh from server?
+        let meeting = await CalendarModule.meetingService.get(meetingId);
 
         (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) ?
             CalendarModule.meetingClientController.openAssignedMeeting(meeting.id) :

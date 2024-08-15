@@ -8,13 +8,15 @@ export default class CalendarSearch {
         });
         Stubegru.dom.addEventListener("#calendar_search_input", "keyup change", this.triggerSearch);
     }
-    triggerSearch() {
+    //Arrow function to keep "this"
+    triggerSearch = () => {
         if (this.searchTimeout) {
             clearTimeout(this.searchTimeout);
         }
         this.searchTimeout = setTimeout(this.doSearch, 500);
-    }
-    async doSearch() {
+    };
+    //Arrow function to keep "this"
+    doSearch = async () => {
         Stubegru.dom.querySelector("#calendar_search_info").innerHTML = ""; //Clear alert
         let query = this.getQuery();
         if (!query || query.length < 1) {
@@ -24,8 +26,9 @@ export default class CalendarSearch {
         query = encodeURI(query);
         let resp = await Stubegru.fetch.getJson("ts_modules/calendar/backend/assignment/search_for_client.php", { query: query });
         this.handleResult(resp);
-    }
-    handleResult(meetingList) {
+    };
+    //Arrow function to keep "this"
+    handleResult = (meetingList) => {
         if (meetingList.length < 1) {
             this.showEmptyResultMessage();
             return;
@@ -46,7 +49,8 @@ export default class CalendarSearch {
             CalendarModule.meetingClientController.openAssignedMeeting(meetingId);
         }));
         this.setResultVisible(true);
-    }
+    };
+    //Arrow function to keep "this"
     showEmptyResultMessage = () => {
         let html = `<div class="alert alert-info">
                         Es wurden leider keine passenden Ergebnisse zur Suchanfrage "${this.getQuery()}" gefunden<br>

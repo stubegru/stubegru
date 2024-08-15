@@ -21,7 +21,7 @@ export default class MeetingController {
         return writePermission.access;
     }
     async clickOnMeetingHandler(meetingId) {
-        let meeting = this.getMeeting(meetingId); //TODO:refresh from server?
+        let meeting = await CalendarModule.meetingService.get(meetingId);
         (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) ?
             CalendarModule.meetingClientController.openAssignedMeeting(meeting.id) :
             this.openFreeMeeting(meeting.id);
