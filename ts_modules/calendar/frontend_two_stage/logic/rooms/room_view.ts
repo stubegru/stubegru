@@ -27,7 +27,7 @@ export default class RoomView {
         let ownId = UserUtils.currentUser.id;
 
         let selectHtml = "<option value=''>Bitte wählen...</option>";
-        let postHtml;
+        let postHtml = "";
         for (const room of roomList) {
             const optionString = `<option value='${room.id}'>${room.titel}</option>`
             ownId == room.besitzer ? selectHtml += optionString : postHtml += optionString; //Add own entries at top

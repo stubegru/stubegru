@@ -10,7 +10,7 @@ export default class MailTemplateView {
     richTextEditor: ClassicEditor;
 
     async init() {
-        const editorPlaceholder = Stubegru.dom.querySelector('#mail_template_editor'); //TODO: Refactor html ids to design rules
+        const editorPlaceholder = Stubegru.dom.querySelector('#mail_template_editor');
         this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
@@ -29,7 +29,7 @@ export default class MailTemplateView {
 
     setMailTemplateDropdown(templateList: MailTemplate[]) {
         let selectHtml = "<option value=''>Bitte wählen...</option>";
-        let postHtml;
+        let postHtml = "";
         for (const template of templateList) {
             const ownId = UserUtils.currentUser.id;
             const optionString = `<option value='${template.id}' title='${template.text}' id='templateSelectOption${template.id}'>${template.titel}</option>`

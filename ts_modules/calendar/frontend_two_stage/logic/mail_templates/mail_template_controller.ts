@@ -88,7 +88,7 @@ export default class MailTemplateController {
             if (resp.status != "success") { return }
 
             //Refresh template list
-            CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
+            await CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
             CalendarModule.mailTemplateView.resetTemplateForm();
             CalendarModule.mailTemplateView.setTemplateFormVisible(false);
 

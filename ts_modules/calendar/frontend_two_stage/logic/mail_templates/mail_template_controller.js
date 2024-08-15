@@ -78,7 +78,7 @@ export default class MailTemplateController {
                 return;
             }
             //Refresh template list
-            CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
+            await CalendarModule.mailTemplateController.refreshMailTemplateDropdown();
             CalendarModule.mailTemplateView.resetTemplateForm();
             CalendarModule.mailTemplateView.setTemplateFormVisible(false);
             //auto-select previously edited/created template
