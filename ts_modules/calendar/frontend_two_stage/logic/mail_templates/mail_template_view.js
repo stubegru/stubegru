@@ -1,12 +1,11 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
-import ClassicEditor from '../../../../../components/ckeditor/v5/ckeditor.js';
+import CKEditor from '../../../../../components/ckeditor/v4/ts_wrapper.js';
 export default class MailTemplateView {
     richTextEditor;
     async init() {
-        const editorPlaceholder = Stubegru.dom.querySelector('#mail_template_editor');
-        this.richTextEditor = await ClassicEditor.create(editorPlaceholder);
+        this.richTextEditor = new CKEditor("mail_template_editor", { height: "450px" });
         await this.showTemplateVariables(); //Show available template variables
         await this.initTemplateEditButtons();
         Stubegru.dom.querySelectorAll(".meeting-template-input").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));

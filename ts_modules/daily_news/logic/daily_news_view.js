@@ -1,5 +1,5 @@
 ///@VSCode:tuwrraphael.queryselector-completion: import html from "../module.html";
-import ClassicEditor from '../../../components/ckeditor/v5/ckeditor.js';
+import CKEditor from '../../../components/ckeditor/v4/ts_wrapper.js';
 import DailyNewsModule from "./daily_news_module.js";
 import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../../components/bootstrap/v3/ts_wrapper.js';
@@ -11,11 +11,9 @@ export default class DailyNewsView {
     onlyCurrentToggle;
     priorityToggle;
     async init() {
-        const editorPlaceholder = Stubegru.dom.querySelector('#daily_news_text');
-        this.richTextEditor = await ClassicEditor.create(editorPlaceholder, { height: "200px" }); //TODO: style ckeditor,wikiwordplugin...
-        //CKEDITOR.replace('dailyNewsEditor', { height: "200px", extraPlugins: "wikiword" }); //Richtexteditor initialisieren
+        this.richTextEditor = new CKEditor('daily_news_text', { height: "200px", extraPlugins: "wikiword" });
         this.modal = new Modal('#daily_news_modal');
-        this.modal.addEventListener("show.bs.modal", this.resetModalForm);
+        this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
         this.priorityToggle = new Toggle("#daily_news_priority");
         this.onlyCurrentToggle = new Toggle("#daily_news_only_current_toggle");
         this.onlyCurrentToggle.addEventListener("change", this.updateShowCurrentState);
@@ -26,6 +24,7 @@ export default class DailyNewsView {
         });
         //TODO: write nice ts interface for toggle init
         //$('stubegruModule[data-name="daily_news"] input[type="checkbox"][data-toggle="toggle"]').bootstrapToggle(); 
+        this.resetModalForm();
     }
     updateShowCurrentState = () => {
         let state = this.onlyCurrentToggle.getState();
