@@ -27,3 +27,9 @@
     height: 500px;
     overflow-y: auto;
 }
+
+/* Show CKeditor OVER bs modal */
+#meeting_detail_mail_template_form {
+    --ck-z-default: 100;
+    --ck-z-panel: calc( var(--ck-z-default) + 999 );
+}

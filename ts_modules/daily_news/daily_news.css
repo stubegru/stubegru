@@ -3,3 +3,9 @@
     background-color: #f2dede !important;
     border-color: #ebccd1 !important;
 }
+
+
+#daily_news_modal_form .ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 200px;
+    overflow-y: auto;
+}
