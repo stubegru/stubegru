@@ -22,8 +22,6 @@ export default class DailyNewsView {
             event.preventDefault();
             DailyNewsModule.controller.saveDailyNews();
         });
-        //TODO: write nice ts interface for toggle init
-        //$('stubegruModule[data-name="daily_news"] input[type="checkbox"][data-toggle="toggle"]').bootstrapToggle(); 
         this.resetModalForm();
     }
     updateShowCurrentState = () => {
@@ -67,7 +65,7 @@ export default class DailyNewsView {
             let container = new Date(currentNews.beginn).getTime() > new Date().getTime() ? "future" : "present";
             let currentEnd = Stubegru.utils.formatDate(currentNews.ende, "DD.MM.YYYY");
             //@ts-expect-error
-            const text = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO: refactor handle WIKIWORDS!!!
+            const textWithRenderedWikiwords = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO: refactor handle WIKIWORDS!!!
             html[container] += `
             <div class="panel panel-default my-2">
                 <div class="panel-heading ${priorityClass}">
@@ -84,7 +82,7 @@ export default class DailyNewsView {
                 </div>
                 <div id="daily_news_collapse_${currentNews.id}" class="collapse">
                     <div class="panel-body">
-                        <p>${currentNews.inhalt}</p>
+                        <p>${textWithRenderedWikiwords}</p>
                         <hr>
                         <div class="row">
                             <div class="col-12 d-flex justify-content-end">

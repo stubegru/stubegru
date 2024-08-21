@@ -53,7 +53,7 @@ function autolinkWikiwords($dataId, $text, $type)
                 $updateStatement->execute();
                 break;
             case "DAILY_NEWS":
-                $updateStatement = $dbPdo->prepare("UPDATE `wiki_artikel` SET `inhalt`=:text WHERE `id` = :dataId;");
+                $updateStatement = $dbPdo->prepare("UPDATE `Nachrichten` SET `inhalt`=:text WHERE `id` = :dataId;");
                 $updateStatement->bindValue(':text', $text);
                 $updateStatement->bindValue(':dataId', $dataId);
                 $updateStatement->execute();
