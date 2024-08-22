@@ -1,7 +1,6 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
-import UserUtils from "../../../../../components/user_utils/user_utils.js";
 export default class CalendarView {
     calendarConfig = {
         locale: 'de',
@@ -55,7 +54,7 @@ export default class CalendarView {
     };
     addMeetings(meetingList) {
         //Generate events for fullcalendar
-        let ownUserId = UserUtils.currentUser.id;
+        let ownUserId = "0";
         let ownEvents = { free: [], assigned: [] };
         let othersEvents = { free: [], assigned: [] };
         for (let inMeeting of meetingList) {

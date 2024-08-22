@@ -1,13 +1,14 @@
+import Alert from "../../../../../components/alert/alert.js";
 import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 class MeetingView {
     static channelDescriptions = {
-        "personally": "Persönlich",
+        "personally": "Persönlich vor Ort",
         "phone": "Telefon",
         "webmeeting": "Webmeeting",
         "digital": "Nur digital (Fon + Web)",
-        "all": "Alle",
+        "all": "Persönlich, Telefon oder Webmeeting",
     };
     modal;
     async init() {
@@ -81,8 +82,15 @@ class MeetingView {
         Stubegru.dom.querySelectorAsInput('#meeting_detail_start').value = meeting.start;
         Stubegru.dom.querySelectorAsInput('#meeting_detail_end').value = meeting.end;
         Stubegru.dom.querySelectorAsInput('#meeting_detail_title').value = meeting.title;
-        Stubegru.dom.querySelectorAsInput('#meeting_detail_owner').value = meeting.ownerId;
-        Stubegru.dom.querySelectorAsInput('#meeting_detail_channel').value = meeting.channel;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_owner').value = meeting.owner;
+        Stubegru.dom.querySelectorAsInput('#meeting_detail_channel').value = MeetingView.channelDescriptions[meeting.channel];
+    }
+    async showBlockError() {
+        await Alert.alert({
+            title: "Termin ist blockiert",
+            text: `Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden.`,
+            type: "error"
+        });
     }
 }
 export default MeetingView;

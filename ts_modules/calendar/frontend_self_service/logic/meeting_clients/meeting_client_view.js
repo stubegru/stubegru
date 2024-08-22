@@ -28,7 +28,6 @@ export default class MeetingClientView {
     showAssignButtons(assign, save, remove, cancel) {
         Stubegru.dom.setVisibility("#meeting_assign_assign_button", assign);
         Stubegru.dom.setVisibility("#meeting_assign_save_button", save);
-        Stubegru.dom.setVisibility("#meeting_assign_delete_button", remove);
         Stubegru.dom.setVisibility("#meeting_assign_cancel_button", cancel);
     }
     /**

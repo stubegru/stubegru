@@ -1,9 +1,6 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
-import Toggle from "../../../../../components/toggles/toggle.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
-import UserUtils from "../../../../../components/user_utils/user_utils.js";
-import CalendarSearch from "./calendar_search.js";
 
 //Manually load fullcalendar files
 import { CalendarOptions, FullCalendarInstance } from "../../fullcalendar/ts_wrapper.js";
@@ -76,7 +73,7 @@ export default class CalendarView {
 
     addMeetings(meetingList) {
         //Generate events for fullcalendar
-        let ownUserId = UserUtils.currentUser.id;
+        let ownUserId = "0";
         let ownEvents = { free: [], assigned: [] };
         let othersEvents = { free: [], assigned: [] };
 

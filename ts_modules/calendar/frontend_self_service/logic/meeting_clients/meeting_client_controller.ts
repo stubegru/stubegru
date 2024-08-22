@@ -1,5 +1,4 @@
 import Alert from "../../../../../components/alert/alert.js";
-import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
 
 export default class MeetingClientController {
@@ -14,13 +13,13 @@ export default class MeetingClientController {
             return;
         }
 
-        //Check for block
+        //Check for block //TODO: Real block management
         let resp = await CalendarModule.meetingService.isBlock(meeting.id);
-        if (resp.blockId == "0" || resp.blockId == UserUtils.currentUser.id) {
+        if (resp.blockId == "0") {
             //Not blocked => block now and continue
             let resp2 = await CalendarModule.meetingService.setBlock(meeting.id, true);
             if (resp2.status != "success") {
-                await m.showBlockError("unbekannt");
+                await m.showBlockError();
                 CalendarModule.meetingController.openFreeMeeting(meetingId);
                 return;
             }
@@ -30,20 +29,18 @@ export default class MeetingClientController {
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
             });
         } else {
-            await m.showBlockError(resp.blockName);
-            CalendarModule.meetingController.openFreeMeeting(meetingId);
+            await m.showBlockError();
             return;
         }
 
         await m.resetAllForms();
         m.setModalVisible(true);
-        m.setModalTitle("Kundendaten eintragen");
+        m.setModalTitle("Termin buchen");
         CalendarModule.meetingClientView.setClientVisible(true);
         CalendarModule.meetingClientView.showAssignButtons(false, true, false, true);
         m.enableDetailMeetingForm(false);
-        m.enableFooterButtons(false, false, false, true);
         m.setMeetingDetailData(meeting);
-        m.setInfoAlert("Bitte als nächstes Kundendaten speichern oder abbrechen. Der Termin kann nicht bearbeitet oder gelöscht werden solange die Kundendaten bearbeitet werden.");
+        m.setInfoAlert("Der Termin wurde für Sie reserviert, bis Sie alle Daten eingetragen haben.<br> Falls Sie die Terminbuchung abbrechen möchten, nutzen Sie bitte unbedingt den <b>'Terminbuchung Abbrechen'</b> Button.");
         CalendarModule.meetingClientView.initClientChannelDropdown(meeting.channel);
 
         //Assign save button
@@ -57,7 +54,7 @@ export default class MeetingClientController {
                 await CalendarModule.calendarView.refresh();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
-                this.openAssignedMeeting(meetingId);
+                //TODO: Some success message
             } catch (error) { Alert.alertError(error); }
         });
 
@@ -70,4 +67,5 @@ export default class MeetingClientController {
         })
     }
 
+    
 }

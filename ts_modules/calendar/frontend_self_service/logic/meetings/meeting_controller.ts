@@ -1,5 +1,3 @@
-import Alert from '../../../../../components/alert/alert.js';
-import UserUtils from '../../../../../components/user_utils/user_utils.js';
 import CalendarModule from '../calendar_module.js';
 import { Meeting } from './meeting_service.js';
 
@@ -30,55 +28,22 @@ export default class MeetingController {
 
     async openFreeMeeting(meetingId) {
         let m = CalendarModule.meetingView;
-        let isWrite = this.isCalendarWriteUser();
 
         m.setModalVisible(true);
-        m.setModalTitle("Termindetails (Freier Termin)");
+        m.setModalTitle("Termindetails");
         await m.resetAllForms();
-        CalendarModule.state.freeMeetingMode = true;
 
         const meeting = this.getMeeting(meetingId);
         m.setMeetingDetailData(meeting);
 
-        let resp = await CalendarModule.meetingService.isBlock(meetingId);
+        //let resp = await CalendarModule.meetingService.isBlock(meetingId);
 
-        if (resp.blockId == UserUtils.currentUser.id) {
-            //If meeting is blocked by yourself => remove block 
-            await CalendarModule.meetingService.setBlock(meetingId, false);
-            resp = await CalendarModule.meetingService.isBlock(meetingId);
-            Alert.alertSimple("Die Terminblockierung wurde aufgehoben");
-        }
+        let isUnblocked = true  //TODO: Real blocking management without user ids
+        if (!isUnblocked) { m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden.`); }
 
-        let isUnblocked = (resp.blockId == "0");
-        if (!isUnblocked) { m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`); }
-
-        m.enableDetailMeetingForm(isWrite && isUnblocked);
+        m.enableDetailMeetingForm(false);
         CalendarModule.meetingClientView.showAssignButtons(isUnblocked, false, false, false);
         CalendarModule.meetingClientView.setClientVisible(false);
-        m.enableFooterButtons(isWrite && isUnblocked, false, isWrite && isUnblocked, true);
-
-        m.setFooterSaveButtonEvent(async () => {
-            try {
-                let resp = await CalendarModule.meetingService.update(meetingId, m.getMeetingDetailData());
-                Alert.alertResp(resp, "Termin speichern");
-                await CalendarModule.calendarView.refresh();
-                m.setUnsavedChanges(false);
-                m.setModalVisible(false);
-            } catch (error) { Alert.alertError(error); }
-        });
-
-        m.setFooterDeleteButtonEvent(async () => {
-            try {
-                let confirmResp = await Alert.deleteConfirm("Termin löschen", "Soll dieser Termin wirklich gelöscht werden?");
-                if (confirmResp.isConfirmed) {
-                    let resp = await CalendarModule.meetingService.delete(meetingId);
-                    Alert.alertResp(resp, "Termin löschen");
-                    await CalendarModule.calendarView.refresh();
-                    m.setUnsavedChanges(false);
-                    m.setModalVisible(false);
-                }
-            } catch (error) { Alert.alertError(error); }
-        });
 
         CalendarModule.meetingClientView.setAssignAssignButtonEvent(() => {
             CalendarModule.meetingClientController.openMeetingForAssignment(meetingId);

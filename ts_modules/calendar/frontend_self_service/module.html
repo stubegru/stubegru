@@ -56,22 +56,20 @@
                                         <div class="row">
                                             <div class="col-sm-4" style="display:block;">
                                                 <div class="form-group">
-                                                    <label>Titel</label>
+                                                    <label>Thema</label>
                                                     <input class="form-control meeting-details" id="meeting_detail_title" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label>Berater*in</label>
-                                                    <select id="meeting_detail_owner" class="form-control meeting-details" required>
-                                                    </select>
+                                                    <input type="text" id="meeting_detail_owner" class="form-control meeting-details" required>
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="form-group">
-                                                    <label>Kontaktkanal</label>
-                                                    <select id="meeting_detail_channel" class="form-control meeting-details" required>
-                                                    </select>
+                                                    <label>Möglicher Kontaktkanal</label>
+                                                    <input type="text" id="meeting_detail_channel" class="form-control meeting-details" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -83,29 +81,24 @@
 
                                 <div id="meeting_client_data_container">
                                     <div class="text-center">
-                                        <h3 style="margin-bottom:0px;">Kundendaten</h3>
+                                        <h3 style="margin-bottom:0px;">Persönliche Daten</h3>
                                     </div>
                                     <hr style="margin-top:0px;">
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-lock"></i> Ihre persönlichen Daten werden verschlüsselt übertragen und sind ausschließlich vom verantwortlichen Beratenden einzusehen.
+                                    </div>
                                     <form id="meeting_client_data_form">
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Vor- und Nachname:</label>
+                                                    <label>Ihr Name:</label>
                                                     <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_name" required>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3">
+                                            
+                                            <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Fragebogen:</label>
-                                                    <select id="meeting_client_survey" class="form-control terminmodal-input meeting-client" required>
-                                                        <option value="0">Nein</option>
-                                                        <option value="1">Ja</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label>Kanal:</label>
+                                                    <label>Gewünschter Kontaktkanal:</label>
                                                     <select id="meeting_client_channel" class="form-control terminmodal-input meeting-client" required>
 
                                                     </select>
@@ -115,21 +108,32 @@
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label>Anliegen:</label>
+                                                    <label>Ihr Anliegen:</label>
                                                     <textarea id="meeting_client_issue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
 
                                                 <div class="form-group">
-                                                    <label>Telefon:</label>
+                                                    <label>Ihre Telefonnummer:</label>
                                                     <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_phone">
                                                 </div>
                                                 <div class="form-group">
-                                                    <label>E-Mail:</label>
+                                                    <label>Ihre E-Mail Adresse:</label>
                                                     <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_mail" required="">
                                                 </div>
 
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-1 text-right">
+                                                <input type="checkbox" id="meeting_client_survey" class="form-control terminmodal-input meeting-client" required>
+                                            </div>
+                                            <div class="col-sm-11">
+                                                <div class="form-group">
+                                                    <label>Feedback Fragebogen</label><br>
+                                                    <span>Dürfen wir Sie nach dem Beratungstermin einmalig per Mail zu einem Feedbackfragebogen einladen?</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
@@ -138,10 +142,9 @@
                                 <br>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-12 text-center">
-                                        <button class="btn btn-lg btn-primary calendar-assign-button" id="meeting_assign_assign_button"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
-                                        <button class="btn btn-lg btn-secondary calendar-assign-button" id="meeting_assign_cancel_button"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
-                                        <button class="btn btn-lg btn-success calendar-assign-button" id="meeting_assign_save_button" type="submit" form="meeting_client_data_form"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
-                                        <button class="btn btn-lg btn-danger calendar-assign-button" id="meeting_assign_delete_button"><i class="far fa-trash-alt"></i>&nbsp;Kundendaten löschen</button>
+                                        <button class="btn btn-lg btn-primary calendar-assign-button" id="meeting_assign_assign_button"><i class="far fa-calendar-plus"></i>&nbsp; Terminbuchung starten</button>
+                                        <button class="btn btn-lg btn-secondary calendar-assign-button" id="meeting_assign_cancel_button"><i class="far fa-calendar-times"></i>&nbsp;Terminbuchung abbrechen</button>
+                                        <button class="btn btn-lg btn-success calendar-assign-button" id="meeting_assign_save_button" type="submit" form="meeting_client_data_form"><i class="far fa-calendar-check"></i>&nbsp;Termin jetzt buchen</button>
                                     </div>
                                 </div>
                                 <br>
@@ -153,10 +156,7 @@
                             <div class="modal-footer">
                                 <div class="row">
                                     <div class='col-sm-12'>
-                                        <button class="btn btn-danger pull-left calendar-footer-button" type="button" id="meeting_delete_button"><i class="far fa-trash-alt"></i> Termin löschen</button>
-                                        <button data-dismiss="modal" class="btn btn-default" id="meeting_cancel_button" type="button"><i class="fas fa-times"></i> Termineditor schließen</button>
-                                        <button id="meeting_save_button" class="btn btn-success pull-right calendar-footer-button" type="submit" form="calendar_meeting_detail_form"><i class="fas fa-save"></i> Termin speichern</button>
-                                        <button id="meeting_save_next_button" class="btn btn-default pull-right calendar-footer-button" type="submit" form="calendar_meeting_detail_form"><i class="fas fa-check-circle"></i> Speichern und Nächster</button>
+                                        <button data-dismiss="modal" class="btn btn-default" id="meeting_cancel_button" type="button"><i class="fas fa-times"></i> Termin schließen</button>
                                     </div>
                                 </div>
                             </div>
