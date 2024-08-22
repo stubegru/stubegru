@@ -138,6 +138,7 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('EVENT_INSTANCE_WRITE', 'beratung'),
 ('EVENT_MGMT_ASSIGNEE', 'beratung'),
 ('VIEW_ACCESS_PORTFOLIO', 'anybody'),
+('CALENDAR_SELF_SERVICE', 'anybody'),
 ('WIKI_READ', 'user'),
 ('MAIL_LOG', 'admin'),
 ('EXECUTE_CRONJOB', 'admin'),
