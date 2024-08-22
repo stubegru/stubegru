@@ -1,0 +1,35 @@
+.pointer {
+    cursor: pointer;
+}
+
+.calendar-dropdown {
+    padding: 10px;
+    min-width: 250px;
+}
+
+.calendar-search-result-button {
+    cursor: pointer;
+}
+
+.calendar-form-blue {
+    background-color: #E3F2FD;
+    padding: 0px 25px 25px 25px;
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 10px #546e7a75;
+}
+
+.border-top{
+    border-top: 2px solid #78909C;
+}
+
+/* CK Editor for mail template editing */
+#meeting_detail_mail_template_form .ck-editor__editable_inline:not(.ck-comment__input *) {
+    height: 500px;
+    overflow-y: auto;
+}
+
+/* Show CKeditor OVER bs modal */
+#meeting_detail_mail_template_form {
+    --ck-z-default: 100;
+    --ck-z-panel: calc( var(--ck-z-default) + 999 );
+}

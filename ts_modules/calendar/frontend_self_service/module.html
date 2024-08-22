@@ -1,0 +1,185 @@
+<!-- KALENDER Box Start-->
+
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="#collapse_calendar" data-toggle="collapse" aria-expanded="true">Übersicht der freien Termine</a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse in" id="collapse_calendar" aria-expanded="false">
+            <div class="panel-body">
+
+                <div id="calendar_body">
+                    <div id="calendar_view_container"></div>
+                </div>
+
+
+
+                <div id="meeting_detail_view_modal" class="modal fade" style="display: none;" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog" style="min-width : 80%;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <h4 class="modal-title" id="meeting_detail_view_title">Termin Details</h4>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div id="calendar_modal_changes_info" class="text-right"><i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="calendar-detail-container">
+                                    <form id="calendar_meeting_detail_form">
+                                        <div class="row">
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Datum</label>
+                                                    <input autocomplete="off" type='date' id="meeting_detail_date" class="form-control meeting-details" required>
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Beginn</label>
+                                                    <input autocomplete="off" type='time' id="meeting_detail_start" class="form-control meeting-details" required>
+                                                </div>
+                                            </div>
+                                            <div class='col-sm-4'>
+                                                <div class="form-group">
+                                                    <label>Ende</label>
+                                                    <input autocomplete="off" id="meeting_detail_end" type='time' class="form-control meeting-details" required>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4" style="display:block;">
+                                                <div class="form-group">
+                                                    <label>Titel</label>
+                                                    <input class="form-control meeting-details" id="meeting_detail_title" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Berater*in</label>
+                                                    <select id="meeting_detail_owner" class="form-control meeting-details" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label>Kontaktkanal</label>
+                                                    <select id="meeting_detail_channel" class="form-control meeting-details" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </form>
+
+
+                                </div>
+
+                                <div id="meeting_client_data_container">
+                                    <div class="text-center">
+                                        <h3 style="margin-bottom:0px;">Kundendaten</h3>
+                                    </div>
+                                    <hr style="margin-top:0px;">
+                                    <form id="meeting_client_data_form">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Vor- und Nachname:</label>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_name" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Fragebogen:</label>
+                                                    <select id="meeting_client_survey" class="form-control terminmodal-input meeting-client" required>
+                                                        <option value="0">Nein</option>
+                                                        <option value="1">Ja</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Kanal:</label>
+                                                    <select id="meeting_client_channel" class="form-control terminmodal-input meeting-client" required>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Anliegen:</label>
+                                                    <textarea id="meeting_client_issue" class="form-control terminmodal-input meeting-client" rows="4" style="resize: vertical;"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+
+                                                <div class="form-group">
+                                                    <label>Telefon:</label>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_phone">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>E-Mail:</label>
+                                                    <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_mail" required="">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                                <br>
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn btn-lg btn-primary calendar-assign-button" id="meeting_assign_assign_button"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
+                                        <button class="btn btn-lg btn-secondary calendar-assign-button" id="meeting_assign_cancel_button"><i class="far fa-calendar-times"></i>&nbsp;Terminvergabe abbrechen</button>
+                                        <button class="btn btn-lg btn-success calendar-assign-button" id="meeting_assign_save_button" type="submit" form="meeting_client_data_form"><i class="far fa-calendar-check"></i>&nbsp;Kundendaten speichern</button>
+                                        <button class="btn btn-lg btn-danger calendar-assign-button" id="meeting_assign_delete_button"><i class="far fa-trash-alt"></i>&nbsp;Kundendaten löschen</button>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="alert alert-info text-center" id="meeting_modal_info_alert" style="display: none;"></div>
+
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class='col-sm-12'>
+                                        <button class="btn btn-danger pull-left calendar-footer-button" type="button" id="meeting_delete_button"><i class="far fa-trash-alt"></i> Termin löschen</button>
+                                        <button data-dismiss="modal" class="btn btn-default" id="meeting_cancel_button" type="button"><i class="fas fa-times"></i> Termineditor schließen</button>
+                                        <button id="meeting_save_button" class="btn btn-success pull-right calendar-footer-button" type="submit" form="calendar_meeting_detail_form"><i class="fas fa-save"></i> Termin speichern</button>
+                                        <button id="meeting_save_next_button" class="btn btn-default pull-right calendar-footer-button" type="submit" form="calendar_meeting_detail_form"><i class="fas fa-check-circle"></i> Speichern und Nächster</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Assign meeting feedback -->
+<div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" id="meeting_assign_feedback_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Termin wird vergeben...</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- KALENDAR Box Ende-->

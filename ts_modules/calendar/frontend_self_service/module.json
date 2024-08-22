@@ -1,0 +1,25 @@
+{
+    "type": "stubegruModule",
+    "name": "calendar/frontend_self_service",
+    "description": "Calendar frontend to use for meeting assignment by participants theirselfs in self-service. Works in combination with calendar/backend.",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [
+            "calendar/fullcalendar",
+            "event_management/libs/multi_select_dropdown"
+        ],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "logic/calendar_module.js"
+    ],
+    "css": [
+        "calendar_self_service.css"
+    ],
+    "cronjob": []
+}

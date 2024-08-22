@@ -1,0 +1,68 @@
+<stubegruAttribute hidden data-name="title" data-value="Termin buchen"></stubegruAttribute>
+<stubegruAttribute hidden data-name="access" data-value="VIEW_ACCESS_SELF_SERVICE"></stubegruAttribute>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="Logo" src="assets/images/favicon.png" width="20px">
+            </a>
+            <a class="navbar-brand" href="#">
+                Hochschule Stubegru | Terminbuchung
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div style="margin: 50px;">
+    <div>
+        <h3>Wir freuen uns auf Sie!</h3>
+
+        <p class="lead">
+            Sie begleiten Studien- oder Berufsorientierung? Sie möchten sich und Ihre Schüler:innen über Studiengänge und den Studienalltag an Hochschulen informieren? Sie möchten bestimmte Studienrichtungen in Ihrem Fach lebendig machen?<br>
+            Die Zentrale Studienberatung bietet unterschiedliche Formate zur Orientierung und Kontakte zu Studiengängen an. Verschaffen Sie sich einen Überblick über unsere Angebote und sprechen Sie uns bei Interesse und bei Fragen gerne an.
+        </p>
+
+        <div class="alert alert-info">
+            <p><i class="fas fa-filter"></i> Filtern Sie die angezeigten Veranstaltungen nach Ihren Wünschen:</p>
+            <br>
+
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Zielgruppe:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="targetGroupsSchool"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Möglicher Zeitumfang:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="timeDurations"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Möglicher Ort:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="possibleLocations"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Buchbar für:</label>
+                        <select multiple class="form-control portfolio-multiple-select portfolio-filter-input" name="bookableBy"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+
+<stubegruModule data-name="event_management/libs/multi_select_dropdown"></stubegruModule>
+<stubegruModule data-name="calendar/fullcalendar"></stubegruModule>
+<stubegruModule data-source="ts_modules" data-name="calendar/frontend_self_service"></stubegruModule>
