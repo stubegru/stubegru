@@ -1,6 +1,7 @@
 import Stubegru from '../../../../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../../../../components/bootstrap/v3/ts_wrapper.js';
 import { AssignClientResponse } from '../meeting_clients/meeting_client_service.js';
+import { Meeting } from './meeting_service.js';
 
 export default class AssignFeedbackModal {
     modal: Modal;
@@ -11,7 +12,7 @@ export default class AssignFeedbackModal {
 
     resetAndShow() {
         Stubegru.dom.querySelector("#meeting_assign_feedback_modal .modal-body").innerHTML = `
-                <ul class="list-group">
+                <ul class="list-group" id="assign_feedback_modal_detail_list">
                     <li class="list-group-item" data-task="clientData">
                         <i class="fas fa-spinner fa-spin"></i> Kundendaten gespeichert
                         <br>
@@ -49,15 +50,15 @@ export default class AssignFeedbackModal {
         this.modal.show();
     }
 
-    async showFeedback(statusObject:AssignClientResponse) {
+    async showFeedback(statusObject: AssignClientResponse, meeting: Meeting) {
 
         if (statusObject.status == "error") {
             this.setTask("overall", "error", `${statusObject.message || ""}<br>Der Termin konnte nicht vergeben werden. Die Terminvergabe wurde abgebrochen!<br>Dieses Fenster kann nun geschlossen werden.`);
-            this.setTask("clientData", "warning", "Terminvergabe abgebrochen");
-            this.setTask("assign", "warning", "Terminvergabe abgebrochen");
-            this.setTask("survey", "warning", "Terminvergabe abgebrochen");
-            this.setTask("clientMail", "warning", "Terminvergabe abgebrochen");
-            this.setTask("advisorMail", "warning", "Terminvergabe abgebrochen");
+            this.setTask("clientData", statusObject.clientData.status, statusObject.clientData.message || "Terminvergabe abgebrochen");
+            this.setTask("assign", statusObject.assign.status, statusObject.assign.message || "Terminvergabe abgebrochen");
+            this.setTask("survey", statusObject.survey.status, statusObject.survey.message || "Terminvergabe abgebrochen");
+            this.setTask("clientMail", statusObject.clientMail.status, statusObject.clientMail.message || "Terminvergabe abgebrochen");
+            this.setTask("advisorMail", statusObject.advisorMail.status, statusObject.advisorMail.message || "Terminvergabe abgebrochen");
             return;
         }
 
@@ -73,7 +74,16 @@ export default class AssignFeedbackModal {
         await Stubegru.utils.wait(500);
 
         if (statusObject.status == "success") {
-            this.setTask("overall", "success", `Die Terminvergabe war erfolgreich`);
+            this.setTask("overall", "success", `<h4>Wir freuen uns auf Sie!</h4>
+            Der Termin wurde erfolgreich für Sie gebucht. Wir haben eine Mail mit einer Terminbestätigung und allen weiteren Infos an Ihre hinterlegte Mailadresse geschickt. Wir freuen uns auf den Termin:
+            <br><br>
+            <div class="panel panel-default"><div class="panel-body" style="font-size:small;">
+                <b>${meeting.title}</b><br>
+                bei: ${meeting.owner}<br>
+                ${Stubegru.utils.formatDate(meeting.date, "DD.MM.YYYY")} von ${meeting.start.substring(0, 5)} bis ${meeting.end.substring(0, 5)}
+            </div></div>`);
+            await Stubegru.utils.wait(2000);
+            Stubegru.dom.slideUp("#assign_feedback_modal_detail_list");
         }
         else {
             this.setTask("overall", "warning", `Der Termin wurde vergeben. Es konnten allerdings nicht alle zugehörigen Daten korrekt bearbeitet werden. Siehe detaillierte Auflistung oben.`);

@@ -90,7 +90,7 @@ export default class MeetingClientView {
         clientData.name = Stubegru.dom.querySelectorAsInput("#meeting_client_name").value;
         clientData.mail = Stubegru.dom.querySelectorAsInput("#meeting_client_mail").value;
         clientData.phone = Stubegru.dom.querySelectorAsInput("#meeting_client_phone").value;
-        clientData.formular = Stubegru.dom.querySelectorAsInput("#meeting_client_survey").value;
+        clientData.formular = Stubegru.dom.querySelectorAsInput("#meeting_client_survey").checked ? "1" : "0";
         clientData.description = Stubegru.dom.querySelectorAsInput("#meeting_client_issue").value;
         clientData.channel = Stubegru.dom.querySelectorAsInput("#meeting_client_channel").value;
         return clientData;

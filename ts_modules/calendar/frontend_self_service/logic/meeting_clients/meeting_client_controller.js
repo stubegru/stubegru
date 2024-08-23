@@ -44,11 +44,11 @@ export default class MeetingClientController {
                 CalendarModule.meetingClientView.assignFeedbackModal.resetAndShow();
                 const clientData = CalendarModule.meetingClientView.getClientData();
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
-                CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
+                CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp, meeting);
                 await CalendarModule.calendarView.refresh();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
-                //TODO: Some success message
+                m.setModalVisible(false);
             }
             catch (error) {
                 Alert.alertError(error);

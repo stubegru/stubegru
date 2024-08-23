@@ -1,8 +1,9 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/utils/auth_and_database.php";
+require_once "$BASE_PATH/utils/database_without_auth.php"; //<<<ONLY FOR SELF SERVICE
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
+
 require_once "$BASE_PATH/modules/calendar/backend/templates/template_variables.php";
 require_once "$BASE_PATH/modules/evaluation/prepare_evaluation_mails.php";
 $INCLUDED_IN_SCRIPT = true;
@@ -148,8 +149,11 @@ function makeDataPretty(&$meetingData, &$clientData)
 function getReplaceList($meetingData, $clientData, $roomData)
 {
     //Add current users id
-    $loggedInUserId = $_SESSION["id"];
-    $loggedInUserName = getUserName($loggedInUserId);
+    $loggedInUserName = "Unbekannt";
+    if (isset($_SESSION)) {
+        $loggedInUserId = $_SESSION["id"];
+        $loggedInUserName = getUserName($loggedInUserId);
+    }
     $extraData = array("currentUserName" => $loggedInUserName);
 
     //Prepare complete dataList
