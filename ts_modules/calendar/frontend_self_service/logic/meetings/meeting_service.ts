@@ -1,8 +1,13 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../../../../../components/stubegru_core/logic/stubegru_fetch.js";
+import { StubegruUser } from "../../../../../components/user_utils/user_utils.js";
 import { MeetingClient } from "../meeting_clients/meeting_client_service.js";
 
 export default class MeetingService {
+
+    async getAdvisorList() {
+        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_advisors_self_service.php") as StubegruUser[];
+    }
 
     async get(meetingId: string) {
         let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php", { meetingId: meetingId }) as Meeting[];
@@ -17,7 +22,7 @@ export default class MeetingService {
         // let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/is_meeting_block.php", { meetingId: meetingId }) as MeetingBlockResponse;
         // if (resp.status == "error") { throw new Error(resp.message) };
         // return resp;
-        return { status : "success", blockId : "0"} //TODO: block management
+        return { status: "success", blockId: "0" } //TODO: block management
     }
 
     async setBlock(meetingId: string, blockMeeting: boolean | number) {
@@ -25,7 +30,7 @@ export default class MeetingService {
         // let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/set_meeting_block.php", { meetingId: meetingId, blockMeeting: blockMeeting }) as StubegruHttpResponse;
         // if (resp.status == "error") { throw new Error(resp.message) };
         // return resp;
-        return { status : "success"} //TODO: block management
+        return { status: "success" } //TODO: block management
     }
 }
 

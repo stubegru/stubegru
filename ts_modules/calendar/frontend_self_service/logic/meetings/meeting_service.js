@@ -1,5 +1,8 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 export default class MeetingService {
+    async getAdvisorList() {
+        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_advisors_self_service.php");
+    }
     async get(meetingId) {
         let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php", { meetingId: meetingId });
         return meetingList[0];
