@@ -11,6 +11,18 @@
             <div class="panel-body">
 
                 <div id="calendar_body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <select class="form-control calendar-multiple-select" id="calendar_view_title_properties" multiple>
+                                    <option value="title" selected>Thema des Termins</option>
+                                    <option value="owner" selected>Name des Beratenden</option>
+                                    <option value="channel">Kontaktkanal</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
                     <div id="calendar_view_container"></div>
                 </div>
 
@@ -95,7 +107,7 @@
                                                     <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_name" required>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Gewünschter Kontaktkanal:</label>

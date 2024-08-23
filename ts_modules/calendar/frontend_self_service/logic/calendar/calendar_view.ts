@@ -1,9 +1,13 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
+import MultiselectDropdown from "../../../../../components/multi_select_dropdown/multiselect-dropdown.js";
 
 //Manually load fullcalendar files
 import { CalendarOptions, FullCalendarInstance } from "../../fullcalendar/ts_wrapper.js";
+import { Meeting } from "../meetings/meeting_service.js";
+import MeetingClientView from "../meeting_clients/meeting_client_view.js";
+import MeetingView from "../meetings/meeting_view.js";
 
 export default class CalendarView {
 
@@ -19,16 +23,16 @@ export default class CalendarView {
         },
         weekends: false,
         headerToolbar: {
-            start: 'dayGridMonth timeGridWeek',
+            start: 'dayGridMonth timeGridWeek listMonth',
             center: 'title',
             end: 'prev,next'
         },
         buttonText: {
             today: 'Heute',
-            month: 'Monat',
-            week: 'Woche',
+            month: 'Monatsansicht',
+            week: 'Wochenansicht',
             day: 'Tag',
-            list: 'Liste'
+            list: 'Listenansicht'
         },
         eventTimeFormat: {
             hour: '2-digit',
@@ -57,6 +61,11 @@ export default class CalendarView {
 
         //render calendar when the calendar box collapses to open
         Stubegru.dom.addEventListener('#collapse_calendar', 'shown.bs.collapse', () => { this.fullCalendar.render(); })
+
+        //Init multiple selects
+        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".calendar-multiple-select" });
+
+        Stubegru.dom.addEventListener("#calendar_view_title_properties", "change", this.renderMeetings);
     }
 
 
@@ -64,64 +73,52 @@ export default class CalendarView {
 
 
     refresh = async () => {
-        this.fullCalendar.removeAllEvents();
         await CalendarModule.meetingController.refreshMeetingList();
+        this.renderMeetings();
+    }
+
+    renderMeetings = () => {
+        //Remove old meetings
+        this.fullCalendar.removeAllEvents();
+
+        let titleProperties: TitleProperties = { channel: false, owner: false, title: false };
+        let elem = Stubegru.dom.querySelector("#calendar_view_title_properties");
+        const selectedOptions = elem.querySelectorAll('option:checked');
+        Array.from(selectedOptions).forEach((elem: HTMLOptionElement) => titleProperties[elem.value] = true);
+
+        //Add new meetings
         let meetingList = CalendarModule.meetingController.meetingList;
-        this.addMeetings(meetingList);
+        this.addMeetings(meetingList, titleProperties);
     }
 
 
-    addMeetings(meetingList) {
+    addMeetings(meetingList: Meeting[], titleProperties: TitleProperties) {
         //Generate events for fullcalendar
-        let ownUserId = "0";
-        let ownEvents = { free: [], assigned: [] };
-        let othersEvents = { free: [], assigned: [] };
+        let FCevents = [];
 
         for (let inMeeting of meetingList) {
+            let titlePropertyList = [];
+            if (titleProperties.title) { titlePropertyList.push(inMeeting.title) }
+            if (titleProperties.owner) { titlePropertyList.push(inMeeting.owner) }
+            if (titleProperties.channel) { titlePropertyList.push(MeetingView.channelDescriptions[inMeeting.channel]) }
+
             let outMeeting = {
-                title: inMeeting.owner,
+                title: titlePropertyList.join(" | "),
                 start: `${inMeeting.date}T${inMeeting.start}`,
                 end: `${inMeeting.date}T${inMeeting.end}`,
                 extendedProps: inMeeting
             };
-
-            //Sort meetings by free/assigned and own/others
-            if (inMeeting.ownerId == ownUserId) {
-                (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
-                    ownEvents.assigned.push(outMeeting) :
-                    ownEvents.free.push(outMeeting);
-            } else {
-                (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
-                    othersEvents.assigned.push(outMeeting) :
-                    othersEvents.free.push(outMeeting);
-            }
+            FCevents.push(outMeeting);
         }
 
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
-            id: "stubegru-own-free-events",
-            events: ownEvents.free,
+            id: "free-events",
+            events: FCevents,
             color: "#5cb85c",
             classNames: ["pointer"]
         });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-own-assigned-events",
-            events: ownEvents.assigned,
-            color: "#d9534f",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-others-free-events",
-            events: othersEvents.free,
-            color: "#5cb85c",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-others-assigned-events",
-            events: othersEvents.assigned,
-            color: "#d9534f",
-            classNames: ["pointer"]
-        });
+
     }
 
     setEventVisibility(eventSourceId, visible) {
@@ -135,4 +132,11 @@ export default class CalendarView {
 
 
 
+}
+
+
+interface TitleProperties {
+    title: boolean;
+    channel: boolean;
+    owner: boolean;
 }
