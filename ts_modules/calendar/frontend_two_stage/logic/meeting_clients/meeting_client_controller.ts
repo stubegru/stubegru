@@ -2,6 +2,7 @@ import Alert from "../../../../../components/alert/alert.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarModule from "../calendar_module.js";
+import { MeetingClient } from "./meeting_client_service.js";
 
 export default class MeetingClientController {
     init() { }
@@ -10,7 +11,7 @@ export default class MeetingClientController {
         let m = CalendarModule.meetingView;
         let meeting = await CalendarModule.meetingService.get(meetingId);
 
-        if (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) {
+        if (meeting.teilnehmer && typeof meeting.teilnehmer == "object" && Object.hasOwn(meeting.teilnehmer, "id")) {
             Alert.alert({ title: "Termin kann nicht vergeben werden", text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...", type: "error" });
             return;
         }
@@ -87,7 +88,7 @@ export default class MeetingClientController {
 
         cv.setClientVisible(true);
         cv.enableClientForm(false);
-        cv.setClientData(meeting.teilnehmer);
+        cv.setClientData(meeting.teilnehmer as MeetingClient);
 
         m.enableFooterButtons(false, false, false, true);
 

@@ -22,7 +22,7 @@ export default class MeetingController {
     }
     async clickOnMeetingHandler(meetingId) {
         let meeting = await CalendarModule.meetingService.get(meetingId);
-        (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) ?
+        (meeting.teilnehmer && typeof meeting.teilnehmer == "object" && Object.hasOwn(meeting.teilnehmer, "id")) ?
             CalendarModule.meetingClientController.openAssignedMeeting(meeting.id) :
             this.openFreeMeeting(meeting.id);
     }

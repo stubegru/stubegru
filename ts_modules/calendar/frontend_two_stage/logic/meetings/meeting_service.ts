@@ -65,5 +65,5 @@ export interface Meeting {
     channel: string;
     template: string;
     blocked: string;
-    teilnehmer?: MeetingClient;
+    teilnehmer?: MeetingClient|string;
 }

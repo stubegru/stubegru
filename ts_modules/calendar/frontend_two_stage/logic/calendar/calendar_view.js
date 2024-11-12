@@ -81,8 +81,8 @@ export default class CalendarView {
     addMeetings(meetingList) {
         //Generate events for fullcalendar
         let ownUserId = UserUtils.currentUser.id;
-        let ownEvents = { free: [], assigned: [] };
-        let othersEvents = { free: [], assigned: [] };
+        let ownEvents = { free: [], halfAssigned: [], assigned: [] };
+        let othersEvents = { free: [], halfAssigned: [], assigned: [] };
         for (let inMeeting of meetingList) {
             let outMeeting = {
                 title: inMeeting.owner,
@@ -90,16 +90,28 @@ export default class CalendarView {
                 end: `${inMeeting.date}T${inMeeting.end}`,
                 extendedProps: inMeeting
             };
-            //Sort meetings by free/assigned and own/others
+            // Sort meetings by free/halfAssigned/assigned and own/others
             if (inMeeting.ownerId == ownUserId) {
-                (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
-                    ownEvents.assigned.push(outMeeting) :
-                    ownEvents.free.push(outMeeting);
+                if (inMeeting.teilnehmer && inMeeting.teilnehmer != "") {
+                    ownEvents.assigned.push(outMeeting); //MeetingClient is set
+                }
+                else if (inMeeting.blocked == "0") {
+                    ownEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
+                }
+                else {
+                    ownEvents.halfAssigned.push(outMeeting); //MeetingClient is NOT set but block is set
+                }
             }
             else {
-                (inMeeting.teilnehmer && inMeeting.teilnehmer != "") ?
-                    othersEvents.assigned.push(outMeeting) :
-                    othersEvents.free.push(outMeeting);
+                if (inMeeting.teilnehmer && inMeeting.teilnehmer != "") {
+                    othersEvents.assigned.push(outMeeting); //MeetingClient is set
+                }
+                else if (inMeeting.blocked == "0") {
+                    othersEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
+                }
+                else {
+                    othersEvents.halfAssigned.push(outMeeting); //MeetingClient is NOT set but block is set
+                }
             }
         }
         //Generate and add Eventsource
@@ -107,6 +119,12 @@ export default class CalendarView {
             id: "stubegru-own-free-events",
             events: ownEvents.free,
             color: "#5cb85c",
+            classNames: ["pointer"]
+        });
+        this.fullCalendar.addEventSource({
+            id: "stubegru-own-half-assigned-events",
+            events: ownEvents.halfAssigned,
+            color: "#ff9d00",
             classNames: ["pointer"]
         });
         this.fullCalendar.addEventSource({
@@ -119,6 +137,12 @@ export default class CalendarView {
             id: "stubegru-others-free-events",
             events: othersEvents.free,
             color: "#5cb85c",
+            classNames: ["pointer"]
+        });
+        this.fullCalendar.addEventSource({
+            id: "stubegru-others-half-assigned-events",
+            events: othersEvents.halfAssigned,
+            color: "#ff9d00",
             classNames: ["pointer"]
         });
         this.fullCalendar.addEventSource({
@@ -141,13 +165,16 @@ export default class CalendarView {
         this.setEventVisibility("stubegru-others-free-events", isVisible);
         if (!isVisible || CalendarModule.state.assignedVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
+            this.setEventVisibility("stubegru-others-half-assigned-events", isVisible);
         }
     };
     showAssignedMeetings = (isVisible) => {
         CalendarModule.state.assignedVisible = isVisible;
         this.setEventVisibility("stubegru-own-assigned-events", isVisible);
+        this.setEventVisibility("stubegru-own-half-assigned-events", isVisible);
         if (!isVisible || CalendarModule.state.othersVisible) {
             this.setEventVisibility("stubegru-others-assigned-events", isVisible);
+            this.setEventVisibility("stubegru-others-half-assigned-events", isVisible);
         }
     };
 }
