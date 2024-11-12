@@ -1,14 +1,28 @@
 <div class='row'>
 
     <div class='col-md-12 text-center'>
-        <h2>Übersicht aller Artikel </h2>
+        <h2>Übersicht aller Wiki Artikel </h2>
     </div>
+
 
 </div>
 <hr>
+<div class="row">
+    <div class="col-md-6"></div>
+    <div class="col-md-6">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Liste filtern..." id="allArticlesListFilter">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" title="Filter zurücksetzen" id="allArticlesListFilterClear">
+                    <i class="fas fa-backspace"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+<br>
 <div class='row'>
     <div class='col-md-12'>
-        <ul id="artikelListe">
-        </ul>
+        <div id="allArticlesTable"></div>
     </div>
 </div>

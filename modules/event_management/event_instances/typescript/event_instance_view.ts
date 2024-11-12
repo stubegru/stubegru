@@ -39,7 +39,7 @@ class EventInstanceView {
             prevText: "<i class='fas fa-angle-left'>",
             searchField: document.getElementById("eventInstanceFilter"),
             tableDidUpdate: EventInstanceView.onUpdateListView
-        };
+        }; 
 
         //@ts-expect-error
         EventInstanceView.sortableTable = $('#eventInstanceTable').tableSortable(tableOptions);

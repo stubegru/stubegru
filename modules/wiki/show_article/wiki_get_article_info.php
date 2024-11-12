@@ -25,6 +25,11 @@ if ($row == false) {
     exit;
 }
 
+//Increment "visited" value for this article
+$incrementStatement = $dbPdo->prepare("UPDATE wiki_artikel SET visited = visited + 1 WHERE id = :artikelId;");
+$incrementStatement->bindValue(':artikelId', $artikelId);
+$incrementStatement->execute();
+
 $heading = $row["heading"];
 $text = $row["text"];
 $date = $row["lastChanged"];
