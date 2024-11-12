@@ -27,7 +27,7 @@ foreach ($resultList as $row) {
 
 
 //Headlines
-$selectStatement = $dbPdo->prepare("SELECT LEFT(text,100) as textPrev ,id,heading FROM `wiki_artikel` WHERE `heading` LIKE :search ORDER BY heading LIMIT 8;");
+$selectStatement = $dbPdo->prepare("SELECT LEFT(text,100) as textPrev ,id,heading FROM `wiki_artikel` WHERE `heading` LIKE :search ORDER BY heading;");
 $selectStatement->bindValue(':search', "%$search%");
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -41,7 +41,7 @@ foreach ($resultList as $row) {
 }
 
 //Volltext
-$selectStatement = $dbPdo->prepare("SELECT LEFT(text,100) as textPrev ,id,heading FROM `wiki_artikel` WHERE `text` LIKE :search ORDER BY heading LIMIT 8;");
+$selectStatement = $dbPdo->prepare("SELECT LEFT(text,100) as textPrev ,id,heading FROM `wiki_artikel` WHERE `text` LIKE :search ORDER BY heading;");
 $selectStatement->bindValue(':search', "%$search%");
 $selectStatement->execute();
 $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
