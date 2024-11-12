@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 27. Mrz 2024 um 10:40
--- Server-Version: 11.3.2-MariaDB
--- PHP-Version: 8.3.3
+-- Erstellungszeit: 12. Nov 2024 um 11:19
+-- Server-Version: 11.5.2-MariaDB
+-- PHP-Version: 8.3.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -426,7 +426,8 @@ CREATE TABLE `wiki_artikel` (
   `lastChanged` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `reminderDate` date DEFAULT NULL,
   `reminderText` mediumtext DEFAULT NULL,
-  `showInSidebar` tinyint(1) NOT NULL DEFAULT 0
+  `showInSidebar` tinyint(1) NOT NULL DEFAULT 0,
+  `visited` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
