@@ -30,6 +30,10 @@ export default class UserUtils {
         const permissionList = await Stubegru.fetch.getJson(`modules/user_utils/get_users_permission_requests.php`);
         return permissionList;
     }
+    static doesCurrentUserFulfillPermissionRequest(permissionRequest) {
+        const writePermission = UserUtils.currentUser.permissionRequests.find(e => e.name == permissionRequest);
+        return writePermission.access;
+    }
     static updateAdminElements() {
         Stubegru.dom.querySelectorAll(`.permission-required`).forEach(elem => elem.style.display = "none"); //Hide all
         for (let perm of UserUtils.currentUser.permissionRequests) {

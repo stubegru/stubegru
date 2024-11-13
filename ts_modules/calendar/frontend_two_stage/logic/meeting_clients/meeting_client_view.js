@@ -7,13 +7,26 @@ export default class MeetingClientView {
     init() {
         Stubegru.dom.querySelectorAll(".meeting-client").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
         this.assignFeedbackModal = new AssignFeedbackModal();
+        Stubegru.dom.addEventListener("#meeting_assign_update_mail_button", "click", this.enableClientMailUpdateForm);
+        Stubegru.dom.addEventListener("#meeting_assign_update_mail_cancel_button", "click", () => this.enableClientMailUpdateForm(false));
     }
     resetClientForm = () => {
+        this.enableClientMailUpdateForm(false);
         this.enableClientForm(true);
         Stubegru.dom.querySelector("#meeting_client_data_form").reset();
     };
     enableClientForm(isEnabled) {
         Stubegru.dom.querySelectorAll('.meeting-client').forEach(elem => elem.disabled = !isEnabled);
+    }
+    enableClientMailUpdateForm(isEnabled = true) {
+        Stubegru.dom.querySelectorAsInput('#meeting_client_mail').disabled = !isEnabled;
+        if (isEnabled) {
+            Stubegru.dom.querySelectorAsInput('#meeting_client_mail').focus();
+        }
+        Stubegru.dom.slideToState("#meeting_assign_update_mail_submit_button", isEnabled);
+        Stubegru.dom.slideToState("#meeting_assign_update_mail_cancel_button", isEnabled);
+        Stubegru.dom.setVisibility("#meeting_assign_update_mail_button", !isEnabled);
+        Stubegru.dom.setVisibility("#meeting_assign_delete_button", !isEnabled);
     }
     setClientVisible(isVisible) {
         Stubegru.dom.slideToState("#meeting_client_data_container", isVisible);
@@ -25,11 +38,19 @@ export default class MeetingClientView {
      * @param {boolean} remove wether to show the delete button
      * @param {boolean} cancel wether to show the cancel button
      */
-    showAssignButtons(assign, save, remove, cancel) {
+    showAssignButtons(assign, save, remove, cancel, updateMail) {
         Stubegru.dom.setVisibility("#meeting_assign_assign_button", assign);
         Stubegru.dom.setVisibility("#meeting_assign_save_button", save);
         Stubegru.dom.setVisibility("#meeting_assign_delete_button", remove);
         Stubegru.dom.setVisibility("#meeting_assign_cancel_button", cancel);
+        Stubegru.dom.setVisibility("#meeting_assign_update_mail_button", updateMail);
+    }
+    setAssignUpdateMailButtonEvent(callback) {
+        Stubegru.dom.removeEventListener("#meeting_client_data_form");
+        Stubegru.dom.addEventListener("#meeting_client_data_form", "submit", (event) => {
+            event.preventDefault();
+            callback(event);
+        });
     }
     /**
   * Register eventhandler for click on the assign save button
@@ -71,6 +92,9 @@ export default class MeetingClientView {
     setAssignCancelButtonEvent(callback) {
         Stubegru.dom.removeEventListener("#meeting_assign_cancel_button");
         Stubegru.dom.addEventListener("#meeting_assign_cancel_button", "click", callback);
+    }
+    getUpdateMailAddress() {
+        return Stubegru.dom.querySelectorAsInput("#meeting_client_mail").value;
     }
     getClientData() {
         let clientData = {};

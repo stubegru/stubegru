@@ -17,8 +17,7 @@ export default class MeetingController {
      * @returns {boolean} wether the current user has write permissions for calendar meetings
      */
     isCalendarWriteUser() {
-        const writePermission = UserUtils.currentUser.permissionRequests.find(e => e.name == "MEETINGS_WRITE");
-        return writePermission.access;
+        return UserUtils.doesCurrentUserFulfillPermissionRequest("MEETINGS_WRITE");
     }
     async clickOnMeetingHandler(meetingId) {
         let meeting = await CalendarModule.meetingService.get(meetingId);
@@ -33,7 +32,7 @@ export default class MeetingController {
         if (!keepValues) {
             await m.resetAllForms();
         }
-        CalendarModule.meetingClientView.showAssignButtons(false, false, false, false);
+        CalendarModule.meetingClientView.showAssignButtons(false, false, false, false, false);
         CalendarModule.meetingClientView.setClientVisible(false);
         m.enableFooterButtons(true, true, false, true);
         const createMeetingCallback = async () => {
@@ -81,7 +80,7 @@ export default class MeetingController {
             m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`);
         }
         m.enableDetailMeetingForm(isWrite && isUnblocked);
-        CalendarModule.meetingClientView.showAssignButtons(isUnblocked, false, false, false);
+        CalendarModule.meetingClientView.showAssignButtons(isUnblocked, false, false, false, false);
         CalendarModule.meetingClientView.setClientVisible(false);
         m.enableFooterButtons(isWrite && isUnblocked, false, isWrite && isUnblocked, true);
         m.setFooterSaveButtonEvent(async () => {

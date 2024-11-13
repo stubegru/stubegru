@@ -394,13 +394,23 @@
                                                     <label>E-Mail:</label>
                                                     <input type="text" class="form-control terminmodal-input meeting-client" id="meeting_client_mail" required="">
                                                 </div>
+                                                <div class="text-right">
+                                                    <button id="meeting_assign_update_mail_cancel_button" class="btn btn-default" style="display: none;" type="button">
+                                                        <i class="far fa-times-circle"></i> Abbrechen
+                                                    </button>
+                                                    <button id="meeting_assign_update_mail_submit_button" class="btn btn-success" style="display: none;" type="submit">
+                                                        <i class="far fa-envelope"></i> Neue Mailadresse speichern
+                                                    </button>
+                                                    <button id="meeting_assign_update_mail_button" class="btn btn-primary" type="button">
+                                                        <i class="far fa-envelope"></i> Mailadresse ändern
+                                                    </button>
+                                                </div>
 
                                             </div>
                                         </div>
                                     </form>
 
                                 </div>
-                                <br>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-md-12 text-center">
                                         <button class="btn btn-lg btn-primary calendar-assign-button" id="meeting_assign_assign_button"><i class="far fa-calendar-plus"></i>&nbsp; Termin vergeben</button>
@@ -439,7 +449,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Termin wird vergeben...</h4>
+                <h4 class="modal-title">Daten werden gespeichert...</h4>
             </div>
             <div class="modal-body">
             </div>

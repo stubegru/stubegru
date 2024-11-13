@@ -57,6 +57,15 @@ function saveClientData($meetingId, $clientData)
     return $clientId;
 }
 
+function updateClientMail($clientId, $clientMail)
+{
+    global $dbPdo;
+    $insertStatement = $dbPdo->prepare("UPDATE `Beratene` SET `mail`=:clientMail WHERE `id` = :clientId;");
+    $insertStatement->bindValue(':clientMail', $clientMail);
+    $insertStatement->bindValue(':clientId', $clientId);
+    $insertStatement->execute();
+}
+
 
 function assignMeetingTo($meetingId, $clientId)
 {

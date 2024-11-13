@@ -36,7 +36,7 @@ class MeetingView {
             Stubegru.dom.querySelector("#calendar_modal_changes_info").innerHTML = `<i class="fas fa-circle" style="color: #d9534f"></i> Ungesicherte Änderungen` :
             Stubegru.dom.querySelector("#calendar_modal_changes_info").innerHTML = `<i class="fas fa-circle" style="color: #5cb85c"></i> Alle Änderungen gespeichert`;
         if (hasUnsavedChanges && CalendarModule.state.freeMeetingMode) {
-            CalendarModule.meetingClientView.showAssignButtons(false, false, false, false);
+            CalendarModule.meetingClientView.showAssignButtons(false, false, false, false, false);
             this.setInfoAlert("Es wurden Änderungen am Termin vorgenommen. Bitte Termin speichern bevor er an einen Kunden vergeben werden kann.");
         }
     }

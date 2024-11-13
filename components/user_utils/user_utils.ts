@@ -36,6 +36,11 @@ export default class UserUtils {
         return permissionList;
     }
 
+    static doesCurrentUserFulfillPermissionRequest(permissionRequest: PermissionRequest) {
+        const writePermission = UserUtils.currentUser.permissionRequests.find(e => e.name == permissionRequest);
+        return writePermission.access;
+    }
+
     static updateAdminElements() {
         Stubegru.dom.querySelectorAll(`.permission-required`).forEach(elem => elem.style.display = "none") //Hide all
 

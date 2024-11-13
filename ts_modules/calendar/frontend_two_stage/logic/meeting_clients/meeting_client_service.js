@@ -17,4 +17,15 @@ export default class MeetingClientService {
         ;
         return resp;
     }
+    async updateClientMail(meetingId, clientMail) {
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/assignment/update_client_mail_address.php", {
+            meetingId: meetingId,
+            clientMail: clientMail
+        });
+        if (resp.status == "error") {
+            throw new Error(resp.message);
+        }
+        ;
+        return resp;
+    }
 }

@@ -41,7 +41,7 @@ export default class MeetingClientController {
         m.setModalVisible(true);
         m.setModalTitle("Kundendaten eintragen");
         CalendarModule.meetingClientView.setClientVisible(true);
-        CalendarModule.meetingClientView.showAssignButtons(false, true, false, true);
+        CalendarModule.meetingClientView.showAssignButtons(false, true, false, true, false);
         m.enableDetailMeetingForm(false);
         m.enableFooterButtons(false, false, false, true);
         m.setMeetingDetailData(meeting);
@@ -84,7 +84,8 @@ export default class MeetingClientController {
         m.setMeetingDetailData(meeting);
         m.enableDetailMeetingForm(false);
 
-        cv.showAssignButtons(false, false, CalendarModule.meetingController.isCalendarWriteUser(), false);
+        const showUpdateMailButton = UserUtils.doesCurrentUserFulfillPermissionRequest("REMOVE_ASSIGNMENT");
+        cv.showAssignButtons(false, false, CalendarModule.meetingController.isCalendarWriteUser(), false, showUpdateMailButton);
 
         cv.setClientVisible(true);
         cv.enableClientForm(false);
@@ -93,6 +94,20 @@ export default class MeetingClientController {
         m.enableFooterButtons(false, false, false, true);
 
         m.setInfoAlert(`Dieser Termin ist bereits an einen Kunden vergeben. Bearbeiten des Termins ist nur möglich, nachdem die Kundendaten gelöscht wurden.`);
+
+        cv.setAssignUpdateMailButtonEvent(async() => {
+            try {
+                CalendarModule.meetingClientView.assignFeedbackModal.resetAndShow();
+                const clientMail = CalendarModule.meetingClientView.getUpdateMailAddress();
+                let resp = await CalendarModule.meetingClientService.updateClientMail(meetingId, clientMail);
+                CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
+
+                await CalendarModule.calendarView.refresh();
+                m.setUnsavedChanges(false);
+                CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
+                this.openAssignedMeeting(meetingId);
+            } catch (error) { Alert.alertError(error); }
+        })
 
         cv.setAssignDeleteButtonEvent(async () => {
             try {
