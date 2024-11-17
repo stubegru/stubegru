@@ -26,7 +26,8 @@ if ($row == false) {
 }
 
 //Increment "visited" value for this article
-$incrementStatement = $dbPdo->prepare("UPDATE wiki_artikel SET visited = visited + 1 WHERE id = :artikelId;");
+//Use lastChanged = lastChanged to avoid auto updating lastChanged timestamp
+$incrementStatement = $dbPdo->prepare("UPDATE wiki_artikel SET visited = visited + 1, lastChanged = lastChanged WHERE id = :artikelId;");
 $incrementStatement->bindValue(':artikelId', $artikelId);
 $incrementStatement->execute();
 

@@ -39,7 +39,7 @@ async function showAllArticlesList() {
 
     for (let article of articleList) {
         let articleLink = `${stubegru.constants.BASE_URL}?view=wiki_show_article&artikel=${article.id}`;
-        article.heading = `<a href='${articleLink}'>${article.heading}</a>`;
+        article.heading = `<a title="${article.heading}" href='${articleLink}'>${article.heading}</a>`;
 
         tableDataList.push(article);
     }
