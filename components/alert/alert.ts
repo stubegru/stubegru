@@ -50,9 +50,10 @@ export default class Alert {
             options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
 
             let swalOptions: SweetAlertOptions = {
-                html: options.text || "",
+                text: options.text || "",
                 title: options.title || "Info",
-                icon: options.type || "info",
+                type: options.type || "info",
+                html: true,
             }
 
             if (options.mode == "alert") {
@@ -62,7 +63,7 @@ export default class Alert {
 
             else if (options.mode == "toast") {
                 let toastOptions = swalOptions as StubegruToastOptions;
-                toastOptions.bootstrapClass = swalToBootstrapClass[swalOptions.icon];
+                toastOptions.bootstrapClass = swalToBootstrapClass[swalOptions.type];
                 Alert.showToast(toastOptions);
             }
         });
@@ -70,7 +71,6 @@ export default class Alert {
 
     /**
      * @example let confirmResp = await Alert.deleteConfirm("Element löschen", "Soll dieses Element wirklich gelöscht werden?");
-                if (confirmResp.isConfirmed) { ... }
      */
     static deleteConfirm(title: string, text: string, confirmButtonText = "Löschen"): Promise<boolean> {
         return new Promise(function (resolve, reject) {
@@ -78,6 +78,7 @@ export default class Alert {
             swal({
                 title: title,
                 text: text,
+                html: true,
                 type: "error",
                 showCancelButton: true,
                 cancelButtonText: "Abbrechen",
@@ -95,7 +96,7 @@ export default class Alert {
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <strong>${options.title}</strong>
-                        ${options.html}
+                        ${options.text}
                     </div>`;
 
         Stubegru.dom.querySelector("#stubegruToastsContainer").insertAdjacentHTML("beforeend", html);
@@ -114,8 +115,9 @@ export interface StubegruAlertOptions {
 
 interface SweetAlertOptions {
     title: string;
-    html: string;
-    icon: SweetAlertIcon;
+    text: string;
+    type: SweetAlertIcon;
+    html: boolean;
 }
 
 interface StubegruToastOptions extends SweetAlertOptions {

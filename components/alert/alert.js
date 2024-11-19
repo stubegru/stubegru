@@ -34,9 +34,10 @@ class Alert {
         return new Promise(function (resolve, reject) {
             options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
             let swalOptions = {
-                html: options.text || "",
+                text: options.text || "",
                 title: options.title || "Info",
-                icon: options.type || "info",
+                type: options.type || "info",
+                html: true,
             };
             if (options.mode == "alert") {
                 //@ts-expect-error Uses JS-Alerts module here
@@ -44,14 +45,13 @@ class Alert {
             }
             else if (options.mode == "toast") {
                 let toastOptions = swalOptions;
-                toastOptions.bootstrapClass = swalToBootstrapClass[swalOptions.icon];
+                toastOptions.bootstrapClass = swalToBootstrapClass[swalOptions.type];
                 Alert.showToast(toastOptions);
             }
         });
     }
     /**
      * @example let confirmResp = await Alert.deleteConfirm("Element löschen", "Soll dieses Element wirklich gelöscht werden?");
-                if (confirmResp.isConfirmed) { ... }
      */
     static deleteConfirm(title, text, confirmButtonText = "Löschen") {
         return new Promise(function (resolve, reject) {
@@ -59,6 +59,7 @@ class Alert {
             swal({
                 title: title,
                 text: text,
+                html: true,
                 type: "error",
                 showCancelButton: true,
                 cancelButtonText: "Abbrechen",
@@ -74,7 +75,7 @@ class Alert {
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <strong>${options.title}</strong>
-                        ${options.html}
+                        ${options.text}
                     </div>`;
         Stubegru.dom.querySelector("#stubegruToastsContainer").insertAdjacentHTML("beforeend", html);
         Stubegru.dom.slideDown(`#${toastId}`);
