@@ -49,11 +49,9 @@ export default class DailyNewsController {
         let resp;
         try {
             let confirmResp = await Alert.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
-            if (confirmResp.isConfirmed) {
-                resp = await DailyNewsModule.service.delete(dailyNewsId) as StubegruHttpResponse;
-                DailyNewsModule.controller.refreshListView();
-                Alert.alertResp(resp);
-            }
+            resp = await DailyNewsModule.service.delete(dailyNewsId) as StubegruHttpResponse;
+            DailyNewsModule.controller.refreshListView();
+            Alert.alertResp(resp);
         }
         catch (error) { Alert.alertError(error); }
     }
@@ -62,11 +60,9 @@ export default class DailyNewsController {
         let resp;
         try {
             let confirmResp = await Alert.deleteConfirm("In Wiki Artikel umwandeln?", "Soll diese Tagesaktuelle Info wirklich in einen Wiki Artikel umgewandelt werden? Die Tagesaktuelle Info wird dadurch gelöscht.", "Umwandeln");
-            if (confirmResp.isConfirmed) {
-                resp = await DailyNewsModule.service.moveToWiki(dailyNewsId) as StubegruHttpResponse;
-                DailyNewsModule.controller.refreshListView();
-                Alert.alertResp(resp);
-            }
+            resp = await DailyNewsModule.service.moveToWiki(dailyNewsId) as StubegruHttpResponse;
+            DailyNewsModule.controller.refreshListView();
+            Alert.alertResp(resp);
         }
         catch (error) { Alert.alertError(error); }
     }
