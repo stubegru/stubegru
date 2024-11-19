@@ -1,4 +1,3 @@
-import SweetAlert, { SweetAlertIcon, SweetAlertOptions, SweetAlertResult } from "../sweetalert2/sweetalert2.js"
 import Stubegru from "../stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../stubegru_core/logic/stubegru_fetch.js";
 
@@ -44,44 +43,54 @@ export default class Alert {
         });
     }
 
-    static async alert(options: StubegruAlertOptions) {
-        options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
+    static alert(options: StubegruAlertOptions): Promise<boolean> {
+        return new Promise(function (resolve, reject) {
 
-        let swalOptions: SweetAlertOptions = {
-            html: options.text || "",
-            title: options.title || "Info",
-            icon: options.type || "info",
-        }
 
-        if (options.mode == "alert") {
-            await SweetAlert.fire(swalOptions);
-        }
+            options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
 
-        else if (options.mode == "toast") {
-            swalOptions.icon = swalToBootstrapClass[swalOptions.icon];
-            Alert.showToast(swalOptions);
-        }
+            let swalOptions: SweetAlertOptions = {
+                html: options.text || "",
+                title: options.title || "Info",
+                icon: options.type || "info",
+            }
+
+            if (options.mode == "alert") {
+                //@ts-expect-error Uses JS-Alerts module here
+                swal(swalOptions, resolve);
+            }
+
+            else if (options.mode == "toast") {
+                let toastOptions = swalOptions as StubegruToastOptions;
+                toastOptions.bootstrapClass = swalToBootstrapClass[swalOptions.icon];
+                Alert.showToast(toastOptions);
+            }
+        });
     }
 
     /**
      * @example let confirmResp = await Alert.deleteConfirm("Element löschen", "Soll dieses Element wirklich gelöscht werden?");
                 if (confirmResp.isConfirmed) { ... }
      */
-    static async deleteConfirm(title: string, text: string, confirmButtonText = "Löschen") {
-        return await SweetAlert.fire({
-            title: title,
-            html: text,
-            icon: "error",
-            confirmButtonText: confirmButtonText,
-            showCancelButton: true,
-            cancelButtonText: "Abbrechen",
+    static deleteConfirm(title: string, text: string, confirmButtonText = "Löschen"): Promise<boolean> {
+        return new Promise(function (resolve, reject) {
+            //@ts-expect-error Uses JS-Alerts module here
+            swal({
+                title: title,
+                text: text,
+                type: "error",
+                showCancelButton: true,
+                cancelButtonText: "Abbrechen",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Löschen",
+            }, resolve);
         });
     }
 
 
-    static showToast(options: SweetAlertOptions) {
+    static showToast(options: StubegruToastOptions) {
         let toastId = `alert_toast_${Alert.TOAST_ID++}`;
-        let html = `<div class="alert alert-${options.icon} alert-dismissible" role="alert" id="${toastId}" style="display:none;">
+        let html = `<div class="alert alert-${options.bootstrapClass} alert-dismissible" role="alert" id="${toastId}" style="display:none;">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -102,6 +111,18 @@ export interface StubegruAlertOptions {
     title?: string;
     mode?: "alert" | "toast";
 }
+
+interface SweetAlertOptions {
+    title: string;
+    html: string;
+    icon: SweetAlertIcon;
+}
+
+interface StubegruToastOptions extends SweetAlertOptions {
+    bootstrapClass: "success" | "info" | "warning" | "danger" | string;
+}
+
+type SweetAlertIcon = "success" | "warning" | "error" | "info";
 
 await Alert.init();
 

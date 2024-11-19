@@ -1,4 +1,3 @@
-import SweetAlert from "../sweetalert2/sweetalert2.js";
 import Stubegru from "../stubegru_core/logic/stubegru.js";
 const swalToBootstrapClass = {
     "success": "success",
@@ -31,38 +30,46 @@ class Alert {
             type: "error"
         });
     }
-    static async alert(options) {
-        options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
-        let swalOptions = {
-            html: options.text || "",
-            title: options.title || "Info",
-            icon: options.type || "info",
-        };
-        if (options.mode == "alert") {
-            await SweetAlert.fire(swalOptions);
-        }
-        else if (options.mode == "toast") {
-            swalOptions.icon = swalToBootstrapClass[swalOptions.icon];
-            Alert.showToast(swalOptions);
-        }
+    static alert(options) {
+        return new Promise(function (resolve, reject) {
+            options.mode = options.mode || ((options.type == "error" || options.type == "warning") ? "alert" : "toast"); //if mode is unset => use alert for errors and warnings and toasts for others
+            let swalOptions = {
+                html: options.text || "",
+                title: options.title || "Info",
+                icon: options.type || "info",
+            };
+            if (options.mode == "alert") {
+                //@ts-expect-error Uses JS-Alerts module here
+                swal(swalOptions, resolve);
+            }
+            else if (options.mode == "toast") {
+                let toastOptions = swalOptions;
+                toastOptions.bootstrapClass = swalToBootstrapClass[swalOptions.icon];
+                Alert.showToast(toastOptions);
+            }
+        });
     }
     /**
      * @example let confirmResp = await Alert.deleteConfirm("Element löschen", "Soll dieses Element wirklich gelöscht werden?");
                 if (confirmResp.isConfirmed) { ... }
      */
-    static async deleteConfirm(title, text, confirmButtonText = "Löschen") {
-        return await SweetAlert.fire({
-            title: title,
-            html: text,
-            icon: "error",
-            confirmButtonText: confirmButtonText,
-            showCancelButton: true,
-            cancelButtonText: "Abbrechen",
+    static deleteConfirm(title, text, confirmButtonText = "Löschen") {
+        return new Promise(function (resolve, reject) {
+            //@ts-expect-error Uses JS-Alerts module here
+            swal({
+                title: title,
+                text: text,
+                type: "error",
+                showCancelButton: true,
+                cancelButtonText: "Abbrechen",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Löschen",
+            }, resolve);
         });
     }
     static showToast(options) {
         let toastId = `alert_toast_${Alert.TOAST_ID++}`;
-        let html = `<div class="alert alert-${options.icon} alert-dismissible" role="alert" id="${toastId}" style="display:none;">
+        let html = `<div class="alert alert-${options.bootstrapClass} alert-dismissible" role="alert" id="${toastId}" style="display:none;">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
