@@ -20,19 +20,7 @@
         </div>
 
         <br>
-        <table class='table-hover table'>
-            <tr>
-                <th></th>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Accountname</th>
-                <th>Rolle</th>
-            </tr>
-            <tbody id="userManagementTable">
-
-            </tbody>
-        </table>
+        <div id="user_management_table"></div>
     </div>
     <div class="col-sm-1"></div>
 
@@ -104,10 +92,12 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default pull-left" type="button" onclick="resetUserEditForm()">Abbrechen</button>
-                    <button class="btn btn-danger pull-left" type="button" onclick="deleteUser()">Nutzer
-                        löschen</button>
-                    <input type="submit" class="btn btn-success" value="Speichern">
+                    <button data-dismiss="modal" class="btn btn-default" type="button" onclick="resetUserEditForm()">
+                        <i class="fas fa-times"></i> Abbrechen
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="far fa-save"></i> Nutzer Speichern
+                    </button> 
                 </div>
             </form>
         </div>

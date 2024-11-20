@@ -1,24 +1,41 @@
 let rolePresets;
-let userManagementUserData;
-let userManagementFilterQuery = "";
+let userManagementListSortableTable;
 initUserManagement();
 
-//Reset monitoring form if the modal is closed
-$('#userEditModal').on('hidden.bs.modal', resetUserEditForm);
-$('#userEditModal').on('hidden.bs.modal', updateUserManagement);
 
-$('#userManagementFilterInput').on('keyup', () => {
-    userManagementFilterQuery = $("#userManagementFilterInput").val();
-    renderUserManagementView();
-});
-$('#userManagementFilterClearButton').on('click', () => {
-    $("#userManagementFilterInput").val("");
-    userManagementFilterQuery = "";
-    renderUserManagementView();
-});
 
 async function initUserManagement() {
     rolePresets = await getRolePresets();
+
+    //Reset monitoring form if the modal is closed
+    $('#userEditModal').on('hidden.bs.modal', resetUserEditForm);
+    $('#userEditModal').on('hidden.bs.modal', updateUserManagement);
+
+    let tableOptions = {
+        data: [],
+        columns: {
+            id: "Id",
+            name: "Name",
+            mail: "Mail",
+            account: "Accountname",
+            roleText: "Rolle",
+            actionButton: "",
+        },
+        rowsPerPage: 10,
+        pagination: true,
+        nextText: "<i class='fas fa-angle-right'>",
+        prevText: "<i class='fas fa-angle-left'>",
+        searchField: document.getElementById("userManagementFilterInput"),
+        //tableDidUpdate: EventInstanceView.onUpdateListView
+    };
+
+    userManagementListSortableTable = $('#user_management_table').tableSortable(tableOptions);
+
+    document.querySelector("#userManagementFilterClearButton").addEventListener("click", () => {
+        document.querySelector("#userManagementFilterInput").value = "";
+        document.querySelector("#userManagementFilterInput").dispatchEvent(new Event("input"));
+    })
+
     updateUserManagement();
 }
 
@@ -36,38 +53,31 @@ async function getRolePresets() {
 }
 
 async function updateUserManagement() { //Tabelle mit den Nutzern updaten
-    userManagementUserData = await stubegru.modules.userUtils.getAllUsers();
-    renderUserManagementView();
-}
+    let tableDataList = [];
 
-/**
- * Renders the current userManagementUserData filtered by userManagementFilterInput and displays it
- */
-function renderUserManagementView() {
-    let html = "";
-    for (let userId in userManagementUserData) {
-        let user = userManagementUserData[userId];
+    let userList = await stubegru.modules.userUtils.getAllUsers();
 
-        //filter
-        let queryRE = new RegExp(userManagementFilterQuery, 'i'); //i for case insensitiv
-        if (userManagementFilterQuery != "" && !queryRE.test(user.id) && !queryRE.test(user.name) && !queryRE.test(user.mail) && !queryRE.test(user.account) && !queryRE.test(rolePresets[user.role].name)) {
-            continue;
-        }
-
-        html += `<tr>
-                <td> 
-                <button type="button" class="btn btn-primary btn-sm" onclick="showUserModal(${user.id})">
-                <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
-                </button>
-                </td>';
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.mail}</td>
-                <td>${user.account}</td>
-                <td>${rolePresets[user.role].name}</td>
-                </tr>`;
+    for (let userId in userList) {
+        let user = userList[userId];
+        let editBtn = `<button type="button" class="btn btn-primary btn-sm" onclick="showUserModal(${user.id})">
+                            <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
+                       </button>`;
+        let deleteBtn = `&nbsp;<button class="btn btn-danger btn-sm" type="button" onclick="deleteUser(${user.id})">
+                            <i class="far fa-trash-alt"></i> Löschen
+                         </button>`;
+        user.actionButton = editBtn + deleteBtn;
+        user.roleText = rolePresets[user.role].name;
+        tableDataList.push(user);
     }
-    $("#userManagementTable").html(html);
+
+    //Add table data and refresh
+    userManagementListSortableTable.setData(tableDataList, null);
+
+    //Keep sorting state consistent (the table plugin does not care about this...)
+    let sort = userManagementListSortableTable._sorting;
+    sort.currentCol = sort.currentCol == '' ? "id" : sort.currentCol;
+    sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
+    userManagementListSortableTable.sortData(sort.currentCol, sort.dir);
 }
 
 async function showUserModal(id) {
@@ -187,14 +197,14 @@ function onRoleSelect() {
 
 }
 
-function deleteUser() {
+function deleteUser(userId) {
     deleteConfirm("Nutzer löschen", "Soll der Nutzer wirklich gelöscht werden?", function () {
 
         $.ajax({
             type: "POST",
             dataType: "json",
             url: `${stubegru.constants.BASE_URL}/modules/user_management/delete_user.php`,
-            data: { id: $("#userEditId").val() },
+            data: { id: userId },
             success: function (json) {
                 stubegru.modules.alerts.alert({
                     title: "Nutzer Gelöscht!",
@@ -203,6 +213,5 @@ function deleteUser() {
                 });
             }
         });
-        $("#userEditModal").modal("hide");
     });
 }
