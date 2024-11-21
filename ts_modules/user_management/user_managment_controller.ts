@@ -1,18 +1,17 @@
 import UserUtils from "../../components/user_utils/user_utils.js";
-import UserManagementModule from "./user_management_module.js";
+import UserManagementModule, { UserRole } from "./user_management_module.js";
 
 export default class UserManagementController {
 
-    rolePresets;
+    rolePresets: UserRole[];
 
 
-    async function init() {
-    rolePresets = await getRolePresets();
+    async init() {
+        this.rolePresets = await UserManagementModule.service.getRolePresets();
+        UserManagementModule.view.setRolePresets(this.rolePresets); //TODO: is the view yet intialized...?
+        updateUserManagement();
+    }
 
-
-
-    updateUserManagement();
-}
 
 
 function deleteUser(userId) {
@@ -45,6 +44,12 @@ function deleteUser(userId) {
         //falls die Id 0 ist, wird ein neuer Benutzer hinzugefügt, es müssen also keine Werte vorgeladen werden.
         await generatePermissionToggles([]);
         Stubegru.dom.querySelector("#userEditModal").modal("show");
+
+        //TODO: bind submit event...
+        Stubegru.dom.querySelector("#daily_news_modal_form").addEventListener("submit", (event) => {
+            event.preventDefault();
+            DailyNewsModule.controller.saveDailyNews();
+        });
     }
 
     function updateUser() { //Nutzerdaten speichern in DB

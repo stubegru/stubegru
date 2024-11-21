@@ -35,6 +35,14 @@ export interface UserManagementDataForUpdate extends StubegruUser {
     permissions: string[];
 }
 
+export interface UserRole {
+    id: string;
+    name: string;
+    description: string;
+    notification_online: string[];
+    permission: string[];
+}
+
 
 
 

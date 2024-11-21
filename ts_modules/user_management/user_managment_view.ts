@@ -1,7 +1,8 @@
 import Stubegru from '../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../components/bootstrap/v3/ts_wrapper.js';
-import UserManagementModule, { UserListItem, UserManagementDataForUpdate } from './user_management_module.js';
-import UserUtils, { StubegruUser, StubegruUserWithPerm } from '../../components/user_utils/user_utils.js';
+import UserManagementModule, { UserListItem, UserManagementDataForUpdate, UserRole } from './user_management_module.js';
+import UserUtils, { StubegruUserWithPerm } from '../../components/user_utils/user_utils.js';
+import { Permission } from '../../components/user_utils/permission_request.js';
 
 
 
@@ -16,6 +17,8 @@ export default class UserManagementView {
         //Reset monitoring form if the modal is closed
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
         this.modal.addEventListener("hide.bs.modal", this.updateListView);
+
+        Stubegru.dom.querySelector('#userEditRole').addEventListener('change', this.onRoleSelect);
 
         let tableOptions = {
             data: [],
@@ -41,27 +44,15 @@ export default class UserManagementView {
             Stubegru.dom.querySelectorAsInput("#userManagementFilterInput").value = "";
             Stubegru.dom.querySelector("#userManagementFilterInput").dispatchEvent(new Event("input"));
         })
-
-        //TODO: bind submit event...
-        Stubegru.dom.querySelector("#daily_news_modal_form").addEventListener("submit", (event) => {
-            event.preventDefault();
-            DailyNewsModule.controller.saveDailyNews();
-        });
-
     }
 
-    async getRolePresets() {
-        //TODO: Typed rolepresets
-        const presets = await UserManagementModule.service.getRolePresets();
-        let presetsObject = {};
+    setRolePresets(presets: UserRole[]) {
         //Generate selectable role option for userEditModal's userEditRole input
         let html = `<option value="" disabled selected>Bitte wählen</option>`;
         for (const role of presets) {
-            presetsObject[role.id] = role;
             html += `<option value="${role.id}" title="${role.description}">${role.name}</option>`;
         }
-        Stubegru.dom.querySelector("#userEditRole").html(html);
-        return presetsObject;
+        Stubegru.dom.querySelector("#userEditRole").innerHTML = html;
     }
 
 
@@ -69,7 +60,7 @@ export default class UserManagementView {
     async updateListView() {
         let tableDataList = [];
 
-        //TODO: Check if this ffetches really fresh data
+        //TODO: Check if this fetches really fresh data
         let userList = await UserUtils.getAllUsers();
 
         for (let userId in userList) {
@@ -97,41 +88,37 @@ export default class UserManagementView {
     }
 
 
-    setModalFormData(userData: StubegruUser) {
+    setModalFormData(userData: StubegruUserWithPerm) {
         Stubegru.dom.querySelectorAsInput("#userEditName").value = userData.name;
         Stubegru.dom.querySelectorAsInput("#userEditMail").value = userData.mail;
         Stubegru.dom.querySelectorAsInput("#userEditAccount").value = userData.account;
         Stubegru.dom.querySelectorAsInput("#userEditRole").value = userData.role;
-        //TODO: handle permissions correct
-        Stubegru.dom.querySelectorAsInput("#userEditBerater").value = userData.berater;
-        Stubegru.dom.querySelectorAsInput("#userEditTelefonnotiz").value = userData.telefonnotiz;
-        Stubegru.dom.querySelectorAsInput("#userEditPermissionAuthor").value = userData.autor;
-        Stubegru.dom.querySelectorAsInput("#userEditPasswort").value = "";
+        Stubegru.dom.querySelectorAsInput("#userEditPasswort").value = ""; //Password field is set to empty value
+        this.generatePermissionToggles(userData.permissions);
     }
 
-    //TODO: Typed return
-    getModalFormData():UserManagementDataForUpdate {
+    getModalFormData(): UserManagementDataForUpdate {
         let userData = {} as UserManagementDataForUpdate;
         userData.name = Stubegru.dom.querySelectorAsInput("#userEditName").value;
         userData.mail = Stubegru.dom.querySelectorAsInput("#userEditMail").value;
         userData.account = Stubegru.dom.querySelectorAsInput("#userEditAccount").value;
         userData.role = Stubegru.dom.querySelectorAsInput("#userEditRole").value;
-    
-        //Permissions
-        userData.permissions = [];
-        //TODO: Check selector
-        Stubegru.dom.querySelectorAll('.permissionsToggle:checkbox:checked').forEach((elem) => {
-            userData.permissions.push(elem.getAttribute("data-permission-id"));
-        });
-    
-        //Nur wenn in das Passwort Input etwas eingetragen wurde, wird das Passwort geändert und gehasht in der DB gespeichert
-        if (Stubegru.dom.querySelectorAsInput("#userEditPasswort").value != "") {
+
+         //Nur wenn in das Passwort Input etwas eingetragen wurde, wird das Passwort geändert und als Hash in der DB gespeichert
+         if (Stubegru.dom.querySelectorAsInput("#userEditPasswort").value != "") {
             userData.password = Stubegru.dom.querySelectorAsInput("#userEditPasswort").value;
             userData.pwdChanged = true;
         } else {
             userData.password = "notChanged";
             userData.pwdChanged = false; //TODO: Check wether true/false logic works fine in PHP
         }
+
+        //Permissions
+        userData.permissions = [];
+        //TODO: Check selector
+        Stubegru.dom.querySelectorAll('.permissionsToggle:checkbox:checked').forEach((elem) => {
+            userData.permissions.push(elem.getAttribute("data-permission-id"));
+        });
 
         return userData;
     }
@@ -147,15 +134,17 @@ export default class UserManagementView {
 
 
 
-    async generatePermissionToggles(userPermissions) {
+    async generatePermissionToggles(userPermissions: Permission[]) {
+        Stubegru.dom.querySelector("#permissionContainer").innerHTML = ""; //Clear container
         //Generate Permission toggles
-        const permissionData = await fetch(`${stubegru.constants.BASE_URL}/modules/user_management/get_all_permissions.php`);
-        let permissionList = await permissionData.json();
+        const allPermissions = await UserManagementModule.service.getAllPermissions();
         let html = "";
-        for (let perm of permissionList) {
+
+        for (let perm of allPermissions) {
             let isChecked = "";
             for (let userPerm of userPermissions) { if (userPerm.id == perm.id) { isChecked = "checked" } }
-            html += `<hr style="margin:3px;"><div class="row">
+            html += `<hr style="margin:3px;">
+                    <div class="row">
                         <div class="col-xs-2">
                             <input type="checkbox" data-toggle="toggle" class="permissionsToggle" data-on="Ja" data-off="Nein" data-width="70px" data-permission-id="${perm.id}" id="permissionToggle${perm.id}" ${isChecked}>
                         </div>
@@ -167,32 +156,35 @@ export default class UserManagementView {
                         </div>
                     </div>`;
         }
-        Stubegru.dom.querySelector("#permissionContainer").html(html);
-        Stubegru.dom.querySelector(`.permissionsToggle`).bootstrapToggle();
+
+        Stubegru.dom.querySelector("#permissionContainer").innerHTML = html;
+        //@ts-expect-error
+        $(`.permissionsToggle`).bootstrapToggle();
     }
 
 
 
 
 
-Stubegru.dom.querySelector('#userEditRole').addEventListener('change', onRoleSelect);
     //Wird aufgerufen, wenn die Rolle im Modal Dropdown geändert wird um default Berechtigungen zu setzen
     onRoleSelect() {
-        const roleId = Stubegru.dom.querySelector("#userEditRole").value =);
-        const roleProps = rolePresets[roleId];
+        const roleId = Stubegru.dom.querySelectorAsInput("#userEditRole").value;
+        const roleProps = UserManagementModule.controller.rolePresets[roleId];
+
         if (roleProps == undefined) {
             console.error(`Selected role has id ${roleId}. But this role has no presets.`);
             return;
         }
 
-        //Set all toggles to off
-        Stubegru.dom.querySelector(`.permissionsToggle`).bootstrapToggle('off');
+        //@ts-expect-error 
+        $(`.permissionsToggle`).bootstrapToggle('off'); //Set all toggles to off
+
         //Enable all toggles where user have permission
         let rolePermissions = roleProps.permission;
         for (const permId of rolePermissions) {
-            Stubegru.dom.querySelector(`#permissionToggle${permId}`).bootstrapToggle('on');
+            //@ts-expect-error
+            $(`#permissionToggle${permId}`).bootstrapToggle('on');
         }
-
     }
 
 
