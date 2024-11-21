@@ -1,7 +1,7 @@
 import Stubegru from '../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../components/bootstrap/v3/ts_wrapper.js';
 import UserManagementModule, { UserListItem, UserManagementDataForUpdate, UserRole } from './user_management_module.js';
-import UserUtils, { StubegruUserWithPerm } from '../../components/user_utils/user_utils.js';
+import { StubegruUserWithPerm } from '../../components/user_utils/user_utils.js';
 import { Permission } from '../../components/user_utils/permission_request.js';
 
 
@@ -60,8 +60,7 @@ export default class UserManagementView {
     async updateListView() {
         let tableDataList = [];
 
-        //TODO: Check if this fetches really fresh data
-        let userList = await UserUtils.getAllUsers();
+        let userList = await UserManagementModule.service.getAllUser();
 
         for (let userId in userList) {
             let user = userList[userId] as UserListItem;
@@ -85,6 +84,8 @@ export default class UserManagementView {
         sort.currentCol = sort.currentCol == '' ? "id" : sort.currentCol;
         sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
         this.userManagementListSortableTable.sortData(sort.currentCol, sort.dir);
+
+        
     }
 
 
