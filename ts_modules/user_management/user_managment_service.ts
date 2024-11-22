@@ -15,7 +15,7 @@ export default class UserManagementService {
     }
 
     async getAllUser() {
-        //FIXME: fetch really fresh data, not cached user list...
+        //TODO: fetch really fresh data, not cached user list...
         return await UserUtils.getAllUsers();
     }
 
@@ -25,6 +25,12 @@ export default class UserManagementService {
 
     async updateUser(userData: UserManagementDataForUpdate) {
         let resp = await Stubegru.fetch.postJson("ts_modules/user_management/update_user.php", userData) as StubegruHttpResponse;
+        if (resp.status == "error") { throw new Error(resp.message) };
+        return resp;
+    }
+
+    async createUser(userData: UserManagementDataForUpdate) {
+        let resp = await Stubegru.fetch.postJson("ts_modules/user_management/create_user.php", userData) as StubegruHttpResponse; //TODO: Create PHP endpoint
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }

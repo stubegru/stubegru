@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-info pull-right" onclick="showUserModal(0)">
+                <button type="button" class="btn btn-info pull-right" id="user_management_create_user_button">
                     <i class="fas fa-plus"></i>&nbsp; Neue Nutzer:in
                 </button>
             </div>
@@ -33,7 +33,7 @@
 <div aria-hidden="true" role="dialog" tabindex="-1" id="userEditModal" class="modal fade" style="display: none;">
     <div class="modal-dialog" style="min-width: 70%;">
         <div class="modal-content">
-            <form action="javascript:updateUser();">
+            <form id="user_management_modal_form">
                 <div class="modal-header">
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                     <h4 class="modal-title">Nutzer bearbeiten</h4>
