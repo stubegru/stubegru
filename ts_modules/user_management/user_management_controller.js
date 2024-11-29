@@ -4,7 +4,7 @@ export default class UserManagementController {
     rolePresets;
     async init() {
         this.rolePresets = await UserManagementModule.service.getRolePresets();
-        UserManagementModule.view.setRolePresets(this.rolePresets); //TEST: is the view yet intialized...?
+        UserManagementModule.view.setRolePresets(this.rolePresets); //TEST: is the view yet initialized...?
         await this.refreshUserList();
     }
     async refreshUserList() {

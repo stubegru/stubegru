@@ -1,8 +1,9 @@
-import Stubegru from '../../components/stubegru_core/logic/stubegru.js';
 import { Modal } from '../../components/bootstrap/v3/ts_wrapper.js';
+import Stubegru from '../../components/stubegru_core/logic/stubegru.js';
+import { TableSortable } from '../../components/table-sortable/ts_wrapper.js';
 import UserManagementModule from './user_management_module.js';
 export default class UserManagementView {
-    userManagementListSortableTable;
+    table;
     modal;
     modalForm = Stubegru.dom.querySelector("#user_management_modal_form");
     async init() {
@@ -11,28 +12,17 @@ export default class UserManagementView {
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
         this.modal.addEventListener("hide.bs.modal", this.updateListView);
         Stubegru.dom.querySelector('#userEditRole').addEventListener('change', this.onRoleSelect);
-        let tableOptions = {
-            data: [],
-            columns: {
-                id: "Id",
-                name: "Name",
-                mail: "Mail",
-                account: "Accountname",
-                roleText: "Rolle",
-                actionButton: "",
-            },
-            rowsPerPage: 10,
-            pagination: true,
-            nextText: "<i class='fas fa-angle-right'>",
-            prevText: "<i class='fas fa-angle-left'>",
-            searchField: document.getElementById("userManagementFilterInput"),
+        let tableColumns = {
+            id: "Id",
+            name: "Name",
+            mail: "Mail",
+            account: "Accountname",
+            roleText: "Rolle",
+            actionButton: "",
         };
-        //@ts-expect-error //CLEAN_CODE: Pretty wrapper for table sortable
-        this.userManagementListSortableTable = Stubegru.dom.querySelector('#user_management_table').tableSortable(tableOptions);
-        Stubegru.dom.querySelector("#userManagementFilterClearButton").addEventListener("click", () => {
-            Stubegru.dom.querySelectorAsInput("#userManagementFilterInput").value = "";
-            Stubegru.dom.querySelector("#userManagementFilterInput").dispatchEvent(new Event("input"));
-        });
+        let searchInput = Stubegru.dom.querySelectorAsInput("#userManagementFilterInput");
+        let searchInputClear = Stubegru.dom.querySelectorAsInput("#userManagementFilterClearButton");
+        this.table = new TableSortable("#user_management_table", tableColumns, searchInput, searchInputClear);
         Stubegru.dom.addEventListener("#user_management_create_user_button", "click", UserManagementModule.controller.handleUserCreate);
     }
     setRolePresets(presets) {
@@ -57,14 +47,7 @@ export default class UserManagementView {
             user.roleText = UserManagementModule.controller.rolePresets[user.role].name;
             tableDataList.push(user);
         }
-        //Add table data and refresh
-        this.userManagementListSortableTable.setData(tableDataList, null);
-        //CLEAN_CODE: Move to function in table sortable wrapper
-        //Keep sorting state consistent (the table plugin does not care about this...)
-        let sort = this.userManagementListSortableTable._sorting;
-        sort.currentCol = sort.currentCol == '' ? "id" : sort.currentCol;
-        sort.dir = sort.dir == '' ? "desc" : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
-        this.userManagementListSortableTable.sortData(sort.currentCol, sort.dir);
+        this.table.update(tableDataList, "id");
         Stubegru.dom.querySelectorAll(".user-management-edit-btn").forEach(elem => {
             const userId = elem.getAttribute("data-user-id");
             Stubegru.dom.addEventListener(elem, "click", () => UserManagementModule.controller.handleUserEdit(userId));
