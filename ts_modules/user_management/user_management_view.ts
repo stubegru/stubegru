@@ -15,12 +15,12 @@ export default class UserManagementView {
 
     async init() {
 
-        this.modal = new Modal('#userEditModal');
+        this.modal = new Modal('#user_management_modal');
         //Reset monitoring form if the modal is closed
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
         this.modal.addEventListener("hide.bs.modal", this.updateListView);
 
-        Stubegru.dom.querySelector('#userEditRole').addEventListener('change', this.onRoleSelect);
+        Stubegru.dom.querySelector('#user_management_modal_form_role').addEventListener('change', this.onRoleSelect);
 
         let tableColumns = {
             id: "Id",
@@ -30,20 +30,20 @@ export default class UserManagementView {
             roleText: "Rolle",
             actionButton: "",
         }
-        let searchInput = Stubegru.dom.querySelectorAsInput("#userManagementFilterInput");
-        let searchInputClear = Stubegru.dom.querySelectorAsInput("#userManagementFilterClearButton");
+        let searchInput = Stubegru.dom.querySelectorAsInput("#user_management_filter_input");
+        let searchInputClear = Stubegru.dom.querySelectorAsInput("#user_management_filter_clear_button");
         this.table = new TableSortable("#user_management_table", tableColumns, searchInput, searchInputClear);
 
         Stubegru.dom.addEventListener("#user_management_create_user_button", "click", UserManagementModule.controller.handleUserCreate);
     }
 
     setRolePresets(presets: UserRole[]) {
-        //Generate selectable role option for userEditModal's userEditRole input
+        //Generate selectable role option for userEditModal's user_management_modal_form_role input
         let html = `<option value="" disabled selected>Bitte wählen</option>`;
         for (const role of presets) {
             html += `<option value="${role.id}" title="${role.description}">${role.name}</option>`;
         }
-        Stubegru.dom.querySelector("#userEditRole").innerHTML = html;
+        Stubegru.dom.querySelector("#user_management_modal_form_role").innerHTML = html;
     }
 
 
@@ -91,24 +91,24 @@ export default class UserManagementView {
      * Sets form data AND generates PermissionToggles
      */
     setModalFormData(userData: StubegruUserWithPerm) {
-        Stubegru.dom.querySelectorAsInput("#userEditName").value = userData.name;
-        Stubegru.dom.querySelectorAsInput("#userEditMail").value = userData.mail;
-        Stubegru.dom.querySelectorAsInput("#userEditAccount").value = userData.account;
-        Stubegru.dom.querySelectorAsInput("#userEditRole").value = userData.role;
-        Stubegru.dom.querySelectorAsInput("#userEditPasswort").value = ""; //Password field is set to empty value
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_name").value = userData.name;
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_mail").value = userData.mail;
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_account").value = userData.account;
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value = userData.role;
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_password").value = ""; //Password field is set to empty value
         this.generatePermissionToggles(userData.permissions);
     }
 
     getModalFormData(): UserManagementDataForUpdate {
         let userData = {} as UserManagementDataForUpdate;
-        userData.name = Stubegru.dom.querySelectorAsInput("#userEditName").value;
-        userData.mail = Stubegru.dom.querySelectorAsInput("#userEditMail").value;
-        userData.account = Stubegru.dom.querySelectorAsInput("#userEditAccount").value;
-        userData.role = Stubegru.dom.querySelectorAsInput("#userEditRole").value;
+        userData.name = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_name").value;
+        userData.mail = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_mail").value;
+        userData.account = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_account").value;
+        userData.role = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value;
 
         //Nur wenn in das Passwort Input etwas eingetragen wurde, wird das Passwort geändert und als Hash in der DB gespeichert
-        if (Stubegru.dom.querySelectorAsInput("#userEditPasswort").value != "") {
-            userData.password = Stubegru.dom.querySelectorAsInput("#userEditPasswort").value;
+        if (Stubegru.dom.querySelectorAsInput("#user_management_modal_form_password").value != "") {
+            userData.password = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_password").value;
             userData.pwdChanged = true;
         } else {
             userData.password = "notChanged";
@@ -118,7 +118,7 @@ export default class UserManagementView {
         //Permissions
         userData.permissions = [];
         //TEST: Check selector
-        Stubegru.dom.querySelectorAll('.permissionsToggle:checkbox:checked').forEach((elem) => {
+        Stubegru.dom.querySelectorAll('.user-management-permission-toggle:checkbox:checked').forEach((elem) => {
             userData.permissions.push(elem.getAttribute("data-permission-id"));
         });
 
@@ -126,18 +126,18 @@ export default class UserManagementView {
     }
 
     resetModalForm() {
-        Stubegru.dom.querySelectorAsInput("#userEditName").value = "";
-        Stubegru.dom.querySelectorAsInput("#userEditMail").value = "";
-        Stubegru.dom.querySelectorAsInput("#userEditAccount").value = "";
-        Stubegru.dom.querySelectorAsInput("#userEditRole").value = "";
-        Stubegru.dom.querySelectorAsInput("#userEditPasswort").value = "";
-        Stubegru.dom.querySelector("#permissionContainer").innerHTML = "";
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_name").value = "";
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_mail").value = "";
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_account").value = "";
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value = "";
+        Stubegru.dom.querySelectorAsInput("#user_management_modal_form_password").value = "";
+        Stubegru.dom.querySelector("#user_management_modal_form_permission_container").innerHTML = "";
     }
 
 
 
     async generatePermissionToggles(userPermissions: Permission[]) {
-        Stubegru.dom.querySelector("#permissionContainer").innerHTML = ""; //Clear container
+        Stubegru.dom.querySelector("#user_management_modal_form_permission_container").innerHTML = ""; //Clear container
         //Generate Permission toggles
         const allPermissions = await UserManagementModule.service.getAllPermissions();
         let html = "";
@@ -148,7 +148,7 @@ export default class UserManagementView {
             html += `<hr style="margin:3px;">
                     <div class="row">
                         <div class="col-xs-2">
-                            <input type="checkbox" data-toggle="toggle" class="permissionsToggle" data-on="Ja" data-off="Nein" data-width="70px" data-permission-id="${perm.id}" id="permissionToggle${perm.id}" ${isChecked}>
+                            <input type="checkbox" data-toggle="toggle" class="user-management-permission-toggle" data-on="Ja" data-off="Nein" data-width="70px" data-permission-id="${perm.id}" id="user_management_permission_toggle_${perm.id}" ${isChecked}>
                         </div>
                         <div class="col-xs-3">
                             <b>${perm.id}</b>
@@ -159,9 +159,9 @@ export default class UserManagementView {
                     </div>`;
         }
 
-        Stubegru.dom.querySelector("#permissionContainer").innerHTML = html;
+        Stubegru.dom.querySelector("#user_management_modal_form_permission_container").innerHTML = html;
         //@ts-expect-error
-        $(`.permissionsToggle`).bootstrapToggle();
+        $(`.user-management-permission-toggle`).bootstrapToggle();
     }
 
 
@@ -170,7 +170,7 @@ export default class UserManagementView {
 
     //Wird aufgerufen, wenn die Rolle im Modal Dropdown geändert wird um default Berechtigungen zu setzen
     onRoleSelect() {
-        const roleId = Stubegru.dom.querySelectorAsInput("#userEditRole").value;
+        const roleId = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value;
         const roleProps = UserManagementModule.controller.rolePresets[roleId];
 
         if (roleProps == undefined) {
@@ -179,13 +179,13 @@ export default class UserManagementView {
         }
 
         //@ts-expect-error 
-        $(`.permissionsToggle`).bootstrapToggle('off'); //Set all toggles to off
+        $(`.user-management-permission-toggle`).bootstrapToggle('off'); //Set all toggles to off
 
         //Enable all toggles where user have permission
         let rolePermissions = roleProps.permission;
         for (const permId of rolePermissions) {
             //@ts-expect-error
-            $(`#permissionToggle${permId}`).bootstrapToggle('on');
+            $(`#user_management_permission_toggle_${permId}`).bootstrapToggle('on');
         }
     }
 
