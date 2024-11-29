@@ -1,7 +1,7 @@
 import { StubegruUser } from "../../components/user_utils/user_utils.js";
-import UserManagementController from "./user_managment_controller.js";
-import UserManagementService from "./user_managment_service.js";
-import UserManagementView from "./user_managment_view.js";
+import UserManagementController from "./user_management_controller.js";
+import UserManagementService from "./user_management_service.js";
+import UserManagementView from "./user_management_view.js";
 
 export default class UserManagementModule {
 
