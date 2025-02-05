@@ -16,7 +16,7 @@
         "module.html"
     ],
     "js": [
-        "user_management.js"
+        "user_management_module.js"
     ],
     "css": []
 }
