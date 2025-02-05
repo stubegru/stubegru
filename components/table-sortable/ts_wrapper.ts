@@ -19,7 +19,7 @@ export class TableSortable {
         this.options.rowsPerPage = rowsPerPage;
 
         //@ts-expect-error 
-        this.table = Stubegru.dom.querySelector(selector).tableSortable(tableOptions);
+        this.table = $(selector).tableSortable(this.options);
 
         searchClearBtn.addEventListener("click", () => {
             searchInput.value = "";
@@ -34,18 +34,24 @@ export class TableSortable {
         this.table.setData(data, null);
 
         //Keep sorting state consistent (the table plugin does not care about this...)
-        this.setSortState(sortingColumn, sortingDirection);
+        this.restoreSortState(sortingColumn, sortingDirection);
     }
 
-
-
-    setSortState(column: string, direction: SortingDirection = "asc") {
-        //TEST: Test if sorting direction is correct
+    /**
+     * This triggers the table to update sort.
+     * This will only sort the table by given column and direction, if it was not sorted before by user.
+     * If table was perviously sorted by user call this function to restore last (user defined) sorting order
+     * @param column id of the sorting column
+     * @param direction "asc" or "desc" for sorting direction
+     */
+    restoreSortState(column: string, direction: SortingDirection = "asc") {
         let sort = this.table._sorting;
         sort.currentCol = sort.currentCol == '' ? column : sort.currentCol;
-        sort.dir = sort.dir == '' ? direction : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
+        let swappedDirection = direction == "asc" ? "desc" : "asc";
+        sort.dir = sort.dir == '' ? swappedDirection : (sort.dir == "asc" ? "desc" : "asc"); //<-- Yes, this looks ugly, but the sorting logic of this table-plugin is really crazy :D
         this.table.sortData(sort.currentCol, sort.dir);
     }
+
 }
 
 

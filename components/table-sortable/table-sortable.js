@@ -435,8 +435,8 @@
                             responsive: {},
                             totalPages: 0,
                             sortingIcons: {
-                                asc: "<span>\u25bc</span>",
-                                desc: "<span>\u25b2</span>"
+                                asc: "<span>\u25b2</span>",
+                                desc: "<span>\u25bc</span>"
                             },
                             nextText: "<span>Next</span>",
                             prevText: "<span>Prev</span>",
