@@ -8,11 +8,13 @@ export class TableSortable {
         nextText: "<i class='fas fa-angle-right'>",
         prevText: "<i class='fas fa-angle-left'>",
         searchField: undefined,
+        tableDidUpdate: undefined,
     };
-    constructor(selector, columns, searchInput, searchClearBtn, rowsPerPage = 10) {
+    constructor(selector, columns, searchInput, searchClearBtn, rowsPerPage = 10, onUpdate) {
         this.options.columns = columns;
         this.options.searchField = searchInput;
         this.options.rowsPerPage = rowsPerPage;
+        this.options.tableDidUpdate = onUpdate || function () { };
         //@ts-expect-error 
         this.table = $(selector).tableSortable(this.options);
         searchClearBtn.addEventListener("click", () => {

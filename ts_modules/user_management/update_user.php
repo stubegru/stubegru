@@ -1,7 +1,7 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
-require_once "$BASE_PATH/modules/user_management/update_user_helper.php";
+require_once "$BASE_PATH/ts_modules/user_management/update_user_helper.php";
 permissionRequest("USER_WRITE");
 $erfasser = $_SESSION["id"];
 $erstellungsdatum = date("d.m.Y");
@@ -12,8 +12,8 @@ $mail = $_POST["mail"];
 $account = $_POST["account"];
 $role = $_POST["role"];
 $password = $_POST["password"];
-$pwdChanged = $_POST["pwdChanged"]; // 0 or 1
-$permissions = isset($_POST["permissions"]) ? $_POST["permissions"] : array();
+$pwdChanged = $_POST["pwdChanged"];
+$permissions = isset($_POST["permissions"]) ? explode(',', $_POST["permissions"]) : array();
 
 //Passwort hashen
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -37,9 +37,11 @@ if ($id == 0) { //Neuer Nutzer
     setPermissions($id, $permissions);
 
     echo json_encode(array("status" => "success", "message" => "Neuer Nutzer $name wurde erfolgreich angelegt.", "id" => $id));
+
+
 } else if ($id > 0) { //Update user not create
 
-    if ($pwdChanged == "1") {
+    if ($pwdChanged == "true") {
         $updateStatement = $dbPdo->prepare("UPDATE `Nutzer` SET name=:name, mail=:mail, account=:account, role=:role,  passwort=:hashedPassword WHERE id=:id;");
         $updateStatement->bindValue(':hashedPassword', $hashedPassword);
     } else { //Password not changed

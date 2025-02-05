@@ -1,4 +1,3 @@
-import Stubegru from "../stubegru_core/logic/stubegru.js";
 
 export class TableSortable {
 
@@ -11,12 +10,14 @@ export class TableSortable {
         nextText: "<i class='fas fa-angle-right'>",
         prevText: "<i class='fas fa-angle-left'>",
         searchField: undefined,
+        tableDidUpdate: undefined,
     };
 
-    constructor(selector: string, columns: object, searchInput: HTMLInputElement, searchClearBtn: HTMLElement, rowsPerPage = 10) {
+    constructor(selector: string, columns: object, searchInput: HTMLInputElement, searchClearBtn: HTMLElement, rowsPerPage = 10, onUpdate?: Function) {
         this.options.columns = columns;
         this.options.searchField = searchInput;
         this.options.rowsPerPage = rowsPerPage;
+        this.options.tableDidUpdate = onUpdate || function () { };
 
         //@ts-expect-error 
         this.table = $(selector).tableSortable(this.options);

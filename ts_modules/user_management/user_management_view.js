@@ -10,7 +10,7 @@ export default class UserManagementView {
         this.modal = new Modal('#user_management_modal');
         //Reset monitoring form if the modal is closed
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
-        this.modal.addEventListener("hide.bs.modal", this.updateListView);
+        this.modal.addEventListener("hide.bs.modal", UserManagementModule.controller.refreshUserList);
         Stubegru.dom.querySelector('#user_management_modal_form_role').addEventListener('change', this.onRoleSelect);
         let tableColumns = {
             id: "Id",
@@ -22,7 +22,7 @@ export default class UserManagementView {
         };
         let searchInput = Stubegru.dom.querySelectorAsInput("#user_management_filter_input");
         let searchInputClear = Stubegru.dom.querySelectorAsInput("#user_management_filter_clear_button");
-        this.table = new TableSortable("#user_management_table", tableColumns, searchInput, searchInputClear);
+        this.table = new TableSortable("#user_management_table", tableColumns, searchInput, searchInputClear, 10, this.registerListItemButtons);
         Stubegru.dom.addEventListener("#user_management_create_user_button", "click", UserManagementModule.controller.handleUserCreate);
     }
     setRolePresets(presets) {
@@ -48,9 +48,12 @@ export default class UserManagementView {
             tableDataList.push(user);
         }
         this.table.update(tableDataList, "id");
+        this.registerListItemButtons();
+    }
+    registerListItemButtons() {
         Stubegru.dom.querySelectorAll(".user-management-edit-btn").forEach(elem => {
             const userId = elem.getAttribute("data-user-id");
-            Stubegru.dom.addEventListener(elem, "click", () => UserManagementModule.controller.handleUserEdit(userId));
+            Stubegru.dom.addEventListener(elem, "click", () => UserManagementModule.controller.showUserModalForUpdate(userId));
         });
         Stubegru.dom.querySelectorAll(".user-management-delete-btn").forEach(elem => {
             const userId = elem.getAttribute("data-user-id");
@@ -58,8 +61,8 @@ export default class UserManagementView {
         });
     }
     setModalSubmitEvent(callback) {
-        Stubegru.dom.removeEventListener(this.modalForm);
-        this.modalForm.addEventListener("submit", (event) => {
+        Stubegru.dom.removeEventListener(this.modalForm, "submit");
+        Stubegru.dom.addEventListener(this.modalForm, "submit", (event) => {
             event.preventDefault();
             callback();
         });
@@ -93,7 +96,7 @@ export default class UserManagementView {
         //Permissions
         userData.permissions = [];
         //TEST: Check selector
-        Stubegru.dom.querySelectorAll('.user-management-permission-toggle:checkbox:checked').forEach((elem) => {
+        Stubegru.dom.querySelectorAll('.user-management-permission-toggle:checked').forEach((elem) => {
             userData.permissions.push(elem.getAttribute("data-permission-id"));
         });
         return userData;
