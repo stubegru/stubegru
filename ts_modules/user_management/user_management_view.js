@@ -141,7 +141,7 @@ export default class UserManagementView {
     //Wird aufgerufen, wenn die Rolle im Modal Dropdown geändert wird um default Berechtigungen zu setzen
     onRoleSelect() {
         const roleId = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value;
-        const roleProps = UserManagementModule.controller.rolePresets[roleId];
+        const roleProps = UserManagementModule.controller.rolePresets.find(role => role.id == roleId);
         if (roleProps == undefined) {
             console.error(`Selected role has id ${roleId}. But this role has no presets.`);
             return;
