@@ -60,7 +60,7 @@ export default class UserManagementView {
                                 <i class="far fa-trash-alt"></i> Löschen
                              </button>`;
             user.actionButton = editBtn + deleteBtn;
-            user.roleText = UserManagementModule.controller.rolePresets[user.role].name;
+            user.roleText = UserManagementModule.controller.getRoleData(user.role).name;
             tableDataList.push(user);
         }
 
@@ -175,7 +175,7 @@ export default class UserManagementView {
     //Wird aufgerufen, wenn die Rolle im Modal Dropdown geändert wird um default Berechtigungen zu setzen
     onRoleSelect() {
         const roleId = Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value;
-        const roleProps = UserManagementModule.controller.rolePresets.find(role => role.id == roleId);
+        const roleProps = UserManagementModule.controller.getRoleData(roleId);
 
         if (roleProps == undefined) {
             console.error(`Selected role has id ${roleId}. But this role has no presets.`);

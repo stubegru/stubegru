@@ -3,13 +3,17 @@ import UserManagementModule, { UserRole } from "./user_management_module.js";
 
 export default class UserManagementController {
 
-    rolePresets: UserRole[];
+    private rolePresets: UserRole[];
 
 
     async init() {
         this.rolePresets = await UserManagementModule.service.getRolePresets();
         UserManagementModule.view.setRolePresets(this.rolePresets); //TEST: is the view yet initialized...?
         await this.refreshUserList();
+    }
+
+    getRoleData(roleId:string):UserRole{
+        return this.rolePresets.find(role => role.id == roleId);
     }
 
     async refreshUserList() {
