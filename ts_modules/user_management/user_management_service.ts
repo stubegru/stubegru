@@ -2,7 +2,7 @@ import Stubegru from "../../components/stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../../components/stubegru_core/logic/stubegru_fetch.js";
 import { Permission } from "../../components/user_utils/permission_request.js";
 import UserUtils from "../../components/user_utils/user_utils.js";
-import { UserManagementDataForUpdate, UserRole } from "./user_management_module.js";
+import { UserManagementDataForCreate, UserManagementDataForUpdate, UserRole } from "./user_management_module.js";
 
 export default class UserManagementService {
 
@@ -15,8 +15,7 @@ export default class UserManagementService {
     }
 
     async getAllUser() {
-        //TODO: fetch really fresh data, not cached user list...
-        return await UserUtils.getAllUsers();
+        return await UserUtils.getAllUsers(true);
     }
 
     async getUser(userId: string) {
@@ -29,8 +28,8 @@ export default class UserManagementService {
         return resp;
     }
 
-    async createUser(userData: UserManagementDataForUpdate) {
-        let resp = await Stubegru.fetch.postJson("ts_modules/user_management/create_user.php", userData) as StubegruHttpResponse; //TODO: Create PHP endpoint
+    async createUser(userData: UserManagementDataForCreate) {
+        let resp = await Stubegru.fetch.postJson("ts_modules/user_management/create_user.php", userData) as StubegruHttpResponse;
         if (resp.status == "error") { throw new Error(resp.message) };
         return resp;
     }

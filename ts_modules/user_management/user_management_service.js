@@ -8,8 +8,7 @@ export default class UserManagementService {
         return await Stubegru.fetch.getJson("ts_modules/user_management/get_all_permissions.php");
     }
     async getAllUser() {
-        //TODO: fetch really fresh data, not cached user list...
-        return await UserUtils.getAllUsers();
+        return await UserUtils.getAllUsers(true);
     }
     async getUser(userId) {
         return await UserUtils.getUserInfo(userId);
@@ -23,7 +22,7 @@ export default class UserManagementService {
         return resp;
     }
     async createUser(userData) {
-        let resp = await Stubegru.fetch.postJson("ts_modules/user_management/create_user.php", userData); //TODO: Create PHP endpoint
+        let resp = await Stubegru.fetch.postJson("ts_modules/user_management/create_user.php", userData);
         if (resp.status == "error") {
             throw new Error(resp.message);
         }

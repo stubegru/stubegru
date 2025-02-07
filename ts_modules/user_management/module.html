@@ -60,13 +60,16 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Account Name</label>
-                                <input autocomplete="off" class="form-control" type="text" id="user_management_modal_form_account" required>
+                                <input autocomplete="off" autofill="off" class="form-control" type="text" id="user_management_modal_form_account" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Passwort</label>
-                                <input autocomplete="off" class="form-control" type="password" id="user_management_modal_form_password" placeholder="Hier nur bei Passwortänderung etwas eintragen">
+                                <label>Passwort</label><br>
+                                <input autocomplete="off" autofill="off" class="form-control" type="password" id="user_management_modal_form_password">
+                                <button class="btn btn-primary" type="button" style="display: none;" id="user_management_modal_form_password_change_button">
+                                    <i class="fas fa-user-lock"></i>    Passwort ändern
+                                </button>
                             </div>
                         </div>
                     </div>

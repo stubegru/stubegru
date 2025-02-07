@@ -18,9 +18,9 @@ export default class UserUtils {
         UserUtils.allUsersList = resp;
     }
 
-    static async getAllUsers() {
+    static async getAllUsers(forceFetch = false) {
         //if local user list ist already fetched -> return it
-        if (UserUtils.allUsersList) { return UserUtils.allUsersList; }
+        if (!forceFetch && UserUtils.allUsersList) { return UserUtils.allUsersList; }
         //if not -> fetch it from server:
         await UserUtils.fetchAllUsers();
         return UserUtils.allUsersList;

@@ -29,10 +29,18 @@ export interface UserListItem extends StubegruUser {
     roleText: string;
 }
 
-export interface UserManagementDataForUpdate extends StubegruUser {
-    pwdChanged: boolean;
+export interface UserManagementDataForCreate {
+    name: string;
+    mail: string;
+    account: string;
+    role: string;
     password: string;
     permissions: string[];
+}
+
+export interface UserManagementDataForUpdate extends UserManagementDataForCreate {
+    pwdChanged: boolean;
+    id: string;
 }
 
 export interface UserRole {

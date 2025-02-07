@@ -2,8 +2,10 @@ import Alert from "../../components/alert/alert.js";
 import UserManagementModule from "./user_management_module.js";
 export default class UserManagementController {
     rolePresets;
+    allPermissions;
     async init() {
         this.rolePresets = await UserManagementModule.service.getRolePresets();
+        this.allPermissions = await UserManagementModule.service.getAllPermissions();
         UserManagementModule.view.setRolePresets(this.rolePresets); //TEST: is the view yet initialized...?
         await this.refreshUserList();
     }
@@ -35,7 +37,7 @@ export default class UserManagementController {
     async handleUserCreate() {
         try {
             let userData = UserManagementModule.view.getModalFormData();
-            const resp = await UserManagementModule.service.createUser(userData); //TEST: Check if param names to php endpoint are correct
+            const resp = await UserManagementModule.service.createUser(userData);
             Alert.alertResp(resp, "Neuen Nutzeraccount erstellen");
             await this.refreshUserList();
             UserManagementModule.view.modal.hide();
@@ -73,6 +75,7 @@ export default class UserManagementController {
             UserManagementModule.view.setModalSubmitEvent(() => {
                 UserManagementModule.controller.handleUserCreate();
             });
+            UserManagementModule.view.generatePermissionToggles([]);
             UserManagementModule.view.modal.show();
         }
         catch (error) {

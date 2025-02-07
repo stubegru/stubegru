@@ -34,7 +34,9 @@ export default class UserManagementView {
         let searchInputClear = Stubegru.dom.querySelectorAsInput("#user_management_filter_clear_button");
         this.table = new TableSortable("#user_management_table", tableColumns, searchInput, searchInputClear, 10, this.registerListItemButtons);
 
-        Stubegru.dom.addEventListener("#user_management_create_user_button", "click", UserManagementModule.controller.handleUserCreate);
+        Stubegru.dom.addEventListener("#user_management_create_user_button", "click", UserManagementModule.controller.showUserModalForCreate);
+
+        Stubegru.dom.addEventListener("#user_management_modal_form_password_change_button", "click", () => this.showPasswordField(true));
     }
 
     setRolePresets(presets: UserRole[]) {
@@ -100,6 +102,7 @@ export default class UserManagementView {
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_account").value = userData.account;
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value = userData.role;
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_password").value = ""; //Password field is set to empty value
+        this.showPasswordField(false);
         this.generatePermissionToggles(userData.permissions);
     }
 
@@ -129,24 +132,27 @@ export default class UserManagementView {
         return userData;
     }
 
-    resetModalForm() {
+    resetModalForm = () => {
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_name").value = "";
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_mail").value = "";
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_account").value = "";
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_role").value = "";
         Stubegru.dom.querySelectorAsInput("#user_management_modal_form_password").value = "";
         Stubegru.dom.querySelector("#user_management_modal_form_permission_container").innerHTML = "";
+        this.showPasswordField(true);
     }
 
 
+    showPasswordField(isVisible: boolean) {
+        Stubegru.dom.setVisibility("#user_management_modal_form_password", isVisible);
+        Stubegru.dom.setVisibility("#user_management_modal_form_password_change_button", !isVisible);
+    }
 
     async generatePermissionToggles(userPermissions: Permission[]) {
         Stubegru.dom.querySelector("#user_management_modal_form_permission_container").innerHTML = ""; //Clear container
-        //Generate Permission toggles
-        const allPermissions = await UserManagementModule.service.getAllPermissions();
         let html = "";
 
-        for (let perm of allPermissions) {
+        for (let perm of UserManagementModule.controller.allPermissions) {
             let isChecked = "";
             for (let userPerm of userPermissions) { if (userPerm.id == perm.id) { isChecked = "checked" } }
             html += `<hr style="margin:3px;">

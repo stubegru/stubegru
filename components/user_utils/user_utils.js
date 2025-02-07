@@ -13,9 +13,9 @@ export default class UserUtils {
         const resp = await Stubegru.fetch.getJson(`modules/user_utils/get_all_users.php`);
         UserUtils.allUsersList = resp;
     }
-    static async getAllUsers() {
+    static async getAllUsers(forceFetch = false) {
         //if local user list ist already fetched -> return it
-        if (UserUtils.allUsersList) {
+        if (!forceFetch && UserUtils.allUsersList) {
             return UserUtils.allUsersList;
         }
         //if not -> fetch it from server:
