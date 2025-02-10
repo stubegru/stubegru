@@ -48,8 +48,7 @@ export default class UserManagementView {
             user.roleText = UserManagementModule.controller.getRoleData(user.role).name;
             tableDataList.push(user);
         }
-        this.table.update(tableDataList, "id");
-        this.registerListItemButtons();
+        this.table.update(tableDataList, "id"); //button events are registered by table's onUpdate function
     }
     registerListItemButtons() {
         Stubegru.dom.querySelectorAll(".user-management-edit-btn").forEach(elem => {

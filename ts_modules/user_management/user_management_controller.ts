@@ -35,8 +35,7 @@ export default class UserManagementController {
             userData.id = userId;
             const resp = await UserManagementModule.service.updateUser(userData); //TEST: Check if param names to php endpoint are correct
             Alert.alertResp(resp, "Nutzerdaten speichern");
-            await this.refreshUserList();
-            UserManagementModule.view.modal.hide();
+            UserManagementModule.view.modal.hide(); //refresh user list via hidden event
         } catch (error) {
             Alert.alertError(error);
         }
@@ -48,8 +47,7 @@ export default class UserManagementController {
             let userData = UserManagementModule.view.getModalFormData();
             const resp = await UserManagementModule.service.createUser(userData);
             Alert.alertResp(resp, "Neuen Nutzeraccount erstellen");
-            await this.refreshUserList();
-            UserManagementModule.view.modal.hide();
+            UserManagementModule.view.modal.hide(); //refresh user list via hidden event
         } catch (error) {
             Alert.alertError(error);
         }

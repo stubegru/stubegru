@@ -66,9 +66,8 @@ export default class UserManagementView {
             tableDataList.push(user);
         }
 
-        this.table.update(tableDataList, "id");
+        this.table.update(tableDataList, "id"); //button events are registered by table's onUpdate function
 
-        this.registerListItemButtons();
 
     }
 
