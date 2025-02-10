@@ -11,7 +11,7 @@ export default class UserManagementController {
     async init() {
         this.rolePresets = await UserManagementModule.service.getRolePresets();
         this.allPermissions = await UserManagementModule.service.getAllPermissions();
-        UserManagementModule.view.setRolePresets(this.rolePresets); //TEST: is the view yet initialized...?
+        UserManagementModule.view.setRolePresets(this.rolePresets);
         await this.refreshUserList();
     }
 
@@ -33,9 +33,9 @@ export default class UserManagementController {
         try {
             let userData = UserManagementModule.view.getModalFormData();
             userData.id = userId;
-            const resp = await UserManagementModule.service.updateUser(userData); //TEST: Check if param names to php endpoint are correct
+            const resp = await UserManagementModule.service.updateUser(userData);
             Alert.alertResp(resp, "Nutzerdaten speichern");
-            UserManagementModule.view.modal.hide(); //refresh user list via hidden event
+            UserManagementModule.view.modal.hide(); //refresh user list via hide event
         } catch (error) {
             Alert.alertError(error);
         }
@@ -47,7 +47,7 @@ export default class UserManagementController {
             let userData = UserManagementModule.view.getModalFormData();
             const resp = await UserManagementModule.service.createUser(userData);
             Alert.alertResp(resp, "Neuen Nutzeraccount erstellen");
-            UserManagementModule.view.modal.hide(); //refresh user list via hidden event
+            UserManagementModule.view.modal.hide(); //refresh user list via hide event
         } catch (error) {
             Alert.alertError(error);
         }

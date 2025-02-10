@@ -49,6 +49,7 @@ export default class UserManagementView {
             tableDataList.push(user);
         }
         this.table.update(tableDataList, "id"); //button events are registered by table's onUpdate function
+        Stubegru.dom.querySelectorAsInput("#user_management_filter_input").value = "";
     }
     registerListItemButtons() {
         Stubegru.dom.querySelectorAll(".user-management-edit-btn").forEach(elem => {
@@ -92,11 +93,10 @@ export default class UserManagementView {
         }
         else {
             userData.password = "notChanged";
-            userData.pwdChanged = false; //TEST: Check wether true/false logic works fine in PHP
+            userData.pwdChanged = false;
         }
         //Permissions
         userData.permissions = [];
-        //TEST: Check selector
         Stubegru.dom.querySelectorAll('.user-management-permission-toggle:checked').forEach((elem) => {
             userData.permissions.push(elem.getAttribute("data-permission-id"));
         });
