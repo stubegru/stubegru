@@ -261,7 +261,7 @@ async function initSurvey(path, selector, uniqueKey) {
                 //Add eventlistener
                 $(`#${questionHtmlId}`).on("change", function () {
                     let inputValue = $(this).val();
-                    questionData.text = { value: inputValue };
+                    questionData.answer = { value: inputValue };
                     //console\.log(questionData);
                 });
                 break;
