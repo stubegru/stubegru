@@ -13,14 +13,20 @@ class EventInstanceCalendarView {
     static removeAllEvents() {
         EventInstanceCalendarView.fullCalendar.removeAllEvents();
     }
-    static addEvents(eventInstanceList) {
+    static async addEvents(eventInstanceList) {
         let fcEventList = [];
         let fcEventListCancelled = [];
+        let allUsersList = await EventInstanceController.stubegru.modules.userUtils.getAllUsers();
         //convert EventInstances to fullcalendar events
         for (let index in eventInstanceList) {
             let inMeeting = eventInstanceList[index];
+            let assigneeName = allUsersList[inMeeting.assigneesInternal[0]].name;
+            //@ts-expect-error generate Initials 
+            let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
+            let initials = [...assigneeName.matchAll(rgx)] || [];
+            initials = ((initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')).toUpperCase();
             let outMeeting = {
-                title: inMeeting.name,
+                title: initials + " | " + inMeeting.name,
                 start: `${inMeeting.startDate}T${inMeeting.startTime}`,
                 end: `${inMeeting.endDate}T${inMeeting.endTime}`,
                 extendedProps: inMeeting
