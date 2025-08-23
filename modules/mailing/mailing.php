@@ -119,7 +119,13 @@ function stubegruMail($to, $subject, $message, $options = [])
                     }
                 }
 
-                $myPHPMailer->addAddress($to);
+                //Add (multiple) recipients
+                $recipientsArray = array_map('trim', explode(',', $to));
+                foreach ($recipientsArray as $singleRecipient) {
+                    $myPHPMailer->addAddress($singleRecipient);
+                }
+
+
                 //Content
                 $myPHPMailer->isHTML(true);
                 $myPHPMailer->Subject = $subject;
@@ -153,7 +159,6 @@ function stubegruMail($to, $subject, $message, $options = [])
         //log mail
         $loggedInUserId = isset($_SESSION["id"]) ? $_SESSION["id"] : "0";
         logMail($to, $subject, $fileName, "OK", $loggedInUserId, $mailMethod);
-
     } catch (\Throwable $th) {
         //temporary catch error to log mail, then throw error again
         $loggedInUserId = isset($_SESSION["id"]) ? $_SESSION["id"] : "0";
