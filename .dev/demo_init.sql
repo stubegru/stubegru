@@ -142,6 +142,7 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('WIKI_READ', 'user'),
 ('MAIL_LOG', 'admin'),
 ('EXECUTE_CRONJOB', 'admin'),
+('EVENT_MGMT_ASSIGNEE', 'beratung'),
 ('WIKI_WRITE', 'wiki_autor');
 
 
