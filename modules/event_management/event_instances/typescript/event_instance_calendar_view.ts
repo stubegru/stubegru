@@ -86,7 +86,7 @@ class EventInstanceCalendarView {
         //convert EventInstances to fullcalendar events
         for (let index in eventInstanceList) {
             let inMeeting = eventInstanceList[index];
-            let assigneeName = allUsersList[inMeeting.assigneesInternal[0]].name;
+            let assigneeName = inMeeting.assigneesInternal ? allUsersList[inMeeting.assigneesInternal[0]].name : "";
             
             //@ts-expect-error generate Initials 
             let rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu'); let initials = [...assigneeName.matchAll(rgx)] || []; initials = ((initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')).toUpperCase();
