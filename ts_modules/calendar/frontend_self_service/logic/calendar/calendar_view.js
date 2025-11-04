@@ -41,6 +41,12 @@ export default class CalendarView {
     assignFeedbackModal;
     filterView;
     async init() {
+        if (Stubegru.utils.getParam("textread")) {
+            this.showAppointmentContainer();
+        }
+        else {
+            await this.showInfoText();
+        }
         this.assignFeedbackModal = new AssignFeedbackModal();
         this.filterView = new CalendarFilterView();
         await this.filterView.init(this);
@@ -49,6 +55,14 @@ export default class CalendarView {
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.calendarConfig);
         this.fullCalendar.render();
         this.refresh();
+    }
+    async showInfoText() {
+        let text = await Stubegru.fetch.getText("ts_modules/calendar/backend/get_self_service_info_text.php");
+        Stubegru.dom.querySelector("#self_service_info_text").innerHTML = text;
+    }
+    showAppointmentContainer() {
+        Stubegru.dom.hide("#self_service_info_text");
+        Stubegru.dom.show("#self_service_appointment_container");
     }
     refresh = async () => {
         await CalendarModule.meetingController.refreshMeetingList();

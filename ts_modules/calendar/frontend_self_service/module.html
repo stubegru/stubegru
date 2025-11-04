@@ -1,63 +1,67 @@
 <!-- KALENDER Box Start-->
-
-<div style="margin: 50px;">
-    <div>
-        <h3>Wir freuen uns auf Sie!</h3>
-
-        <p class="lead">
-            Verschaffen Sie sich einen Überblick über unsere Angebote und sprechen Sie uns bei Interesse und bei Fragen gerne an.
-        </p>
+<div id="self_service_info_text"></div>
 
 
-
-
+<div id="self_service_appointment_container" style="display: none;">
+    <div style="margin: 50px;">
+        <div>
+            <h3>Wir freuen uns auf Sie!</h3>
+    
+            <p class="lead">
+                Verschaffen Sie sich einen Überblick über unsere Angebote und sprechen Sie uns bei Interesse und bei Fragen gerne an.
+            </p>
+    
+    
+    
+    
+        </div>
     </div>
-</div>
-
-
-<div id="calendar_body" style="margin: 50px;">
-    <div class="alert alert-info">
-        <p><i class="fas fa-cog"></i> Passen Sie die Anzeige der Termine nach Ihren Wünschen an:</p>
-        <br>
-
-
+    
+    
+    <div id="calendar_body" style="margin: 50px;">
+        <div class="alert alert-info">
+            <p><i class="fas fa-cog"></i> Passen Sie die Anzeige der Termine nach Ihren Wünschen an:</p>
+            <br>
+    
+    
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label><i class="fas fa-filter"></i> Nur Termin bei:</label>
+                        <select multiple class="form-control calendar-multiple-select calendar-filter-input" name="ownerId"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label><i class="fas fa-filter"></i> Nur über Kontaktkanal:</label>
+                        <select multiple class="form-control calendar-multiple-select calendar-filter-input" name="channel"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label><i class="fas fa-eye"></i> Im Titel anzeigen:</label>
+                        <select class="form-control calendar-multiple-select" id="calendar_view_title_properties" multiple>
+                            <option value="title" selected>Thema des Termins</option>
+                            <option value="owner" selected>Name des Beratenden</option>
+                            <option value="channel">Kontaktkanal</option>
+                        </select>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    
         <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label><i class="fas fa-filter"></i> Nur Termin bei:</label>
-                    <select multiple class="form-control calendar-multiple-select calendar-filter-input" name="ownerId"></select>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="calendar_view_container"></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label><i class="fas fa-filter"></i> Nur über Kontaktkanal:</label>
-                    <select multiple class="form-control calendar-multiple-select calendar-filter-input" name="channel"></select>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label><i class="fas fa-eye"></i> Im Titel anzeigen:</label>
-                    <select class="form-control calendar-multiple-select" id="calendar_view_title_properties" multiple>
-                        <option value="title" selected>Thema des Termins</option>
-                        <option value="owner" selected>Name des Beratenden</option>
-                        <option value="channel">Kontaktkanal</option>
-                    </select>
-                </div>
-
-            </div>
+            <div class="col-sm-2"></div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-8">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div id="calendar_view_container"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2"></div>
     </div>
 </div>
 
