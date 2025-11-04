@@ -12,8 +12,14 @@ if (isset($_GET["meetingId"])) {
     $selectStatement->execute();
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 } else {
-    //select all available meetings
-    $selectStatement = $dbPdo->query("SELECT `id`, `date`, `owner`, `ownerId`,  `room`, `start`, `end`, `title`, `channel` FROM `Termine` WHERE teilnehmer IS NULL ORDER BY date, start;");
+    //select all free meetings, exclude meetings on the same day
+    $selectStatement = $dbPdo->query(
+        "SELECT `id`, `date`, `owner`, `ownerId`, `room`, `start`, `end`, `title`, `channel`
+         FROM `Termine`
+         WHERE teilnehmer IS NULL
+           AND DATE(`date`) >= DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+         ORDER BY `date`, `start`;"
+    );
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 }
 
