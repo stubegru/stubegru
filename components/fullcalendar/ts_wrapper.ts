@@ -24,7 +24,6 @@ export interface FullCalendarEvent {
 }
 
 export interface CalendarOptions {
-    height: string;
     locale: string;
     initialView: string;
     businessHours: BusinessHours;
@@ -32,6 +31,7 @@ export interface CalendarOptions {
     headerToolbar: HeaderToolbar;
     buttonText: ButtonText;
     eventTimeFormat: EventTimeFormat;
+    height?:string;
     eventClick: (event) => void;
 }
 

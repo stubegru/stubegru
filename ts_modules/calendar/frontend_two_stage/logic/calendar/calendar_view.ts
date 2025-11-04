@@ -6,7 +6,7 @@ import UserUtils from "../../../../../components/user_utils/user_utils.js";
 import CalendarSearch from "./calendar_search.js";
 
 //Manually load fullcalendar files
-import { CalendarOptions, FullCalendarInstance } from "../../fullcalendar/ts_wrapper.js";
+import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
 import { Meeting } from "../meetings/meeting_service.js";
 
 export default class CalendarView {

@@ -4,7 +4,7 @@ import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 
 //Manually load fullcalendar files
-import { CalendarOptions, FullCalendarInstance } from "../../fullcalendar/ts_wrapper.js";
+import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
 import { Meeting } from "../meetings/meeting_service.js";
 import MeetingView from "../meetings/meeting_view.js";
 import UserUtils from "../../../../../components/user_utils/user_utils.js";
