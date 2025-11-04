@@ -1,8 +1,8 @@
-import MultiselectDropdown from "../../../../../components/multi_select_dropdown/multiselect-dropdown.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 import MeetingView from "../meetings/meeting_view.js";
+import CalendarFilterView from "./calendar_filter_view.js";
 export default class CalendarView {
     calendarConfig = {
         height: "600px",
@@ -39,72 +39,16 @@ export default class CalendarView {
     };
     fullCalendar;
     assignFeedbackModal;
+    filterView;
     async init() {
         this.assignFeedbackModal = new AssignFeedbackModal();
+        this.filterView = new CalendarFilterView();
+        await this.filterView.init(this);
         let calendarEl = document.querySelector("#calendar_view_container");
         //@ts-expect-error
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.calendarConfig);
         this.fullCalendar.render();
         this.refresh();
-        //render calendar when the calendar box collapses to open
-        Stubegru.dom.addEventListener('#collapse_calendar', 'shown.bs.collapse', () => { this.fullCalendar.render(); });
-        //Add EventListener for Title-Properties select
-        Stubegru.dom.addEventListener("#calendar_view_title_properties", "change", this.renderMeetings);
-        //Insert select options from config file
-        await this.initFilterDropdowns();
-        //Add eventListener for filter inputs
-        document.querySelectorAll(".calendar-filter-input").forEach((elem) => {
-            Stubegru.dom.addEventListener(elem, "change", this.renderMeetings);
-        });
-        //Init multiple selects
-        MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".calendar-multiple-select" });
-    }
-    async initFilterDropdowns() {
-        const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`);
-        for (let propName in MeetingView.channelDescriptions) {
-            channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
-        }
-        ;
-        const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`);
-        let advisorList = await CalendarModule.meetingService.getAdvisorList();
-        for (let user of advisorList) {
-            ownerFilterElem.add(new Option(user.name, user.id));
-        }
-        ;
-    }
-    passedFilter(meeting, filter) {
-        //Rules are interpreted as conjunction (ALL rules must be fulfilled to pass the filter)
-        for (const rule of filter.rules) {
-            const filterKey = rule.key;
-            const meetingValue = String(meeting[filterKey]);
-            //If this property is not set for this eventType -> rule not fulfilled -> filter not passed -> return false
-            if (!meetingValue) {
-                return false;
-            }
-            //Check if there's at least one element that is contained in rule's and in eventType's array
-            if (!rule.allowedValues.includes(meetingValue)) {
-                return false;
-            }
-        }
-        //If this statement is reached -> all rules were fulfilled -> filter is passed -> return true
-        return true;
-    }
-    generateFilterRules() {
-        let filter = { rules: [] };
-        //Select all inputs with filter values
-        document.querySelectorAll(".calendar-filter-input").forEach((elem) => {
-            //read multi-select values
-            const inputName = elem.name;
-            const selectedOptions = elem.querySelectorAll('option:checked');
-            //Creates an array with all SELECTED values as items. If nothing is selected (no filter set) it creates an empty array
-            const selectedValues = Array.from(selectedOptions).map((el) => el.value);
-            if (selectedValues.length > 0) { //only add rule, if there's any value selected
-                //add it's values to filter rule
-                const rule = { key: inputName, allowedValues: selectedValues };
-                filter.rules.push(rule);
-            }
-        });
-        return filter;
     }
     refresh = async () => {
         await CalendarModule.meetingController.refreshMeetingList();
@@ -124,9 +68,9 @@ export default class CalendarView {
     addMeetings(meetingList, titleProperties) {
         //Generate events for fullcalendar
         let FCevents = [];
-        let filter = this.generateFilterRules();
+        let filter = this.filterView.generateFilterRules();
         for (let inMeeting of meetingList) {
-            if (this.passedFilter(inMeeting, filter)) {
+            if (this.filterView.passedFilter(inMeeting, filter)) {
                 let titlePropertyList = [];
                 if (titleProperties.title) {
                     titlePropertyList.push(inMeeting.title);
