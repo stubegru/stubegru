@@ -61,7 +61,7 @@ export default class CalendarView {
         Stubegru.dom.querySelector("#self_service_info_text").innerHTML = text;
     }
     showAppointmentContainer() {
-        Stubegru.dom.hide("#self_service_info_text");
+        Stubegru.dom.hide("#self_service_info_text_container");
         Stubegru.dom.show("#self_service_appointment_container");
     }
     refresh = async () => {
