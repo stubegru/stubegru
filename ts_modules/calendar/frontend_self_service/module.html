@@ -1,29 +1,46 @@
 <!-- KALENDER Box Start-->
-<div id="self_service_info_text"></div>
+<div id="self_service_info_text_container" class="container-fluid" style="padding:20px 15px;">
+    <div class="info-text-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="self_service_info_text"></div>
+            </div>
+        </div>
+        <hr style="border-color: #00000070;">
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <h4>Ich bestätige, dass ich die Hinweise gelesen habe.</h4>
+                <a class="btn btn-lg btn-primary" href="?view=calendar_self_service&textread=true">
+                    Weiter zur Terminbuchung
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div id="self_service_appointment_container" style="display: none;">
     <div style="margin: 50px;">
         <div>
             <h3>Wir freuen uns auf Sie!</h3>
-    
+
             <p class="lead">
                 Verschaffen Sie sich einen Überblick über unsere Angebote und sprechen Sie uns bei Interesse und bei Fragen gerne an.
             </p>
-    
-    
-    
-    
+
+
+
+
         </div>
     </div>
-    
-    
+
+
     <div id="calendar_body" style="margin: 50px;">
         <div class="alert alert-info">
             <p><i class="fas fa-cog"></i> Passen Sie die Anzeige der Termine nach Ihren Wünschen an:</p>
             <br>
-    
-    
+
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -46,11 +63,11 @@
                             <option value="channel">Kontaktkanal</option>
                         </select>
                     </div>
-    
+
                 </div>
             </div>
         </div>
-    
+
         <div class="row">
             <div class="col-sm-2"></div>
             <div class="col-sm-8">

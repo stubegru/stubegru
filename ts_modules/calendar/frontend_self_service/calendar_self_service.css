@@ -22,6 +22,14 @@
     border-top: 2px solid #78909C;
 }
 
+.info-text-container{
+    padding: 60px 60px;
+    margin-bottom: 30px;
+    color: inherit;
+    background-color: #d5f2fffc;
+    border-radius: 6px;
+}
+
 /* CK Editor for mail template editing */
 #meeting_detail_mail_template_form .ck-editor__editable_inline:not(.ck-comment__input *) {
     height: 500px;
