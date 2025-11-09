@@ -7,7 +7,13 @@ import MultiselectDropdown from "../../../../../components/multi_select_dropdown
 
 export default class CalendarFilterView {
     calendarView: CalendarView;
-    
+
+    static channelDescriptions = {
+        "personally": "Persönlich vor Ort",
+        "phone": "Telefon",
+        "webmeeting": "Webmeeting",
+    };
+
     async init(parent: CalendarView) {
         this.calendarView = parent;
         //Add EventListener for Title-Properties select
@@ -26,7 +32,7 @@ export default class CalendarFilterView {
 
     private async initFilterDropdowns() {
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`) as HTMLSelectElement;
-        for (let propName in MeetingView.channelDescriptions) {
+        for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
         };
 
@@ -65,6 +71,15 @@ export default class CalendarFilterView {
             const selectedOptions = elem.querySelectorAll('option:checked');
             //Creates an array with all SELECTED values as items. If nothing is selected (no filter set) it creates an empty array
             const selectedValues = Array.from(selectedOptions).map((el: HTMLOptionElement) => el.value);
+
+            //Special case: Special meeting channel attributes ("all","digital")
+            if (inputName == "channel") {
+                if (selectedValues.length > 0) { selectedValues.push("all"); }
+                if (selectedValues.includes("phone") || selectedValues.includes("webmeeting")) {
+                    selectedValues.push("digital");
+                }
+            }
+
             if (selectedValues.length > 0) { //only add rule, if there's any value selected
                 //add it's values to filter rule
                 const rule: CalendarFilterRule = { key: inputName, allowedValues: selectedValues };
