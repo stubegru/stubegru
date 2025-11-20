@@ -23,11 +23,12 @@
 }
 
 .info-text-container{
-    padding: 60px 60px;
+    padding: 30px 60px;
     margin-bottom: 30px;
     color: inherit;
     background-color: #d5f2fffc;
     border-radius: 6px;
+    font-size: medium;
 }
 
 /* CK Editor for mail template editing */
