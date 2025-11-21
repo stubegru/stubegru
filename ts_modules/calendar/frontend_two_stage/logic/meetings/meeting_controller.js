@@ -75,10 +75,10 @@ export default class MeetingController {
             resp = await CalendarModule.meetingService.isBlock(meetingId);
             Alert.alertSimple("Die Terminblockierung wurde aufgehoben");
         }
-        let isUnblocked = (resp.blockId == "0");
-        if (!isUnblocked) {
+        if (resp.isBlocked) {
             m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`);
         }
+        let isUnblocked = !resp.isBlocked;
         m.enableDetailMeetingForm(isWrite && isUnblocked);
         CalendarModule.meetingClientView.showAssignButtons(isUnblocked, false, false, false, false);
         CalendarModule.meetingClientView.setClientVisible(false);

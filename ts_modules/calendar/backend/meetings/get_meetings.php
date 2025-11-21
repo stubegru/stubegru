@@ -22,8 +22,25 @@ if (isset($_GET["meetingId"])) {
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+//Delete expired blocks
+$dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
+//Get all remaining blocks
+$blocks = [];
+$blockStmt = $dbPdo->query("SELECT meetingId FROM `meeting_blocks`");
+foreach ($blockStmt->fetchAll(PDO::FETCH_ASSOC) as $block) {
+    $blocks[$block['meetingId']] = true;
+}
+
+//Get client infos
 $clientStatement = $dbPdo->prepare("SELECT * FROM `Beratene` WHERE id = :clientId");
+
+
 foreach ($resultList as &$meetingData) {
+    //Add isBlocked value
+    $currentMeetingId = $meetingData['id'];
+    $meetingData['isBlocked'] = isset($blocks[$currentMeetingId]);
+
     //Teilnehmer Informationen sammeln
     $clientId = $meetingData["teilnehmer"];
     if ($clientId != "") {

@@ -120,19 +120,18 @@ export default class CalendarView {
             if (inMeeting.ownerId == ownUserId) {
                 if (inMeeting.teilnehmer && inMeeting.teilnehmer != "") {
                     ownEvents.assigned.push(outMeeting) //MeetingClient is set
-                } else if (inMeeting.blocked == "0") {
-                    ownEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
-                } else {
+                } else if (inMeeting.isBlocked) {
                     ownEvents.halfAssigned.push(outMeeting); //MeetingClient is NOT set but block is set
-
+                } else {
+                    ownEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
                 }
             } else {
                 if (inMeeting.teilnehmer && inMeeting.teilnehmer != "") {
                     othersEvents.assigned.push(outMeeting) //MeetingClient is set
-                } else if (inMeeting.blocked == "0") {
-                    othersEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
-                } else {
+                } else if (inMeeting.isBlocked) {
                     othersEvents.halfAssigned.push(outMeeting); //MeetingClient is NOT set but block is set
+                } else {
+                    othersEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
 
                 }
             }
