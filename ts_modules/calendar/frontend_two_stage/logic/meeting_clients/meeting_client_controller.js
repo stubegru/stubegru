@@ -13,7 +13,7 @@ export default class MeetingClientController {
         }
         //Check for block
         let resp = await CalendarModule.meetingService.isBlock(meeting.id);
-        if (resp.isBlocked == true || resp.blockId == UserUtils.currentUser.id) {
+        if (resp.isBlocked == false || (UserUtils.currentUser.id && resp.blockId == UserUtils.currentUser.id)) {
             //Not blocked => block now and continue
             let resp2 = await CalendarModule.meetingService.setBlock(meeting.id, true);
             if (resp2.status != "success") {
