@@ -7,20 +7,39 @@ permissionRequest("MEETINGS_READ");
 try {
     $meetingId = $_POST["meetingId"];
 
-    $selectStatement = $dbPdo->prepare("SELECT blocked FROM `Termine` WHERE id = :meetingId;");
+    //delete expired blocks
+    $dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
+
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
     $selectStatement->bindValue(':meetingId', $meetingId);
     $selectStatement->execute();
-    $alreadyBlocked = $selectStatement->fetchColumn();
+    $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
+    if ($blockedRow && isset($blockedRow['meetingId'])) {
+        $alreadyBlocked = true;
+        $blockUserId = $blockedRow['userId'];
+    } else {
+        $alreadyBlocked = false;
+    }
 
-    if($alreadyBlocked == 0){
-        echo json_encode(array("status" => "success", "message" => "Der Termin ist nicht blockiert", "blockId" => $alreadyBlocked));
+    if($alreadyBlocked == false){
+        echo json_encode(array("status" => "success", "message" => "Der Termin ist nicht blockiert", "isBlocked" => "false"));
     }
     else{
-        $blockUsername = getUserName($alreadyBlocked);
-        echo json_encode(array("status" => "success", "message" => "Der Termin ist blockiert", "blockId" => $alreadyBlocked, "blockName" => $blockUsername));
+        $blockUserName = $blockUserId > 0 ? getUserName($blockUserId) : "unknown";
+        echo json_encode(array("status" => "success", "message" => "Der Termin ist blockiert", "isBlocked" => "true", "blockId" => $blockUserId, "blockName" => $blockUserName));
     }
     
 } catch (Exception $e) {
-    echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht blockiert werden."));
+    echo json_encode(array("status" => "error", "message" => "Es konnte nicht überprüft werden, ob der Termin durch eine andere Person gesperrt ist."));
     exit;
 }
+
+/**
+ * Return values
+ * 
+ * status       : "success" | "error"
+ * message      : human readable message
+ * isBlocked    : "true" | "false"
+ * blockId?     : userId that currently blocks the meeting (0=anonymous)
+ * blockName?   : userName to blockId
+ */
