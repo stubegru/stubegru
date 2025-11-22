@@ -1,7 +1,7 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
-require_once "$BASE_PATH/modules/calendar/backend/assignment/assignment_utils.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/assignment/assignment_utils.php";
 permissionRequest("REMOVE_ASSIGNMENT");
 
 

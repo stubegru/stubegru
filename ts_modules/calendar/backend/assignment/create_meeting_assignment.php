@@ -3,7 +3,8 @@
 
 // ----------- 1. Includes ------------
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/modules/calendar/backend/assignment/assignment_utils.php";
+require_once "$BASE_PATH/utils/auth_and_database.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/assignment/assignment_utils.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 permissionRequest("ASSIGN_DATE");
 $loggedInUserId = $_SESSION["id"];
@@ -106,7 +107,7 @@ try{
     $toReturn["advisorMail"]["status"] = "success";
     $toReturn["advisorMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $meetingData["ownerMail"] . "</b> versandt.";
 } catch (Exception $e) {
-    $toReturn["clientMail"]["message"] = "Es konnte keine Bestätigungsmail an <b>" . $meetingData["ownerMail"] . "</b> versandt werden.";
+    $toReturn["advisorMail"]["message"] = "Es konnte keine Bestätigungsmail an <b>" . $meetingData["ownerMail"] . "</b> versandt werden.";
     $toReturn["status"] = "warning";
 }
 
