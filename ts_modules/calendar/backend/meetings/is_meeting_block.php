@@ -22,11 +22,11 @@ try {
     }
 
     if($alreadyBlocked == false){
-        echo json_encode(array("status" => "success", "message" => "Der Termin ist nicht blockiert", "isBlocked" => "false"));
+        echo json_encode(array("status" => "success", "message" => "Der Termin ist nicht blockiert", "isBlocked" => false));
     }
     else{
         $blockUserName = $blockUserId > 0 ? getUserName($blockUserId) : "unknown";
-        echo json_encode(array("status" => "success", "message" => "Der Termin ist blockiert", "isBlocked" => "true", "blockId" => $blockUserId, "blockName" => $blockUserName));
+        echo json_encode(array("status" => "success", "message" => "Der Termin ist blockiert", "isBlocked" => true, "blockId" => $blockUserId, "blockName" => $blockUserName));
     }
     
 } catch (Exception $e) {
