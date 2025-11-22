@@ -18,13 +18,17 @@ $template = $_POST["template"];
 $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
 
 //check for meeting block
-$selectStatement = $dbPdo->prepare("SELECT blocked FROM `Termine` WHERE id = :meetingId;");
+
+//delete expired blocks
+$dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
+
+$selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
 $selectStatement->bindValue(':meetingId', $meetingId);
 $selectStatement->execute();
-$alreadyBlocked = $selectStatement->fetchColumn();
-
-if ($alreadyBlocked != 0) {
-    $blockUsername = getUserName($alreadyBlocked);
+$blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
+if ($blockedRow && isset($blockedRow['meetingId'])) {
+    $blockUserId = $blockedRow['userId'];
+    $blockUsername = getUserName($blockUserId);
     echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht bearbeitet werden. Dieser Termin ist blockiert durch: $blockUsername"));
     exit;
 }

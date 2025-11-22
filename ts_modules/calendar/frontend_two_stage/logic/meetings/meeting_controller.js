@@ -69,7 +69,7 @@ export default class MeetingController {
         const meeting = this.getMeeting(meetingId);
         m.setMeetingDetailData(meeting);
         let resp = await CalendarModule.meetingService.isBlock(meetingId);
-        if (resp.blockId == UserUtils.currentUser.id) {
+        if (resp.isBlocked && resp.blockId == UserUtils.currentUser.id) {
             //If meeting is blocked by yourself => remove block 
             await CalendarModule.meetingService.setBlock(meetingId, false);
             resp = await CalendarModule.meetingService.isBlock(meetingId);

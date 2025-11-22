@@ -13,16 +13,18 @@ $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $cons
 
 function meetingShouldBeBlockedBy($meetingId, $userId)
 {
-    //check for meeting block
     global $dbPdo;
-    $selectStatement = $dbPdo->prepare("SELECT blocked FROM `Termine` WHERE id = :meetingId;");
+    //delete expired blocks
+    $dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
+
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
     $selectStatement->bindValue(':meetingId', $meetingId);
     $selectStatement->execute();
-    $alreadyBlocked = $selectStatement->fetchColumn();
-
-    if ($alreadyBlocked != $userId) {
-        $blockUsername = getUserName($alreadyBlocked);
-        echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $userId) blockiert, sondern durch: $blockUsername (Id: $alreadyBlocked)"));
+    $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
+    if ($blockedRow && isset($blockedRow['meetingId'])) {
+        $blockUserId = $blockedRow['userId'];
+        $blockUsername = getUserName($blockUserId);
+        echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $userId) blockiert, sondern durch: $blockUsername (Id: $blockUserId)"));
         exit;
     }
 }
@@ -284,9 +286,9 @@ function generateIcsString($uid, $start, $end, $summary, $description, $location
 function unblockMeeting($meetingId)
 {
     global $dbPdo;
-    $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked = '0' WHERE id = :meetingId");
-    $updateStatement->bindValue(':meetingId', $meetingId);
-    $updateStatement->execute();
+    $deleteStatement = $dbPdo->prepare("DELETE FROM `meeting_blocks` WHERE `meetingId` = :meetingId");
+    $deleteStatement->bindValue(':meetingId', $meetingId);
+    $deleteStatement->execute();
 }
 
 function sendAdvisorMail($meetingData, $replaceList, $icsAttachment)

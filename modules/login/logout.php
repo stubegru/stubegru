@@ -4,8 +4,8 @@ $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 $loggedInUserId = $_SESSION["id"];
 
-
-$updateStatement = $dbPdo->prepare("UPDATE `Termine` SET blocked='0' WHERE blocked = :userId;");
+//remove all blocks by this user
+$updateStatement = $dbPdo->prepare("DELETE FROM `meeting_blocks` WHERE userId = :userId;");
 $updateStatement->bindValue(':userId', $loggedInUserId);
 $updateStatement->execute();
 
