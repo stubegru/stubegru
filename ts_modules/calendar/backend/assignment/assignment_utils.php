@@ -14,14 +14,12 @@ $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $cons
 function meetingShouldBeBlockedBy($meetingId, $userId)
 {
     global $dbPdo;
-    //delete expired blocks
-    $dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
 
     $selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
     $selectStatement->bindValue(':meetingId', $meetingId);
     $selectStatement->execute();
     $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
-    if ($blockedRow && isset($blockedRow['meetingId'])) {
+    if (!$blockedRow || $blockedRow['userId'] != $userId) {
         $blockUserId = $blockedRow['userId'];
         $blockUsername = getUserName($blockUserId);
         echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $userId) blockiert, sondern durch: $blockUsername (Id: $blockUserId)"));
