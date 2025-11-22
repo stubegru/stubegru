@@ -3,7 +3,7 @@
 
 // ----------- 1. Includes ------------
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/modules/calendar/backend/assignment/assignment_utils.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/assignment/assignment_utils.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 permissionRequest("REMOVE_ASSIGNMENT");
 $loggedInUserId = $_SESSION["id"];
