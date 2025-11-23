@@ -19,18 +19,16 @@ export default class MeetingService {
     }
 
     async isBlock(meetingId: string) {
-        // let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/is_meeting_block.php", { meetingId: meetingId }) as MeetingBlockResponse;
-        // if (resp.status == "error") { throw new Error(resp.message) };
-        // return resp;
-        return { status: "success", blockId: "0" } //TODO: block management
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/is_meeting_block.php", { meetingId: meetingId }) as MeetingBlockResponse;
+        if (resp.status == "error") { throw new Error(resp.message) };
+        return resp;
     }
 
     async setBlock(meetingId: string, blockMeeting: boolean | number) {
-        // blockMeeting = blockMeeting ? 1 : 0;
-        // let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/set_meeting_block.php", { meetingId: meetingId, blockMeeting: blockMeeting }) as StubegruHttpResponse;
-        // if (resp.status == "error") { throw new Error(resp.message) };
-        // return resp;
-        return { status: "success" } //TODO: block management
+        blockMeeting = blockMeeting ? 1 : 0;
+        let resp = await Stubegru.fetch.postJson("ts_modules/calendar/backend/meetings/set_meeting_block.php", { meetingId: meetingId, blockMeeting: blockMeeting }) as StubegruHttpResponse;
+        if (resp.status == "error") { throw new Error(resp.message) };
+        return resp;
     }
 }
 
