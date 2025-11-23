@@ -34,7 +34,7 @@ try {
 
     if ($blockMeeting) {
         //meeting should be blocked AND is already blocked BY another person => ERROR
-        $allowReBlock = isset($own_id) && $blockUserId == $own_id; //allow re-blocking if this meeting is blocked by yourself
+        $allowReBlock = $alreadyBlocked && isset($own_id) && $blockUserId == $own_id; //allow re-blocking if this meeting is blocked by yourself
         $allowBlock = !$alreadyBlocked || $allowReBlock;
         if (!$allowBlock) {
             echo json_encode(array("status" => "error", "message" => "Der Termin ist bereits blockiert und konnte nicht erneut blockiert werden.", "blockId" => $blockUserId));
