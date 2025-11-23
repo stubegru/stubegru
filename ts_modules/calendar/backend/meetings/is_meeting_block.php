@@ -1,8 +1,15 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
-require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
-permissionRequest("MEETINGS_READ");
+
+$isLoggedInUser = isLoggedInUser();
+if ($isLoggedInUser) {
+    require_once "$BASE_PATH/utils/auth_and_database.php";
+    permissionRequest("MEETINGS_READ");
+} else {
+    require_once "$BASE_PATH/utils/database_without_auth.php"; //<<used in self-service
+}
+
 
 try {
     $meetingId = $_POST["meetingId"];
@@ -21,14 +28,18 @@ try {
         $alreadyBlocked = false;
     }
 
-    if($alreadyBlocked == false){
+    if ($alreadyBlocked == false) {
         echo json_encode(array("status" => "success", "message" => "Der Termin ist nicht blockiert", "isBlocked" => false));
-    }
-    else{
+    } else {
         $blockUserName = $blockUserId > 0 ? getUserName($blockUserId) : "unknown";
-        echo json_encode(array("status" => "success", "message" => "Der Termin ist blockiert", "isBlocked" => true, "blockId" => $blockUserId, "blockName" => $blockUserName));
+        $returnArray = array("status" => "success", "message" => "Der Termin ist blockiert", "isBlocked" => true);
+        //add more sensitive info about blocking person if NOT in self-service-mode
+        if ($isLoggedInUser === true) {
+            $returnArray["blockId"] = $blockUserId;
+            $returnArray["blockName"] = $blockUserName;
+        }
+        echo json_encode($returnArray);
     }
-    
 } catch (Exception $e) {
     echo json_encode(array("status" => "error", "message" => "Es konnte nicht überprüft werden, ob der Termin durch eine andere Person gesperrt ist."));
     exit;

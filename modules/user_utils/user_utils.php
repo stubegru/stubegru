@@ -1,6 +1,18 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 
+/**
+ * Check if the script is called from a logged in user or an unregistered user (e.g. self-service)
+ * @return boolean isLoggedInUser 
+ */
+function isLoggedInUser()
+{
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start(); //Start session (necessary to use $_SESSION values before including auth_and_database.php)
+    }
+    return isset($_SESSION["id"]);
+}
+
 function getUserName($userId)
 {
     global $dbPdo;
