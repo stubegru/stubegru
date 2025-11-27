@@ -22,11 +22,11 @@ export default class MeetingController {
         await m.resetAllForms();
         const meeting = this.getMeeting(meetingId);
         m.setMeetingDetailData(meeting);
-        //let resp = await CalendarModule.meetingService.isBlock(meetingId);
-        let isUnblocked = true; //TODO: Real blocking management without user ids
-        if (!isUnblocked) {
-            m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden.`);
+        let resp = await CalendarModule.meetingService.isBlock(meetingId);
+        if (resp.isBlocked) {
+            m.setInfoAlert(`Dieser Termin wird aktuell von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Bitte buchen Sie einen anderen Termin oder versuchen Sie es zu einem späteren Zeitpunkt nochmal!`);
         }
+        let isUnblocked = !resp.isBlocked;
         m.enableDetailMeetingForm(false);
         CalendarModule.meetingClientView.showAssignButtons(isUnblocked, false, false, false);
         CalendarModule.meetingClientView.setClientVisible(false);

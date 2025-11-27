@@ -31,7 +31,7 @@ try {
     if ($alreadyBlocked == false) {
         echo json_encode(array("status" => "success", "message" => "Der Termin ist nicht blockiert", "isBlocked" => false));
     } else {
-        $blockUserName = $blockUserId > 0 ? getUserName($blockUserId) : "unknown";
+        $blockUserName = $blockUserId > 0 ? getUserName($blockUserId) : "Unbekannt (Self-Service)";
         $returnArray = array("status" => "success", "message" => "Der Termin ist blockiert", "isBlocked" => true);
         //add more sensitive info about blocking person if NOT in self-service-mode
         if ($isLoggedInUser === true) {
