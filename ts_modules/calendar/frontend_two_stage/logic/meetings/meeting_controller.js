@@ -76,7 +76,7 @@ export default class MeetingController {
             Alert.alertSimple("Die Terminblockierung wurde aufgehoben");
         }
         if (resp.isBlocked) {
-            m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`);
+            m.setInfoAlert(`Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden.<br> Der Termin ist aktuell gesperrt durch: ${resp.blockName}.`);
         }
         let isUnblocked = !resp.isBlocked;
         m.enableDetailMeetingForm(isWrite && isUnblocked);

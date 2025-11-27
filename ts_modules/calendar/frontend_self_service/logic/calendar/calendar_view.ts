@@ -106,6 +106,8 @@ export default class CalendarView {
         let filter = this.filterView.generateFilterRules();
 
         for (let inMeeting of meetingList) {
+            if (inMeeting.isBlocked) { continue; } //skip blocked meetings
+
             if (this.filterView.passedFilter(inMeeting, filter)) {
                 let titlePropertyList = [];
                 if (titleProperties.title) { titlePropertyList.push(inMeeting.title) }

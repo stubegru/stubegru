@@ -33,8 +33,9 @@ export default class MeetingService {
 }
 
 export interface MeetingBlockResponse extends StubegruHttpResponse {
-    blockId: string;
-    blockName: string;
+    isBlocked: boolean;
+    blockId?: string;
+    blockName?: string;
 }
 
 export interface Meeting {
@@ -50,6 +51,6 @@ export interface Meeting {
     title: string;
     channel: string;
     template: string;
-    blocked: string;
+    isBlocked: boolean;
     teilnehmer?: MeetingClient;
 }

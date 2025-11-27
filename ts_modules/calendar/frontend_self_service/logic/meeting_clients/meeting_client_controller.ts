@@ -13,9 +13,9 @@ export default class MeetingClientController {
             return;
         }
 
-        //Check for block //TODO: Real block management
+        //Check for block 
         let resp = await CalendarModule.meetingService.isBlock(meeting.id);
-        if (resp.blockId == "0") {
+        if (resp.isBlocked == false) {
             //Not blocked => block now and continue
             let resp2 = await CalendarModule.meetingService.setBlock(meeting.id, true);
             if (resp2.status != "success") {
@@ -25,7 +25,7 @@ export default class MeetingClientController {
             }
             CalendarModule.meetingView.modal.addEventListener('hidden.bs.modal.remove-block', () => {
                 CalendarModule.meetingService.setBlock(meeting.id, false);
-                Alert.alertSimple("Die Terminblockierung wurde aufgehoben.");
+                Alert.alertSimple("Die Buchung des Termins wurde abgebrochen.");
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
             });
         } else {
