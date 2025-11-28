@@ -18,7 +18,6 @@ $template = $_POST["template"];
 $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
 
 //check for meeting block
-
 //delete expired blocks
 $dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
 
@@ -27,11 +26,21 @@ $selectStatement->bindValue(':meetingId', $meetingId);
 $selectStatement->execute();
 $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
 if ($blockedRow && isset($blockedRow['meetingId'])) {
-    $blockUserId = $blockedRow['userId'];
-    $blockUsername = getUserName($blockUserId);
-    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht bearbeitet werden. Dieser Termin ist blockiert durch: $blockUsername"));
+    echo json_encode(array("status" => "error", "message" => "Die Änderungen konnten nicht gespeichert werden. Dieser Termin kann aktuell nicht bearbeitet werden, da er durch einen anderen Nutzer zur Terminvergabe blockiert wurde."));
     exit;
 }
+
+//check if this meeting is still assigned to anybody
+$selectStatement = $dbPdo->prepare("SELECT teilnehmer FROM `Termine` WHERE `id`=:meetingId;");
+$selectStatement->bindValue(':meetingId', $meetingId);
+$selectStatement->execute();
+$meetingData = $selectStatement->fetch(PDO::FETCH_ASSOC);
+if ($meetingData["teilnehmer"] != "") {
+    $clientId = $meetingData["teilnehmer"];
+    echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht mehr bearbeitet werden. Der Termin ist bereits an einen Kunden vergeben."));
+    exit;
+}
+
 
 $ownerName = getUserName($ownerId);
 

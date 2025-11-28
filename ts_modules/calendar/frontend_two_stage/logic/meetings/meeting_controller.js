@@ -93,6 +93,7 @@ export default class MeetingController {
             }
             catch (error) {
                 Alert.alertError(error);
+                CalendarModule.meetingController.clickOnMeetingHandler(meetingId); //re-open meeting after error
             }
         });
         m.setFooterDeleteButtonEvent(async () => {
@@ -105,7 +106,8 @@ export default class MeetingController {
                 m.setModalVisible(false);
             }
             catch (error) {
-                Alert.alertError(error);
+                setTimeout(() => Alert.alertError(error), 300); // use timeout for errorAlert after deleteConfirmAlert
+                CalendarModule.meetingController.clickOnMeetingHandler(meetingId); //re-open meeting after error
             }
         });
         CalendarModule.meetingClientView.setAssignAssignButtonEvent(() => {
