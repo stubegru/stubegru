@@ -350,7 +350,7 @@ function removeClientData($clientId, $meetingId)
     $clientStatement->bindValue(':clientId', $clientId);
     $clientStatement->execute();
 
-    $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = ''  WHERE `id` = :meetingId;");
+    $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = NULL  WHERE `id` = :meetingId;");
     $updateStatement->bindValue(':meetingId', $meetingId);
     $updateStatement->execute();
 }

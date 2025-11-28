@@ -22,6 +22,18 @@ if ($meetingData["teilnehmer"] != "") {
     exit;
 }
 
+//Check if this meeting is currently blocked for assignment
+$selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
+$selectStatement->bindValue(':meetingId', $meetingId);
+$selectStatement->execute();
+$blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
+if ($blockedRow && isset($blockedRow['meetingId'])) {
+    echo json_encode(array("status" => "error", "message" => "Löschen des Termins fehlgeschlagen. Der Termin ist aktuell zur Terminvergabe blockiert."));
+    exit;
+}
+
+
+//Delete now!
 $deleteStatement = $dbPdo->prepare("DELETE FROM Termine WHERE id=:meetingId;");
 $deleteStatement->bindValue(':meetingId', $meetingId);
 $deleteStatement->execute();
