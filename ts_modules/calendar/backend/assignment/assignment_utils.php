@@ -4,7 +4,7 @@ require_once "$BASE_PATH/utils/database_without_auth.php"; //<<<ONLY FOR SELF SE
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/modules/mailing/mailing.php";
 
-require_once "$BASE_PATH/modules/calendar/backend/templates/template_variables.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/templates/template_variables.php";
 require_once "$BASE_PATH/modules/evaluation/prepare_evaluation_mails.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
