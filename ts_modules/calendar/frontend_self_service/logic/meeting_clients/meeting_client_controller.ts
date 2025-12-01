@@ -19,8 +19,10 @@ export default class MeetingClientController {
             //Not blocked => block now and continue
             let resp2 = await CalendarModule.meetingService.setBlock(meeting.id, true);
             if (resp2.status != "success") {
-                await m.showBlockError();
-                CalendarModule.meetingController.openFreeMeeting(meetingId);
+                //TODO: pretty try catch instead of double code
+                m.showBlockError();
+                await CalendarModule.meetingController.clickOnMeetingHandler(meetingId);
+                await CalendarModule.calendarView.refresh();
                 return;
             }
             CalendarModule.meetingView.modal.addEventListener('hidden.bs.modal.remove-block', () => {
@@ -29,7 +31,10 @@ export default class MeetingClientController {
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
             });
         } else {
-            await m.showBlockError();
+            //TODO: double code here... :-(
+            m.showBlockError();
+            await CalendarModule.meetingController.clickOnMeetingHandler(meetingId);
+            await CalendarModule.calendarView.refresh();
             return;
         }
 
