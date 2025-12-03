@@ -53,6 +53,9 @@ export default class AssignFeedbackModal {
             this.setTask("advisorMail", statusObject.advisorMail.status, statusObject.advisorMail.message || "Terminvergabe abgebrochen");
             return;
         }
+        //No error => Hide calendar, show Feedback Container
+        Stubegru.dom.hide("#self_service_appointment_container");
+        Stubegru.dom.show("#self_service_feedback_container");
         this.setTask("clientData", statusObject.clientData.status, statusObject.clientData.message);
         await Stubegru.utils.wait(500);
         this.setTask("assign", statusObject.assign.status, statusObject.assign.message);

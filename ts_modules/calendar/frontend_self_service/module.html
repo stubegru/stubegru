@@ -70,6 +70,7 @@
 
 
 
+
 <div id="meeting_detail_view_modal" class="modal fade" style="display: none;" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" style="min-width : 80%;">
         <div class="modal-content">
@@ -216,6 +217,43 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Container for assign meeting feedback -->
+<!-- <div id="self_service_feedback_container" style="display: none;"> -->
+<div id="self_service_feedback_container">
+
+    <ul class="list-group" id="assign_feedback_container_detail_list">
+        <li class="list-group-item" data-task="clientData">
+            <i class="fas fa-spinner fa-spin"></i> Kundendaten gespeichert
+            <br>
+            <small></small>
+        </li>
+        <li class="list-group-item" data-task="assign">
+            <i class="fas fa-spinner fa-spin"></i> Termin mit Kunde verknüpft
+            <br><small></small>
+        </li>
+        <li class="list-group-item" data-task="survey">
+            <i class="fas fa-spinner fa-spin"></i> Mailversand für Feedbackfragebogen vorgemerkt
+            <br><small></small>
+        </li>
+        <li class="list-group-item" data-task="clientMail">
+            <i class="fas fa-spinner fa-spin"></i> Mail an Kunden versendet
+            <br><small></small>
+        </li>
+        <li class="list-group-item" data-task="advisorMail">
+            <i class="fas fa-spinner fa-spin"></i> Mail an Berater:in versendet
+            <br><small></small>
+        </li>
+    </ul>
+    <br>
+
+    <ul class="list-group">
+        <li class="list-group-item" data-task="overall">
+            <i class="fas fa-spinner fa-spin"></i> <b>Terminvergabe abschließen</b>
+            <br>
+            <small></small>
+        </li>
 </div>
 
 <!-- Modal for Assign meeting feedback -->

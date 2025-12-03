@@ -16,6 +16,7 @@ export default class MeetingClientService {
 export interface AssignFeedback {
     status: string;
     message?: string;
+    content?: string;
 }
 
 export interface AssignClientResponse extends StubegruHttpResponse {
