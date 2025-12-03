@@ -23,13 +23,15 @@ export default class MeetingController {
         const meeting = this.getMeeting(meetingId);
         m.setMeetingDetailData(meeting);
         let resp = await CalendarModule.meetingService.isBlock(meetingId);
-        if (resp.isBlocked) {
-            m.setInfoAlert(`Dieser Termin wird aktuell von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Bitte buchen Sie einen anderen Termin oder versuchen Sie es zu einem späteren Zeitpunkt nochmal!`);
-        }
         let isUnblocked = !resp.isBlocked;
         m.enableDetailMeetingForm(false);
         CalendarModule.meetingClientView.showAssignButtons(isUnblocked, false, false, false);
         CalendarModule.meetingClientView.setClientVisible(false);
+        if (resp.isBlocked) {
+            m.setInfoAlert(`Dieser Termin wird aktuell von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Bitte buchen Sie einen anderen Termin oder versuchen Sie es zu einem späteren Zeitpunkt nochmal!`);
+            await CalendarModule.calendarView.refresh();
+            return;
+        }
         CalendarModule.meetingClientView.setAssignAssignButtonEvent(() => {
             CalendarModule.meetingClientController.openMeetingForAssignment(meetingId);
         });
