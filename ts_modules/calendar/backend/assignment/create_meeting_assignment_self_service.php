@@ -33,6 +33,7 @@ $clientData["channel"] = isset($_POST["channel"]) ? $_POST["channel"] : "unknown
 
 // ----------- 3. Consistency checks ------------
 //TODO: Meeting should now be blocked by the current user, if not -> exit;
+//TODO: Attention with blockedUserName in Response
 //meetingShouldBeBlockedBy($meetingId, $loggedInUserId);
 
 //Meeting must not be assigned yet, else -> exit
@@ -61,6 +62,7 @@ try {
     $toReturn["status"] = "error";
     $toReturn["assign"]["status"] = "error";
     $toReturn["assign"]["message"] = "Der Termin konnte nicht an den Kunden vergeben werden. Die Terminvergabe wird abgebrochen.";
+    //TODO: exit and send resp here....? See equivalent in not-self-service-variant
 }
 
 
@@ -93,7 +95,11 @@ $icsAttachment = generateIcsAttachment($meetingData, $clientData, $roomData);
 
 
 
-// ----------- 7. Send Client's Mail ------------
+// ----------- 7.1 Get Client's Mail Content ------------
+$clientMailContent = generateClientMailData($meetingData, $replaceList);
+$toReturn["clientMail"]["content"] = $clientMailContent["text"];
+
+// ----------- 7.2 Send Client's Mail ------------
 try {
     sendClientMail($meetingData, $clientData, $replaceList, $icsAttachment);
     $toReturn["clientMail"]["status"] = "success";

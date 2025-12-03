@@ -329,11 +329,17 @@ function sendMailWithVariables($recipient, $templateName, $replaceList, $icsAtta
     stubegruMail($recipient, $mailSubject, $mailText, $mailOptions);
 }
 
-function sendClientMail($meetingData, $clientData, $replaceList, $icsAttachment)
+function generateClientMailData($meetingData, $replaceList)
 {
     $templateData = getTemplateData($meetingData["template"]);
     $templateData["text"] = replaceVariables($templateData["text"], $replaceList);
     $templateData["betreff"] = replaceVariables($templateData["betreff"], $replaceList);
+    return $templateData;
+}
+
+function sendClientMail($meetingData, $clientData, $replaceList, $icsAttachment)
+{
+    $templateData = generateClientMailData($meetingData, $replaceList);
 
     $clientMailOptions = array(
         "attachment" => $icsAttachment,
