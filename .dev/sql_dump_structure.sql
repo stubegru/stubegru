@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 12. Nov 2024 um 11:19
--- Server-Version: 11.5.2-MariaDB
--- PHP-Version: 8.3.13
+-- Erstellungszeit: 03. Dez 2025 um 09:58
+-- Server-Version: 12.0.2-MariaDB
+-- PHP-Version: 8.4.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -109,6 +109,18 @@ CREATE TABLE `mail_log` (
   `status` text NOT NULL,
   `initiator` int(11) NOT NULL COMMENT 'userId',
   `mailMethod` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `meeting_blocks`
+--
+
+CREATE TABLE `meeting_blocks` (
+  `meetingId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -409,8 +421,7 @@ CREATE TABLE `Termine` (
   `title` mediumtext NOT NULL,
   `channel` varchar(20) NOT NULL DEFAULT 'all',
   `teilnehmer` mediumtext DEFAULT NULL,
-  `template` int(11) NOT NULL COMMENT 'Id des mail templates das bei terminvergabe an den zu Beratenden versendet wird',
-  `blocked` int(11) NOT NULL DEFAULT 0
+  `template` int(11) NOT NULL COMMENT 'Id des mail templates das bei terminvergabe an den zu Beratenden versendet wird'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -513,6 +524,12 @@ ALTER TABLE `event_mgmt_types`
 --
 ALTER TABLE `mail_log`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `meeting_blocks`
+--
+ALTER TABLE `meeting_blocks`
+  ADD PRIMARY KEY (`meetingId`);
 
 --
 -- Indizes für die Tabelle `Nachrichten`
