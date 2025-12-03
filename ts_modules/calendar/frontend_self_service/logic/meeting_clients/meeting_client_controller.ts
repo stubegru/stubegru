@@ -9,29 +9,29 @@ export default class MeetingClientController {
         let meeting = await CalendarModule.meetingService.get(meetingId);
 
         if (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) {
-            Alert.alert({ title: "Termin kann nicht vergeben werden", text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...", type: "error" });
+            Alert.alert({
+                title: "Termin kann nicht vergeben werden",
+                text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...",
+                type: "error"
+            });
             return;
         }
 
-        //Check for block 
-        let resp = await CalendarModule.meetingService.isBlock(meeting.id);
-        if (resp.isBlocked == false) {
+        try {
+            //Check for block 
+            let resp = await CalendarModule.meetingService.isBlock(meeting.id);
+            if (resp.isBlocked == true) { throw new Error("Meeting blocked"); }
+
             //Not blocked => block now and continue
             let resp2 = await CalendarModule.meetingService.setBlock(meeting.id, true);
-            if (resp2.status != "success") {
-                //TODO: pretty try catch instead of double code
-                m.showBlockError();
-                await CalendarModule.meetingController.clickOnMeetingHandler(meetingId);
-                await CalendarModule.calendarView.refresh();
-                return;
-            }
+
             CalendarModule.meetingView.modal.addEventListener('hidden.bs.modal.remove-block', () => {
                 CalendarModule.meetingService.setBlock(meeting.id, false);
                 Alert.alertSimple("Die Buchung des Termins wurde abgebrochen.");
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
             });
-        } else {
-            //TODO: double code here... :-(
+
+        } catch (e) {
             m.showBlockError();
             await CalendarModule.meetingController.clickOnMeetingHandler(meetingId);
             await CalendarModule.calendarView.refresh();
