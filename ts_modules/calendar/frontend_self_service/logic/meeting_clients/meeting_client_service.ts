@@ -16,14 +16,19 @@ export default class MeetingClientService {
 export interface AssignFeedback {
     status: string;
     message?: string;
-    content?: string;
+}
+
+export interface ClientMailAssignFeedback extends AssignFeedback {
+    content: string;
+    address: string;
+    ics: string;
 }
 
 export interface AssignClientResponse extends StubegruHttpResponse {
     advisorMail: AssignFeedback;
     assign: AssignFeedback;
     clientData: AssignFeedback;
-    clientMail: AssignFeedback;
+    clientMail: ClientMailAssignFeedback;
     survey: AssignFeedback;
 }
 

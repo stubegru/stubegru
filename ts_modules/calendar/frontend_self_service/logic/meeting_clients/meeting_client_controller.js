@@ -45,7 +45,6 @@ export default class MeetingClientController {
         //Assign save button
         CalendarModule.meetingClientView.setAssignSaveButtonEvent(async () => {
             try {
-                CalendarModule.meetingClientView.assignFeedbackModal.resetAndShow();
                 const clientData = CalendarModule.meetingClientView.getClientData();
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp, meeting);
