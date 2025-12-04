@@ -98,6 +98,8 @@ $icsAttachment = generateIcsAttachment($meetingData, $clientData, $roomData);
 // ----------- 7.1 Get Client's Mail Content ------------
 $clientMailContent = generateClientMailData($meetingData, $replaceList);
 $toReturn["clientMail"]["content"] = $clientMailContent["text"];
+$toReturn["clientMail"]["ics"] = $icsAttachment["content"];
+$toReturn["clientMail"]["address"] = $clientData["mail"];
 
 // ----------- 7.2 Send Client's Mail ------------
 try {

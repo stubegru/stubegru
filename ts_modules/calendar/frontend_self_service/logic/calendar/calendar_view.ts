@@ -75,7 +75,7 @@ export default class CalendarView {
 
     showAppointmentContainer() {
         Stubegru.dom.hide("#self_service_info_text_container")
-        Stubegru.dom.show("#self_service_appointment_container")
+        Stubegru.dom.show("#self_service_appointment_container") 
     }
 
 

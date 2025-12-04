@@ -220,40 +220,34 @@
 </div>
 
 <!-- Container for assign meeting feedback -->
-<!-- <div id="self_service_feedback_container" style="display: none;"> -->
-<div id="self_service_feedback_container">
+<div id="self_service_feedback_container" style="display: none;">
 
-    <ul class="list-group" id="assign_feedback_container_detail_list">
-        <li class="list-group-item" data-task="clientData">
-            <i class="fas fa-spinner fa-spin"></i> Kundendaten gespeichert
-            <br>
-            <small></small>
-        </li>
-        <li class="list-group-item" data-task="assign">
-            <i class="fas fa-spinner fa-spin"></i> Termin mit Kunde verknüpft
-            <br><small></small>
-        </li>
-        <li class="list-group-item" data-task="survey">
-            <i class="fas fa-spinner fa-spin"></i> Mailversand für Feedbackfragebogen vorgemerkt
-            <br><small></small>
-        </li>
-        <li class="list-group-item" data-task="clientMail">
-            <i class="fas fa-spinner fa-spin"></i> Mail an Kunden versendet
-            <br><small></small>
-        </li>
-        <li class="list-group-item" data-task="advisorMail">
-            <i class="fas fa-spinner fa-spin"></i> Mail an Berater:in versendet
-            <br><small></small>
-        </li>
-    </ul>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="alert alert-success">
+                <div class="text-center" id="self_service_feedback_alert">
+                    <h3>
+                        <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                        Termin erfolgreich gebucht!
+                    </h3>
+                    <p>
+                        <i class="fas fa-envelope-open-text" style="color: #007bff;"></i>
+                        Sie erhalten in Kürze eine Bestätigung per E-Mail an: <b id="self_service_feedback_client_mail"></b>
+                    </p>
+                </div>
+            </div>
+
+            <div class="container" style="background: #fff; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 30px; margin-top: 20px;" id="self_service_mail_template">
+                <!-- The mail content is displayed here after successful meeting appointment-->
+            </div>
+
+
+
+
+        </div>
+    </div>
     <br>
 
-    <ul class="list-group">
-        <li class="list-group-item" data-task="overall">
-            <i class="fas fa-spinner fa-spin"></i> <b>Terminvergabe abschließen</b>
-            <br>
-            <small></small>
-        </li>
 </div>
 
 <!-- Modal for Assign meeting feedback -->

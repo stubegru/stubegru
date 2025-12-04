@@ -2,6 +2,7 @@ import Stubegru from '../../../../../components/stubegru_core/logic/stubegru.js'
 import { Modal } from '../../../../../components/bootstrap/v3/ts_wrapper.js';
 import { AssignClientResponse } from '../meeting_clients/meeting_client_service.js';
 import { Meeting } from './meeting_service.js';
+import CalendarModule from '../calendar_module.js';
 
 export default class AssignFeedbackModal {
     modal: Modal;
@@ -53,6 +54,7 @@ export default class AssignFeedbackModal {
     async showFeedback(statusObject: AssignClientResponse, meeting: Meeting) {
 
         if (statusObject.status == "error") {
+            CalendarModule.calendarView.assignFeedbackModal.resetAndShow();
             this.setTask("overall", "error", `${statusObject.message || ""}<br>Der Termin konnte nicht vergeben werden. Die Terminvergabe wurde abgebrochen!<br>Dieses Fenster kann nun geschlossen werden.`);
             this.setTask("clientData", statusObject.clientData.status, statusObject.clientData.message || "Terminvergabe abgebrochen");
             this.setTask("assign", statusObject.assign.status, statusObject.assign.message || "Terminvergabe abgebrochen");
@@ -65,36 +67,25 @@ export default class AssignFeedbackModal {
         //No error => Hide calendar, show Feedback Container
         Stubegru.dom.hide("#self_service_appointment_container");
         Stubegru.dom.show("#self_service_feedback_container");
+        Stubegru.dom.querySelector("#self_service_mail_template").innerHTML = statusObject.clientMail.content;
+        Stubegru.dom.querySelector("#self_service_feedback_client_mail").innerHTML = statusObject.clientMail.address;
 
-
-
-        this.setTask("clientData", statusObject.clientData.status, statusObject.clientData.message);
-        await Stubegru.utils.wait(500);
-        this.setTask("assign", statusObject.assign.status, statusObject.assign.message);
-        await Stubegru.utils.wait(500);
-        this.setTask("survey", statusObject.survey.status, statusObject.survey.message);
-        await Stubegru.utils.wait(500);
-        this.setTask("clientMail", statusObject.clientMail.status, statusObject.clientMail.message);
-        await Stubegru.utils.wait(500);
-        this.setTask("advisorMail", statusObject.advisorMail.status, statusObject.advisorMail.message);
-        await Stubegru.utils.wait(500);
-
-        if (statusObject.status == "success") {
-            this.setTask("overall", "success", `<h4>Wir freuen uns auf Sie!</h4>
-            Der Termin wurde erfolgreich für Sie gebucht. Wir haben eine Mail mit einer Terminbestätigung und allen weiteren Infos an Ihre hinterlegte Mailadresse geschickt. Wir freuen uns auf den Termin:
-            <br><br>
-            <div class="panel panel-default"><div class="panel-body" style="font-size:small;">
-                <b>${meeting.title}</b><br>
-                bei: ${meeting.owner}<br>
-                ${Stubegru.utils.formatDate(meeting.date, "DD.MM.YYYY")} von ${meeting.start.substring(0, 5)} bis ${meeting.end.substring(0, 5)}
-            </div></div>`);
-            await Stubegru.utils.wait(2000);
-            Stubegru.dom.slideUp("#assign_feedback_modal_detail_list");
-        }
-        else {
-            this.setTask("overall", "warning", `Der Termin wurde vergeben. Es konnten allerdings nicht alle zugehörigen Daten korrekt bearbeitet werden. Siehe detaillierte Auflistung oben.`);
+        // Append download link for ICS file
+        const icsContent = statusObject.clientMail.ics;
+        if (icsContent) {
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'appointment.ics';
+            downloadLink.className = 'btn btn-primary';
+            downloadLink.innerHTML = '<i class="fas fa-download"></i> Termin als Kalenderdatei (.ics) herunterladen';
+            Stubegru.dom.querySelector("#self_service_feedback_alert").appendChild(downloadLink);
         }
     }
+
+
+
 
     setTask(task, status, message) {
         let li = Stubegru.dom.querySelector(`#meeting_assign_feedback_modal li[data-task="${task}"]`);
