@@ -9,11 +9,14 @@ require_once "$BASE_PATH/modules/evaluation/prepare_evaluation_mails.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 
+
+
 $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
 
 function meetingShouldBeBlockedBy($meetingId, $userId)
 {
     global $dbPdo;
+    $isLoggedInUser = isLoggedInUser();
 
     $selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
     $selectStatement->bindValue(':meetingId', $meetingId);
@@ -22,7 +25,14 @@ function meetingShouldBeBlockedBy($meetingId, $userId)
     if (!$blockedRow || $blockedRow['userId'] != $userId) {
         $blockUserId = $blockedRow['userId'];
         $blockUsername = getUserName($blockUserId);
-        echo json_encode(array("status" => "error", "message" => "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $userId) blockiert, sondern durch: $blockUsername (Id: $blockUserId)"));
+
+        $toReturn = array("status" => "error");
+        if ($isLoggedInUser) {
+            $toReturn["message"] = "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $userId) blockiert, sondern durch: $blockUsername (Id: $blockUserId)";
+        } else {
+            $toReturn["message"] = "Der Termin kann nicht vergeben werden. Dieser Termin wurde von einem anderen Nutzer blockiert.";
+        }
+        echo json_encode($toReturn);
         exit;
     }
 }

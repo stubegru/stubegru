@@ -7,6 +7,8 @@ require_once "$BASE_PATH/ts_modules/calendar/backend/assignment/assignment_utils
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/utils/permission_request.php";
 
+
+
 permissionRequest("CALENDAR_SELF_SERVICE");
 
 $toReturn = array();
@@ -28,13 +30,14 @@ $clientData["description"] = $_POST["description"];
 $clientData["mail"] = $_POST["mail"];
 $clientData["phone"] = $_POST["phone"];
 $clientData["survey"] = $_POST["formular"]; //!Naming!
-$clientData["channel"] = isset($_POST["channel"]) ? $_POST["channel"] : "unknown"; //Channel attribute will only be set by calendar2 frontend
+$clientData["channel"] = $_POST["channel"];
 
 
 // ----------- 3. Consistency checks ------------
-//TODO: Meeting should now be blocked by the current user, if not -> exit;
-//TODO: Attention with blockedUserName in Response
-//meetingShouldBeBlockedBy($meetingId, $loggedInUserId);
+//Meeting should now be blocked by the current user, if not -> exit;
+//TODO: what if the current user IS logged in => check with $ANONYMOUS_BLOCK_ID will fail
+$ANONYMOUS_BLOCK_ID = -1;
+meetingShouldBeBlockedBy($meetingId, $ANONYMOUS_BLOCK_ID);
 
 //Meeting must not be assigned yet, else -> exit
 meetingShouldBeUnassigned($meetingId);
