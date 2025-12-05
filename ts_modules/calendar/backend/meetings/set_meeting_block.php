@@ -1,5 +1,6 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 
 $own_id = null;
@@ -12,25 +13,14 @@ if ($isLoggedInUser) {
     require_once "$BASE_PATH/utils/database_without_auth.php"; //<<used in self-service
 }
 
-$ANONYMOUS_BLOCK_ID = -1;
 
 try {
     $meetingId = $_POST["meetingId"];
-    $blockMeeting = $_POST["blockMeeting"] == 1;
+    $blockMeeting = ($_POST["blockMeeting"] == 1);
 
-    //delete expired blocks
-    $dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
-
-    //check for existing block
-    $selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
-    $selectStatement->bindValue(':meetingId', $meetingId);
-    $selectStatement->execute();
-    $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
-    $alreadyBlocked = false;
-    if ($blockedRow && isset($blockedRow['meetingId'])) {
-        $alreadyBlocked = true;
-        $blockUserId = $blockedRow['userId'];
-    }
+    $blockResult = isMeetingBlock($meetingId);
+    $alreadyBlocked = $blockResult["isBlocked"];
+    $blockUserId = $blockResult["blockId"];
 
     if ($blockMeeting) {
         //meeting should be blocked AND is already blocked BY another person => ERROR
@@ -46,11 +36,8 @@ try {
         }
 
         // Insert new block
-        $setBlockUserId = $isLoggedInUser ? $own_id : $ANONYMOUS_BLOCK_ID; //set userId to -1 if user is not logged in
-        $insertStatement = $dbPdo->prepare("INSERT INTO `meeting_blocks` (`meetingId`, `userId`, `timestamp`) VALUES (:meetingId, :userId, NOW())");
-        $insertStatement->bindValue(':meetingId', $meetingId);
-        $insertStatement->bindValue(':userId', $setBlockUserId);
-        $insertStatement->execute();
+        $setBlockUserId = $isLoggedInUser ? $own_id : $ANONYMOUS_BLOCK_ID; //set userId to ANONYMOUS if user is not logged in
+        setMeetingBlock($meetingId, $setBlockUserId, true);
         echo json_encode(array("status" => "success", "message" => "Termin wurde erfolgreich blockiert"));
     } else {
         //meeting should be UN-blocked AND is already blocked BY another person => ERROR
@@ -68,9 +55,7 @@ try {
         }
 
         // Remove block
-        $deleteStatement = $dbPdo->prepare("DELETE FROM `meeting_blocks` WHERE `meetingId` = :meetingId");
-        $deleteStatement->bindValue(':meetingId', $meetingId);
-        $deleteStatement->execute();
+        setMeetingBlock($meetingId, null, false);
         echo json_encode(array("status" => "success", "message" => "Termin wurde erfolgreich freigegeben"));
     }
 } catch (Exception $e) {

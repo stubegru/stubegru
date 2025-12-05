@@ -13,29 +13,6 @@ require_once "$BASE_PATH/utils/constants.php";
 
 $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
 
-function meetingShouldBeBlockedBy($meetingId, $userId)
-{
-    global $dbPdo;
-    $isLoggedInUser = isLoggedInUser();
-
-    $selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
-    $selectStatement->bindValue(':meetingId', $meetingId);
-    $selectStatement->execute();
-    $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
-    if (!$blockedRow || $blockedRow['userId'] != $userId) {
-        $blockUserId = $blockedRow['userId'];
-        $blockUsername = getUserName($blockUserId);
-
-        $toReturn = array("status" => "error");
-        if ($isLoggedInUser) {
-            $toReturn["message"] = "Der Termin kann nicht vergeben werden. Dieser Termin wurde nicht durch den aktuellen Nutzer (Id: $userId) blockiert, sondern durch: $blockUsername (Id: $blockUserId)";
-        } else {
-            $toReturn["message"] = "Der Termin kann nicht vergeben werden. Dieser Termin wurde von einem anderen Nutzer blockiert.";
-        }
-        echo json_encode($toReturn);
-        exit;
-    }
-}
 
 function meetingShouldBeUnassigned($meetingId)
 {
@@ -289,14 +266,6 @@ function generateIcsString($uid, $start, $end, $summary, $description, $location
 
     $icsString = implode("\r\n", $eventData);
     return $icsString;
-}
-
-function unblockMeeting($meetingId)
-{
-    global $dbPdo;
-    $deleteStatement = $dbPdo->prepare("DELETE FROM `meeting_blocks` WHERE `meetingId` = :meetingId");
-    $deleteStatement->bindValue(':meetingId', $meetingId);
-    $deleteStatement->execute();
 }
 
 function sendAdvisorMail($meetingData, $replaceList, $icsAttachment)
