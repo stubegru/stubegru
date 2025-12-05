@@ -1,4 +1,6 @@
 <?php
+$BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/utils/database_without_auth.php";
 
 /**
  * Check if the given permissionRequest is fulfilled by the currently logged-in user
