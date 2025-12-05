@@ -1,6 +1,8 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/database_without_auth.php"; //<<used in self-service
+require_once "$BASE_PATH/utils/permission_request.php";
+permissionRequest("CALENDAR_SELF_SERVICE");
 
 //get all permissions required for this permissionRequest
 $selectStatement = $dbPdo->prepare("SELECT permissionId FROM permission_requests WHERE `name` = :permissionRequest");

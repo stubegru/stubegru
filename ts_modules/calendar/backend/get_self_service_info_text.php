@@ -1,5 +1,7 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
+require_once "$BASE_PATH/utils/permission_request.php";
+permissionRequest("CALENDAR_SELF_SERVICE");
 
 $paths = [
     $BASE_PATH . '/custom/mail_templates/self_service_info_text.html',

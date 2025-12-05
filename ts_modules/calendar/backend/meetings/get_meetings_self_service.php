@@ -2,6 +2,8 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/database_without_auth.php"; //<<<WARNING Only here for public access
 require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
+require_once "$BASE_PATH/utils/permission_request.php";
+permissionRequest("CALENDAR_SELF_SERVICE");
 
 $resultList;
 
