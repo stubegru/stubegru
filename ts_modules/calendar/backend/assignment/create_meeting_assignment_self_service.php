@@ -65,7 +65,8 @@ try {
     $toReturn["status"] = "error";
     $toReturn["assign"]["status"] = "error";
     $toReturn["assign"]["message"] = "Der Termin konnte nicht an den Kunden vergeben werden. Die Terminvergabe wird abgebrochen.";
-    //TODO: exit and send resp here....? See equivalent in not-self-service-variant
+    echo json_encode($toReturn);
+    exit;
 }
 
 
