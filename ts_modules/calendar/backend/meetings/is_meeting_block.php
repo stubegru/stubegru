@@ -9,7 +9,7 @@ permissionRequest(isLoggedInUser() ? "MEETINGS_READ" : "CALENDAR_SELF_SERVICE");
 try {
     $meetingId = $_POST["meetingId"];
     $blockResult = isMeetingBlock($meetingId);
-    echo json_encode($$blockResult);
+    echo json_encode($blockResult);
 } catch (Exception $e) {
     echo json_encode(array("status" => "error", "message" => "Es konnte nicht überprüft werden, ob der Termin durch eine andere Person gesperrt ist."));
     exit;
