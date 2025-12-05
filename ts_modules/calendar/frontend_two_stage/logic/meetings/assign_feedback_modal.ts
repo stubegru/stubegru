@@ -49,15 +49,15 @@ export default class AssignFeedbackModal {
         this.modal.show();
     }
 
-    async showFeedback(statusObject:AssignClientResponse) {
+    async showFeedback(statusObject: AssignClientResponse) {
 
         if (statusObject.status == "error") {
             this.setTask("overall", "error", `${statusObject.message || ""}<br>Der Termin konnte nicht vergeben werden. Die Terminvergabe wurde abgebrochen!<br>Dieses Fenster kann nun geschlossen werden.`);
-            this.setTask("clientData", "warning", "Terminvergabe abgebrochen");
-            this.setTask("assign", "warning", "Terminvergabe abgebrochen");
-            this.setTask("survey", "warning", "Terminvergabe abgebrochen");
-            this.setTask("clientMail", "warning", "Terminvergabe abgebrochen");
-            this.setTask("advisorMail", "warning", "Terminvergabe abgebrochen");
+            this.setTask("clientData", statusObject.clientData?.status || "error", statusObject.clientData?.message || "Terminvergabe abgebrochen");
+            this.setTask("assign", statusObject.assign?.status || "error", statusObject.assign?.message || "Terminvergabe abgebrochen");
+            this.setTask("survey", statusObject.survey?.status || "error", statusObject.survey?.message || "Terminvergabe abgebrochen");
+            this.setTask("clientMail", statusObject.clientMail?.status || "error", statusObject.clientMail?.message || "Terminvergabe abgebrochen");
+            this.setTask("advisorMail", statusObject.advisorMail?.status || "error", statusObject.advisorMail?.message || "Terminvergabe abgebrochen");
             return;
         }
 
