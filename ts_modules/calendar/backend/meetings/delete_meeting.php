@@ -1,6 +1,8 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
+
 permissionRequest("MEETINGS_WRITE");
 
 $meetingId = $_POST["id"];
@@ -23,11 +25,8 @@ if ($meetingData["teilnehmer"] != "") {
 }
 
 //Check if this meeting is currently blocked for assignment
-$selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
-$selectStatement->bindValue(':meetingId', $meetingId);
-$selectStatement->execute();
-$blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
-if ($blockedRow && isset($blockedRow['meetingId'])) {
+$blockResult = isMeetingBlock($meetingId);
+if ($blockResult["isBlocked"]) {
     echo json_encode(array("status" => "error", "message" => "Löschen des Termins fehlgeschlagen. Der Termin ist aktuell zur Terminvergabe blockiert."));
     exit;
 }

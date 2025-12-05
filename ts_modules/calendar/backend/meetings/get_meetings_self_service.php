@@ -1,6 +1,7 @@
 <?php
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/database_without_auth.php"; //<<<WARNING Only here for public access
+require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
 
 $resultList;
 
@@ -13,7 +14,7 @@ if (isset($_GET["meetingId"])) {
     $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 } else {
     //delete expired blocks
-    $dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
+    deleteExpiredMeetingBlocks();
 
     //select all free meetings, exclude meetings on the same day
     $selectStatement = $dbPdo->query(

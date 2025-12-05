@@ -3,6 +3,7 @@ $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
 
 permissionRequest("MEETINGS_READ");
 $own_id = $_SESSION['id'];
@@ -24,7 +25,7 @@ if (isset($_GET["meetingId"])) {
 
 
 //Delete expired blocks
-$dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
+deleteExpiredMeetingBlocks();
 //Get all remaining blocks
 $blocks = [];
 $blockStmt = $dbPdo->query("SELECT meetingId FROM `meeting_blocks`");

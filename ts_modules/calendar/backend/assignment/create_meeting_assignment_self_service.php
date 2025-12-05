@@ -6,8 +6,7 @@ $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/ts_modules/calendar/backend/assignment/assignment_utils.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
 require_once "$BASE_PATH/utils/permission_request.php";
-
-
+require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
 
 permissionRequest("CALENDAR_SELF_SERVICE");
 
@@ -35,9 +34,7 @@ $clientData["channel"] = $_POST["channel"];
 
 // ----------- 3. Consistency checks ------------
 //Meeting should now be blocked by the current user, if not -> exit;
-//TODO: what if the current user IS logged in => check with $ANONYMOUS_BLOCK_ID will fail
-$ANONYMOUS_BLOCK_ID = -1;
-meetingShouldBeBlockedBy($meetingId, $ANONYMOUS_BLOCK_ID);
+meetingShouldBeBlockedByMe($meetingId);
 
 //Meeting must not be assigned yet, else -> exit
 meetingShouldBeUnassigned($meetingId);
@@ -129,7 +126,7 @@ try {
 
 
 // ----------- 9. Unblock Meeting ------------
-unblockMeeting($meetingId);
+setMeetingBlock($meetingId, null, false);
 
 
 // ----------- 10. Return global feedback ------------

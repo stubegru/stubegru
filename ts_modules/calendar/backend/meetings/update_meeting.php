@@ -3,6 +3,8 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 require_once "$BASE_PATH/modules/user_utils/user_utils.php";
+require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_utils.php";
+
 permissionRequest("MEETINGS_WRITE");
 
 $meetingId = $_POST["id"];
@@ -18,14 +20,8 @@ $template = $_POST["template"];
 $channel = isset($_POST["channel"]) ? $_POST["channel"] : "unknown";
 
 //check for meeting block
-//delete expired blocks
-$dbPdo->query("DELETE FROM `meeting_blocks` WHERE `timestamp` < (NOW() - INTERVAL 30 MINUTE);");
-
-$selectStatement = $dbPdo->prepare("SELECT * FROM `meeting_blocks` WHERE meetingId = :meetingId;");
-$selectStatement->bindValue(':meetingId', $meetingId);
-$selectStatement->execute();
-$blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
-if ($blockedRow && isset($blockedRow['meetingId'])) {
+$blockResult = isMeetingBlock($meetingId);
+if ($blockResult["isBlocked"]) {
     echo json_encode(array("status" => "error", "message" => "Die Änderungen konnten nicht gespeichert werden. Dieser Termin kann aktuell nicht bearbeitet werden, da er durch einen anderen Nutzer zur Terminvergabe blockiert wurde."));
     exit;
 }
