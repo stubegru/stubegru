@@ -56,11 +56,13 @@ export default class AssignFeedbackModal {
         if (statusObject.status == "error") {
             CalendarModule.calendarView.assignFeedbackModal.resetAndShow();
             this.setTask("overall", "error", `${statusObject.message || ""}<br>Der Termin konnte nicht vergeben werden. Die Terminvergabe wurde abgebrochen!<br>Dieses Fenster kann nun geschlossen werden.`);
-            this.setTask("clientData", statusObject.clientData.status, statusObject.clientData.message || "Terminvergabe abgebrochen");
-            this.setTask("assign", statusObject.assign.status, statusObject.assign.message || "Terminvergabe abgebrochen");
-            this.setTask("survey", statusObject.survey.status, statusObject.survey.message || "Terminvergabe abgebrochen");
-            this.setTask("clientMail", statusObject.clientMail.status, statusObject.clientMail.message || "Terminvergabe abgebrochen");
-            this.setTask("advisorMail", statusObject.advisorMail.status, statusObject.advisorMail.message || "Terminvergabe abgebrochen");
+            this.setTask(
+                "clientData", statusObject.clientData?.status || "error", statusObject.clientData?.message || "Terminvergabe abgebrochen"
+            );
+            this.setTask("assign", statusObject.assign?.status || "error", statusObject.assign?.message || "Terminvergabe abgebrochen");
+            this.setTask("survey", statusObject.survey?.status || "error", statusObject.survey?.message || "Terminvergabe abgebrochen");
+            this.setTask("clientMail", statusObject.clientMail?.status || "error", statusObject.clientMail?.message || "Terminvergabe abgebrochen");
+            this.setTask("advisorMail", statusObject.advisorMail?.status || "error", statusObject.advisorMail?.message || "Terminvergabe abgebrochen");
             return;
         }
 
