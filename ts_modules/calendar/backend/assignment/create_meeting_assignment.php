@@ -57,6 +57,8 @@ try {
 } catch (Exception $e) {
     $toReturn["status"] = "error";
     $toReturn["assign"]["message"] = "Der Termin konnte nicht an den Kunden vergeben werden. Die Terminvergabe wird abgebrochen.";
+    echo json_encode($toReturn);
+    exit;
 }
 
 
@@ -65,7 +67,7 @@ $meetingData = getMeetingData($meetingId);
 $roomData = getRoomData($meetingData["room"]);
 
 makeDataPretty($meetingData, $clientData);
-$replaceList = getReplaceList($meetingData,$clientData,$roomData);
+$replaceList = getReplaceList($meetingData, $clientData, $roomData);
 
 
 
@@ -90,8 +92,8 @@ $icsAttachment = generateIcsAttachment($meetingData, $clientData, $roomData);
 
 
 // ----------- 7. Send Client's Mail ------------
-try{
-    sendClientMail($meetingData,$clientData,$replaceList,$icsAttachment);
+try {
+    sendClientMail($meetingData, $clientData, $replaceList, $icsAttachment);
     $toReturn["clientMail"]["status"] = "success";
     $toReturn["clientMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $clientData["mail"] . "</b> versandt.";
 } catch (Exception $e) {
@@ -102,8 +104,8 @@ try{
 
 // ----------- 8. Send advisor's mail ------------
 
-try{
-    sendAdvisorMail($meetingData,$replaceList,$icsAttachment);
+try {
+    sendAdvisorMail($meetingData, $replaceList, $icsAttachment);
     $toReturn["advisorMail"]["status"] = "success";
     $toReturn["advisorMail"]["message"] = "Eine Bestätigungsmail wurde erfolgreich an <b>" . $meetingData["ownerMail"] . "</b> versandt.";
 } catch (Exception $e) {
