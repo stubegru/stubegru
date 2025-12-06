@@ -23,7 +23,7 @@ function deleteExpiredMeetingBlocks()
  * @param int $meetingId The ID of the meeting to check.
  * @return array [isBlocked, blockId?, blockName?] An array containing block status and optionally user info.
  */
-function isMeetingBlock($meetingId)
+function isMeetingBlock($meetingId, $forceAllData = false)
 {
     global $dbPdo, $isLoggedInUser;
     $result = array("isBlocked" => true);
@@ -35,10 +35,10 @@ function isMeetingBlock($meetingId)
     $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
     if ($blockedRow && isset($blockedRow['meetingId'])) {
         $result["isBlocked"] = true;
-        if ($isLoggedInUser) {
+        if ($forceAllData || $isLoggedInUser) {
             //give this enhanced info only to logged in users
             $result["blockId"] = $blockedRow['userId'];
-            $result["blockName"] = getUserName($blockedRow['userId']) || "unknown (SelfService)";
+            $result["blockName"] = getUserName($blockedRow['userId']) ?: "unknown (SelfService)";
         }
     } else {
         $result["isBlocked"] = false;
@@ -80,7 +80,14 @@ function meetingShouldBeBlockedByMe($meetingId)
     $selectStatement->bindValue(':meetingId', $meetingId);
     $selectStatement->execute();
     $blockedRow = $selectStatement->fetch(PDO::FETCH_ASSOC);
-    if (!$blockedRow || $blockedRow['userId'] != $userId) {
+   
+    if ($blockedRow == false) {
+        echo json_encode(array("status" => "error", "message" => "Fehler bei der Terminbuchung. Termin wurde für Sie nicht zur Buchung vorgemerkt (no meeting block)."));
+        exit;
+    }
+
+
+    if ($blockedRow['userId'] != $userId) {
         $blockUserId = $blockedRow['userId'];
         $blockUsername = getUserName($blockUserId);
 

@@ -20,9 +20,9 @@ try {
     $meetingId = $_POST["meetingId"];
     $blockMeeting = ($_POST["blockMeeting"] == 1);
 
-    $blockResult = isMeetingBlock($meetingId);
+    $blockResult = isMeetingBlock($meetingId, true);
     $alreadyBlocked = $blockResult["isBlocked"];
-    $blockUserId = $blockResult["blockId"];
+    $blockUserId = isset($blockResult["blockId"]) ? $blockResult["blockId"] : null;
 
     if ($blockMeeting) {
         //meeting should be blocked AND is already blocked BY another person => ERROR

@@ -137,7 +137,7 @@ function getReplaceList($meetingData, $clientData, $roomData)
 {
     //Add current users id
     $loggedInUserName = "Unbekannt";
-    if (isset($_SESSION)) {
+    if (isset($_SESSION["id"])) {
         $loggedInUserId = $_SESSION["id"];
         $loggedInUserName = getUserName($loggedInUserId);
     }
