@@ -1,0 +1,20 @@
+{
+    "type": "stubegruModule",
+    "name": "spam_filter",
+    "description": "Module to manage spam filter rules. Spam filter rules are used by self service meeting appointment to avoid spam and bots",
+    "author": "Johannes Schnirring",
+    "license": "MIT",
+    "dependencies": {
+        "blocking": [],
+        "nonBlocking": [],
+        "backend": []
+    },
+    "html": [
+        "module.html"
+    ],
+    "js": [
+        "frontend/module.js"
+    ],
+    "css": [],
+    "cronjob": []
+}

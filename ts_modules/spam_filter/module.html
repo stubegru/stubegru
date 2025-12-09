@@ -1,0 +1,109 @@
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="#collapse_spam_filter" data-toggle="collapse" aria-expanded="true" class="stubegru-module-title">
+                <h4 class="mb-4"><i class="fas fa-shield-alt"></i> Spam Filter</h4>
+                <div class="stubegru-module-subtitle">Automatische und Manuelle Blacklist für Terminbuchungen</div>
+            </a>
+        </div>
+        <div class="collapse in" id="collapse_spam_filter">
+            <div class="panel-body">
+
+                <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="spam_filter_search_addon"><i class="fas fa-filter"></i>&nbsp;Filtern:</span>
+                                <input type="text" class="form-control" placeholder="Name, Mail, Typ,..." aria-describedby="spam_filter_search_addon" id="spam_filter_filter_input">
+                                <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="spam_filter_filter_clear_button"><i class="fas fa-times"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info pull-right" id="spam_filter_create_button">
+                                <i class="fas fa-plus"></i>&nbsp; Neue Filterregel
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="spam_filter_table"></div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--SpamFilter Modal Start-->
+<div aria-hidden="true" role="dialog" tabindex="-1" id="spam_filter_modal" class="modal fade">
+    <div class="modal-dialog" style="min-width: 70%;">
+        <div class="modal-content">
+            <form id="spam_filter_modal_form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Spam Filter</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="spam_filter_modal_form_name">name</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_name" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="spam_filter_modal_form_mail">mail</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_mail" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="spam_filter_modal_form_timestamp">timestamp</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_timestamp" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="spam_filter_modal_form_reason">reason</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_reason" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="spam_filter_modal_form_type">type</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_type" required>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="far fa-save"></i> Save SpamFilter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- SpamFilter Modal End -->
