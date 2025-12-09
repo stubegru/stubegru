@@ -1,23 +1,16 @@
 import { Modal } from "../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
 import { TableSortable } from "../../../components/table-sortable/ts_wrapper.js";
-import { SpamFilter, SpamFilterListItem } from "./model.js";
 import SpamFilterModule from "./module.js";
-
 export default class SpamFilterView {
-
-    table: TableSortable;
-    modal: Modal;
-    modalForm: HTMLFormElement = Stubegru.dom.querySelector("#spam_filter_modal_form") as HTMLFormElement;
-
+    table;
+    modal;
+    modalForm = Stubegru.dom.querySelector("#spam_filter_modal_form");
     constructor() {
-
         this.modal = new Modal('#spam_filter_modal');
         //Reset monitoring form if the modal is closed
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
         this.modal.addEventListener("hide.bs.modal", SpamFilterModule.controller.refreshSpamFilterList);
-
-
         let tableColumns = {
             id: "Id",
             name: "Name",
@@ -26,21 +19,16 @@ export default class SpamFilterView {
             reason: "Grund",
             type: "Art der Sperre",
             actionButton: "",
-        }
+        };
         let searchInput = Stubegru.dom.querySelectorAsInput("#spam_filter_filter_input");
         let searchInputClear = Stubegru.dom.querySelectorAsInput("#spam_filter_filter_clear_button");
         this.table = new TableSortable("#spam_filter_table", tableColumns, searchInput, searchInputClear, 10, this.registerListItemButtons);
-
-
         Stubegru.dom.addEventListener("#spam_filter_create_button", "click", SpamFilterModule.controller.showSpamFilterModalForCreate);
-
     }
-
-    async updateListView(spamFilterList: SpamFilter[]) {
+    async updateListView(spamFilterList) {
         let tableDataList = [];
-
         for (let spamFilterId in spamFilterList) {
-            let spamFilter = spamFilterList[spamFilterId] as SpamFilterListItem;
+            let spamFilter = spamFilterList[spamFilterId];
             let editBtn = `<button type="button" class="btn btn-primary btn-sm spam-filter-edit-btn" data-spam-filter-id="${spamFilter.id}">
                                 <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
                            </button>`;
@@ -50,62 +38,46 @@ export default class SpamFilterView {
             spamFilter.actionButton = editBtn + deleteBtn;
             tableDataList.push(spamFilter);
         }
-
         this.table.update(tableDataList, "id"); //button events are registered by table's onUpdate function
         Stubegru.dom.querySelectorAsInput("#spam_filter_filter_input").value = "";
-
-
     }
-
-
-
     registerListItemButtons() {
         Stubegru.dom.querySelectorAll(".spam-filter-edit-btn").forEach(elem => {
-            const spamfilterId = elem.getAttribute("data-spam-filter-id") as string;
+            const spamfilterId = elem.getAttribute("data-spam-filter-id");
             Stubegru.dom.addEventListener(elem, "click", () => SpamFilterModule.controller.showSpamFilterModalForUpdate(spamfilterId));
         });
-
         Stubegru.dom.querySelectorAll(".spam-filter-delete-btn").forEach(elem => {
-            const spamfilterId = elem.getAttribute("data-spam-filter-id") as string;
+            const spamfilterId = elem.getAttribute("data-spam-filter-id");
             Stubegru.dom.addEventListener(elem, "click", () => SpamFilterModule.controller.handleSpamFilterDelete(spamfilterId));
         });
     }
-
-    setModalSubmitEvent(callback: Function) {
+    setModalSubmitEvent(callback) {
         Stubegru.dom.removeEventListener(this.modalForm, "submit");
         Stubegru.dom.addEventListener(this.modalForm, "submit", (event) => {
             event.preventDefault();
             callback();
         });
     }
-
-
     /**
-     * Sets form data 
+     * Sets form data
      */
-    setModalFormData(spamfilterData: SpamFilter) {
+    setModalFormData(spamfilterData) {
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_name").value = spamfilterData.name;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_mail").value = spamfilterData.mail;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_timestamp").value = spamfilterData.timestamp;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_reason").value = spamfilterData.reason;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_type").value = spamfilterData.type;
-
     }
-
-    getModalFormData(): SpamFilter {
-        let spamfilterData = {} as SpamFilter;
+    getModalFormData() {
+        let spamfilterData = {};
         spamfilterData.name = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_name").value;
         spamfilterData.mail = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_mail").value;
         spamfilterData.timestamp = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_timestamp").value;
         spamfilterData.reason = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_reason").value;
         spamfilterData.type = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_type").value;
-
         return spamfilterData;
     }
-
     resetModalForm = () => {
         this.modalForm.reset();
-    }
-
-
+    };
 }

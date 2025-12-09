@@ -1,6 +1,6 @@
 import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
 import { StubegruHttpResponse } from "../../../components/stubegru_core/logic/stubegru_fetch.js";
-import { SpamFilter } from "./model";
+import { SpamFilter } from "./model.js";
 
 export default class SpamFilterService {
 
