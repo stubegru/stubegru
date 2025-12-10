@@ -41,13 +41,15 @@ export default class SpamFilterView {
 
         for (let spamFilterId in spamFilterList) {
             let spamFilter = spamFilterList[spamFilterId] as SpamFilterListItem;
-            let editBtn = `<button type="button" class="btn btn-primary btn-sm spam-filter-edit-btn" data-spam-filter-id="${spamFilter.id}">
-                                <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
+            let editBtn = `<button type="button" class="btn btn-primary btn-sm spam-filter-edit-btn" data-spam-filter-id="${spamFilter.id}" title="Bearbeiten">
+                                <i class="fas fa-pencil-alt"></i>
                            </button>`;
-            let deleteBtn = `&nbsp;<button class="btn btn-danger btn-sm spam-filter-delete-btn" type="button" data-spam-filter-id="${spamFilter.id}">
-                                <i class="far fa-trash-alt"></i> Löschen
+            let deleteBtn = `&nbsp;<button class="btn btn-danger btn-sm spam-filter-delete-btn" type="button" data-spam-filter-id="${spamFilter.id}" title="Löschen">
+                                <i class="far fa-trash-alt"></i>
                              </button>`;
             spamFilter.actionButton = editBtn + deleteBtn;
+
+            spamFilter.timestamp = Stubegru.utils.formatDate(spamFilter.timestamp, "DD.MM.YYYY");
             tableDataList.push(spamFilter);
         }
 
@@ -86,9 +88,9 @@ export default class SpamFilterView {
     setModalFormData(spamfilterData: SpamFilter) {
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_name").value = spamfilterData.name;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_mail").value = spamfilterData.mail;
-        Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_timestamp").value = spamfilterData.timestamp;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_reason").value = spamfilterData.reason;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_type").value = spamfilterData.type;
+        Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_created").value = Stubegru.utils.formatDate(spamfilterData.timestamp, "DD.MM.YYYY hh:mm");
 
     }
 
@@ -96,7 +98,6 @@ export default class SpamFilterView {
         let spamfilterData = {} as SpamFilter;
         spamfilterData.name = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_name").value;
         spamfilterData.mail = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_mail").value;
-        spamfilterData.timestamp = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_timestamp").value;
         spamfilterData.reason = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_reason").value;
         spamfilterData.type = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_type").value;
 
