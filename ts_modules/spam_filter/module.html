@@ -10,23 +10,33 @@
             <div class="panel-body">
 
                 <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="spam_filter_search_addon"><i class="fas fa-filter"></i>&nbsp;Filtern:</span>
-                                <input type="text" class="form-control" placeholder="Name, Mail, Typ,..." aria-describedby="spam_filter_search_addon" id="spam_filter_filter_input">
-                                <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="spam_filter_filter_clear_button"><i class="fas fa-times"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-info pull-right" id="spam_filter_create_button">
-                                <i class="fas fa-plus"></i>&nbsp; Neue Filterregel
-                            </button>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="spam_filter_search_addon"><i class="fas fa-filter"></i>&nbsp;Filtern:</span>
+                            <input type="text" class="form-control" placeholder="Name, Mail, Typ,..." aria-describedby="spam_filter_search_addon" id="spam_filter_filter_input">
+                            <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="spam_filter_filter_clear_button"><i class="fas fa-times"></i></span>
                         </div>
                     </div>
-                    <br>
-                    <div id="spam_filter_table"></div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-info pull-right" id="spam_filter_create_button">
+                            <i class="fas fa-plus"></i>&nbsp; Neue Filterregel
+                        </button>
+                    </div>
+                </div>
 
+                <br>
+                <div id="spam_filter_table"></div>
 
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Personen für die ein Spam Filter eingetragen ist können <b>keine Termine im Self-Service</b> buchen. Die Personen werden entweder über eine Mailadresse oder über eine IP-Adresse identifiziert.<br>
+                            Bucht eine Person viele Termine in kurzer Zeit wird für sie automatisch ein Spam Filter erstellt.<br>
+                            Spam Filter können hier manuell erstellt, angepasst oder entfernt werden.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -44,51 +54,60 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Spam Filter</h4>
+                    <h4 class="modal-title"><i class="fas fa-shield-alt"></i> Spam Filter</h4>
                 </div>
                 <div class="modal-body">
 
+
+
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="spam_filter_modal_form_name">name</label>
+                                <label for="spam_filter_modal_form_name">Name der betreffenden Person</label>
                                 <input class="form-control" type="text" id="spam_filter_modal_form_name" required>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
+
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="spam_filter_modal_form_mail">mail</label>
-                                <input class="form-control" type="text" id="spam_filter_modal_form_mail" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="spam_filter_modal_form_timestamp">timestamp</label>
-                                <input class="form-control" type="text" id="spam_filter_modal_form_timestamp" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="spam_filter_modal_form_reason">reason</label>
+                                <label for="spam_filter_modal_form_reason">Grund der Sperre</label>
                                 <input class="form-control" type="text" id="spam_filter_modal_form_reason" required>
                             </div>
                         </div>
                     </div>
-                    
+
+
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label for="spam_filter_modal_form_type">type</label>
-                                <input class="form-control" type="text" id="spam_filter_modal_form_type" required>
+                                <label for="spam_filter_modal_form_type">Art der Sperre</label>
+                                <select class="form-control" id="spam_filter_modal_form_type" required>
+                                    <option value="mail" selected>Mailadresse gesperrt</option>
+                                    <option value="ip">IP Adresse gesperrt</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="spam_filter_modal_form_mail">Mailadresse</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_mail" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Erstellt am</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_created" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ablauf der Sperre</label>
+                                <input class="form-control" type="date" id="spam_filter_modal_form_expires">
                             </div>
                         </div>
                     </div>
@@ -96,10 +115,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="fas fa-times"></i> Cancel
+                        <i class="fas fa-times"></i> Abbrechen
                     </button>
                     <button type="submit" class="btn btn-success">
-                        <i class="far fa-save"></i> Save SpamFilter
+                        <i class="far fa-save"></i> Spamfilter Speichern
                     </button>
                 </div>
             </form>
