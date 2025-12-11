@@ -7,12 +7,17 @@ $name = $_POST["name"];
 $mail = $_POST["mail"];
 $reason = $_POST["reason"];
 $type = $_POST["type"];
+$ip = $_POST["ip"];
+$expires = $_POST["expires"];
 
-$insertStatement = $dbPdo->prepare("INSERT INTO spam_filter (name, mail, reason, type, timestamp) VALUES (:name, :mail, :reason, :type, CURRENT_TIMESTAMP)");
+
+$insertStatement = $dbPdo->prepare("INSERT INTO spam_filter (name, mail, reason, type, ip, expires, created) VALUES (:name, :mail, :reason, :type, :ip, :expires, CURRENT_TIMESTAMP)");
 $insertStatement->bindValue(':name', $name);
 $insertStatement->bindValue(':mail', $mail);
 $insertStatement->bindValue(':reason', $reason);
 $insertStatement->bindValue(':type', $type);
+$insertStatement->bindValue(':ip', $ip);
+$insertStatement->bindValue(':expires', $expires);
 $insertStatement->execute();
 
 if ($insertStatement->rowCount() > 0) {

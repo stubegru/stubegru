@@ -90,30 +90,32 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="spam_filter_modal_form_mail">Mailadresse</label>
-                                <input class="form-control" type="text" id="spam_filter_modal_form_mail" required>
+                                <label>Ablauf der Sperre</label>
+                                <input class="form-control" type="date" id="spam_filter_modal_form_expires" required>
                             </div>
                         </div>
                     </div>
 
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Erstellt am</label>
-                                <input class="form-control" type="text" id="spam_filter_modal_form_created" disabled>
+                                <label for="spam_filter_modal_form_mail">Mailadresse</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_mail" required>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Ablauf der Sperre</label>
-                                <input class="form-control" type="date" id="spam_filter_modal_form_expires">
+                                <label for="spam_filter_modal_form_ip">IP-Adresse</label>
+                                <input class="form-control" type="text" id="spam_filter_modal_form_ip">
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <div class="modal-footer">
+                    <span class="pull-left">Erstellt am: <b id="spam_filter_modal_form_created"></b></span>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fas fa-times"></i> Abbrechen
                     </button>
