@@ -1,11 +1,12 @@
-
 export interface SpamFilter {
     id: string,
     name: string;
     mail: string;
-    timestamp: string;
+    created: string;
     reason: string;
     type: string;
+    ip: string;
+    expires: string;
 }
 
 export interface SpamFilterListItem extends SpamFilter {
