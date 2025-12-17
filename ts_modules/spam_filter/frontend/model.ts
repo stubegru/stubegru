@@ -7,6 +7,7 @@ export interface SpamFilter {
     type: string;
     ip: string;
     expires: string;
+    initiator: string;
 }
 
 export interface SpamFilterListItem extends SpamFilter {

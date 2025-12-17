@@ -2,6 +2,7 @@
 $BASE_PATH = getenv("BASE_PATH");
 require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("SPAM_FILTER_WRITE");
+$own_id = $_SESSION["id"];
 
 $name = $_POST["name"];
 $mail = $_POST["mail"];
@@ -11,12 +12,13 @@ $ip = $_POST["ip"];
 $expires = $_POST["expires"];
 
 
-$insertStatement = $dbPdo->prepare("INSERT INTO spam_filter (name, mail, reason, type, ip, expires, created) VALUES (:name, :mail, :reason, :type, :ip, :expires, CURRENT_TIMESTAMP)");
+$insertStatement = $dbPdo->prepare("INSERT INTO spam_filter (name, mail, reason, type, ip, initiator, expires, created) VALUES (:name, :mail, :reason, :type, :ip, :initiator, :expires, CURRENT_TIMESTAMP)");
 $insertStatement->bindValue(':name', $name);
 $insertStatement->bindValue(':mail', $mail);
 $insertStatement->bindValue(':reason', $reason);
 $insertStatement->bindValue(':type', $type);
 $insertStatement->bindValue(':ip', $ip);
+$insertStatement->bindValue(':initiator', $own_id);
 $insertStatement->bindValue(':expires', $expires);
 $insertStatement->execute();
 
