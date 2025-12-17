@@ -21,7 +21,7 @@ $updateStatement->bindValue(':ip', $ip);
 $updateStatement->bindValue(':expires', $expires);
 $updateStatement->execute();
 
-if ($updateStatement->rowCount() > 0) {
+if ($updateStatement->errorCode() == '00000') {
     $status = array("status" => "success", "message" => "Spam Filter erfolgreich aktualisiert.");
 } else {
     $status = array("status" => "error", "message" => "Spam Filter konnte nicht aktualisiert werden.");

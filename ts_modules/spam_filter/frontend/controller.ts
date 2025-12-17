@@ -24,7 +24,7 @@ export default class SpamFilterController {
             let spamfilterData = SpamFilterModule.view.getModalFormData();
             spamfilterData.id = spamfilterId;
             const resp = await SpamFilterModule.service.updateSpamFilter(spamfilterData);
-            Alert.alertResp(resp, "Saving SpamFilter");
+            Alert.alertResp(resp, "Spam Filter");
             SpamFilterModule.view.modal.hide(); //refresh spamfilter list via hide event
         } catch (error) {
             Alert.alertError(error);
@@ -36,7 +36,7 @@ export default class SpamFilterController {
         try {
             let spamfilterData = SpamFilterModule.view.getModalFormData();
             const resp = await SpamFilterModule.service.createSpamFilter(spamfilterData);
-            Alert.alertResp(resp, "Create SpamFilter");
+            Alert.alertResp(resp, "Spam Filter");
             SpamFilterModule.view.modal.hide(); //refresh spamfilter list via hide event
         } catch (error) {
             Alert.alertError(error);
@@ -46,9 +46,9 @@ export default class SpamFilterController {
 
     async handleSpamFilterDelete(spamfilterId: string) {
         try {
-            let confirmResp = await Alert.deleteConfirm("Delete SpamFilter", "Do you really want to delete this SpamFilter?");
+            let confirmResp = await Alert.deleteConfirm("Spam Filter löschen", "Möchtest du diesen Filter wirklich löschen?");
             let resp = await SpamFilterModule.service.deleteSpamFilter(spamfilterId);
-            Alert.alertResp(resp, "Delete SpamFilter");
+            Alert.alertResp(resp, "Spam Filter");
             await this.refreshSpamFilterList();
         } catch (error) {
             Alert.alertError(error);
