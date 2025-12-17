@@ -62,6 +62,7 @@ export default class SpamFilterController {
             SpamFilterModule.view.setModalSubmitEvent(() => {
                 SpamFilterModule.controller.handleSpamFilterEdit(spamfilterId);
             });
+            SpamFilterModule.view.setFooterInfoVisibility(true);
             SpamFilterModule.view.modal.show();
         } catch (error) {
             Alert.alertError(error);
@@ -73,6 +74,7 @@ export default class SpamFilterController {
             SpamFilterModule.view.setModalSubmitEvent(() => {
                 SpamFilterModule.controller.handleSpamFilterCreate();
             });
+            SpamFilterModule.view.setFooterInfoVisibility(false);
             SpamFilterModule.view.modal.show();
         } catch (error) {
             Alert.alertError(error);

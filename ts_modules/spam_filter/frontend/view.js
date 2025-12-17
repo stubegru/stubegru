@@ -1,6 +1,7 @@
 import { Modal } from "../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
 import { TableSortable } from "../../../components/table-sortable/ts_wrapper.js";
+import UserUtils from "../../../components/user_utils/user_utils.js";
 import SpamFilterModule from "./module.js";
 export default class SpamFilterView {
     table;
@@ -14,10 +15,10 @@ export default class SpamFilterView {
         let tableColumns = {
             id: "Id",
             name: "Name",
-            mail: "Mail",
             created: "Erstellt",
             reason: "Grund",
             type: "Art der Sperre",
+            mail: "Mail",
             ip: "IP-Adresse",
             expires: "Ablaufdatum",
             actionButton: "",
@@ -72,7 +73,18 @@ export default class SpamFilterView {
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_reason").value = spamfilterData.reason;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_type").value = spamfilterData.type;
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_expires").value = spamfilterData.expires;
-        Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_created").innerHTML = Stubegru.utils.formatDate(spamfilterData.created, "DD.MM.YYYY hh:mm");
+        Stubegru.dom.querySelector("#spam_filter_modal_form_created").innerHTML = Stubegru.utils.formatDate(spamfilterData.created, "DD.MM.YYYY hh:mm");
+        this.showInitiator(spamfilterData); // Show initiator user-name, or other value
+    }
+    async showInitiator(spamfilterData) {
+        if (!isNaN(Number(spamfilterData.initiator))) {
+            let userList = await UserUtils.getAllUsers();
+            const user = userList[spamfilterData.initiator];
+            Stubegru.dom.querySelector("#spam_filter_modal_form_initiator").innerHTML = user ? user.name : "Unknown user";
+        }
+        else {
+            Stubegru.dom.querySelector("#spam_filter_modal_form_initiator").innerHTML = spamfilterData.initiator;
+        }
     }
     getModalFormData() {
         let spamfilterData = {};
@@ -83,6 +95,9 @@ export default class SpamFilterView {
         spamfilterData.ip = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_ip").value;
         spamfilterData.expires = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_expires").value;
         return spamfilterData;
+    }
+    setFooterInfoVisibility(state) {
+        Stubegru.dom.setVisibility("#spam_filter_modal_footer_info", state);
     }
     resetModalForm = () => {
         this.modalForm.reset();
