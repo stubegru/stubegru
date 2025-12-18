@@ -14,6 +14,7 @@ require_once "$BASE_PATH/utils/constants.php";
 $institutionName = isset($constants["CUSTOM_CONFIG"]["institutionName"]) ? $constants["CUSTOM_CONFIG"]["institutionName"] : "Stubegru";
 
 
+
 function meetingShouldBeUnassigned($meetingId)
 {
     global $dbPdo;
@@ -338,4 +339,121 @@ function removeClientData($clientId, $meetingId)
     $updateStatement = $dbPdo->prepare("UPDATE `Termine` SET `teilnehmer` = NULL  WHERE `id` = :meetingId;");
     $updateStatement->bindValue(':meetingId', $meetingId);
     $updateStatement->execute();
+}
+
+
+function logMeetingAssignment($name, $mail)
+{
+    global $dbPdo;
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $insertStatement = $dbPdo->prepare("INSERT INTO `self_service_log` (`ip`, `name`, `mail`, `created`) VALUES (:ip, :name, :mail, NOW())");
+    $insertStatement->bindValue(':ip', $ip);
+    $insertStatement->bindValue(':name', $name);
+    $insertStatement->bindValue(':mail', $mail);
+    $insertStatement->execute();
+}
+
+function createSpamFilterFromLog()
+{
+    global $dbPdo;
+
+    $selectStatement = $dbPdo->prepare("SELECT * FROM `self_service_log`");
+    $selectStatement->execute();
+    $logEntries = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    createSpamFilterByIp($logEntries);
+    createSpamFilterByMail($logEntries);
+}
+
+
+function createSpamFilterByIp($logEntries)
+{
+    global $dbPdo, $constants;
+    $now = new DateTime(); // Get current time
+    $ipCounts = []; // Prepare a map to count recent entries per IP
+
+    // Read spam filter configuration from custom/config.json
+    $maxMeetingsByIp = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByIp"] ?? 3;
+    $maxMeetingsByIpSeconds = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByIpSeconds"] ?? 100;
+    $maxMeetingsByIpExpireDays = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByIpExpireDays"] ?? 14;
+
+    //Count ips
+    foreach ($logEntries as $entry) {
+        $ip = $entry['ip'];
+        $created = new DateTime($entry['created']);
+        $interval = $now->getTimestamp() - $created->getTimestamp();
+
+        if ($interval <= $maxMeetingsByIpSeconds) {
+            if (!isset($ipCounts[$ip])) {
+                $ipCounts[$ip] = 0;
+            }
+            $ipCounts[$ip]++;
+        }
+    }
+
+    foreach ($ipCounts as $ip => $count) {
+        if ($count > $maxMeetingsByIp) {
+            $reason = "Zu viele Anfragen von dieser IP ($ip) innerhalb von $maxMeetingsByIpSeconds Sekunden.";
+            $expires = (clone $now)->modify("+$maxMeetingsByIpExpireDays days")->format('Y-m-d');
+
+            // Create new Spam-Filter rule
+            $insertStatement = $dbPdo->prepare("INSERT INTO `spam_filter` (`name`, `reason`, `type`, `ip`, `mail`, `created`, `expires`, `initiator`) VALUES (:name, :reason, 'ip', :ip, '', NOW(), :expires, 'AUTO_DETECT')");
+            $insertStatement->bindValue(':name', $ip);
+            $insertStatement->bindValue(':reason', $reason);
+            $insertStatement->bindValue(':ip', $ip);
+            $insertStatement->bindValue(':expires', $expires);
+            $insertStatement->execute();
+
+            // Delete log entries for this IP from self_service_log
+            $deleteStatement = $dbPdo->prepare("DELETE FROM `self_service_log` WHERE `ip` = :ip");
+            $deleteStatement->bindValue(':ip', $ip);
+            $deleteStatement->execute();
+        }
+    }
+}
+
+function createSpamFilterByMail($logEntries)
+{
+    global $dbPdo, $constants;
+    $now = new DateTime(); // Get current time
+    $mailCounts = [];
+
+    // Read spam filter configuration from custom/config.json
+    $maxMeetingsByMail = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByMail"] ?? 3;
+    $maxMeetingsByMailDays = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByMailDays"] ?? 7;
+    $maxMeetingsByMailExpireDays = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByMailExpireDays"] ?? 7;
+
+    // Count mails
+    foreach ($logEntries as $entry) {
+        $mail = $entry['mail'];
+        $created = new DateTime($entry['created']);
+        $intervalDays = ($now->getTimestamp() - $created->getTimestamp()) / (60 * 60 * 24);
+
+        if ($intervalDays <= $maxMeetingsByMailDays) {
+            if (!isset($mailCounts[$mail])) {
+                $mailCounts[$mail] = 0;
+            }
+            $mailCounts[$mail]++;
+        }
+    }
+
+    foreach ($mailCounts as $mail => $count) {
+        if ($count > $maxMeetingsByMail) {
+            $reason = "Zu viele Anfragen mit dieser Mailadresse ($mail) innerhalb von $maxMeetingsByMailDays Tagen.";
+            $expires = (clone $now)->modify("+$maxMeetingsByMailExpireDays days")->format('Y-m-d');
+
+            // Create new Spam-Filter rule
+            $insertStatement = $dbPdo->prepare("INSERT INTO `spam_filter` (`name`, `reason`, `type`, `ip`, `mail`, `created`, `expires`, `initiator`) VALUES (:name, :reason, 'mail', '', :mail, NOW(), :expires, 'AUTO_DETECT')");
+            $insertStatement->bindValue(':name', $mail);
+            $insertStatement->bindValue(':reason', $reason);
+            $insertStatement->bindValue(':mail', $mail);
+            $insertStatement->bindValue(':expires', $expires);
+            $insertStatement->execute();
+
+            // Delete log entries for this mail from self_service_log
+            $deleteStatement = $dbPdo->prepare("DELETE FROM `self_service_log` WHERE `mail` = :mail");
+            $deleteStatement->bindValue(':mail', $mail);
+            $deleteStatement->execute();
+        }
+    }
 }
