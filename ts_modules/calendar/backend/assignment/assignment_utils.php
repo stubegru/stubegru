@@ -371,7 +371,7 @@ function createSpamFilterByIp($logEntries)
     global $dbPdo, $constants;
     $now = new DateTime(); // Get current time
     $ipCounts = []; // Prepare a map to count recent entries per IP
-
+    $ipNames = [];
     // Read spam filter configuration from custom/config.json
     $maxMeetingsByIp = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByIp"] ?? 3;
     $maxMeetingsByIpSeconds = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByIpSeconds"] ?? 100;
@@ -386,6 +386,7 @@ function createSpamFilterByIp($logEntries)
         if ($interval <= $maxMeetingsByIpSeconds) {
             if (!isset($ipCounts[$ip])) {
                 $ipCounts[$ip] = 0;
+                $ipNames[$ip] = $entry["name"];
             }
             $ipCounts[$ip]++;
         }
@@ -398,7 +399,7 @@ function createSpamFilterByIp($logEntries)
 
             // Create new Spam-Filter rule
             $insertStatement = $dbPdo->prepare("INSERT INTO `spam_filter` (`name`, `reason`, `type`, `ip`, `mail`, `created`, `expires`, `initiator`) VALUES (:name, :reason, 'ip', :ip, '', NOW(), :expires, 'AUTO_DETECT')");
-            $insertStatement->bindValue(':name', $ip);
+            $insertStatement->bindValue(':name', $ipNames[$ip]);
             $insertStatement->bindValue(':reason', $reason);
             $insertStatement->bindValue(':ip', $ip);
             $insertStatement->bindValue(':expires', $expires);
@@ -417,6 +418,7 @@ function createSpamFilterByMail($logEntries)
     global $dbPdo, $constants;
     $now = new DateTime(); // Get current time
     $mailCounts = [];
+    $mailNames = [];
 
     // Read spam filter configuration from custom/config.json
     $maxMeetingsByMail = $constants["CUSTOM_CONFIG"]["selfServiceMaxMeetingsByMail"] ?? 3;
@@ -432,6 +434,7 @@ function createSpamFilterByMail($logEntries)
         if ($intervalDays <= $maxMeetingsByMailDays) {
             if (!isset($mailCounts[$mail])) {
                 $mailCounts[$mail] = 0;
+                $mailNames[$mail] = $entry["name"];
             }
             $mailCounts[$mail]++;
         }
@@ -444,7 +447,7 @@ function createSpamFilterByMail($logEntries)
 
             // Create new Spam-Filter rule
             $insertStatement = $dbPdo->prepare("INSERT INTO `spam_filter` (`name`, `reason`, `type`, `ip`, `mail`, `created`, `expires`, `initiator`) VALUES (:name, :reason, 'mail', '', :mail, NOW(), :expires, 'AUTO_DETECT')");
-            $insertStatement->bindValue(':name', $mail);
+            $insertStatement->bindValue(':name', $mailNames[$mail]);
             $insertStatement->bindValue(':reason', $reason);
             $insertStatement->bindValue(':mail', $mail);
             $insertStatement->bindValue(':expires', $expires);
