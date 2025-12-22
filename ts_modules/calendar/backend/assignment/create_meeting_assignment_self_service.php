@@ -40,6 +40,16 @@ meetingShouldBeBlockedByMe($meetingId);
 meetingShouldBeUnassigned($meetingId);
 
 
+// ----------- 3a. Spam Filter (only in self-service) ------------
+logMeetingAssignment($clientData["name"], $clientData["mail"]);
+
+//Check if sum of the logs creates any spam-filter
+createSpamFilterFromLog();
+
+//Check if ip or mail is blocked by spam-filter -> exit
+shouldNotBeBlockedBySpamFilter($_SERVER["REMOTE_ADDR"], $clientData["mail"]);
+
+
 // ----------- 4. Assign Meeting ------------
 //Insert client data
 try {

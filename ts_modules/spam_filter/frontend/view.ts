@@ -19,7 +19,7 @@ export default class SpamFilterView {
         this.modal.addEventListener("hide.bs.modal", SpamFilterModule.controller.refreshSpamFilterList);
 
 
-        let tableColumns = {
+        let tableColumns = { 
             id: "Id",
             name: "Name",
             created: "Erstellt",
@@ -37,6 +37,7 @@ export default class SpamFilterView {
 
         Stubegru.dom.addEventListener("#spam_filter_create_button", "click", SpamFilterModule.controller.showSpamFilterModalForCreate);
 
+        this.updateInfoText();
         this.resetModalForm(); //reset once to load default values
     }
 
@@ -129,6 +130,18 @@ export default class SpamFilterView {
     resetModalForm = () => {
         this.modalForm.reset();
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_created").innerHTML = Stubegru.utils.formatDate(new Date(), "DD.MM.YYYY");
+    }
+
+    updateInfoText(){
+        const config = Stubegru.constants.CUSTOM_CONFIG;
+        Stubegru.dom.querySelector("#spam_filter_info_text").innerHTML = `
+        <i class="fas fa-info-circle"></i>
+        Personen für die ein Spam Filter eingetragen ist können <b>keine Termine im Self-Service</b> buchen. Spam Filter können hier manuell erstellt, angepasst oder entfernt werden.<br>
+        Bucht eine Person viele Termine in kurzer Zeit wird für sie automatisch ein Spam Filter erstellt:<br>
+        - Mehr als ${config.selfServiceMaxMeetingsByIp} Buchungen von einer IP innerhalb von ${config.selfServiceMaxMeetingsByIpSeconds} Sekunden => ${config.selfServiceMaxMeetingsByIpExpireDays} Tage gesperrt.
+        <br>
+        - Mehr als ${config.selfServiceMaxMeetingsByMail} Buchungen von einer Mailadresse innerhalb von ${config.selfServiceMaxMeetingsByMailDays} Tagen => ${config.selfServiceMaxMeetingsByMailExpireDays} Tage gesperrt.
+        `
     }
 
 
