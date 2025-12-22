@@ -460,3 +460,26 @@ function createSpamFilterByMail($logEntries)
         }
     }
 }
+
+function shouldNotBeBlockedBySpamFilter($ip, $mail)
+{
+    global $dbPdo;
+
+    // Check IP
+    $ipStatement = $dbPdo->prepare("SELECT COUNT(*) FROM `spam_filter` WHERE `type` = 'ip' AND `ip` = :ip");
+    $ipStatement->bindValue(':ip', $ip);
+    $ipStatement->execute();
+    if ($ipStatement->fetchColumn() > 0) {
+        echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht gebucht werden.", "spamFilter" => "ip"));
+        exit;
+    }
+
+    // Check Mail
+    $mailStatement = $dbPdo->prepare("SELECT COUNT(*) FROM `spam_filter` WHERE `type` = 'mail' AND `mail` = :mail");
+    $mailStatement->bindValue(':mail', $mail);
+    $mailStatement->execute();
+    if ($mailStatement->fetchColumn() > 0) {
+        echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht gebucht werden.", "spamFilter" => "mail"));
+        exit;
+    }
+}
