@@ -164,7 +164,7 @@ function generateEventIcsAttachment($eventInstance, $isCancelled = false)
 
     $eventSummary = $eventInstance["name"];
     $eventLocation = $eventInstance["location"];
-    $eventDescription = ""; //TODO set event description
+    $eventDescription = $eventInstance["link"];
 
     if ($isCancelled) {
         $icsString = generateEventIcsString($eventId, $startTimestampUTC, $endTimestampUTC, $eventSummary, $eventDescription, $eventLocation, "100", "CANCELLED");
