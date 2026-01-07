@@ -8,7 +8,7 @@ class EventInstanceView {
         for (const inputName in presetValues) {
             const optionsList = presetValues[inputName];
             const selectElement = document.querySelector(`#eventInstanceModalForm [name='${inputName}']`) as HTMLSelectElement;
-            optionsList.forEach(option => selectElement.add(new Option(option.name,option.value)));
+            optionsList.forEach(option => selectElement.add(new Option(option.name, option.value)));
         }
 
         //insert userLists
@@ -18,6 +18,12 @@ class EventInstanceView {
                 elem.add(new Option(user.name, user.id));
             }
         });
+
+        //enter start date -> autofill end date
+        document.querySelector(`#eventInstanceModalForm [name='startDate']`).addEventListener("change", () => {
+            let startDate = (document.querySelector(`#eventInstanceModalForm [name='startDate']`) as HTMLInputElement).value;
+            (document.querySelector(`#eventInstanceModalForm [name='endDate']`) as HTMLInputElement).value = startDate;
+        })
 
         //init category select
         await EventInstanceView.refreshEventTypeSelect();
@@ -39,7 +45,7 @@ class EventInstanceView {
             prevText: "<i class='fas fa-angle-left'>",
             searchField: document.getElementById("eventInstanceFilter"),
             tableDidUpdate: EventInstanceView.onUpdateListView
-        }; 
+        };
 
         //@ts-expect-error
         EventInstanceView.sortableTable = $('#eventInstanceTable').tableSortable(tableOptions);

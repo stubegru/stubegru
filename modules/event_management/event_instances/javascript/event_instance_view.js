@@ -14,6 +14,11 @@ class EventInstanceView {
                 elem.add(new Option(user.name, user.id));
             }
         });
+        //enter start date -> autofill end date
+        document.querySelector(`#eventInstanceModalForm [name='startDate']`).addEventListener("change", () => {
+            let startDate = document.querySelector(`#eventInstanceModalForm [name='startDate']`).value;
+            document.querySelector(`#eventInstanceModalForm [name='endDate']`).value = startDate;
+        });
         //init category select
         await EventInstanceView.refreshEventTypeSelect();
     }
