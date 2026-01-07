@@ -14,6 +14,9 @@ function handleMailingOnCreate($eventInstanceId)
     $assigneeRecipients = buildRecipients($eventInstance["assigneesInternal"], $userList);
     triggerEventMail("event_create_assignee.html", $assigneeRecipients, $eventInstance, $userList, "CONFIRMED");
     scheduleReminderMail("event_reminder_assignee.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderAssignee",  $eventInstance["reminderInternal"]);
+    //Send reminder for monitoring one week AFTER the event
+    $oneWeekAfter = -7;
+    scheduleReminderMail("event_reminder_monitoring.html", $assigneeRecipients, $eventInstance, $userList, "eventInstanceReminderMonitoring", $oneWeekAfter);
 
     //Trigger Mail for PR
     $prRecipients = buildRecipients($eventInstance["assigneesPR"], $userList);
@@ -66,9 +69,10 @@ function scheduleReminderMail($templateName, $recipient, $eventInstance, $userLi
 {
     global $dbPdo;
 
-    if (isset($daysBefore) && $daysBefore >= 0) {
+    if (isset($daysBefore) && is_numeric($daysBefore)) {
         $date = DateTime::createFromFormat('Y-m-d', $eventInstance["startDate"]);
-        $date = date_sub($date, DateInterval::createFromDateString("$daysBefore days"));
+        //modify date by number of days. $daysBefore > 0 => subtract days, $daysBefore < 0 => add days
+        $date->modify(($daysBefore > 0 ? '-' : '+') . abs($daysBefore) . ' days'); 
         $date = $date->format(("Y-m-d"));
 
         $templateRaw = loadStubegruMailtemplate($templateName);
