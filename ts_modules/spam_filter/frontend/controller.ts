@@ -21,6 +21,7 @@ export default class SpamFilterController {
 
     async handleSpamFilterEdit(spamfilterId: string) {
         try {
+            SpamFilterModule.view.checkForRequiredFilterAttribute()
             let spamfilterData = SpamFilterModule.view.getModalFormData();
             spamfilterData.id = spamfilterId;
             const resp = await SpamFilterModule.service.updateSpamFilter(spamfilterData);
@@ -34,6 +35,7 @@ export default class SpamFilterController {
 
     async handleSpamFilterCreate() {
         try {
+            SpamFilterModule.view.checkForRequiredFilterAttribute()
             let spamfilterData = SpamFilterModule.view.getModalFormData();
             const resp = await SpamFilterModule.service.createSpamFilter(spamfilterData);
             Alert.alertResp(resp, "Spam Filter");

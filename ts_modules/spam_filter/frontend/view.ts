@@ -1,3 +1,4 @@
+import Alert from "../../../components/alert/alert.js";
 import { Modal } from "../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
 import { TableSortable } from "../../../components/table-sortable/ts_wrapper.js";
@@ -19,7 +20,7 @@ export default class SpamFilterView {
         this.modal.addEventListener("hide.bs.modal", SpamFilterModule.controller.refreshSpamFilterList);
 
 
-        let tableColumns = { 
+        let tableColumns = {
             id: "Id",
             name: "Name",
             created: "Erstellt",
@@ -55,6 +56,9 @@ export default class SpamFilterView {
             spamFilter.actionButton = editBtn + deleteBtn;
 
             spamFilter.created = Stubegru.utils.formatDate(spamFilter.created, "DD.MM.YYYY");
+            spamFilter.expires = Stubegru.utils.formatDate(spamFilter.expires, "DD.MM.YYYY");
+            spamFilter.type = `<div class="label label-primary">${spamFilter.type}</div>`;
+
             tableDataList.push(spamFilter);
         }
 
@@ -123,6 +127,30 @@ export default class SpamFilterView {
         return spamfilterData;
     }
 
+    /**
+     * Checks if the type-corresponding filter property (mail or ip) is set in the modal form
+     */
+    checkForRequiredFilterAttribute() {
+        let type = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_type").value;
+        let mail = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_mail").value;
+        let ip = Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_ip").value;
+
+        if (type == "mail") {
+            if (mail == undefined || mail == "") {
+                throw new Error("Um einen Spamfilter vom Typ 'mail' zu erstellen muss eine Mailadresse angegeben werden.");
+            }
+        } else {
+            if (type == "ip") {
+                if (ip == undefined || ip == "") {
+                    throw new Error("Um einen Spamfilter vom Typ 'ip' zu erstellen muss eine Ip Adresse angegeben werden.");
+                }
+            }
+            else {
+                throw new Error("Spamfilter: Ungültiger Wert für Typ! Spamfilter muss vom Typ 'mail' oder 'ip' sein.");
+            }
+        }
+    }
+
     setFooterInfoVisibility(state: boolean) {
         Stubegru.dom.setVisibility("#spam_filter_modal_footer_info", state);
     }
@@ -132,15 +160,15 @@ export default class SpamFilterView {
         Stubegru.dom.querySelectorAsInput("#spam_filter_modal_form_created").innerHTML = Stubegru.utils.formatDate(new Date(), "DD.MM.YYYY");
     }
 
-    updateInfoText(){
+    updateInfoText() {
         const config = Stubegru.constants.CUSTOM_CONFIG;
         Stubegru.dom.querySelector("#spam_filter_info_text").innerHTML = `
         <i class="fas fa-info-circle"></i>
         Personen für die ein Spam Filter eingetragen ist können <b>keine Termine im Self-Service</b> buchen. Spam Filter können hier manuell erstellt, angepasst oder entfernt werden.<br>
-        Bucht eine Person viele Termine in kurzer Zeit wird für sie automatisch ein Spam Filter erstellt:<br>
-        - Mehr als ${config.selfServiceMaxMeetingsByIp} Buchungen von einer IP innerhalb von ${config.selfServiceMaxMeetingsByIpSeconds} Sekunden => ${config.selfServiceMaxMeetingsByIpExpireDays} Tage gesperrt.
+        Bucht eine Person viele Termine in kurzer Zeit, wird für sie automatisch ein Spam Filter erstellt:<br>
+        - Mehr als <b>${config.selfServiceMaxMeetingsByIp} Buchungen von einer IP</b> innerhalb von <b>${config.selfServiceMaxMeetingsByIpSeconds} Sekunden</b> => <b>${config.selfServiceMaxMeetingsByIpExpireDays} Tage</b> gesperrt.
         <br>
-        - Mehr als ${config.selfServiceMaxMeetingsByMail} Buchungen von einer Mailadresse innerhalb von ${config.selfServiceMaxMeetingsByMailDays} Tagen => ${config.selfServiceMaxMeetingsByMailExpireDays} Tage gesperrt.
+        - Mehr als <b>${config.selfServiceMaxMeetingsByMail} Buchungen von einer Mailadresse</b> innerhalb von <b>${config.selfServiceMaxMeetingsByMailDays} Tagen</b> => <b>${config.selfServiceMaxMeetingsByMailExpireDays} Tage</b> gesperrt.
         `
     }
 

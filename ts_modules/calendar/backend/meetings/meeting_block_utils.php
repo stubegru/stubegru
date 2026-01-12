@@ -46,6 +46,9 @@ function isMeetingBlock($meetingId, $forceAllData = false)
     return $result;
 }
 
+/**
+ * Set or unset meeting block. This function does NOT check if setting the meeting block is desired in this scenario.
+ */
 function setMeetingBlock($meetingId, $userId, $block)
 {
     global $dbPdo;
