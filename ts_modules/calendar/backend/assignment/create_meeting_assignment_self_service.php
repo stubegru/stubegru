@@ -47,7 +47,7 @@ logMeetingAssignment($clientData["name"], $clientData["mail"]);
 createSpamFilterFromLog();
 
 //Check if ip or mail is blocked by spam-filter -> exit
-shouldNotBeBlockedBySpamFilter($_SERVER["REMOTE_ADDR"], $clientData["mail"]);
+shouldNotBeBlockedBySpamFilter($meetingId, $_SERVER["REMOTE_ADDR"], $clientData["mail"]);
 
 
 // ----------- 4. Assign Meeting ------------

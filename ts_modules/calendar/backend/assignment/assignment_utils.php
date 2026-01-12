@@ -394,7 +394,7 @@ function createSpamFilterByIp($logEntries)
 
     foreach ($ipCounts as $ip => $count) {
         if ($count > $maxMeetingsByIp) {
-            $reason = "Zu viele Anfragen von dieser IP ($ip) innerhalb von $maxMeetingsByIpSeconds Sekunden.";
+            $reason = "Automatisch erstellt: Zu viele Anfragen von dieser IP ($ip) innerhalb von $maxMeetingsByIpSeconds Sekunden.";
             $expires = (clone $now)->modify("+$maxMeetingsByIpExpireDays days")->format('Y-m-d');
 
             // Create new Spam-Filter rule
@@ -442,7 +442,7 @@ function createSpamFilterByMail($logEntries)
 
     foreach ($mailCounts as $mail => $count) {
         if ($count > $maxMeetingsByMail) {
-            $reason = "Zu viele Anfragen mit dieser Mailadresse ($mail) innerhalb von $maxMeetingsByMailDays Tagen.";
+            $reason = "Automatisch erstellt: Zu viele Anfragen mit dieser Mailadresse ($mail) innerhalb von $maxMeetingsByMailDays Tagen.";
             $expires = (clone $now)->modify("+$maxMeetingsByMailExpireDays days")->format('Y-m-d');
 
             // Create new Spam-Filter rule
@@ -461,7 +461,7 @@ function createSpamFilterByMail($logEntries)
     }
 }
 
-function shouldNotBeBlockedBySpamFilter($ip, $mail)
+function shouldNotBeBlockedBySpamFilter($meetingId, $ip, $mail)
 {
     global $dbPdo;
 
@@ -471,6 +471,7 @@ function shouldNotBeBlockedBySpamFilter($ip, $mail)
     $ipStatement->execute();
     if ($ipStatement->fetchColumn() > 0) {
         echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht gebucht werden.", "spamFilter" => "ip"));
+        setMeetingBlock($meetingId, null, false); //Remove meeting block and cancel assignment
         exit;
     }
 
@@ -480,6 +481,7 @@ function shouldNotBeBlockedBySpamFilter($ip, $mail)
     $mailStatement->execute();
     if ($mailStatement->fetchColumn() > 0) {
         echo json_encode(array("status" => "error", "message" => "Der Termin konnte nicht gebucht werden.", "spamFilter" => "mail"));
+        setMeetingBlock($meetingId, null, false); //Remove meeting block and cancel assignment
         exit;
     }
 }

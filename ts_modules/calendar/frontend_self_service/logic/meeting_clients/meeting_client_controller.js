@@ -1,4 +1,5 @@
 import Alert from "../../../../../components/alert/alert.js";
+import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 export default class MeetingClientController {
     init() { }
@@ -45,6 +46,7 @@ export default class MeetingClientController {
         //Assign save button
         CalendarModule.meetingClientView.setAssignSaveButtonEvent(async () => {
             try {
+                Stubegru.dom.querySelector("#meeting_assign_save_button").innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
                 const clientData = CalendarModule.meetingClientView.getClientData();
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp, meeting);
@@ -55,6 +57,9 @@ export default class MeetingClientController {
             }
             catch (error) {
                 Alert.alertError(error);
+            }
+            finally {
+                Stubegru.dom.querySelector("#meeting_assign_save_button").innerHTML = `<i class="far fa-calendar-check"></i>&nbsp;Termin jetzt buchen`;
             }
         });
         //Assign cancel button
