@@ -16,5 +16,8 @@
         "frontend/module.js"
     ],
     "css": [],
-    "cronjob": []
+    "cronjob": [
+        "cronjob/delete_old_log_entries.php",
+        "cronjob/delete_expired_spam_filter.php"
+    ]
 }
