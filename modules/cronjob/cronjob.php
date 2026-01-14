@@ -28,6 +28,7 @@ $INCLUDED_IN_SCRIPT = true;
 require_once "$BASE_PATH/utils/constants.php";
 
 $MODULES_PATH = "$BASE_PATH/modules/";
+$TS_MODULES_PATH = "$BASE_PATH/ts_modules/";
 $MODULE_FILE_NAME = "module.json";
 $CONFIG_PATH = "$BASE_PATH/custom/";
 $CONFIG_FILE_NAME = "config.json";
@@ -46,6 +47,9 @@ $adminMail = $constants["CUSTOM_CONFIG"]["adminMail"];
 
 //Scan for all module's json files
 $jsonList = scanForModules($MODULES_PATH);
+$jsonListTs = scanForModules($TS_MODULES_PATH);
+$jsonList = array_merge($jsonList,$jsonListTs);
+
 foreach ($jsonList as $jsonPath) {
     $cstr = file_get_contents($jsonPath);
     $json = json_decode($cstr, true); // decode the JSON into an associative array
