@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Erstellungszeit: 03. Dez 2025 um 09:58
--- Server-Version: 12.0.2-MariaDB
--- PHP-Version: 8.4.12
+-- Erstellungszeit: 14. Jan 2026 um 10:52
+-- Server-Version: 12.1.2-MariaDB
+-- PHP-Version: 8.5.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -317,6 +317,38 @@ CREATE TABLE `role_presets` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `self_service_log`
+--
+
+CREATE TABLE `self_service_log` (
+  `id` int(11) NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `mail` varchar(300) NOT NULL,
+  `created` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `spam_filter`
+--
+
+CREATE TABLE `spam_filter` (
+  `id` int(11) NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `reason` varchar(1000) NOT NULL,
+  `type` varchar(300) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `mail` varchar(300) NOT NULL,
+  `created` timestamp NOT NULL,
+  `expires` date NOT NULL,
+  `initiator` varchar(300) NOT NULL COMMENT 'Creator of this entry. User id of the creator or AUTO_DETECT'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `survey_answers`
 --
 
@@ -616,6 +648,18 @@ ALTER TABLE `role_presets`
   ADD PRIMARY KEY (`roleId`,`type`,`subjectId`);
 
 --
+-- Indizes für die Tabelle `self_service_log`
+--
+ALTER TABLE `self_service_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indizes für die Tabelle `spam_filter`
+--
+ALTER TABLE `spam_filter`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indizes für die Tabelle `survey_answers`
 --
 ALTER TABLE `survey_answers`
@@ -766,8 +810,20 @@ ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `survey_answers`
+-- AUTO_INCREMENT für Tabelle `self_service_log`
 --
+ALTER TABLE `self_service_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `spam_filter`
+--
+ALTER TABLE `spam_filter`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT für Tabelle `survey_answers`
+s--
 ALTER TABLE `survey_answers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
