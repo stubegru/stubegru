@@ -47,10 +47,10 @@ export default class SpamFilterView {
 
         for (let spamFilterId in spamFilterList) {
             let spamFilter = spamFilterList[spamFilterId] as SpamFilterListItem;
-            let editBtn = `<button type="button" class="btn btn-primary btn-sm spam-filter-edit-btn" data-spam-filter-id="${spamFilter.id}" title="Bearbeiten">
+            let editBtn = `<button type="button" class="btn btn-primary btn-sm spam-filter-edit-btn permission-SPAM_FILTER_WRITE permission-required" data-spam-filter-id="${spamFilter.id}" title="Bearbeiten">
                                 <i class="fas fa-pencil-alt"></i> Bearbeiten
                            </button>`;
-            let deleteBtn = `&nbsp;<button class="btn btn-danger btn-sm spam-filter-delete-btn" type="button" data-spam-filter-id="${spamFilter.id}" title="Löschen">
+            let deleteBtn = `&nbsp;<button class="btn btn-danger btn-sm spam-filter-delete-btn permission-SPAM_FILTER_WRITE permission-required" type="button" data-spam-filter-id="${spamFilter.id}" title="Löschen">
                                 <i class="far fa-trash-alt"></i> Löschen
                              </button>`;
             spamFilter.actionButton = editBtn + deleteBtn;
@@ -71,6 +71,8 @@ export default class SpamFilterView {
 
 
     registerListItemButtons() {
+        UserUtils.updateAdminElements();
+
         Stubegru.dom.querySelectorAll(".spam-filter-edit-btn").forEach(elem => {
             const spamfilterId = elem.getAttribute("data-spam-filter-id") as string;
             Stubegru.dom.addEventListener(elem, "click", () => SpamFilterModule.controller.showSpamFilterModalForUpdate(spamfilterId));
