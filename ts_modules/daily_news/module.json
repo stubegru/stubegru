@@ -25,6 +25,6 @@
         "daily_news.css"
     ],
     "cronjob": [
-        "unlink_broken_wikiwords_cronjob.php"
+        "backend/unlink_broken_wikiwords_cronjob.php"
     ]
 }
