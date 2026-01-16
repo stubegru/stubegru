@@ -43,7 +43,7 @@ export default class MeetingController {
         CalendarModule.meetingClientView.setClientVisible(false);
 
         if (resp.isBlocked) {
-            m.setInfoAlert(`Dieser Termin wird aktuell von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden. Bitte buchen Sie einen anderen Termin oder versuchen Sie es zu einem späteren Zeitpunkt nochmal!`);
+            m.setInfoAlert(`Dieser Termin ist gerade von einer anderen Person ausgewählt worden. Daher kann dieser Termin aktuell nicht vergeben werden. Bitte buchen Sie einen anderen Termin oder versuchen Sie es zu einem späteren Zeitpunkt nochmal!`);
             await CalendarModule.calendarView.refresh();
             return;
         }

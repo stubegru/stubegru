@@ -88,7 +88,7 @@ class MeetingView {
     async showBlockError() {
         await Alert.alert({
             title: "Termin ist blockiert",
-            text: `Dieser Termin wird bereits von einem anderen Nutzer bearbeitet. Daher kann dieser Termin aktuell nicht vergeben werden.`,
+            text: `Dieser Termin ist gerade von einer anderen Person ausgewählt worden. Daher kann dieser Termin aktuell nicht vergeben werden.`,
             type: "error"
         });
     }
