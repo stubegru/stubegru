@@ -823,7 +823,7 @@ ALTER TABLE `spam_filter`
 
 --
 -- AUTO_INCREMENT für Tabelle `survey_answers`
-s--
+--
 ALTER TABLE `survey_answers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
