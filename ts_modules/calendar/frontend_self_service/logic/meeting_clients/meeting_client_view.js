@@ -7,6 +7,11 @@ export default class MeetingClientView {
     init() {
         Stubegru.dom.querySelectorAll(".meeting-client").forEach(elem => Stubegru.dom.addEventListener(elem, "change", () => CalendarModule.meetingView.setUnsavedChanges(true)));
         this.assignFeedbackModal = new AssignFeedbackModal();
+        this.loadPrivacyText();
+    }
+    async loadPrivacyText() {
+        const text = await Stubegru.fetch.getText("ts_modules/calendar/backend/get_self_service_privacy_text.php");
+        Stubegru.dom.querySelector("#self_service_privacy_text").innerHTML = text;
     }
     resetClientForm = () => {
         this.enableClientForm(true);
