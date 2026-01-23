@@ -36,6 +36,7 @@ export interface StubegruCustomConfig {
   roomTemplateAssignment: RoomTemplateAssignment;
   applicationName: string;
   institutionMailAddress: string;
+  institutionPhone: string;
   institutionName: string;
   adminMail: string;
   evaluationSurveyId: string;

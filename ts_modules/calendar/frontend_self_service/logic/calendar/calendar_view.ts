@@ -1,6 +1,5 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
-import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
 import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
 import { Meeting } from "../meetings/meeting_service.js";
 import MeetingView from "../meetings/meeting_view.js";
@@ -44,7 +43,6 @@ export default class CalendarView {
     };
 
     fullCalendar: FullCalendarInstance;
-    assignFeedbackModal: AssignFeedbackModal;
     filterView: CalendarFilterView;
 
 
@@ -55,7 +53,6 @@ export default class CalendarView {
             await this.showInfoText();
         }
 
-        this.assignFeedbackModal = new AssignFeedbackModal();
         this.filterView = new CalendarFilterView();
         await this.filterView.init(this);
 

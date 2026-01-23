@@ -49,7 +49,7 @@ export default class MeetingClientController {
                 Stubegru.dom.querySelector("#meeting_assign_save_button").innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
                 const clientData = CalendarModule.meetingClientView.getClientData();
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
-                CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp, meeting);
+                CalendarModule.meetingClientView.showAssignmentFeedback(resp);
                 await CalendarModule.calendarView.refresh();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
