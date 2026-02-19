@@ -1,12 +1,12 @@
 
 
-let monitoringTemplatePath,surveyId;
+let monitoringTemplatePath, surveyId;
 initMonitoring();
 
 async function initMonitoring() {
     monitoringTemplatePath = $(`stubegruModule[data-name="monitoring"]`).attr("data-template-path");
 
-    if(!monitoringTemplatePath){
+    if (!monitoringTemplatePath) {
         console.warn(`[Monitoring] Could not init monitoring form. Please specify "data-template-path" attribute.`);
         return;
     }
@@ -18,7 +18,7 @@ async function initMonitoring() {
 
     await stubegru.modules.survey.resetSurvey(monitoringTemplatePath, "#monitoringContainerEvaluation", "");
 
-    stubegru.modules.customEvents.trigger("postMonitoringReset").catch(()=>{});
+    stubegru.modules.customEvents.trigger("postMonitoringReset").catch(() => { });
 }
 
 
@@ -31,15 +31,16 @@ $("#monitoringSubmitButton").on("click", async () => {
 });
 
 $("#monitoringSubmitAndNextButton").on("click", async () => {
+    await stubegru.modules.customEvents.trigger("preMonitoringSubmit");
     if (await stubegru.modules.survey.submitSurvey(monitoringTemplatePath)) {
         await stubegru.modules.survey.resetSurvey(monitoringTemplatePath, "#monitoringContainerEvaluation", "");
-        stubegru.modules.customEvents.trigger("postMonitoringReset").catch(()=>{});
+        stubegru.modules.customEvents.trigger("postMonitoringReset").catch(() => { });
     }
 });
 
 $('#monitoringModal').on('hidden.bs.modal', async () => {
     await stubegru.modules.survey.resetSurvey(monitoringTemplatePath, "#monitoringContainerEvaluation", "");
-    stubegru.modules.customEvents.trigger("postMonitoringReset").catch(()=>{});
+    stubegru.modules.customEvents.trigger("postMonitoringReset").catch(() => { });
 });
 
 
