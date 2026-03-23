@@ -38,7 +38,8 @@ export default class UserUtils {
         Stubegru.dom.querySelectorAll(`.permission-required`).forEach(elem => elem.style.display = "none"); //Hide all
         for (let perm of UserUtils.currentUser.permissionRequests) {
             if (perm.access) {
-                Stubegru.dom.querySelectorAll(`.permission-${perm.name}`).forEach(elem => elem.style.display = "inline-block"); //Hide all
+                Stubegru.dom.querySelectorAll(`.permission-${perm.name}`).forEach(elem => elem.style.display = "block"); //Show all elements with present
+                //TODO: dont reset to display:block, use stubegru-hidden class instead
             }
         }
     }

@@ -4,11 +4,19 @@
 }
 
 .stubegru-module-subtitle{
-    margin-top: -20px;
+    margin-top: -10px;
     font-style: italic;
+}
+
+.stubegru-module-padding{
+    padding: 0px 30px;
 }
 
 .stubegru-modal-footer-wide{
     padding: 10px;
     display: block;
+}
+
+.stubegru-hidden{
+    display: hidden !important;
 }

@@ -1,127 +1,112 @@
-<div class="row">
-    <div class="col-sm-1"></div>
-    <div class="col-sm-10">
-        <h2><i class="fas fa-user-shield"></i> Admin Tools </h2>
+<div>
+    <div class="mail-log permission-MAIL_LOG permission-required">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="#collapse_mail_log" data-toggle="collapse" aria-expanded="false" class="stubegru-module-title">
+                    <h4><i class="fas fa-mail-bulk"></i> Mail Log <i class="fas fa-caret-down"></i></h4>
+                    <div class="stubegru-module-subtitle">Hier werden alle Mails aufgelistet, die über Stubegru versendet wurden.</div>
+                </a>
+            </div>
+            <div class="collapse" id="collapse_mail_log">
 
 
-
-        <div class="mail-log permission-MAIL_LOG permission-required">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="panel-title">
-                        <a href="#collapseMailLog" data-toggle="collapse" aria-expanded="false">
-                            <h3><i class="fas fa-mail-bulk"></i> Mail Log <i class="fas fa-caret-down"></i> </h3>
-                        </a>
-                        <div style="margin-top: -10px;"><i>Hier werden alle Mails aufgelistet, die über Stubegru versendet wurden.</i></div>
-                    </span>
-                </div>
-
-                <div class="panel-collapse collapse" id="collapseMailLog">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="alert alert-info"><i class="fas fa-trash-restore"></i> Mails werden automatisiert nach <b id="mailLogKeepMails">einigen Tagen</b> aus dem Log gelöscht.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="mailLogAddon"><i class="fas fa-filter"></i>&nbsp;Mail Log Filtern:</span>
-                                    <input type="text" class="form-control" placeholder="Datum, Absender, Status...." aria-describedby="mailLogAddon" id="mailLogFilter">
-                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="mailLogClearFilter"><i class="fas fa-times"></i></span>
-                                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-info"><i class="fas fa-trash-restore"></i> Mails werden automatisiert nach <b id="mailLogKeepMails">einigen Tagen</b> aus dem Log gelöscht.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="mailLogAddon"><i class="fas fa-filter"></i>&nbsp;Mail Log Filtern:</span>
+                                <input type="text" class="form-control" placeholder="Datum, Absender, Status...." aria-describedby="mailLogAddon" id="mailLogFilter">
+                                <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="mailLogClearFilter"><i class="fas fa-times"></i></span>
                             </div>
                         </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="mailLogTable"></div>
-                            </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="mailLogTable"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="cronjob-mails permission-MAIL_LOG permission-required">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="panel-title">
-                        <a href="#collapseCronjobMails" data-toggle="collapse" aria-expanded="false">
-                            <h3><i class="fas fa-user-clock"></i> Vorgemerkte Mails <i class="fas fa-caret-down"></i></h3>
-                        </a>
-                        <div style="margin-top: -10px;"><i>Hier werden alle Mails aufgelistet, deren Versand über Stubegru geplant und terminiert ist.</i></div>
-                    </span>
-                </div>
-
-                <div class="panel-collapse collapse" id="collapseCronjobMails">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            </div>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="cronjobMailAddon"><i class="fas fa-filter"></i>&nbsp;Vorgemerkte Mails Filtern:</span>
-                                    <input type="text" class="form-control" placeholder="Datum, Empfänger, Typ...." aria-describedby="cronjobMailAddon" id="cronjobMailFilter">
-                                    <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="cronjobMailClearFilter"><i class="fas fa-times"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div id="cronjobMailTable"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="admin-tools-misc">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <span class="panel-title">
-                        <a href="#collapseAdminToolsMisc" data-toggle="collapse" aria-expanded="false">
-                            <h3><i class="fas fa-cogs"></i> Sonstige Tools für Admins <i class="fas fa-caret-down"></i></h3>
-                        </a>
-                        <div style="margin-top: -10px;"><i>Mailsystem, Cronjob & mehr</i></div>
-                    </span>
-                </div>
-
-                <div class="panel-collapse collapse" id="collapseAdminToolsMisc">
-                    <div class="panel-body">
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4><i class="fas fa-envelope"></i> Mailsystem testen</h4>
-                                <a target="_blank" href="modules/mailing/mail_test.php">> Hier geht's zur Testseite</a>
-                            </div>
-                        </div>
-
-                        <br>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4><i class="fas fa-robot"></i> Cronjob manuell ausführen</h4>
-
-                                <div class="alert alert-warning">
-                                    <i class="fas fa-exclamation-triangle"></i> Der Cronjob ist ein Skript, das üblicherweise jede Nacht ausgeführt wird. Es führt Aufräumarbeiten im Stubegru System durch. Der Cronjob wird vom Server-Admin konfiguriert. Hier kann der Cronjob manuell ausgeführt werden. Dies kann inkonsistente Datensätze verursachen, wenn gerade Nutzer in Stubegru angemeldet sind. Bitte nur benutzen, wenn du weißt, was du tust...
-                                    <br><br>
-
-                                    <button type="button" class="btn btn-primary" id="executeCronjobButton"><i class="fas fa-play-circle"></i> Cronjob jetzt ausführen</button>
-                                </div>
-
-                                <div class="well" id="cronjobLog" style="display: none; font-family: monospace;"></div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
-    <div class="col-sm-1"></div>
+
+    <div class="cronjob-mails permission-MAIL_LOG permission-required">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="#collapse_cronjob_mails" data-toggle="collapse" aria-expanded="false" class="stubegru-module-title">
+                    <h4><i class="fas fa-user-clock"></i> Vorgemerkte Mails <i class="fas fa-caret-down"></i></h4>
+                    <div class="stubegru-module-subtitle">Hier werden alle Mails aufgelistet, deren Versand über Stubegru geplant und terminiert ist.</div>
+                </a>
+            </div>
+            <div class="collapse" id="collapse_cronjob_mails">
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-addon" id="cronjobMailAddon"><i class="fas fa-filter"></i>&nbsp;Vorgemerkte Mails Filtern:</span>
+                                <input type="text" class="form-control" placeholder="Datum, Empfänger, Typ...." aria-describedby="cronjobMailAddon" id="cronjobMailFilter">
+                                <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="cronjobMailClearFilter"><i class="fas fa-times"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="cronjobMailTable"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-tools-misc permission-MAIL_LOG permission-required">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="#collapse_admin_tools_misc" data-toggle="collapse" aria-expanded="false" class="stubegru-module-title">
+                    <h4><i class="fas fa-cogs"></i> Sonstige Tools für Admins <i class="fas fa-caret-down"></i></h4>
+                    <div class="stubegru-module-subtitle">Mailsystem, Cronjob & mehr</div>
+                </a>
+            </div>
+            <div class="collapse" id="collapse_admin_tools_misc">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4><i class="fas fa-envelope"></i> Mailsystem testen</h4>
+                            <a target="_blank" href="modules/mailing/mail_test.php">> Hier geht's zur Testseite</a>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4><i class="fas fa-robot"></i> Cronjob manuell ausführen</h4>
+
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle"></i> Der Cronjob ist ein Skript, das üblicherweise jede Nacht ausgeführt wird. Es führt Aufräumarbeiten im Stubegru System durch. Der Cronjob wird vom Server-Admin konfiguriert. Hier kann der Cronjob manuell ausgeführt werden. Dies kann inkonsistente Datensätze verursachen, wenn gerade Nutzer in Stubegru angemeldet sind. Bitte nur benutzen, wenn du weißt, was du tust...
+                                <br><br>
+
+                                <button type="button" class="btn btn-primary" id="executeCronjobButton"><i class="fas fa-play-circle"></i> Cronjob jetzt ausführen</button>
+                            </div>
+
+                            <div class="well" id="cronjobLog" style="display: none; font-family: monospace;"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

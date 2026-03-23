@@ -1,40 +1,37 @@
-<div class="row">
-    <div class="col-sm-1"></div>
-    <div class="col-sm-10">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="#collapse_spam_filter" data-toggle="collapse" aria-expanded="false" class="stubegru-module-title">
-                    <h4 class="mb-4"><i class="fas fa-shield-alt"></i> Spam Filter</h4>
-                    <div class="stubegru-module-subtitle">Automatische und Manuelle Blacklist für Terminbuchungen</div>
-                </a>
-            </div>
-            <div class="collapse" id="collapse_spam_filter">
-                <div class="panel-body">
+<div class="permission-SPAM_FILTER_READ permission-required">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="#collapse_spam_filter" data-toggle="collapse" aria-expanded="false" class="stubegru-module-title">
+                <h4><i class="fas fa-shield-alt"></i> Spam Filter</h4>
+                <div class="stubegru-module-subtitle">Automatische und Manuelle Blacklist für Terminbuchungen</div>
+            </a>
+        </div>
+        <div class="collapse" id="collapse_spam_filter">
+            <div class="panel-body">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <span class="input-group-addon" id="spam_filter_search_addon"><i class="fas fa-filter"></i>&nbsp;Filtern:</span>
-                                <input type="text" class="form-control" placeholder="Name, Mail, Typ,..." aria-describedby="spam_filter_search_addon" id="spam_filter_filter_input">
-                                <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="spam_filter_filter_clear_button"><i class="fas fa-times"></i></span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-info pull-right permission-SPAM_FILTER_WRITE permission-required" id="spam_filter_create_button">
-                                <i class="fas fa-plus"></i>&nbsp; Neue Filterregel
-                            </button>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="spam_filter_search_addon"><i class="fas fa-filter"></i>&nbsp;Filtern:</span>
+                            <input type="text" class="form-control" placeholder="Name, Mail, Typ,..." aria-describedby="spam_filter_search_addon" id="spam_filter_filter_input">
+                            <span class="input-group-addon" style="cursor: pointer;" title="Clear filter" id="spam_filter_filter_clear_button"><i class="fas fa-times"></i></span>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-info pull-right permission-SPAM_FILTER_WRITE permission-required" id="spam_filter_create_button">
+                            <i class="fas fa-plus"></i>&nbsp; Neue Filterregel
+                        </button>
+                    </div>
+                </div>
 
-                    <br>
-                    <div id="spam_filter_table"></div>
+                <br>
+                <div id="spam_filter_table"></div>
 
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="alert alert-info" id="spam_filter_info_text">
-                                <!-- Filled by SpamFilterView -->
-                            </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="alert alert-info" id="spam_filter_info_text">
+                            <!-- Filled by SpamFilterView -->
                         </div>
                     </div>
                 </div>
