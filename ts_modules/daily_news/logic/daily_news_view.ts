@@ -17,11 +17,11 @@ export default class DailyNewsView {
     priorityToggle: Toggle;
 
     async init() {
-        this.richTextEditor = new CKEditor('daily_news_text',{ height: "200px", extraPlugins: "wikiword" });
+        this.richTextEditor = new CKEditor('daily_news_text', { height: "200px", extraPlugins: "wikiword" });
 
         this.modal = new Modal('#daily_news_modal');
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
-        
+
         this.priorityToggle = new Toggle("#daily_news_priority");
         this.onlyCurrentToggle = new Toggle("#daily_news_only_current_toggle");
         this.onlyCurrentToggle.addEventListener("change", this.updateShowCurrentState);
@@ -31,8 +31,8 @@ export default class DailyNewsView {
             event.preventDefault();
             DailyNewsModule.controller.saveDailyNews();
         });
-        
-        this.resetModalForm();
+
+        this.resetModalForm(false);
     }
 
     updateShowCurrentState = () => {
@@ -40,14 +40,16 @@ export default class DailyNewsView {
         Stubegru.dom.slideToState("#daily_news_item_container_future", state);
     }
 
-    resetModalForm = () => {
+    resetModalForm = (setToggle = true) => {
         Stubegru.dom.querySelectorAsInput('#daily_news_title').value = "";
         this.richTextEditor.setData("");
         var d = new Date();
         Stubegru.dom.querySelectorAsInput('#daily_news_start').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
         d = new Date(d.getTime() + 1000 * 60 * 60 * 24 * 7); //Add 7 days
         Stubegru.dom.querySelectorAsInput('#daily_news_end').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
-        this.onlyCurrentToggle.setState(false);
+        if (setToggle) { //Toggle must not be set on initial form reset (toggle lib is buggy...)
+            this.priorityToggle.setState(false);
+        }
     }
 
     toggleMessageView() {
@@ -80,7 +82,7 @@ export default class DailyNewsView {
             let container = new Date(currentNews.beginn).getTime() > new Date().getTime() ? "future" : "present"
             let currentEnd = Stubegru.utils.formatDate(currentNews.ende, "DD.MM.YYYY");
             //@ts-expect-error
-           const textWithRenderedWikiwords = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO: refactor handle WIKIWORDS!!!
+            const textWithRenderedWikiwords = await stubegru.modules.wiki.wikiUtils.handleWikiWords(currentNews.inhalt); //TODO: refactor handle WIKIWORDS!!!
 
             html[container] += `
             <div class="panel panel-default my-2">

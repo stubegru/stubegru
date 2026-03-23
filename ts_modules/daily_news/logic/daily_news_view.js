@@ -22,20 +22,22 @@ export default class DailyNewsView {
             event.preventDefault();
             DailyNewsModule.controller.saveDailyNews();
         });
-        this.resetModalForm();
+        this.resetModalForm(false);
     }
     updateShowCurrentState = () => {
         let state = this.onlyCurrentToggle.getState();
         Stubegru.dom.slideToState("#daily_news_item_container_future", state);
     };
-    resetModalForm = () => {
+    resetModalForm = (setToggle = true) => {
         Stubegru.dom.querySelectorAsInput('#daily_news_title').value = "";
         this.richTextEditor.setData("");
         var d = new Date();
         Stubegru.dom.querySelectorAsInput('#daily_news_start').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
         d = new Date(d.getTime() + 1000 * 60 * 60 * 24 * 7); //Add 7 days
         Stubegru.dom.querySelectorAsInput('#daily_news_end').value = Stubegru.utils.formatDate(d, "YYYY-MM-DD");
-        this.onlyCurrentToggle.setState(false);
+        if (setToggle) { //Toggle must not be set on initial form reset (toggle lib is buggy...)
+            this.priorityToggle.setState(false);
+        }
     };
     toggleMessageView() {
         let showOnlyCurrent = DailyNewsModule.state.showOnlyCurrentMessages;
