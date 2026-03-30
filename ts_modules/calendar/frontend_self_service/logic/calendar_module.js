@@ -24,11 +24,11 @@ class CalendarModule {
         CalendarModule.meetingClientView = new MeetingClientView();
         CalendarModule.meetingController = new MeetingController();
         CalendarModule.meetingClientController = new MeetingClientController();
-        await CalendarModule.calendarView.init();
         await CalendarModule.meetingView.init();
         await CalendarModule.meetingClientView.init();
         await CalendarModule.meetingController.init();
         await CalendarModule.meetingClientController.init();
+        await CalendarModule.calendarView.init(this.meetingController.meetingList);
     }
 }
 export default CalendarModule;

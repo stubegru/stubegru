@@ -38,7 +38,7 @@ export default class CalendarView {
     };
     fullCalendar;
     filterView;
-    async init() {
+    async init(meetingList) {
         if (Stubegru.utils.getParam("textread")) {
             this.showAppointmentContainer();
         }
@@ -46,7 +46,7 @@ export default class CalendarView {
             await this.showInfoText();
         }
         this.filterView = new CalendarFilterView();
-        await this.filterView.init(this);
+        await this.filterView.init(this, meetingList);
         let calendarEl = document.querySelector("#calendar_view_container");
         //@ts-expect-error
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.calendarConfig);

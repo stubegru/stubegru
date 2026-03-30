@@ -1,5 +1,4 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
-import CalendarModule from "../calendar_module.js";
 import MeetingView from "../meetings/meeting_view.js";
 import MultiselectDropdown from "../../../../../components/multi_select_dropdown/multiselect-dropdown.js";
 class CalendarFilterView {
@@ -9,11 +8,11 @@ class CalendarFilterView {
         "phone": "Telefon",
         "webmeeting": "Webmeeting",
     };
-    async init(parent) {
+    async init(parent, meetingList) {
         this.calendarView = parent;
         //Add EventListener for Title-Properties select
         Stubegru.dom.addEventListener("#calendar_view_title_properties", "change", this.calendarView.renderMeetings);
-        await this.initFilterDropdowns();
+        await this.initFilterDropdowns(meetingList);
         //Add eventListener for filter inputs
         document.querySelectorAll(".calendar-filter-input").forEach((elem) => {
             Stubegru.dom.addEventListener(elem, "change", this.calendarView.renderMeetings);
@@ -21,16 +20,20 @@ class CalendarFilterView {
         //Init multiple selects
         MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".calendar-multiple-select" });
     }
-    async initFilterDropdowns() {
+    async initFilterDropdowns(meetingList) {
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`);
         for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
         }
         ;
         const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`);
-        let advisorList = await CalendarModule.meetingService.getAdvisorList();
-        for (let user of advisorList) {
-            ownerFilterElem.add(new Option(user.name, user.id));
+        //Add all meeting-owner to the filter list once
+        let knownAdvisors = []; //list of user ids
+        for (let meeting of meetingList) {
+            if (knownAdvisors.includes(meeting.ownerId))
+                continue;
+            knownAdvisors.push(meeting.ownerId);
+            ownerFilterElem.add(new Option(meeting.owner, meeting.ownerId));
         }
         ;
     }

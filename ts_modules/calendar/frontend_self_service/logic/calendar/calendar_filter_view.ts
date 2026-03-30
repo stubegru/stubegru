@@ -14,12 +14,12 @@ export default class CalendarFilterView {
         "webmeeting": "Webmeeting",
     };
 
-    async init(parent: CalendarView) {
+    async init(parent: CalendarView, meetingList: Meeting[]) {
         this.calendarView = parent;
         //Add EventListener for Title-Properties select
         Stubegru.dom.addEventListener("#calendar_view_title_properties", "change", this.calendarView.renderMeetings);
 
-        await this.initFilterDropdowns();
+        await this.initFilterDropdowns(meetingList);
 
         //Add eventListener for filter inputs
         document.querySelectorAll(".calendar-filter-input").forEach((elem: HTMLSelectElement) => {
@@ -30,16 +30,20 @@ export default class CalendarFilterView {
         MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".calendar-multiple-select" });
     }
 
-    private async initFilterDropdowns() {
+    private async initFilterDropdowns(meetingList: Meeting[]) {
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`) as HTMLSelectElement;
         for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
         };
 
         const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`) as HTMLSelectElement;
-        let advisorList = await CalendarModule.meetingService.getAdvisorList();
-        for (let user of advisorList) {
-            ownerFilterElem.add(new Option(user.name, user.id));
+
+        //Add all meeting-owner to the filter list once
+        let knownAdvisors: string[] = [] //list of user ids
+        for (let meeting of meetingList) {
+            if (knownAdvisors.includes(meeting.ownerId)) continue;
+            knownAdvisors.push(meeting.ownerId);
+            ownerFilterElem.add(new Option(meeting.owner, meeting.ownerId));
         };
     }
 

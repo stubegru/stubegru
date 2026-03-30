@@ -36,12 +36,13 @@ export default class CalendarModule {
         CalendarModule.meetingClientController = new MeetingClientController();
         
         
-        await CalendarModule.calendarView.init();
         await CalendarModule.meetingView.init();
         await CalendarModule.meetingClientView.init();
         
         await CalendarModule.meetingController.init();
         await CalendarModule.meetingClientController.init();
+        
+        await CalendarModule.calendarView.init(this.meetingController.meetingList);
     }
 }
 
