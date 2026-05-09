@@ -2,6 +2,7 @@ import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js"
 import CalendarModule from "../calendar_module.js";
 import MeetingView from "../meetings/meeting_view.js";
 import CalendarFilterView from "./calendar_filter_view.js";
+import Alert from "../../../../../components/alert/alert.js";
 export default class CalendarView {
     calendarConfig = {
         height: "600px",
@@ -78,12 +79,17 @@ export default class CalendarView {
     };
     addMeetings(meetingList, titleProperties) {
         //Generate events for fullcalendar
+        let foundFreeMeeting = false;
         let FCevents = [];
         let filter = this.filterView.generateFilterRules();
         for (let inMeeting of meetingList) {
             if (inMeeting.isBlocked) {
                 continue;
             } //skip blocked meetings
+            //if there is at least one unassigned Meeting => set this flag to true
+            if (inMeeting.teilnehmer == null) {
+                foundFreeMeeting = true;
+            }
             if (this.filterView.passedFilter(inMeeting, filter)) {
                 let titlePropertyList = [];
                 if (titleProperties.title) {
@@ -111,6 +117,14 @@ export default class CalendarView {
             color: "#5cb85c",
             classNames: ["pointer"]
         });
+        if (foundFreeMeeting == false) {
+            Alert.alert({
+                type: "warning",
+                mode: "alert",
+                text: "Aktuell sind keine freien Termine verfügbar. Termine werden einige Wochen im Voraus freigegeben. Schauen Sie gerne regelmäßig auf dieser Webseite nach, ob neue Termine verfügbar sind.",
+                title: "Keine freien Termine"
+            });
+        }
     }
     setEventVisibility(eventSourceId, visible) {
         let allEvents = this.fullCalendar.getEvents();

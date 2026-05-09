@@ -4,6 +4,7 @@ import { CalendarOptions, FullCalendarInstance } from "../../../../../components
 import { Meeting } from "../meetings/meeting_service.js";
 import MeetingView from "../meetings/meeting_view.js";
 import CalendarFilterView, { TitleProperties } from "./calendar_filter_view.js";
+import Alert from "../../../../../components/alert/alert.js";
 
 export default class CalendarView {
 
@@ -72,7 +73,7 @@ export default class CalendarView {
 
     showAppointmentContainer() {
         Stubegru.dom.hide("#self_service_info_text_container")
-        Stubegru.dom.show("#self_service_appointment_container") 
+        Stubegru.dom.show("#self_service_appointment_container")
     }
 
 
@@ -99,11 +100,15 @@ export default class CalendarView {
 
     addMeetings(meetingList: Meeting[], titleProperties: TitleProperties) {
         //Generate events for fullcalendar
+        let foundFreeMeeting = false;
         let FCevents = [];
         let filter = this.filterView.generateFilterRules();
 
         for (let inMeeting of meetingList) {
             if (inMeeting.isBlocked) { continue; } //skip blocked meetings
+
+            //if there is at least one unassigned Meeting => set this flag to true
+            if (inMeeting.teilnehmer == null) { foundFreeMeeting = true; }
 
             if (this.filterView.passedFilter(inMeeting, filter)) {
                 let titlePropertyList = [];
@@ -128,6 +133,15 @@ export default class CalendarView {
             color: "#5cb85c",
             classNames: ["pointer"]
         });
+
+        if(foundFreeMeeting == false){
+            Alert.alert({
+                type: "warning",
+                mode: "alert",
+                text: "Aktuell sind keine freien Termine verfügbar. Termine werden einige Wochen im Voraus freigegeben. Schauen Sie gerne regelmäßig auf dieser Webseite nach, ob neue Termine verfügbar sind.",
+                title: "Keine freien Termine"
+            })
+        }
 
     }
 
