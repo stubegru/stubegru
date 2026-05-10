@@ -1,18 +1,15 @@
+import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
-import Toggle from "../../../../../components/toggles/toggle.js";
 import CalendarModule from "../calendar_module.js";
 import AssignFeedbackModal from "../meetings/assign_feedback_modal.js";
-import UserUtils from "../../../../../components/user_utils/user_utils.js";
-import CalendarSearch from "./calendar_search.js";
-
-//Manually load fullcalendar files
-import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
 import { Meeting } from "../meetings/meeting_service.js";
+import CalendarFilterView from "./calendar_filter_view.js";
+import CalendarSearch from "./calendar_search.js";
 
 export default class CalendarView {
 
-
     calendarConfig: CalendarOptions = {
+        height: "600px",
         locale: 'de',
         initialView: 'dayGridMonth',
         businessHours: {
@@ -23,7 +20,7 @@ export default class CalendarView {
         },
         weekends: false,
         headerToolbar: {
-            start: 'dayGridMonth timeGridWeek',
+            start: 'dayGridMonth timeGridWeek listMonth',
             center: 'title',
             end: 'prev,next'
         },
@@ -47,22 +44,23 @@ export default class CalendarView {
 
     fullCalendar: FullCalendarInstance;
     assignFeedbackModal: AssignFeedbackModal;
-    foreignToggle: Toggle;
-    assignedToggle: Toggle;
     search: CalendarSearch;
+    filterView: CalendarFilterView;
 
 
-    init() {
+    async init() {
         this.search = new CalendarSearch();
         this.assignFeedbackModal = new AssignFeedbackModal();
+        this.filterView = new CalendarFilterView();
 
         let calendarEl = document.querySelector("#calendar_view_container") as HTMLElement;
         //@ts-expect-error
         this.fullCalendar = new FullCalendar.Calendar(calendarEl, this.calendarConfig);
         this.fullCalendar.render();
 
-        this.initFilterMenu();
-        this.refresh();
+        await CalendarModule.meetingController.refreshMeetingList();
+        await this.filterView.init(this, CalendarModule.meetingController.meetingList);
+        this.refreshView();
 
         Stubegru.dom.addEventListener("#calendar_new_meeting_button", "click", () => CalendarModule.meetingController.createMeeting());
 
@@ -70,139 +68,53 @@ export default class CalendarView {
         Stubegru.dom.addEventListener('#collapse_calendar', 'shown.bs.collapse', () => { this.fullCalendar.render(); })
     }
 
-
-    initFilterMenu() {
-        this.foreignToggle = new Toggle("#calendar_settings_foreign_toggle");
-        this.assignedToggle = new Toggle("#calendar_settings_assigned_toggle");
-
-
-        this.foreignToggle.addEventListener("change", (event) => {
-            const showOthers = !this.foreignToggle.getState();
-            this.showOthersMeetings(showOthers);
-        });
-        this.assignedToggle.addEventListener("change", (event) => {
-            const showAssigned = !this.assignedToggle.getState();
-            this.showAssignedMeetings(showAssigned);
-        });
-
-        //Dont hide Calendar Settings dropdown when clicking on a toggle
-        //@ts-expect-error
-        $(document).on('click', '#calendar_settings_dropdown', function (e) { e.preventDefault(); e.stopPropagation(); });
-    }
-
-
-
-    refresh = async () => {
-        this.fullCalendar.removeAllEvents();
+    refreshMeetingList = async () => {
         await CalendarModule.meetingController.refreshMeetingList();
+        this.refreshView();
+    }
+
+    refreshView = () => {
+        //Remove old meetings
+        this.fullCalendar.removeAllEvents();
+        //Add new meetings
         let meetingList = CalendarModule.meetingController.meetingList;
-        this.addMeetings(meetingList);
-        this.showAssignedMeetings(CalendarModule.state.assignedVisible);
-        this.showOthersMeetings(CalendarModule.state.othersVisible);
+        this.renderMeetings(meetingList);
     }
 
 
-    addMeetings(meetingList: Meeting[]) {
+    renderMeetings(meetingList: Meeting[]) {
         //Generate events for fullcalendar
-        let ownUserId = UserUtils.currentUser.id;
-        let ownEvents = { free: [], halfAssigned: [], assigned: [] };
-        let othersEvents = { free: [], halfAssigned: [], assigned: [] };
+        let FCevents = [];
+        let filter = this.filterView.generateFilterRules();
 
         for (let inMeeting of meetingList) {
-            let outMeeting = {
-                title: inMeeting.owner,
-                start: `${inMeeting.date}T${inMeeting.start}`,
-                end: `${inMeeting.date}T${inMeeting.end}`,
-                extendedProps: inMeeting
-            };
+            // TODO: is this a good place to add isAssigned property?
+            inMeeting.isAssigned = inMeeting.teilnehmer && inMeeting.teilnehmer != "";
+            inMeeting.filterAssignState = inMeeting.isAssigned ? "assigned" : "free";
 
-            // Sort meetings by free/halfAssigned/assigned and own/others
-            if (inMeeting.ownerId == ownUserId) {
-                if (inMeeting.teilnehmer && inMeeting.teilnehmer != "") {
-                    ownEvents.assigned.push(outMeeting) //MeetingClient is set
-                } else if (inMeeting.isBlocked) {
-                    ownEvents.halfAssigned.push(outMeeting); //MeetingClient is NOT set but block is set
-                } else {
-                    ownEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
-                }
-            } else {
-                if (inMeeting.teilnehmer && inMeeting.teilnehmer != "") {
-                    othersEvents.assigned.push(outMeeting) //MeetingClient is set
-                } else if (inMeeting.isBlocked) {
-                    othersEvents.halfAssigned.push(outMeeting); //MeetingClient is NOT set but block is set
-                } else {
-                    othersEvents.free.push(outMeeting); //MeetingClient is NOT set and block is NOT set
+            if (this.filterView.passedFilter(inMeeting, filter)) {
 
-                }
+                let meetingColor = inMeeting.isAssigned ? "#d9534f" : inMeeting.isBlocked ? "#ff9d00" : "#5cb85c";
+
+                let outMeeting = {
+                    title: inMeeting.owner,
+                    start: `${inMeeting.date}T${inMeeting.start}`,
+                    end: `${inMeeting.date}T${inMeeting.end}`,
+                    extendedProps: inMeeting,
+                    color: meetingColor
+                };
+                FCevents.push(outMeeting);
             }
         }
 
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
-            id: "stubegru-own-free-events",
-            events: ownEvents.free,
-            color: "#5cb85c",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-own-half-assigned-events",
-            events: ownEvents.halfAssigned,
-            color: "#ff9d00",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-own-assigned-events",
-            events: ownEvents.assigned,
-            color: "#d9534f",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-others-free-events",
-            events: othersEvents.free,
-            color: "#5cb85c",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-others-half-assigned-events",
-            events: othersEvents.halfAssigned,
-            color: "#ff9d00",
-            classNames: ["pointer"]
-        });
-        this.fullCalendar.addEventSource({
-            id: "stubegru-others-assigned-events",
-            events: othersEvents.assigned,
-            color: "#d9534f",
+            id: "stubegru-events",
+            events: FCevents,
             classNames: ["pointer"]
         });
     }
-
-    setEventVisibility(eventSourceId, visible) {
-        let allEvents = this.fullCalendar.getEvents();
-        for (let ev of allEvents) {
-            if (ev.source.id == eventSourceId) {
-                ev.setProp("display", visible ? "auto" : "none");
-            }
-        }
-    }
-
-    showOthersMeetings = (isVisible) => {
-        CalendarModule.state.othersVisible = isVisible;
-        this.setEventVisibility("stubegru-others-free-events", isVisible);
-        if (!isVisible || CalendarModule.state.assignedVisible) {
-            this.setEventVisibility("stubegru-others-assigned-events", isVisible);
-            this.setEventVisibility("stubegru-others-half-assigned-events", isVisible);
-        }
-    }
-
-    showAssignedMeetings = (isVisible) => {
-        CalendarModule.state.assignedVisible = isVisible;
-        this.setEventVisibility("stubegru-own-assigned-events", isVisible);
-        this.setEventVisibility("stubegru-own-half-assigned-events", isVisible);
-        if (!isVisible || CalendarModule.state.othersVisible) {
-            this.setEventVisibility("stubegru-others-assigned-events", isVisible);
-            this.setEventVisibility("stubegru-others-half-assigned-events", isVisible);
-        }
-    }
-
 
 }
+
+

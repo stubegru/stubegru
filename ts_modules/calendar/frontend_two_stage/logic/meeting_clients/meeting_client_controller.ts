@@ -56,7 +56,7 @@ export default class MeetingClientController {
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
 
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
                 this.openAssignedMeeting(meetingId);
@@ -102,7 +102,7 @@ export default class MeetingClientController {
                 let resp = await CalendarModule.meetingClientService.updateClientMail(meetingId, clientMail);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
 
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
                 this.openAssignedMeeting(meetingId);
@@ -117,7 +117,7 @@ export default class MeetingClientController {
                 await Stubegru.utils.wait(200); //Wait until the delete confirm alert is closed
                 Alert.alertResp(resp, "Kundendaten löschen");
                 if (resp.status == "error") { throw new Error(resp.message); }
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingController.openFreeMeeting(meetingId);
             } catch (error) { Alert.alertError(error); }

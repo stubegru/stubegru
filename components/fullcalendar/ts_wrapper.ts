@@ -9,7 +9,7 @@ export declare class FullCalendarInstance {
 export interface FullCalendarEventSource {
     id: string;
     events: FullCalendarEvent[];
-    color: string;
+    color?: string;
     classNames: string[];
 }
 
@@ -19,6 +19,7 @@ export interface FullCalendarEvent {
     end: string;
     extendedProps: Object;
     source: FullCalendarEventSource;
+    color: string;
 
     setProp: (name: string, value: any) => void;
 }

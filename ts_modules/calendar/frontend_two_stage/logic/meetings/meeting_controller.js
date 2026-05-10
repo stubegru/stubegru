@@ -40,7 +40,7 @@ export default class MeetingController {
                 const meetingData = m.getMeetingDetailData();
                 let resp = await CalendarModule.meetingService.create(meetingData);
                 Alert.alertResp(resp, "Termin erstellen");
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 return resp;
             }
             catch (error) {
@@ -87,7 +87,7 @@ export default class MeetingController {
             try {
                 let resp = await CalendarModule.meetingService.update(meetingId, m.getMeetingDetailData());
                 Alert.alertResp(resp, "Termin speichern");
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 m.setModalVisible(false);
             }
@@ -101,7 +101,7 @@ export default class MeetingController {
                 let confirmResp = await Alert.deleteConfirm("Termin löschen", "Soll dieser Termin wirklich gelöscht werden?");
                 let resp = await CalendarModule.meetingService.delete(meetingId);
                 Alert.alertResp(resp, "Termin löschen");
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 m.setModalVisible(false);
             }

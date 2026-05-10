@@ -49,7 +49,7 @@ export default class MeetingClientController {
                 const clientData = CalendarModule.meetingClientView.getClientData();
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
                 this.openAssignedMeeting(meetingId);
@@ -88,7 +88,7 @@ export default class MeetingClientController {
                 const clientMail = CalendarModule.meetingClientView.getUpdateMailAddress();
                 let resp = await CalendarModule.meetingClientService.updateClientMail(meetingId, clientMail);
                 CalendarModule.meetingClientView.assignFeedbackModal.showFeedback(resp);
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingView.modal.removeEventListener('hidden.bs.modal.remove-block');
                 this.openAssignedMeeting(meetingId);
@@ -107,7 +107,7 @@ export default class MeetingClientController {
                 if (resp.status == "error") {
                     throw new Error(resp.message);
                 }
-                await CalendarModule.calendarView.refresh();
+                await CalendarModule.calendarView.refreshMeetingList();
                 m.setUnsavedChanges(false);
                 CalendarModule.meetingController.openFreeMeeting(meetingId);
             }

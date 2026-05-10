@@ -67,4 +67,6 @@ export interface Meeting {
     template: string;
     isBlocked: boolean;
     teilnehmer?: MeetingClient | string;
+    isAssigned? : boolean;
+    filterAssignState?: string;
 }

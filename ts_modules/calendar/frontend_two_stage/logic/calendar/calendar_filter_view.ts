@@ -15,14 +15,11 @@ export default class CalendarFilterView {
 
     async init(parent: CalendarView, meetingList: Meeting[]) {
         this.calendarView = parent;
-        //Add EventListener for Title-Properties select
-        //TODO: Stubegru.dom.addEventListener("#calendar_view_title_properties", "change", this.calendarView.renderMeetings);
-
         await this.initFilterDropdowns(meetingList);
 
         //Add eventListener for filter inputs
         document.querySelectorAll(".calendar-filter-input").forEach((elem: HTMLSelectElement) => {
-            //TODO: Stubegru.dom.addEventListener(elem, "change", this.calendarView.renderMeetings);
+            Stubegru.dom.addEventListener(elem, "change", this.calendarView.refreshView);
         })
 
         //Init multiple selects
@@ -30,13 +27,19 @@ export default class CalendarFilterView {
     }
 
     private async initFilterDropdowns(meetingList: Meeting[]) {
+        //Channel Filter
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`) as HTMLSelectElement;
         for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
         };
 
-        const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`) as HTMLSelectElement;
+        //Free/Assigned Filter
+        const freeFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='filterAssignState']`) as HTMLSelectElement;
+        freeFilterElem.add(new Option("Freie Termine", "free"));
+        freeFilterElem.add(new Option("Vergebene Termine", "assigned"));
 
+        //Owner filter
+        const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`) as HTMLSelectElement;
         //Add all meeting-owner to the filter list once
         let knownAdvisors: string[] = [] //list of user ids
         for (let meeting of meetingList) {
