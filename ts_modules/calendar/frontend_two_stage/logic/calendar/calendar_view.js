@@ -72,8 +72,6 @@ export default class CalendarView {
         let FCevents = [];
         let filter = this.filterView.generateFilterRules();
         for (let inMeeting of meetingList) {
-            // TODO: is this a good place to add isAssigned property?
-            inMeeting.isAssigned = inMeeting.teilnehmer && inMeeting.teilnehmer != "";
             inMeeting.filterAssignState = inMeeting.isAssigned ? "assigned" : "free";
             if (this.filterView.passedFilter(inMeeting, filter)) {
                 let meetingColor = inMeeting.isAssigned ? "#d9534f" : inMeeting.isBlocked ? "#ff9d00" : "#5cb85c";

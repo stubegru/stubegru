@@ -8,7 +8,7 @@ require_once "$BASE_PATH/ts_modules/calendar/backend/meetings/meeting_block_util
 permissionRequest("MEETINGS_READ");
 $own_id = $_SESSION['id'];
 
-$resultList;
+$resultList = null;
 
 if (isset($_GET["meetingId"])) {
     //select one specific meeting
@@ -44,6 +44,7 @@ foreach ($resultList as &$meetingData) {
 
     //Teilnehmer Informationen sammeln
     $clientId = $meetingData["teilnehmer"];
+    $meetingData["isAssigned"] = false;
     if ($clientId != "") {
         $clientStatement->bindValue(':clientId', $clientId);
         $clientStatement->execute();
@@ -58,6 +59,7 @@ foreach ($resultList as &$meetingData) {
         }
 
         $meetingData["teilnehmer"] = $clientData;
+        $meetingData["isAssigned"] = true;
     }
 }
 
