@@ -117,7 +117,10 @@ export default class CalendarView {
             color: "#5cb85c",
             classNames: ["pointer"]
         });
-        if (foundFreeMeeting == false) {
+        this.showNoFreeMeetingWarning(foundFreeMeeting);
+    }
+    showNoFreeMeetingWarning(foundFreeMeeting) {
+        if (foundFreeMeeting == false && Stubegru.utils.getParam("textread")) {
             Alert.alert({
                 type: "warning",
                 mode: "alert",

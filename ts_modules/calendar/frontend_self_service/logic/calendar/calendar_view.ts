@@ -134,15 +134,19 @@ export default class CalendarView {
             classNames: ["pointer"]
         });
 
-        if(foundFreeMeeting == false){
+        this.showNoFreeMeetingWarning(foundFreeMeeting);
+
+    }
+
+    private showNoFreeMeetingWarning(foundFreeMeeting: boolean) {
+        if (foundFreeMeeting == false && Stubegru.utils.getParam("textread")) {
             Alert.alert({
                 type: "warning",
                 mode: "alert",
                 text: "Aktuell sind keine freien Termine verfügbar. Termine werden einige Wochen im Voraus freigegeben. Schauen Sie gerne regelmäßig auf dieser Webseite nach, ob neue Termine verfügbar sind.",
                 title: "Keine freien Termine"
-            })
+            });
         }
-
     }
 
     setEventVisibility(eventSourceId, visible) {
