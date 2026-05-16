@@ -4,6 +4,7 @@ export default class MeetingService {
         return await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_advisors_self_service.php");
     }
     async get(meetingId) {
+        //TODO: Is this used...? Remove here and in PHP backend...?
         let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php", { meetingId: meetingId });
         return meetingList[0];
     }

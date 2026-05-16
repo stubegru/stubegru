@@ -10,6 +10,7 @@ export default class MeetingService {
     }
 
     async get(meetingId: string) {
+        //TODO: Is this used...? Remove here and in PHP backend...?
         let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php", { meetingId: meetingId }) as Meeting[];
         return meetingList[0];
     }

@@ -39,9 +39,12 @@ export default class CalendarView {
     };
     fullCalendar;
     filterView;
+    textread;
     async init(meetingList) {
-        if (Stubegru.utils.getParam("textread")) {
+        this.textread = Stubegru.utils.getParam("textread") == "true";
+        if (this.textread) {
             this.showAppointmentContainer();
+            this.showCalendarHelp();
         }
         else {
             await this.showInfoText();
@@ -57,6 +60,10 @@ export default class CalendarView {
     async showInfoText() {
         let text = await Stubegru.fetch.getText("ts_modules/calendar/backend/get_self_service_info_text.php");
         Stubegru.dom.querySelector("#self_service_info_text").innerHTML = text;
+    }
+    async showCalendarHelp() {
+        let text = await Stubegru.fetch.getText("ts_modules/calendar/backend/get_self_service_calendar_help.php");
+        Stubegru.dom.querySelector("#self_service_calendar_help").innerHTML = text;
     }
     showAppointmentContainer() {
         Stubegru.dom.hide("#self_service_info_text_container");
@@ -120,7 +127,7 @@ export default class CalendarView {
         this.showNoFreeMeetingWarning(foundFreeMeeting);
     }
     showNoFreeMeetingWarning(foundFreeMeeting) {
-        if (foundFreeMeeting == false && Stubegru.utils.getParam("textread")) {
+        if (foundFreeMeeting == false && this.textread) {
             Alert.alert({
                 type: "warning",
                 mode: "alert",
