@@ -90,11 +90,9 @@ export default class CalendarView {
         let FCevents = [];
         let filter = this.filterView.generateFilterRules();
         for (let inMeeting of meetingList) {
-            if (inMeeting.isBlocked) {
-                continue;
-            } //skip blocked meetings
+            //Checking for meeting-block is not necessary here, because the get_meetings_self_service.php script only delivers unblocked meetings.
             //if there is at least one unassigned Meeting => set this flag to true
-            if (inMeeting.teilnehmer == null) {
+            if (inMeeting.isAssigned == false) {
                 foundFreeMeeting = true;
             }
             if (this.filterView.passedFilter(inMeeting, filter)) {
@@ -108,20 +106,21 @@ export default class CalendarView {
                 if (titleProperties.channel) {
                     titlePropertyList.push(MeetingView.channelDescriptions[inMeeting.channel]);
                 }
+                let meetingColor = inMeeting.isAssigned ? "#d9534f" : "#5cb85c";
                 let outMeeting = {
                     title: titlePropertyList.join(" | "),
                     start: `${inMeeting.date}T${inMeeting.start}`,
                     end: `${inMeeting.date}T${inMeeting.end}`,
-                    extendedProps: inMeeting
+                    extendedProps: inMeeting,
+                    color: meetingColor
                 };
                 FCevents.push(outMeeting);
             }
         }
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
-            id: "free-events",
+            id: "stubegru-events",
             events: FCevents,
-            color: "#5cb85c",
             classNames: ["pointer"]
         });
         this.showNoFreeMeetingWarning(foundFreeMeeting);

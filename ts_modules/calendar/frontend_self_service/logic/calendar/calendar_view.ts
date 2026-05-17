@@ -1,7 +1,7 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
 import { CalendarOptions, FullCalendarInstance } from "../../../../../components/fullcalendar/ts_wrapper.js";
-import { Meeting } from "../meetings/meeting_service.js";
+import { SelfServiceMeeting } from "../meetings/meeting_service.js";
 import MeetingView from "../meetings/meeting_view.js";
 import CalendarFilterView, { TitleProperties } from "./calendar_filter_view.js";
 import Alert from "../../../../../components/alert/alert.js";
@@ -48,7 +48,7 @@ export default class CalendarView {
     textread: boolean;
 
 
-    async init(meetingList: Meeting[]) {
+    async init(meetingList: SelfServiceMeeting[]) {
         this.textread = Stubegru.utils.getParam("textread") == "true";
         if (this.textread) {
             this.showAppointmentContainer();
@@ -106,29 +106,31 @@ export default class CalendarView {
     }
 
 
-    addMeetings(meetingList: Meeting[], titleProperties: TitleProperties) {
+    addMeetings(meetingList: SelfServiceMeeting[], titleProperties: TitleProperties) {
         //Generate events for fullcalendar
         let foundFreeMeeting = false;
         let FCevents = [];
         let filter = this.filterView.generateFilterRules();
 
         for (let inMeeting of meetingList) {
-            if (inMeeting.isBlocked) { continue; } //skip blocked meetings
+            //Checking for meeting-block is not necessary here, because the get_meetings_self_service.php script only delivers unblocked meetings.
 
             //if there is at least one unassigned Meeting => set this flag to true
-            if (inMeeting.teilnehmer == null) { foundFreeMeeting = true; }
+            if (inMeeting.isAssigned == false) { foundFreeMeeting = true; }
 
             if (this.filterView.passedFilter(inMeeting, filter)) {
                 let titlePropertyList = [];
                 if (titleProperties.title) { titlePropertyList.push(inMeeting.title) }
                 if (titleProperties.owner) { titlePropertyList.push(inMeeting.owner) }
                 if (titleProperties.channel) { titlePropertyList.push(MeetingView.channelDescriptions[inMeeting.channel]) }
+                let meetingColor = inMeeting.isAssigned ? "#d9534f" : "#5cb85c";
 
                 let outMeeting = {
                     title: titlePropertyList.join(" | "),
                     start: `${inMeeting.date}T${inMeeting.start}`,
                     end: `${inMeeting.date}T${inMeeting.end}`,
-                    extendedProps: inMeeting
+                    extendedProps: inMeeting,
+                    color: meetingColor
                 };
                 FCevents.push(outMeeting);
             }
@@ -136,9 +138,8 @@ export default class CalendarView {
 
         //Generate and add Eventsource
         this.fullCalendar.addEventSource({
-            id: "free-events",
+            id: "stubegru-events",
             events: FCevents,
-            color: "#5cb85c",
             classNames: ["pointer"]
         });
 

@@ -1,24 +1,17 @@
 import Alert from "../../../../../components/alert/alert.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
+import { SelfServiceMeeting } from "../meetings/meeting_service";
 
 export default class MeetingClientController {
     init() { }
 
     async openMeetingForAssignment(meetingId) {
         let m = CalendarModule.meetingView;
-        let meeting = await CalendarModule.meetingService.get(meetingId);
-
-        if (meeting.teilnehmer && Object.hasOwn(meeting.teilnehmer, "id")) {
-            Alert.alert({
-                title: "Termin kann nicht vergeben werden",
-                text: "Dieser Termin wurde bereits an einen Kunden vergeben. Bitte Seite neu laden...",
-                type: "error"
-            });
-            return;
-        }
+        let meeting: SelfServiceMeeting;
 
         try {
+            meeting = await CalendarModule.meetingService.get(meetingId);
             //Check for block 
             let resp = await CalendarModule.meetingService.isBlock(meeting.id);
             if (resp.isBlocked == true) { throw new Error("Meeting blocked"); }

@@ -1,9 +1,9 @@
 import CalendarModule from '../calendar_module.js';
-import { Meeting } from './meeting_service.js';
+import { SelfServiceMeeting } from './meeting_service.js';
 
 export default class MeetingController {
 
-    meetingList: Meeting[];
+    meetingList: SelfServiceMeeting[];
 
     async init() {
         await this.refreshMeetingList();

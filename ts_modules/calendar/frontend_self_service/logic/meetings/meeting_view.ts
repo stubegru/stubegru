@@ -2,7 +2,7 @@ import Alert from "../../../../../components/alert/alert.js";
 import { Modal } from "../../../../../components/bootstrap/v3/ts_wrapper.js";
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
-import { Meeting } from "./meeting_service.js";
+import { SelfServiceMeeting } from "./meeting_service.js";
 
 export default class MeetingView {
 
@@ -99,7 +99,7 @@ export default class MeetingView {
 
 
 
-    setMeetingDetailData(meeting: Meeting) {
+    setMeetingDetailData(meeting: SelfServiceMeeting) {
         Stubegru.dom.querySelectorAsInput('#meeting_detail_date').value = meeting.date;
         Stubegru.dom.querySelectorAsInput('#meeting_detail_start').value = meeting.start;
         Stubegru.dom.querySelectorAsInput('#meeting_detail_end').value = meeting.end;

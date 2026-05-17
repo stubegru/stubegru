@@ -10,13 +10,12 @@ export default class MeetingService {
     }
 
     async get(meetingId: string) {
-        //TODO: Is this used...? Remove here and in PHP backend...?
-        let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php", { meetingId: meetingId }) as Meeting[];
+        let meetingList = await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php", { meetingId: meetingId }) as SelfServiceMeeting[];
         return meetingList[0];
     }
 
     async getAll() {
-        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php") as Meeting[];
+        return await Stubegru.fetch.getJson("ts_modules/calendar/backend/meetings/get_meetings_self_service.php") as SelfServiceMeeting[];
     }
 
     async isBlock(meetingId: string) {
@@ -39,19 +38,15 @@ export interface MeetingBlockResponse extends StubegruHttpResponse {
     blockName?: string;
 }
 
-export interface Meeting {
+export interface SelfServiceMeeting {
     id: string;
     date: string;
     owner: string;
     ownerId: string;
-    free: string;
-    room: string;
-    erfassungsdatum: string;
+    room?: string;
     start: string;
     end: string;
     title: string;
     channel: string;
-    template: string;
-    isBlocked: boolean;
-    teilnehmer?: MeetingClient;
+    isAssigned?: boolean;
 }

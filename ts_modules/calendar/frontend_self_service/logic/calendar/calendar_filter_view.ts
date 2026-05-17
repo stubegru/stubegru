@@ -1,6 +1,6 @@
 import Stubegru from "../../../../../components/stubegru_core/logic/stubegru.js";
 import CalendarModule from "../calendar_module.js";
-import { Meeting } from "../meetings/meeting_service.js";
+import { SelfServiceMeeting } from "../meetings/meeting_service.js";
 import MeetingView from "../meetings/meeting_view.js";
 import CalendarView from "./calendar_view.js";
 import MultiselectDropdown from "../../../../../components/multi_select_dropdown/multiselect-dropdown.js";
@@ -14,7 +14,7 @@ export default class CalendarFilterView {
         "webmeeting": "Webmeeting",
     };
 
-    async init(parent: CalendarView, meetingList: Meeting[]) {
+    async init(parent: CalendarView, meetingList: SelfServiceMeeting[]) {
         this.calendarView = parent;
         //Add EventListener for Title-Properties select
         Stubegru.dom.addEventListener("#calendar_view_title_properties", "change", this.calendarView.renderMeetings);
@@ -30,7 +30,7 @@ export default class CalendarFilterView {
         MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".calendar-multiple-select" });
     }
 
-    private async initFilterDropdowns(meetingList: Meeting[]) {
+    private async initFilterDropdowns(meetingList: SelfServiceMeeting[]) {
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`) as HTMLSelectElement;
         for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
@@ -47,7 +47,7 @@ export default class CalendarFilterView {
         };
     }
 
-    passedFilter(meeting: Meeting, filter: CalendarFilter): boolean {
+    passedFilter(meeting: SelfServiceMeeting, filter: CalendarFilter): boolean {
         //Rules are interpreted as conjunction (ALL rules must be fulfilled to pass the filter)
         for (const rule of filter.rules) {
             const filterKey = rule.key;

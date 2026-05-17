@@ -8,7 +8,7 @@ permissionRequest("CALENDAR_SELF_SERVICE");
 $resultList;
 
 if (isset($_GET["meetingId"])) {
-    //select one specific meeting
+    //select one specific meeting, only allow free meetings
     $meetingId =  $_GET["meetingId"];
     $selectStatement = $dbPdo->prepare("SELECT `id`, `date`, `owner`, `ownerId`,  `room`, `start`, `end`, `title`, `channel` FROM `Termine` WHERE id = :meetingId AND (teilnehmer IS NULL OR teilnehmer = '');");
     $selectStatement->bindValue(':meetingId', $meetingId);
@@ -28,7 +28,32 @@ if (isset($_GET["meetingId"])) {
             AND `id` NOT IN (SELECT `meetingId` FROM `meeting_blocks`)
          ORDER BY `date`, `start`;"
     );
-    $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+    $freeResultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    //select all assigned meetings, exclude meetings on the same day
+    $selectStatement = $dbPdo->query(
+        "SELECT `id`, `date`, `owner`, `ownerId`, `start`, `end`, `title`, `channel`
+         FROM `Termine`
+         WHERE 
+            (teilnehmer IS NOT NULL AND teilnehmer <> '')
+            AND DATE(`date`) >= DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+            AND `id` NOT IN (SELECT `meetingId` FROM `meeting_blocks`)
+         ORDER BY `date`, `start`;"
+    );
+    $assignedResultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    //Merge free and assigned meetings and set isAssigned flag
+    $resultList = [];
+
+    foreach ($assignedResultList as $row) {
+        $row['isAssigned'] = true;
+        $resultList[] = $row;
+    }
+
+    foreach ($freeResultList as $row) {
+        $row['isAssigned'] = false;
+        $resultList[] = $row;
+    }
 }
 
 echo json_encode($resultList);
