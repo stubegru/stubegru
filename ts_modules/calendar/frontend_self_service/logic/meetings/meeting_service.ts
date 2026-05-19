@@ -49,4 +49,5 @@ export interface SelfServiceMeeting {
     title: string;
     channel: string;
     isAssigned?: boolean;
+    filterAssignState?: string;
 }

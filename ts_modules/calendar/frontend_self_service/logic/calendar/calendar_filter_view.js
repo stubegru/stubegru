@@ -21,11 +21,17 @@ class CalendarFilterView {
         MultiselectDropdown({ style: { width: "100%", padding: "5px" }, placeholder: "Alle anzeigen", selector: ".calendar-multiple-select" });
     }
     async initFilterDropdowns(meetingList) {
+        //Channel filter
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`);
         for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
         }
         ;
+        //Free/Assigned Filter
+        const freeFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='filterAssignState']`);
+        freeFilterElem.add(new Option("Freie Termine", "free"));
+        freeFilterElem.add(new Option("Vergebene Termine", "assigned"));
+        //Owner filter
         const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`);
         //Add all meeting-owner to the filter list once
         let knownAdvisors = []; //list of user ids

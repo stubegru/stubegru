@@ -31,11 +31,18 @@ export default class CalendarFilterView {
     }
 
     private async initFilterDropdowns(meetingList: SelfServiceMeeting[]) {
+        //Channel filter
         const channelFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='channel']`) as HTMLSelectElement;
         for (let propName in CalendarFilterView.channelDescriptions) {
             channelFilterElem.add(new Option(MeetingView.channelDescriptions[propName], propName));
         };
 
+        //Free/Assigned Filter
+        const freeFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='filterAssignState']`) as HTMLSelectElement;
+        freeFilterElem.add(new Option("Freie Termine", "free"));
+        freeFilterElem.add(new Option("Vergebene Termine", "assigned"));
+
+        //Owner filter
         const ownerFilterElem = Stubegru.dom.querySelector(`.calendar-filter-input[name='ownerId']`) as HTMLSelectElement;
 
         //Add all meeting-owner to the filter list once

@@ -118,6 +118,9 @@ export default class CalendarView {
             //if there is at least one unassigned Meeting => set this flag to true
             if (inMeeting.isAssigned == false) { foundFreeMeeting = true; }
 
+            //add filterAssignState property for filter
+            inMeeting.filterAssignState = inMeeting.isAssigned ? "assigned" : "free";
+
             if (this.filterView.passedFilter(inMeeting, filter)) {
                 let titlePropertyList = [];
                 if (titleProperties.title) { titlePropertyList.push(inMeeting.title) }
