@@ -112,6 +112,7 @@ export default class MeetingClientView {
         }
         //No error => Hide calendar, show Feedback Container
         Stubegru.dom.hide("#self_service_appointment_container");
+        Stubegru.dom.hide("#self_service_calendar_help");
         Stubegru.dom.show("#self_service_feedback_container");
         Stubegru.dom.querySelector("#self_service_mail_template").innerHTML = statusObject.clientMail.content;
         let mailFeedback;
