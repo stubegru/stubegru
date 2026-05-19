@@ -1,3 +1,4 @@
+import Alert from '../../../../../components/alert/alert.js';
 import CalendarModule from '../calendar_module.js';
 export default class MeetingController {
     meetingList;
@@ -12,8 +13,18 @@ export default class MeetingController {
         return this.meetingList.find(e => e.id == meetingId);
     }
     async clickOnMeetingHandler(meetingId) {
-        let meeting = await CalendarModule.meetingService.get(meetingId);
-        this.openFreeMeeting(meeting.id);
+        try {
+            let meeting = await CalendarModule.meetingService.get(meetingId);
+            this.openFreeMeeting(meeting.id);
+        }
+        catch (error) {
+            Alert.alert({
+                text: "Dieser Termin kann aktuell nicht gebucht werden",
+                title: "Termin nicht verfügbar",
+                mode: 'alert',
+                type: "error"
+            });
+        }
     }
     async openFreeMeeting(meetingId) {
         let m = CalendarModule.meetingView;
