@@ -27,7 +27,7 @@ export default class MeetingController {
             this.openFreeMeeting(meeting.id);
         } catch (error) {
             Alert.alert({
-                text: "Dieser Termin kann aktuell nicht gebucht werden",
+                text: "Dieser Termin kann aktuell nicht gebucht werden.",
                 title: "Termin nicht verfügbar",
                 mode: 'alert',
                 type: "error"
