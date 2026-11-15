@@ -1,0 +1,70 @@
+import Alert from "../../../components/alert/alert.js";
+import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
+import { StubegruHttpResponse } from "../../../components/stubegru_core/logic/stubegru_fetch.js";
+import QuickLinkModule from "./quick_link_module.js";
+
+
+export default class QuickLinkController {
+    
+    async init() {
+        await this.refreshListView();
+    }
+
+    async refreshListView() {
+        try {
+            let list = await QuickLinkModule.service.getAll();
+            await QuickLinkModule.view.renderListView(list);
+        } catch (error) {
+            Alert.alertError(error);
+        }
+    }
+
+    async handleCreateQuickLink() {
+        try {
+            let data = QuickLinkModule.view.getFormData();
+            let resp = await QuickLinkModule.service.create(data) as StubegruHttpResponse;
+            QuickLinkModule.view.modal.hide();
+            QuickLinkModule.controller.refreshListView();
+            Alert.alertResp(resp);
+        }
+        catch (error) { Alert.alertError(error); }
+    }
+
+    async handleUpdateQuicklink() {
+        try {
+            let data = QuickLinkModule.view.getFormData();
+            let resp = await QuickLinkModule.service.update(data) as StubegruHttpResponse;
+            QuickLinkModule.view.modal.hide();
+            QuickLinkModule.controller.refreshListView();
+            Alert.alertResp(resp);
+        }
+        catch (error) { Alert.alertError(error); }
+    }
+
+    async handleDeleteQuickLink(quickLinkId: string) {
+        try {
+            let confirmResp = await Alert.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
+            let resp = await QuickLinkModule.service.delete(quickLinkId) as StubegruHttpResponse;
+            QuickLinkModule.controller.refreshListView();
+            Alert.alertResp(resp);
+        }
+        catch (error) { Alert.alertError(error); }
+    }
+
+    async showQuickLinkModalForUpdate(quickLinkId: string) {
+        try {
+            QuickLinkModule.view.modal.show();
+            let quickLink = await QuickLinkModule.service.get(quickLinkId);
+            QuickLinkModule.view.setFormData(quickLink);
+        }
+        catch (error) { Alert.alertError(error); }
+    }
+
+    async showQuickLinkModalForCreate() {
+        try {
+            Stubegru.dom.querySelectorAsInput("#quick_link_id").value = "new";
+            QuickLinkModule.view.modal.show();
+        }
+        catch (error) { Alert.alertError(error); }
+    }
+}

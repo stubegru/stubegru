@@ -1,6 +1,6 @@
 {
     "type": "stubegruModule",
-    "name": "quicklinks",
+    "name": "quick_link",
     "description": "Add tile with quicklinks",
     "author": "Johannes Schnirring",
     "license": "MIT",
@@ -15,7 +15,7 @@
         "module.html"
     ],
     "js": [
-        "quicklinks.js"
+        "logic/quick_link_module.js"
     ],
     "css": []
 }

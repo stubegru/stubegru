@@ -1,0 +1,58 @@
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title"><a href="#collapse_quick_link" data-toggle="collapse" aria-expanded="true">Quicklinks</a>
+            </h4>
+        </div>
+        <div class="panel-collapse collapse in" id="collapse_quick_link" aria-expanded="false">
+            <div class="panel-body">
+                <ul id="quick_link_container">
+                    <!-- Here are inserted all the Quicklinks -->
+                </ul>
+            </div>
+
+            <div class="panel-footer admin">
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" id="quick_link_create_button" class="btn btn-primary pull-right permission-QUICKLINK_WRITE permission-required">
+                            <i class="fas fa-plus"></i>&nbsp; Quicklink hinzufügen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Quicklink Edit Modal-->
+<div aria-hidden="true" role="dialog" tabindex="-1" id="quick_link_modal" class="modal fade" style="display: none;">
+    <div class="modal-dialog" style="min-width:70%;">
+        <div class="modal-content">
+            <form id="quick_link_modal_form">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Quicklink bearbeiten</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label>Titel</label>
+                        <input autocomplete="off" class="form-control" type="text" id="quick_link_text" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Linkadresse ( incl. http:// )</label>
+                        <input autocomplete="off" class="form-control" type="text" id="quick_link_link" placeholder="http://www.example.com" required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button data-dismiss="modal" class="btn btn-default pull-left" type="button">Abbrechen</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Quicklink Edit Modal end -->
