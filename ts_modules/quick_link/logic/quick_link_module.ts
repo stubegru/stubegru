@@ -15,7 +15,6 @@ export default class QuickLinkModule {
         QuickLinkModule.controller = new QuickLinkController();
         QuickLinkModule.view = new QuickLinkView();
 
-        await QuickLinkModule.view.init();
         await QuickLinkModule.controller.init();
     }
 }
@@ -26,6 +25,6 @@ await QuickLinkModule.init();
 
 export interface QuickLinkObject {
     id: string;
-    text: string;
-    link: string;
+    title: string;
+    url: string;
 }

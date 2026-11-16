@@ -26,7 +26,7 @@
 
 <!--Quicklink Edit Modal-->
 <div aria-hidden="true" role="dialog" tabindex="-1" id="quick_link_modal" class="modal fade" style="display: none;">
-    <div class="modal-dialog" style="min-width:70%;">
+    <div class="modal-dialog">
         <div class="modal-content">
             <form id="quick_link_modal_form">
                 <div class="modal-header">
@@ -35,14 +35,16 @@
                 </div>
                 <div class="modal-body">
 
+                    <input type="hidden" id="quick_link_modal_form_id">
+
                     <div class="form-group">
                         <label>Titel</label>
-                        <input autocomplete="off" class="form-control" type="text" id="quick_link_text" required>
+                        <input autocomplete="off" class="form-control" type="text" id="quick_link_modal_form_title" required>
                     </div>
 
                     <div class="form-group">
                         <label>Linkadresse ( incl. http:// )</label>
-                        <input autocomplete="off" class="form-control" type="text" id="quick_link_link" placeholder="http://www.example.com" required>
+                        <input autocomplete="off" class="form-control" type="text" id="quick_link_modal_form_url" placeholder="http://www.example.com" required>
                     </div>
 
                 </div>

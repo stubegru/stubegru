@@ -5,30 +5,36 @@ import QuickLinkModule from "./quick_link_module.js";
 export default class QuickLinkView {
     modal;
     form;
-    async init() {
+    constructor() {
         this.modal = new Modal('#quick_link_modal');
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
         Stubegru.dom.querySelector("#quick_link_create_button").addEventListener("click", QuickLinkModule.controller.showQuickLinkModalForCreate);
         this.form = Stubegru.dom.querySelector('#quick_link_modal_form');
         this.form.addEventListener("submit", (event) => {
             event.preventDefault();
-            QuickLinkModule.controller.handleCreateQuickLink();
+            const quickLinkId = Stubegru.dom.querySelectorAsInput("#quick_link_modal_form_id").value;
+            if (quickLinkId == "new") {
+                QuickLinkModule.controller.handleCreateQuickLink();
+            }
+            else {
+                QuickLinkModule.controller.handleUpdateQuickLink();
+            }
         });
         this.resetModalForm();
     }
-    resetModalForm() {
+    resetModalForm = () => {
         this.form.reset();
-    }
+    };
     setFormData(quickLink) {
-        Stubegru.dom.querySelectorAsInput("#quick_link_id").value = quickLink.id;
-        Stubegru.dom.querySelectorAsInput("#quick_link_text").value = quickLink.text;
-        Stubegru.dom.querySelectorAsInput("#quick_link_link").value = quickLink.link;
+        Stubegru.dom.querySelectorAsInput("#quick_link_modal_form_id").value = quickLink.id;
+        Stubegru.dom.querySelectorAsInput("#quick_link_modal_form_title").value = quickLink.title;
+        Stubegru.dom.querySelectorAsInput("#quick_link_modal_form_url").value = quickLink.url;
     }
     getFormData() {
         return {
-            id: Stubegru.dom.querySelectorAsInput('#quick_link_id').value,
-            text: Stubegru.dom.querySelectorAsInput('#quick_link_text').value,
-            link: Stubegru.dom.querySelectorAsInput('#quick_link_link').value,
+            id: Stubegru.dom.querySelectorAsInput('#quick_link_modal_form_id').value,
+            title: Stubegru.dom.querySelectorAsInput('#quick_link_modal_form_title').value,
+            url: Stubegru.dom.querySelectorAsInput('#quick_link_modal_form_url').value,
         };
     }
     async renderListView(quickLinkList) {
@@ -36,7 +42,7 @@ export default class QuickLinkView {
         for (let l of quickLinkList) {
             html += `
             <li>
-                <a href="${l.link}">${l.text}</a>
+                <a href="${l.url}">${l.title}</a>
             </<li>`;
         }
         Stubegru.dom.querySelector("#quick_link_container").innerHTML = html;

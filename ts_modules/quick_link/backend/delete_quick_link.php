@@ -5,7 +5,7 @@ permissionRequest("QUICK_LINK_WRITE");
 
 $quickLinkId = $_POST["id"];
 
-$deleteStatement = $dbPdo->prepare("DELETE FROM Quicklinks WHERE id=:quickLinkId;");
+$deleteStatement = $dbPdo->prepare("DELETE FROM `quicklinks` WHERE id=:quickLinkId;");
 $deleteStatement->bindValue(':quickLinkId', $quickLinkId);
 $deleteStatement->execute();
 

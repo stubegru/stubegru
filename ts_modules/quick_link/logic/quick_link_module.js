@@ -10,7 +10,6 @@ class QuickLinkModule {
         QuickLinkModule.service = new QuickLinkService();
         QuickLinkModule.controller = new QuickLinkController();
         QuickLinkModule.view = new QuickLinkView();
-        await QuickLinkModule.view.init();
         await QuickLinkModule.controller.init();
     }
 }

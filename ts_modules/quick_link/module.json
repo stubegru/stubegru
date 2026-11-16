@@ -12,7 +12,7 @@
         "backend": []
     },
     "html": [
-        "module.html"
+        "quick_link.html"
     ],
     "js": [
         "logic/quick_link_module.js"

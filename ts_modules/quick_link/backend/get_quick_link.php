@@ -5,7 +5,7 @@ permissionRequest("QUICK_LINK_READ");
 
 $quickLinkId = $_GET["id"];
 
-$selectStatement = $dbPdo->prepare("SELECT `id`, `text`, `link` FROM `Quicklinks` WHERE id = :quickLinkId;");
+$selectStatement = $dbPdo->prepare("SELECT `id`, `title`, `url` FROM `quicklinks` WHERE id = :quickLinkId;");
 $selectStatement->bindValue(':quickLinkId', $quickLinkId);
 $result = $selectStatement->fetch(PDO::FETCH_ASSOC);
 

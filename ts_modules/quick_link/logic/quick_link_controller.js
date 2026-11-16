@@ -26,7 +26,7 @@ export default class QuickLinkController {
             Alert.alertError(error);
         }
     }
-    async handleUpdateQuicklink() {
+    async handleUpdateQuickLink() {
         try {
             let data = QuickLinkModule.view.getFormData();
             let resp = await QuickLinkModule.service.update(data);
@@ -40,7 +40,8 @@ export default class QuickLinkController {
     }
     async handleDeleteQuickLink(quickLinkId) {
         try {
-            let confirmResp = await Alert.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
+            //TODO: handle user clicks "cancel" button
+            let confirmResp = await Alert.deleteConfirm("Quicklink löschen", "Soll dieser Quicklink wirklich gelöscht werden?");
             let resp = await QuickLinkModule.service.delete(quickLinkId);
             QuickLinkModule.controller.refreshListView();
             Alert.alertResp(resp);
@@ -51,9 +52,9 @@ export default class QuickLinkController {
     }
     async showQuickLinkModalForUpdate(quickLinkId) {
         try {
-            QuickLinkModule.view.modal.show();
             let quickLink = await QuickLinkModule.service.get(quickLinkId);
             QuickLinkModule.view.setFormData(quickLink);
+            QuickLinkModule.view.modal.show();
         }
         catch (error) {
             Alert.alertError(error);
@@ -61,7 +62,7 @@ export default class QuickLinkController {
     }
     async showQuickLinkModalForCreate() {
         try {
-            Stubegru.dom.querySelectorAsInput("#quick_link_id").value = "new";
+            Stubegru.dom.querySelectorAsInput("#quick_link_modal_form_id").value = "new";
             QuickLinkModule.view.modal.show();
         }
         catch (error) {
