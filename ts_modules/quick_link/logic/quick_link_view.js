@@ -41,22 +41,51 @@ export default class QuickLinkView {
         let html = "";
         for (let l of quickLinkList) {
             html += `
-            <li>
-                <a href="${l.url}">${l.title}</a>
-            </<li>`;
+                <tr class="quick-link-row text-primary" data-quick-link-url="${l.url}" style="cursor: pointer;">
+                    <td style="font-size: 1.15em; vertical-align: middle;">
+                        <i class="fas fa-arrow-right"></i>&nbsp; ${l.title}
+                    </td>
+                    <td>
+                            <button class="btn btn-default quick-link-edit-button permission-QUICK_LINK_WRITE permission-required" data-quick-link-id="${l.id}">
+                                <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
+                            </button>
+                    </td>
+                    <td>
+                            <button class="btn btn-danger quick-link-delete-button permission-QUICK_LINK_WRITE permission-required" data-quick-link-id="${l.id}">
+                                <i class="fas fa-times"></i>&nbsp; Löschen
+                            </button>
+                    </td>
+                </tr>
+            `;
         }
-        Stubegru.dom.querySelector("#quick_link_container").innerHTML = html;
+        Stubegru.dom.querySelector("#quick_link_container").innerHTML = `
+            <table class="table table-condensed table-hover" style="margin-bottom: 0;">
+                <tbody>
+                    ${html}
+                </tbody>
+            </table>
+        `;
         UserUtils.updateAdminElements();
         this.registerButtonEvents();
     }
     registerButtonEvents() {
         Stubegru.dom.querySelectorAll(".quick-link-delete-button").forEach(elem => {
             const quickLinkId = elem.getAttribute("data-quick-link-id");
-            elem.addEventListener("click", () => QuickLinkModule.controller.handleDeleteQuickLink(quickLinkId));
+            elem.addEventListener("click", (event) => {
+                event.stopPropagation();
+                QuickLinkModule.controller.handleDeleteQuickLink(quickLinkId);
+            });
         });
         Stubegru.dom.querySelectorAll(".quick-link-edit-button").forEach(elem => {
             const quickLinkId = elem.getAttribute("data-quick-link-id");
-            elem.addEventListener("click", () => QuickLinkModule.controller.showQuickLinkModalForUpdate(quickLinkId));
+            elem.addEventListener("click", (event) => {
+                event.stopPropagation();
+                QuickLinkModule.controller.showQuickLinkModalForUpdate(quickLinkId);
+            });
+        });
+        Stubegru.dom.querySelectorAll(".quick-link-row").forEach(elem => {
+            const quickLinkUrl = elem.getAttribute("data-quick-link-url");
+            elem.addEventListener("click", (event) => { window.open(quickLinkUrl, "_blank"); });
         });
     }
 }
