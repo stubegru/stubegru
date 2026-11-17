@@ -83,8 +83,10 @@ export default class Alert {
                 showCancelButton: true,
                 cancelButtonText: "Abbrechen",
                 confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Löschen",
-            }, resolve);
+                confirmButtonText: confirmButtonText,
+            }, function (confirmed: boolean) {
+                resolve(confirmed);
+            });
         });
     }
 

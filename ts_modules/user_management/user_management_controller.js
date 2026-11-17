@@ -47,6 +47,9 @@ export default class UserManagementController {
     async handleUserDelete(userId) {
         try {
             let confirmResp = await Alert.deleteConfirm("Nutzeraccount löschen", "Soll der Nutzeraccount wirklich gelöscht werden?");
+            if (confirmResp != true) {
+                return;
+            }
             let resp = await UserManagementModule.service.deleteUser(userId);
             Alert.alertResp(resp, "Nutzeraccount Löschen");
             await this.refreshUserList();

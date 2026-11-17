@@ -112,6 +112,7 @@ export default class MeetingClientController {
         cv.setAssignDeleteButtonEvent(async () => {
             try {
                 let confirmResp = await Alert.deleteConfirm("Kundendaten löschen", "Sollen die Kundendaten wirklich gelöscht werden? Der Kunde und der Berater werden darüber per Mail informiert.");
+                if (confirmResp != true) { return; }
                 let resp = await CalendarModule.meetingClientService.deleteClient(meetingId);
                 resp.mode = "alert";
                 await Stubegru.utils.wait(200); //Wait until the delete confirm alert is closed

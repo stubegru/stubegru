@@ -116,6 +116,7 @@ export default class RoomController {
     async deleteRoom() {
         try {
             let confirmResp = await Alert.deleteConfirm("Raum löschen", "Soll dieser Raum wirklich gelöscht werden?");
+            if (confirmResp != true) { return; }
             let roomId = Stubegru.dom.querySelectorAsInput("#raum_id").value;
             if (roomId != "new") {
                 let resp = await CalendarModule.roomService.delete(roomId);

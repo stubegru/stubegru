@@ -40,8 +40,10 @@ export default class QuickLinkController {
     }
     async handleDeleteQuickLink(quickLinkId) {
         try {
-            //TODO: handle user clicks "cancel" button
             let confirmResp = await Alert.deleteConfirm("Quicklink löschen", "Soll dieser Quicklink wirklich gelöscht werden?");
+            if (confirmResp != true) {
+                return;
+            }
             let resp = await QuickLinkModule.service.delete(quickLinkId);
             QuickLinkModule.controller.refreshListView();
             Alert.alertResp(resp);

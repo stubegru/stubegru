@@ -41,6 +41,9 @@ export default class SpamFilterController {
     async handleSpamFilterDelete(spamfilterId) {
         try {
             let confirmResp = await Alert.deleteConfirm("Spam Filter löschen", "Möchtest du diesen Filter wirklich löschen?");
+            if (confirmResp != true) {
+                return;
+            }
             let resp = await SpamFilterModule.service.deleteSpamFilter(spamfilterId);
             Alert.alertResp(resp, "Spam Filter");
             await this.refreshSpamFilterList();

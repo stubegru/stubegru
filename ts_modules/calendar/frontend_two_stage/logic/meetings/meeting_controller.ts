@@ -115,6 +115,7 @@ export default class MeetingController {
         m.setFooterDeleteButtonEvent(async () => {
             try {
                 let confirmResp = await Alert.deleteConfirm("Termin löschen", "Soll dieser Termin wirklich gelöscht werden?");
+                if (confirmResp != true) { return; }
                 let resp = await CalendarModule.meetingService.delete(meetingId);
                 Alert.alertResp(resp, "Termin löschen");
                 await CalendarModule.calendarView.refreshMeetingList();

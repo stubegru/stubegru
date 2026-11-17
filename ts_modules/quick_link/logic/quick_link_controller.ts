@@ -5,7 +5,7 @@ import QuickLinkModule from "./quick_link_module.js";
 
 
 export default class QuickLinkController {
-    
+
     async init() {
         await this.refreshListView();
     }
@@ -43,8 +43,8 @@ export default class QuickLinkController {
 
     async handleDeleteQuickLink(quickLinkId: string) {
         try {
-            //TODO: handle user clicks "cancel" button
             let confirmResp = await Alert.deleteConfirm("Quicklink löschen", "Soll dieser Quicklink wirklich gelöscht werden?");
+            if (confirmResp != true) { return; }
             let resp = await QuickLinkModule.service.delete(quickLinkId) as StubegruHttpResponse;
             QuickLinkModule.controller.refreshListView();
             Alert.alertResp(resp);

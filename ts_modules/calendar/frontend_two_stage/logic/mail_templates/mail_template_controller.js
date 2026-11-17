@@ -101,6 +101,9 @@ export default class MailTemplateController {
     async deleteMailTemplate() {
         try {
             let confirmResp = await Alert.deleteConfirm("Mailvorlage löschen", "Soll diese Mailvorlage wirklich gelöscht werden?");
+            if (confirmResp != true) {
+                return;
+            }
             let templateId = Stubegru.dom.querySelectorAsInput("#mail_template_id").value;
             if (templateId != "new") {
                 let resp = await CalendarModule.mailTemplateService.delete(templateId);

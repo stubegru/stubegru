@@ -49,6 +49,7 @@ export default class DailyNewsController {
         let resp;
         try {
             let confirmResp = await Alert.deleteConfirm("Nachricht löschen", "Soll die Nachricht wirklich gelöscht werden?");
+            if (confirmResp != true) { return; }
             resp = await DailyNewsModule.service.delete(dailyNewsId) as StubegruHttpResponse;
             DailyNewsModule.controller.refreshListView();
             Alert.alertResp(resp);
@@ -60,6 +61,7 @@ export default class DailyNewsController {
         let resp;
         try {
             let confirmResp = await Alert.deleteConfirm("In Wiki Artikel umwandeln?", "Soll diese Tagesaktuelle Info wirklich in einen Wiki Artikel umgewandelt werden? Die Tagesaktuelle Info wird dadurch gelöscht.", "Umwandeln");
+            if (confirmResp != true) { return; }
             resp = await DailyNewsModule.service.moveToWiki(dailyNewsId) as StubegruHttpResponse;
             DailyNewsModule.controller.refreshListView();
             setTimeout(()=>Alert.alertResp(resp),500); //Set Timeout so wait until the last alert is closed //TODO: Make pretty with promises
