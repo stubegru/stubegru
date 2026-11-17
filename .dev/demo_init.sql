@@ -143,6 +143,8 @@ INSERT INTO `permission_requests` (`name`, `permissionId`) VALUES
 ('MAIL_LOG', 'admin'),
 ('EXECUTE_CRONJOB', 'admin'),
 ('WIKI_WRITE', 'wiki_autor'),
+('QUICK_LINK_READ', 'user'),
+('QUICK_LINK_WRITE', 'admin'),
 ('SPAM_FILTER_READ', 'beratung'),
 ('SPAM_FILTER_WRITE', 'beratung');
 

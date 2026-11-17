@@ -258,13 +258,13 @@ CREATE TABLE `permission_requests` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `Quicklinks`
+-- Tabellenstruktur für Tabelle `quicklinks`
 --
 
-CREATE TABLE `Quicklinks` (
+CREATE TABLE `quicklinks` (
   `id` int(11) NOT NULL,
-  `text` mediumtext NOT NULL,
-  `link` mediumtext NOT NULL
+  `title` varchar(300) NOT NULL,
+  `url` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -624,9 +624,9 @@ ALTER TABLE `permission_requests`
   ADD PRIMARY KEY (`name`,`permissionId`);
 
 --
--- Indizes für die Tabelle `Quicklinks`
+-- Indizes für die Tabelle `quicklinks`
 --
-ALTER TABLE `Quicklinks`
+ALTER TABLE `quicklinks`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -792,9 +792,9 @@ ALTER TABLE `Nutzer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT für Tabelle `Quicklinks`
+-- AUTO_INCREMENT für Tabelle `quicklinks`
 --
-ALTER TABLE `Quicklinks`
+ALTER TABLE `quicklinks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
