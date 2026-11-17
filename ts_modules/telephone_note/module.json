@@ -1,6 +1,6 @@
 {
     "type" : "stubegruModule",
-    "name" : "telephone_notes",
+    "name" : "telephone_note",
     "description" : "Module to easily send mails to configured users",
     "author" : "Johannes Schnirring",
     "license" : "MIT",
@@ -9,7 +9,7 @@
         "nonBlocking" : [],
         "backend" : ["mailing"]
     },
-    "html" : ["telephone_notes.html"],
-    "js" : ["telephone_notes.js"],
+    "html" : ["telephone_note.html"],
+    "js" : ["logic/telephone_note_module.js"],
     "css" : []
 }
