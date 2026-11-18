@@ -1,21 +1,20 @@
 import Stubegru from "../stubegru_core/logic/stubegru.js";
 export default class StubegruToggle {
-    selector;
+    elem;
     static init() {
         Stubegru.dom.loadCss("components/stubegru_toggle/bs3_polyfill.css");
     }
     constructor(selector) {
-        this.selector = selector;
+        this.elem = Stubegru.dom.querySelectorAsInput(selector);
     }
     setState(state) {
-        throw new Error("Not implemented");
+        this.elem.checked = state;
     }
     getState() {
-        throw new Error("Not implemented");
-        return Stubegru.dom.querySelectorAsInput(this.selector).checked;
+        return this.elem.checked;
     }
     addEventListener(eventId, callback) {
-        throw new Error("Not implemented");
+        Stubegru.dom.addEventListener(this.elem, eventId, callback);
     }
 }
 StubegruToggle.init();
