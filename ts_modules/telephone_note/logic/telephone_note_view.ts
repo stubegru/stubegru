@@ -1,6 +1,6 @@
-import Stubegru from '../../../components/stubegru_core/logic/stubegru';
-import { StubegruUser } from '../../../components/user_utils/user_utils';
-import TelephoneNoteModule, { TelephoneNoteObject } from "./telephone_note_module";
+import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
+import { StubegruUser } from '../../../components/user_utils/user_utils.js';
+import TelephoneNoteModule, { TelephoneNoteObject } from "./telephone_note_module.js";
 
 
 

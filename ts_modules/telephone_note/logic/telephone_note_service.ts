@@ -1,6 +1,6 @@
-import Stubegru from "../../../components/stubegru_core/logic/stubegru";
-import { StubegruHttpResponse } from "../../../components/stubegru_core/logic/stubegru_fetch";
-import { TelephoneNoteObject } from "./telephone_note_module";
+import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
+import { StubegruHttpResponse } from "../../../components/stubegru_core/logic/stubegru_fetch.js";
+import { TelephoneNoteObject } from "./telephone_note_module.js";
 
 export default class TelephoneNoteService {
 

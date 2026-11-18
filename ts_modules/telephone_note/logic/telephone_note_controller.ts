@@ -1,7 +1,7 @@
-import Alert from "../../../components/alert/alert";
-import { StubegruHttpResponse } from "../../../components/stubegru_core/logic/stubegru_fetch";
-import UserUtils from "../../../components/user_utils/user_utils";
-import TelephoneNoteModule from "./telephone_note_module";
+import Alert from "../../../components/alert/alert.js";
+import { StubegruHttpResponse } from "../../../components/stubegru_core/logic/stubegru_fetch.js";
+import UserUtils from "../../../components/user_utils/user_utils.js";
+import TelephoneNoteModule from "./telephone_note_module.js";
 
 
 export default class TelephoneNoteController {

@@ -1,5 +1,5 @@
-import Stubegru from '../../../components/stubegru_core/logic/stubegru';
-import TelephoneNoteModule from "./telephone_note_module";
+import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
+import TelephoneNoteModule from "./telephone_note_module.js";
 export default class TelephoneNoteView {
     form;
     constructor() {

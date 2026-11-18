@@ -1,6 +1,6 @@
-import TelephoneNoteController from "./telephone_note_controller";
-import TelephoneNoteService from "./telephone_note_service";
-import TelephoneNoteView from "./telephone_note_view";
+import TelephoneNoteController from "./telephone_note_controller.js";
+import TelephoneNoteService from "./telephone_note_service.js";
+import TelephoneNoteView from "./telephone_note_view.js";
 class TelephoneNoteModule {
     static state = {};
     static service;
