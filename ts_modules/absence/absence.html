@@ -1,20 +1,28 @@
 <div class="col-md-12">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4 class="panel-title">
-                <a href="#collapseAbsence" data-toggle="collapse" aria-expanded="true">Abwesenheiten</a>
-            </h4>
+            <a href="#collapse_absence" data-toggle="collapse" aria-expanded="true" class="stubegru-module-title">
+                <h4 class="mb-4"><i class="far fa-calendar-minus"></i> Abwesenheiten</h4>
+                <div class="stubegru-module-subtitle">Urlaub und regelmäßige Abwesenheiten des Tages auf einen Blick</div>
+            </a>
         </div>
 
-        <div class="panel-collapse collapse in" id="collapseAbsence">
+        <div class="panel-collapse collapse in" id="collapse_absence">
             <div class="panel-body">
 
                 <div class="row">
-                    <div class="col-sm-6"><button class="btn btn-success permission-ABSENCE_WRITE permission-required" style="margin-bottom: 15px; display:block;" type="button" onclick="editAbsence('new')"><i class="fas fa-plus-circle"></i> Neuer
-                            Eintrag</button></div>
+                    <div class="col-sm-6">
+                        <button class="btn btn-success permission-ABSENCE_WRITE permission-required" type="button" id="absence_create_button">
+                            <i class="fas fa-plus"></i> Neuer Eintrag
+                        </button>
+                    </div>
                     <div class="col-sm-6 text-right">
                         <div class="form-group">
-                            <input type="checkbox" data-toggle="toggle" class="absence-toggle pull-right" id="absence_view_future_toggle" data-on="<i class='fas fa-check-double'></i>&nbsp; Alle anzeigen" data-off="<i class='fas fa-clock'></i>&nbsp; Nur aktuelle" data-width="150px">
+                            <div class="toggle-switch toggle-success">
+                                <input type="checkbox" id="absence_modal_view_future_toggle" checked />
+                                <label>Nur aktuelle</label>
+                                <label>Alle anzeigen</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -33,14 +41,10 @@
                             </tr>
                         </thead>
                         <tbody id="absence_table_present">
-
-
                             <!-- Here are generated all the Absence Entries with an AJAX call -->
                         </tbody>
 
                         <tbody id="absence_table_future" style="display: none;">
-
-
                             <!-- Here are generated all the Absence Entries with an AJAX call -->
                         </tbody>
                     </table>
@@ -50,30 +54,30 @@
     </div>
 
     <!-- Abwesenheits Modal start-->
-    <div aria-hidden="true" role="dialog" tabindex="-1" id="absenceModal" class="modal fade" style="display: none;">
-        <form action="javascript:saveAbsence();" id="absenceForm">
+    <div aria-hidden="true" role="dialog" tabindex="-1" id="absence_modal" class="modal fade" style="display: none;">
+        <form id="absence_modal_form">
 
             <div class="modal-dialog" style="min-width:70%;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Abwesenheit bearbeiten</h4>
                     </div>
                     <div class="modal-body">
-                        <input autocomplete="off" type="hidden" id="absence_id">
+                        <input type="hidden" id="absence_modal_form_id">
 
                         <div class="row">
                             <div class='col-sm-6'>
                                 <div class="form-group">
                                     <label>Abwesende Person</label>
-                                    <input autocomplete="on" class="form-control" id="absence_name" required>
+                                    <input autocomplete="on" class="form-control" id="absence_modal_form_name" required>
                                 </div>
                             </div>
 
                             <div class='col-sm-6'>
                                 <div class="form-group">
                                     <label>Anmerkungen</label>
-                                    <input autocomplete="off" class="form-control" id="absence_description">
+                                    <input autocomplete="off" class="form-control" id="absence_modal_form_description">
                                 </div>
                             </div>
                         </div>
@@ -83,14 +87,18 @@
                             <div class='col-sm-3'>
                                 <div class="form-group">
                                     <label>Art</label><br>
-                                    <input type="checkbox" data-toggle="toggle" class="absence-toggle" id="absence_whole_day_toggle" data-on="<i class='fas fa-clock'></i>&nbsp; Mit Uhrzeit" data-off="<i class='far fa-calendar-alt'></i>&nbsp; Ohne Uhrzeit" data-width="100%">
+                                    <div class="toggle-switch toggle-success">
+                                        <input type="checkbox" id="absence_modal_form_whole_day_toggle" checked />
+                                        <label><i class='fas fa-clock'></i>&nbsp; Mit Uhrzeit</label>
+                                        <label><i class='far fa-calendar-alt'></i>&nbsp; Ohne Uhrzeit</label>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class='col-sm-3'>
                                 <div class="form-group">
                                     <label>Datum</label>
-                                    <input autocomplete="off" type='date' id="absence_date" class="form-control" required />
+                                    <input autocomplete="off" type='date' id="absence_modal_form_start_date" class="form-control" required />
                                 </div>
                             </div>
 
@@ -98,7 +106,7 @@
                                 <div class='col-sm-6'>
                                     <div class="form-group">
                                         <label>Datum Ende</label>
-                                        <input autocomplete="off" id="absence_end_date" type='date' class="form-control" required />
+                                        <input autocomplete="off" id="absence_modal_form_end_date" type='date' class="form-control" required />
                                     </div>
                                 </div>
                             </div>
@@ -109,14 +117,14 @@
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Beginn</label>
-                                        <input autocomplete="off" id="absence_start_time" type='time' class="form-control" />
+                                        <input autocomplete="off" id="absence_modal_form_start_time" type='time' class="form-control" />
                                     </div>
                                 </div>
 
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Ende</label>
-                                        <input autocomplete="off" id="absence_end_time" type='time' class="form-control" />
+                                        <input autocomplete="off" id="absence_modal_form_end_time" type='time' class="form-control" />
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +134,11 @@
                             <div class='col-sm-3'>
                                 <div class="form-group">
                                     <label>Wiederholung</label><br>
-                                    <input type="checkbox" data-toggle="toggle" class="absence-toggle" id="absence_recurring_toggle" data-on="<i class='fas fa-redo-alt'></i>&nbsp; Wiederkehrend" data-off="<i class='fas fa-bolt'></i>&nbsp; Einmalig" data-width="100%">
+                                    <div class="toggle-switch toggle-success">
+                                        <input type="checkbox" id="absence_modal_form_recurring_toggle" checked />
+                                        <label><i class='fas fa-redo-alt'></i>&nbsp; Wiederkehrend</label>
+                                        <label><i class='fas fa-bolt'></i>&nbsp; Einmalig</label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -135,7 +147,7 @@
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Rhythmus</label>
-                                        <select class="form-control" id="absence_recurring_rhythm">
+                                        <select class="form-control" id="absence_modal_form_recurring">
                                             <option value="daily">täglich</option>
                                             <option value="weekly">wöchentlich</option>
                                         </select>
@@ -143,7 +155,7 @@
                                 </div>
 
                                 <div class='col-sm-6'>
-                                    <div id="absence_recurring_day_label" style="margin-top: 30px; display:none;"></div>
+                                    <div id="absence_modal_form_recurring_label" style="margin-top: 30px; display:none;"></div>
                                 </div>
 
                             </div>
@@ -155,11 +167,21 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-sm-6 text-left">
-                                <input type="checkbox" data-toggle="toggle" class="absence-toggle pull-left" id="absence_notification_toggle" data-on="<i class='fas fa-bell'></i>&nbsp; Mit Info" data-off="<i class='far far fa-bell-slash'></i>&nbsp; Ohne Info" data-width="135px">
-                                &nbsp;<i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Wähle aus, ob eine Benachrichtigung erstellt werden soll um über diese Änderung zu informieren. Die Benachrichtigung wird nur Personen angezeigt, die Benachrichtigungen für 'Abwesenheiten' abonniert haben." style="color:#4fafd3; cursor:help"></i>
+                                <div class="toggle-switch toggle-success">
+                                    <input type="checkbox" id="absence_modal_notification_toggle" checked />
+                                    <label><i class='fas fa-bell'></i>&nbsp; Mit Info</label>
+                                    <label><i class='far far fa-bell-slash'></i>&nbsp; Ohne Info</label>
+                                </div>
+                                &nbsp;
+                                <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Wähle aus, ob eine Benachrichtigung erstellt werden soll um über diese Änderung zu informieren. Die Benachrichtigung wird nur Personen angezeigt, die Benachrichtigungen für 'Abwesenheiten' abonniert haben." style="color:#4fafd3; cursor:help"></i>
                             </div>
-                            <div class="col-sm-6 text-rigth"> <button data-dismiss="modal" class="btn btn-default" type="button">Abbrechen</button>
-                                <input class="btn btn-primary" type="submit" value="Eintrag speichern">
+                            <div class="col-sm-6 text-rigth"> 
+                                <button data-dismiss="modal" class="btn btn-default" type="button">
+                                    <i class="fas fa-times"></i> Abbrechen
+                                </button>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="far fa-save"></i> Eintrag speichern
+                                </button>
                             </div>
                         </div>
 

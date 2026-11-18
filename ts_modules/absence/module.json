@@ -15,7 +15,7 @@
         "absence.html"
     ],
     "js": [
-        "absence.js"
+        "logic/absence_module.js"
     ],
     "css": [],
     "cronjob": []
