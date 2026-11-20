@@ -16,6 +16,7 @@ export default class AbsenceController {
     }
     async handleCreateAbsence() {
         try {
+            Stubegru.utils.showButtonSpinner("#absence_modal_submit_button");
             let data = AbsenceModule.view.getFormData();
             let resp = await AbsenceModule.service.create(data);
             AbsenceModule.view.modal.hide();
@@ -25,9 +26,13 @@ export default class AbsenceController {
         catch (error) {
             Alert.alertError(error);
         }
+        finally {
+            Stubegru.utils.removeButtonSpinner("#absence_modal_submit_button");
+        }
     }
     async handleUpdateAbsence() {
         try {
+            Stubegru.utils.showButtonSpinner("#absence_modal_submit_button");
             let data = AbsenceModule.view.getFormData();
             let resp = await AbsenceModule.service.update(data);
             AbsenceModule.view.modal.hide();
@@ -36,6 +41,9 @@ export default class AbsenceController {
         }
         catch (error) {
             Alert.alertError(error);
+        }
+        finally {
+            Stubegru.utils.removeButtonSpinner("#absence_modal_submit_button");
         }
     }
     async handleDeleteAbsence(absenceId) {

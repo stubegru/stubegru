@@ -16,6 +16,7 @@ export default class QuickLinkController {
     }
     async handleCreateQuickLink() {
         try {
+            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
             let data = QuickLinkModule.view.getFormData();
             let resp = await QuickLinkModule.service.create(data);
             QuickLinkModule.view.modal.hide();
@@ -25,9 +26,13 @@ export default class QuickLinkController {
         catch (error) {
             Alert.alertError(error);
         }
+        finally {
+            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
+        }
     }
     async handleUpdateQuickLink() {
         try {
+            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
             let data = QuickLinkModule.view.getFormData();
             let resp = await QuickLinkModule.service.update(data);
             QuickLinkModule.view.modal.hide();
@@ -36,6 +41,9 @@ export default class QuickLinkController {
         }
         catch (error) {
             Alert.alertError(error);
+        }
+        finally {
+            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
         }
     }
     async handleDeleteQuickLink(quickLinkId) {
