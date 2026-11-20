@@ -1,3 +1,4 @@
+import Stubegru from "./stubegru.js";
 export default class StubegruUtils {
     async fetchConstants() {
         let resp = await fetch(`utils/constants.php`);
@@ -69,5 +70,17 @@ export default class StubegruUtils {
     }
     async wait(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    showButtonSpinner(target) {
+        let btn = ((typeof (target) == "string") ? Stubegru.dom.querySelector(target) : target);
+        const originalContent = btn.innerHTML;
+        btn.setAttribute("data-stubegru-original-text", originalContent);
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+    removeButtonSpinner(target) {
+        let btn = ((typeof (target) == "string") ? Stubegru.dom.querySelector(target) : target);
+        btn.disabled = false;
+        btn.innerHTML = btn.getAttribute("data-stubegru-original-text") ?? "Finished";
     }
 }

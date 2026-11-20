@@ -1,3 +1,4 @@
+import Stubegru from "./stubegru.js";
 import { StubegruConstants } from "./stubegru_interfaces.js";
 
 export default class StubegruUtils {
@@ -79,5 +80,20 @@ export default class StubegruUtils {
 
     async wait(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
+    }
+
+    showButtonSpinner(target: string | HTMLElement) {
+        let btn = ((typeof (target) == "string") ? Stubegru.dom.querySelector(target) : target) as HTMLButtonElement;
+
+        const originalContent = btn.innerHTML;
+        btn.setAttribute("data-stubegru-original-text", originalContent);
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    }
+
+    removeButtonSpinner(target: string | HTMLElement) {
+        let btn = ((typeof (target) == "string") ? Stubegru.dom.querySelector(target) : target) as HTMLButtonElement;
+        btn.disabled = false;
+        btn.innerHTML = btn.getAttribute("data-stubegru-original-text") ?? "Finished";
     }
 }

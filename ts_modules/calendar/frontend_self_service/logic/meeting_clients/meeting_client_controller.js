@@ -39,7 +39,7 @@ export default class MeetingClientController {
         //Assign save button
         CalendarModule.meetingClientView.setAssignSaveButtonEvent(async () => {
             try {
-                Stubegru.dom.querySelector("#meeting_assign_save_button").innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+                Stubegru.utils.showButtonSpinner("#meeting_assign_save_button");
                 const clientData = CalendarModule.meetingClientView.getClientData();
                 let resp = await CalendarModule.meetingClientService.assignClient(meetingId, clientData);
                 CalendarModule.meetingClientView.showAssignmentFeedback(resp);
@@ -52,7 +52,7 @@ export default class MeetingClientController {
                 Alert.alertError(error);
             }
             finally {
-                Stubegru.dom.querySelector("#meeting_assign_save_button").innerHTML = `<i class="far fa-calendar-check"></i>&nbsp;Termin jetzt buchen`;
+                Stubegru.utils.removeButtonSpinner("#meeting_assign_save_button");
             }
         });
         //Assign cancel button

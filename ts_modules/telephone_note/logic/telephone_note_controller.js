@@ -16,10 +16,7 @@ export default class TelephoneNoteController {
         }
     }
     async handleSendTelephoneNote() {
-        const submitButton = Stubegru.dom.querySelector("#telephone_note_form_submit_button");
-        const originalContent = submitButton.innerHTML;
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        Stubegru.utils.showButtonSpinner("#telephone_note_form_submit_button");
         try {
             let data = TelephoneNoteModule.view.getFormData();
             let resp = await TelephoneNoteModule.service.send(data);
@@ -30,8 +27,7 @@ export default class TelephoneNoteController {
             Alert.alertError(error);
         }
         finally {
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalContent;
+            Stubegru.utils.removeButtonSpinner("#telephone_note_form_submit_button");
         }
     }
 }
