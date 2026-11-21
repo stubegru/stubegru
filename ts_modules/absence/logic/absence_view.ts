@@ -2,7 +2,7 @@ import { Modal } from '../../../components/bootstrap/v3/ts_wrapper.js';
 import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
 import StubegruToggle from '../../../components/stubegru_toggle/stubegru_toggle.js';
 import UserUtils from '../../../components/user_utils/user_utils.js';
-import AbsenceModule, { AbsenceObject } from "./absence_module.js";
+import AbsenceModule, { AbsenceObject, AbsenceObjectWithNtf, AbsenceRecurringString } from "./absence_module.js";
 
 
 
@@ -15,12 +15,16 @@ export default class AbsenceView {
     recurringToggle: StubegruToggle;
     notificationToggle: StubegruToggle;
 
+    recurringDayLabel: HTMLElement;
+
     constructor() {
 
         this.modal = new Modal('#absence_modal');
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
 
         Stubegru.dom.querySelector("#absence_create_button").addEventListener("click", AbsenceModule.controller.showAbsenceModalForCreate);
+
+        this.recurringDayLabel = Stubegru.dom.querySelector("#absence_modal_form_recurring_label");
 
         this.viewFutureToggle = new StubegruToggle("#absence_modal_view_future_toggle");
         this.wholeDayToggle = new StubegruToggle("#absence_modal_form_whole_day_toggle");
@@ -45,20 +49,84 @@ export default class AbsenceView {
 
     resetModalForm = () => {
         this.form.reset();
+        this.wholeDayToggle.setState(false);
+        this.recurringToggle.setState(false);
+        this.notificationToggle.setState(false);
+        this.recurringDayLabel.innerHTML = "";
     }
 
 
     setFormData(absence: AbsenceObject) {
         Stubegru.dom.querySelectorAsInput("#absence_modal_form_id").value = absence.id;
-        Stubegru.dom.querySelectorAsInput("#absence_modal_form_title").value = absence.title;
-        Stubegru.dom.querySelectorAsInput("#absence_modal_form_url").value = absence.url;
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_name").value = absence.name;
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_description").value = absence.description;
+
+        this.wholeDayToggle.setState(absence.wholeDay);
+
+        const start = new Date(absence.start);
+        const end = new Date(absence.end);
+
+        const absenceFormatDate = (date: Date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        };
+        const absenceFormatTime = (date: Date) => {
+            const hours = String(date.getHours()).padStart(2, "0");
+            const minutes = String(date.getMinutes()).padStart(2, "0");
+            return `${hours}:${minutes}`;
+        };
+
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_date").value = absenceFormatDate(start);
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_date").value = absenceFormatDate(end);
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_time").value = absenceFormatTime(start);
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_time").value = absenceFormatTime(end);
+
+        const recurringValue = absence.recurring;
+        const isRecurring = recurringValue != null;
+        this.recurringToggle.setState(isRecurring);
+        if (isRecurring) {
+            Stubegru.dom.querySelectorAsInput("#absence_modal_form_recurring").value = recurringValue;
+            this.recurringDayLabel.innerHTML = recurringValue; //TODO: Set pretty text
+        }
+
     }
 
-    getFormData(): AbsenceObject {
+    getFormData(): AbsenceObjectWithNtf {
+        const isWholeDay = this.wholeDayToggle.getState();
+
+        let startString, endString;
+        const startDate = Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_date").value
+        const startTime = Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_time").value
+        const endDate = Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_date").value
+        const endTime = Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_time").value
+        if (isWholeDay) {
+            //Use only date
+            startString = startDate;
+            endString = endDate;
+        } else {
+            //Use date and time
+            startString = startDate + " " + startTime;
+            endString = endDate + " " + endTime;
+        }
+        startString = new Date(startString).toISOString();
+        endString = new Date(endString).toISOString();
+
+        const isRecurring = this.recurringToggle.getState();
+        const recurringValue = isRecurring ? Stubegru.dom.querySelectorAsInput("#absence_modal_form_recurring").value as AbsenceRecurringString : null;
+
+        const sendNotification = this.notificationToggle.getState();
+
         return {
-            id: Stubegru.dom.querySelectorAsInput('#absence_modal_form_id').value,
-            title: Stubegru.dom.querySelectorAsInput('#absence_modal_form_title').value,
-            url: Stubegru.dom.querySelectorAsInput('#absence_modal_form_url').value,
+            id: Stubegru.dom.querySelectorAsInput("#absence_modal_form_id").value,
+            name: Stubegru.dom.querySelectorAsInput("#absence_modal_form_name").value,
+            description: Stubegru.dom.querySelectorAsInput("#absence_modal_form_description").value,
+            start: startString,
+            end: endString,
+            recurring: recurringValue,
+            wholeDay: isWholeDay,
+            sendNotification: sendNotification
         }
     }
 
@@ -68,21 +136,7 @@ export default class AbsenceView {
 
         for (let l of absenceList) {
             html += `
-                <tr class="absence-row text-primary" data-absence-url="${l.url}" style="cursor: pointer;">
-                    <td style="font-size: 1.15em; vertical-align: middle;">
-                        <i class="fas fa-arrow-right"></i>&nbsp; ${l.title}
-                    </td>
-                    <td>
-                            <button class="btn btn-default absence-edit-button permission-ABSENCE_WRITE permission-required" data-absence-id="${l.id}">
-                                <i class="fas fa-pencil-alt"></i>&nbsp; Bearbeiten
-                            </button>
-                    </td>
-                    <td>
-                            <button class="btn btn-danger absence-delete-button permission-ABSENCE_WRITE permission-required" data-absence-id="${l.id}">
-                                <i class="fas fa-times"></i>&nbsp; Löschen
-                            </button>
-                    </td>
-                </tr>
+                TODO: TO BE GENERATED 
             `;
         }
 

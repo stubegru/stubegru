@@ -33,4 +33,8 @@ export interface AbsenceObject {
     wholeDay: boolean;
 }
 
+export interface AbsenceObjectWithNtf extends AbsenceObject {
+    sendNotification: boolean;
+}
+
 export type AbsenceRecurringString = "" | "daily" | "weekly";
