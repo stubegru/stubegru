@@ -1,5 +1,5 @@
 import Alert from "../../../components/alert/alert.js";
-import Stubegru from "../../../components/stubegru_core/logic/stubegru";
+import Stubegru from "../../../components/stubegru_core/logic/stubegru.js";
 import UserUtils from "../../../components/user_utils/user_utils.js";
 import TelephoneNoteModule from "./telephone_note_module.js";
 export default class TelephoneNoteController {
@@ -9,7 +9,7 @@ export default class TelephoneNoteController {
     async refreshRecipientsList() {
         try {
             let list = await UserUtils.getUserListByPermission("RECEIVE_TELEPHONE_NOTE");
-            await TelephoneNoteModule.view.setRecipientsList(list);
+            TelephoneNoteModule.view.setRecipientsList(list);
         }
         catch (error) {
             Alert.alertError(error);

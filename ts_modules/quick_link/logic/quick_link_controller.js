@@ -27,7 +27,7 @@ export default class QuickLinkController {
             Alert.alertError(error);
         }
         finally {
-            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
+            Stubegru.utils.removeButtonSpinner("#quick_link_modal_submit_button");
         }
     }
     async handleUpdateQuickLink() {
@@ -43,7 +43,7 @@ export default class QuickLinkController {
             Alert.alertError(error);
         }
         finally {
-            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
+            Stubegru.utils.removeButtonSpinner("#quick_link_modal_submit_button");
         }
     }
     async handleDeleteQuickLink(quickLinkId) {

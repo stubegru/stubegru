@@ -30,7 +30,7 @@ export default class QuickLinkController {
         }
         catch (error) { Alert.alertError(error); }
         finally {
-            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
+            Stubegru.utils.removeButtonSpinner("#quick_link_modal_submit_button");
         }
     }
 
@@ -45,7 +45,7 @@ export default class QuickLinkController {
         }
         catch (error) { Alert.alertError(error); }
         finally {
-            Stubegru.utils.showButtonSpinner("#quick_link_modal_submit_button");
+            Stubegru.utils.removeButtonSpinner("#quick_link_modal_submit_button");
         }
     }
 

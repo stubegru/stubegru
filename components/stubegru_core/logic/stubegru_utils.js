@@ -76,11 +76,12 @@ export default class StubegruUtils {
         const originalContent = btn.innerHTML;
         btn.setAttribute("data-stubegru-original-text", originalContent);
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.innerHTML = "<i class='fas fa-spinner fa-spin' style='margin: 0px 40px;'></i>";
     }
     removeButtonSpinner(target) {
         let btn = ((typeof (target) == "string") ? Stubegru.dom.querySelector(target) : target);
         btn.disabled = false;
         btn.innerHTML = btn.getAttribute("data-stubegru-original-text") ?? "Finished";
+        btn.removeAttribute("data-stubegru-original-text");
     }
 }
