@@ -8,6 +8,7 @@ export default class AbsenceController {
 
     async init() {
         await this.refreshListView();
+        setInterval(this.refreshListView, 1000 * 60 * 15); //Refresh view every 15 minutes
     }
 
     async refreshListView() {

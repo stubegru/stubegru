@@ -37,4 +37,14 @@ export interface AbsenceObjectWithNtf extends AbsenceObject {
     sendNotification: boolean;
 }
 
+export interface AbsenceObjectWithDisplayStrings extends AbsenceObject {
+    startString: string;
+    endString: string;
+    recurringLabelText: string;
+    tableId: AbsenceTableId;
+    epoch: AbsenceEpochString;
+}
+
 export type AbsenceRecurringString = "" | "daily" | "weekly";
+export type AbsenceEpochString = "past" | "present" | "future";
+export type AbsenceTableId =  "present" | "future";

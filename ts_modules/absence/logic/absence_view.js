@@ -3,7 +3,7 @@ import Stubegru from '../../../components/stubegru_core/logic/stubegru.js';
 import StubegruToggle from '../../../components/stubegru_toggle/stubegru_toggle.js';
 import UserUtils from '../../../components/user_utils/user_utils.js';
 import AbsenceModule from "./absence_module.js";
-export default class AbsenceView {
+class AbsenceView {
     modal;
     form;
     viewFutureToggle;
@@ -11,6 +11,7 @@ export default class AbsenceView {
     recurringToggle;
     notificationToggle;
     recurringDayLabel;
+    static DAY_NAMES = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
     constructor() {
         this.modal = new Modal('#absence_modal');
         this.modal.addEventListener("hide.bs.modal", this.resetModalForm);
@@ -32,6 +33,70 @@ export default class AbsenceView {
             }
         });
         this.resetModalForm();
+        //TODO: Init toggel event listner
+        //TODO: Init recurring select > label event listner
+        /*
+        //toggle future table
+$("#absence_view_future_toggle").on("change", function () {
+    if ($(this).prop('checked')) { $("#absence_table_future").show(); }
+    else { $("#absence_table_future").hide(); }
+});
+
+//Show/hide Elements on toggle change in modal
+$("#absence_whole_day_toggle").on("change", function () {
+    if ($(this).prop('checked')) {
+        //show time inputs
+        $(".absence-whole-day-inputs").hide();
+        $("#absence_end_date").prop("required", false);
+
+        $(".absence-time-inputs").show();
+        $("#absence_start_time").prop("required", true);
+        $("#absence_end_time").prop("required", true);
+    }
+    else {
+        //show date inputs
+        $(".absence-time-inputs").hide();
+        $("#absence_start_time").prop("required", false);
+        $("#absence_end_time").prop("required", false);
+
+        $(".absence-whole-day-inputs").show();
+        $("#absence_end_date").prop("required", true);
+    }
+});
+
+$("#absence_recurring_toggle").on("change", function () {
+    if ($(this).prop('checked')) {
+        $(".absence-recurring-inputs").show();
+    }
+    else {
+        $(".absence-recurring-inputs").hide();
+    }
+});
+
+$("#absence_recurring_rhythm").on("change", function () {
+    switch ($(this).val()) {
+        case "daily":
+            $("#absence_recurring_day_label").hide();
+            break;
+        case "weekly":
+            $("#absence_recurring_day_label").show();
+            break;
+    }
+});
+
+//show recurring day of the week
+$("#absence_date").on("change", function () {
+    const input = $(this).val();
+    if (input == "") {
+        $("#absence_recurring_day_label").html("Bitte Datum wählen...");
+    } else {
+        let dayIndex = new Date(input).getDay();
+        let weekDay = dayNames[dayIndex];
+        $("#absence_recurring_day_label").html(`Wiederholung jeden <b class="text-primary">${weekDay}</b>`);
+    }
+});
+        */
+        // TODO: $('[data-toggle="tooltip"]').tooltip();
     }
     resetModalForm = () => {
         this.form.reset();
@@ -103,41 +168,222 @@ export default class AbsenceView {
             sendNotification: sendNotification
         };
     }
-    async renderListView(absenceList) {
-        let html = "";
-        for (let l of absenceList) {
-            html += `
-                TODO: TO BE GENERATED 
-            `;
+    /**
+    * Checks wether the passed absence's time slot has overlay with the current time
+    *
+    * Returns "past" if the absence's time slot has already ended at the current time
+    *
+    * Returns "present" if the absence's time slot has overlay with the current time
+    *
+    * Returns "future" if the absence's time slot has not yet begun at the current time
+    *
+    * A whole-day absence will always return "present"
+    * This function cares about daylight saving time offsets between the absence's start date and today
+    * This function does NOT check for dates or days of the week. It just checks for time!
+    */
+    getAbsenceEpochByTime(absence) {
+        //TODO: do we really need this function? (see one call)
+        if (absence.wholeDay)
+            return "present"; //If absence is whole-day it matches every time
+        const now = new Date();
+        const start = new Date(absence.start);
+        const end = new Date(absence.end);
+        let startTimeMillis = start.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+        let endTimeMillis = end.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+        let nowTimeMillis = now.getTime() % (1000 * 60 * 60 * 24);
+        //Handle daylight saving time offsets (crazy shit...)
+        const dstOffset = now.getTimezoneOffset() - start.getTimezoneOffset(); //Get offset between DST and not-DST in MINUTES
+        startTimeMillis += dstOffset * 60 * 1000;
+        endTimeMillis += dstOffset * 60 * 1000;
+        if (endTimeMillis > nowTimeMillis && startTimeMillis < nowTimeMillis) {
+            return "present";
         }
-        Stubegru.dom.querySelector("#absence_container").innerHTML = `
-            <table class="table table-condensed table-hover" style="margin-bottom: 0;">
-                <tbody>
-                    ${html}
-                </tbody>
-            </table>
-        `;
-        UserUtils.updateAdminElements();
+        if (endTimeMillis > nowTimeMillis) {
+            return "future";
+        }
+        return "past";
+    }
+    getAbsenceEpochByDate(absence) {
+        const now = new Date();
+        const start = new Date(absence.start);
+        const end = new Date(absence.end);
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const todayEnd = new Date();
+        todayEnd.setHours(23, 59, 59, 9999);
+        let epoch = "present";
+        if (end < todayStart) {
+            epoch = "past";
+        }
+        if (start > todayEnd) {
+            epoch = "future";
+        }
+        if (!absence.wholeDay && epoch == "present") {
+            if (end < now) {
+                epoch = "past";
+            }
+            if (start > now) {
+                epoch = "future";
+            }
+        }
+        return epoch;
+    }
+    getAbsenceWithDisplayStrings(absence) {
+        const formatDate = Stubegru.utils.formatDate;
+        const start = new Date(absence.start);
+        let epoch = this.getAbsenceEpochByDate(absence);
+        let startString = formatDate(absence.start, "DD.MM.YYYY");
+        let endString = formatDate(absence.end, "DD.MM.YYYY");
+        let recurringLabelText = "";
+        let tableId = "present";
+        //No recurring
+        if (absence.recurring == "") {
+            if (epoch == "past") {
+                console.warn(`Not recurring absence from the past. Ignoring...`);
+                console.warn(absence);
+                return;
+            }
+            //if not in the past just add to the corresponding table
+            tableId = epoch;
+            if (!absence.wholeDay) {
+                if (epoch == "future") {
+                    if (formatDate(absence.start, "YYYY-MM-DD") == formatDate(new Date(), "YYYY-MM-DD")) {
+                        //Today, but the time is in the future
+                        startString = `Heute ${formatDate(absence.start, "hh:mm")}`;
+                        endString = `Heute ${formatDate(absence.end, "hh:mm")}`;
+                        tableId = "present"; //Show upcoming hourly absence in present table if it is today but time is in the future
+                    }
+                    else {
+                        startString = formatDate(absence.start, "DD.MM.YYYY hh:mm");
+                        endString = formatDate(absence.end, "DD.MM.YYYY hh:mm");
+                    }
+                }
+                else {
+                    startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                    endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+                }
+            }
+        }
+        //daily recurring
+        if (absence.recurring == "daily") {
+            recurringLabelText = `<span class="label label-info">Täglich</span>`;
+            if (epoch == "present" || epoch == "past") {
+                if (absence.wholeDay) {
+                    startString = "Heute";
+                    endString = "Heute";
+                }
+                else {
+                    startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                    endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+                }
+                //if the absence's timeslot has ended before the current time -> move to upcoming table
+                if (this.getAbsenceEpochByTime(absence) == "past") {
+                    tableId = "future";
+                }
+            }
+            if (epoch == "future") {
+                tableId = "future";
+                if (absence.wholeDay) {
+                    startString = formatDate(absence.start, "ab DD.MM.YYYY");
+                    endString = "";
+                }
+                else {
+                    startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
+                    endString = formatDate(absence.end, "hh:mm");
+                }
+            }
+        }
+        //weekly recurring
+        if (absence.recurring == "weekly") {
+            let dayOfWeek = start.getDay();
+            let currentDayOfWeek = new Date().getDay();
+            recurringLabelText = `<span class="label label-info">Jeden ${AbsenceView.DAY_NAMES[dayOfWeek]}</span>`;
+            if (epoch == "present" || epoch == "past") {
+                //check if weekly recurring is today or not (set corresponding table)
+                if (dayOfWeek != currentDayOfWeek) {
+                    tableId = "future";
+                }
+                else {
+                    //if the absence's timeslot has ended before the current time -> move to upcoming table
+                    if (this.getAbsenceEpochByTime(absence) == "past") {
+                        tableId = "future";
+                    }
+                }
+                if (absence.wholeDay) {
+                    startString = `Jeden ${AbsenceView.DAY_NAMES[dayOfWeek]}`;
+                    endString = `Jeden ${AbsenceView.DAY_NAMES[dayOfWeek]}`;
+                }
+                else {
+                    startString = `${formatDate(absence.start, "hh:mm")} Uhr`;
+                    endString = `${formatDate(absence.end, "hh:mm")} Uhr`;
+                }
+            }
+            if (epoch == "future") {
+                tableId = "future";
+                if (absence.wholeDay) {
+                    startString = formatDate(absence.start, "ab DD.MM.YYYY");
+                    endString = "";
+                }
+                else {
+                    startString = formatDate(absence.start, "ab DD.MM.YYYY hh:mm");
+                    endString = formatDate(absence.end, "hh:mm");
+                }
+            }
+        }
+        return {
+            ...absence,
+            startString,
+            endString,
+            recurringLabelText,
+            tableId,
+            epoch
+        };
+    }
+    async renderListView(absenceList) {
+        let htmlHolder = {
+            present: "",
+            future: "",
+        };
+        for (let inputAbsence of absenceList) {
+            let a = this.getAbsenceWithDisplayStrings(inputAbsence);
+            let absenceHtml = `
+                <tr>
+                    <td>${a.name}</td>
+                    <td>${a.description}</td>
+                    <td>${a.startString}</td>
+                    <td>${a.endString}</td>
+                    <td>${a.recurringLabelText}</td>
+                    <td>
+                        <button class='absence-edit-button btn btn-default permission-ABSENCE_WRITE permission-required' data-absence-id='${a.id}'>
+                            <i class='fa fa-pencil-alt'></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class='absence-delete-button btn btn-danger permission-ABSENCE_WRITE permission-required' data-absence-id='${a.id}'>
+                            <i class='fa fa-times'></i>
+                        </button>
+                    </td>
+                </tr>`;
+            htmlHolder[a.tableId] += absenceHtml;
+        }
+        Stubegru.dom.querySelector("#absence_table_present").innerHTML = htmlHolder.present;
+        Stubegru.dom.querySelector("#absence_table_future").innerHTML = htmlHolder.future;
         this.registerButtonEvents();
+        UserUtils.updateAdminElements();
     }
     registerButtonEvents() {
         Stubegru.dom.querySelectorAll(".absence-delete-button").forEach(elem => {
             const absenceId = elem.getAttribute("data-absence-id");
-            elem.addEventListener("click", (event) => {
-                event.stopPropagation();
+            elem.addEventListener("click", () => {
                 AbsenceModule.controller.handleDeleteAbsence(absenceId);
             });
         });
         Stubegru.dom.querySelectorAll(".absence-edit-button").forEach(elem => {
             const absenceId = elem.getAttribute("data-absence-id");
-            elem.addEventListener("click", (event) => {
-                event.stopPropagation();
+            elem.addEventListener("click", () => {
                 AbsenceModule.controller.showAbsenceModalForUpdate(absenceId);
             });
         });
-        Stubegru.dom.querySelectorAll(".absence-row").forEach(elem => {
-            const absenceUrl = elem.getAttribute("data-absence-url");
-            elem.addEventListener("click", (event) => { window.open(absenceUrl, "_blank"); });
-        });
     }
 }
+export default AbsenceView;
