@@ -4,10 +4,14 @@ require_once "$BASE_PATH/utils/auth_and_database.php";
 permissionRequest("ABSENCE_READ");
 
 $absenceId = $_GET["id"];
+$dbPdo->query("SET time_zone = '+0:00'"); //Set MySQL's timezone to UTC (+0:00)
 
-$selectStatement = $dbPdo->prepare("SELECT `id`, `title`, `url` FROM `quicklinks` WHERE `id` = :absenceId;");
+$selectStatement = $dbPdo->prepare("SELECT `id`, `name`, `description`, `start`, `end`, `recurring`, `wholeDay` FROM `absence` WHERE `id` = :absenceId;");
 $selectStatement->bindValue(':absenceId', $absenceId);
 $selectStatement->execute();
 $result = $selectStatement->fetch(PDO::FETCH_ASSOC);
+
+$result["start"] .= "Z"; //Add trailing "Z" to match ISO UTC Strings
+$result["end"] .= "Z"; //Add trailing "Z" to match ISO UTC Strings
 
 echo json_encode($result);
