@@ -199,38 +199,13 @@ $("#absence_date").on("change", function () {
         }
     }
 
-    /**
-    * Checks wether the passed absence's time slot has overlay with the current time
-    * 
-    * Returns "past" if the absence's time slot has already ended at the current time
-    * 
-    * Returns "present" if the absence's time slot has overlay with the current time
-    * 
-    * Returns "future" if the absence's time slot has not yet begun at the current time
-    * 
-    * A whole-day absence will always return "present"
-    * This function cares about daylight saving time offsets between the absence's start date and today
-    * This function does NOT check for dates or days of the week. It just checks for time!
-    */
-    getAbsenceEpochByTime(absence: AbsenceObject): AbsenceEpochString {
-        //TODO: do we really need this function? (see one call)
-        if (absence.wholeDay) return "present"; //If absence is whole-day it matches every time
-
+    isEndTimeBeforeNow(absence: AbsenceObject): boolean {
         const now = new Date();
-        const start = new Date(absence.start);
         const end = new Date(absence.end);
-        let startTimeMillis = start.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
-        let endTimeMillis = end.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
-        let nowTimeMillis = now.getTime() % (1000 * 60 * 60 * 24);
+        const endTimeMillis = end.getTime() % (1000 * 60 * 60 * 24); //get milliseconds since 0:00
+        const nowTimeMillis = now.getTime() % (1000 * 60 * 60 * 24);
 
-        //Handle daylight saving time offsets (crazy shit...)
-        const dstOffset = now.getTimezoneOffset() - start.getTimezoneOffset(); //Get offset between DST and not-DST in MINUTES
-        startTimeMillis += dstOffset * 60 * 1000;
-        endTimeMillis += dstOffset * 60 * 1000;
-
-        if (endTimeMillis > nowTimeMillis && startTimeMillis < nowTimeMillis) { return "present"; }
-        if (endTimeMillis > nowTimeMillis) { return "future"; }
-        return "past";
+        return (endTimeMillis < nowTimeMillis);
     }
 
     getAbsenceEpochByDate(absence: AbsenceObject) {
@@ -315,7 +290,7 @@ $("#absence_date").on("change", function () {
                 }
 
                 //if the absence's timeslot has ended before the current time -> move to upcoming table
-                if (this.getAbsenceEpochByTime(absence) == "past") { tableId = "future"; }
+                if (this.isEndTimeBeforeNow(absence)) { tableId = "future"; }
             }
 
             if (epoch == "future") {
@@ -343,7 +318,7 @@ $("#absence_date").on("change", function () {
                     tableId = "future";
                 } else {
                     //if the absence's timeslot has ended before the current time -> move to upcoming table
-                    if (this.getAbsenceEpochByTime(absence) == "past") { tableId = "future"; }
+                    if (this.isEndTimeBeforeNow(absence)) { tableId = "future"; }
                 }
 
                 if (absence.wholeDay) {
