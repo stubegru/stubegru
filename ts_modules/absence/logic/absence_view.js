@@ -18,8 +18,11 @@ class AbsenceView {
         Stubegru.dom.querySelector("#absence_create_button").addEventListener("click", AbsenceModule.controller.showAbsenceModalForCreate);
         this.recurringDayLabel = Stubegru.dom.querySelector("#absence_modal_form_recurring_label");
         this.viewFutureToggle = new StubegruToggle("#absence_modal_view_future_toggle");
+        this.viewFutureToggle.onChange((state) => { Stubegru.dom.setVisibility("#absence_table_future", state); });
         this.wholeDayToggle = new StubegruToggle("#absence_modal_form_whole_day_toggle");
+        this.wholeDayToggle.onChange(this.onWholeDayToggleChange);
         this.recurringToggle = new StubegruToggle("#absence_modal_form_recurring_toggle");
+        this.recurringToggle.onChange((state) => Stubegru.dom.setVisibility(".absence-recurring-inputs", state));
         this.notificationToggle = new StubegruToggle("#absence_modal_notification_toggle");
         this.form = Stubegru.dom.querySelector('#absence_modal_form');
         this.form.addEventListener("submit", (event) => {
@@ -36,42 +39,11 @@ class AbsenceView {
         //TODO: Init toggel event listner
         //TODO: Init recurring select > label event listner
         /*
-        //toggle future table
-$("#absence_view_future_toggle").on("change", function () {
-    if ($(this).prop('checked')) { $("#absence_table_future").show(); }
-    else { $("#absence_table_future").hide(); }
-});
+       
+
 
 //Show/hide Elements on toggle change in modal
-$("#absence_whole_day_toggle").on("change", function () {
-    if ($(this).prop('checked')) {
-        //show time inputs
-        $(".absence-whole-day-inputs").hide();
-        $("#absence_end_date").prop("required", false);
 
-        $(".absence-time-inputs").show();
-        $("#absence_start_time").prop("required", true);
-        $("#absence_end_time").prop("required", true);
-    }
-    else {
-        //show date inputs
-        $(".absence-time-inputs").hide();
-        $("#absence_start_time").prop("required", false);
-        $("#absence_end_time").prop("required", false);
-
-        $(".absence-whole-day-inputs").show();
-        $("#absence_end_date").prop("required", true);
-    }
-});
-
-$("#absence_recurring_toggle").on("change", function () {
-    if ($(this).prop('checked')) {
-        $(".absence-recurring-inputs").show();
-    }
-    else {
-        $(".absence-recurring-inputs").hide();
-    }
-});
 
 $("#absence_recurring_rhythm").on("change", function () {
     switch ($(this).val()) {
@@ -97,6 +69,13 @@ $("#absence_date").on("change", function () {
 });
         */
         // TODO: $('[data-toggle="tooltip"]').tooltip();
+    }
+    onWholeDayToggleChange(state) {
+        Stubegru.dom.setVisibility(".absence-time-inputs", state);
+        Stubegru.dom.setVisibility(".absence-whole-day-inputs", !state);
+        Stubegru.dom.querySelectorAsInput("#absence_end_date").required = !state;
+        Stubegru.dom.querySelectorAsInput("#absence_start_time").required = state;
+        Stubegru.dom.querySelectorAsInput("#absence_end_time").required = state;
     }
     resetModalForm = () => {
         this.form.reset();

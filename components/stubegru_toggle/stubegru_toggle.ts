@@ -1,6 +1,7 @@
 import Stubegru from "../stubegru_core/logic/stubegru.js";
 
 export default class StubegruToggle {
+
     elem: HTMLInputElement;
 
     static loadCss() {
@@ -27,8 +28,8 @@ export default class StubegruToggle {
         if (elem.dataset.width) { label.style.minWidth = elem.dataset.width; }
         wrapper.appendChild(label);
 
-        const onText = elem.dataset.onText ?? 'On';
-        const offText = elem.dataset.offText ?? 'Off';
+        const onText = elem.dataset.onText ?? 'An';
+        const offText = elem.dataset.offText ?? 'Aus';
 
         const onStyle = elem.dataset.onStyle ?? 'success';
         const offStyle = elem.dataset.offStyle ?? 'danger';
@@ -62,6 +63,10 @@ export default class StubegruToggle {
 
     addEventListener(eventId: string, callback: Function) {
         Stubegru.dom.addEventListener(this.elem, eventId, callback);
+    }
+
+    onChange(callback: (state: boolean) => void) {
+        this.addEventListener("change", () => callback(this.getState()));
     }
 }
 

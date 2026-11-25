@@ -21,8 +21,8 @@ export default class StubegruToggle {
             label.style.minWidth = elem.dataset.width;
         }
         wrapper.appendChild(label);
-        const onText = elem.dataset.onText ?? 'On';
-        const offText = elem.dataset.offText ?? 'Off';
+        const onText = elem.dataset.onText ?? 'An';
+        const offText = elem.dataset.offText ?? 'Aus';
         const onStyle = elem.dataset.onStyle ?? 'success';
         const offStyle = elem.dataset.offStyle ?? 'danger';
         function update() {
@@ -47,6 +47,9 @@ export default class StubegruToggle {
     }
     addEventListener(eventId, callback) {
         Stubegru.dom.addEventListener(this.elem, eventId, callback);
+    }
+    onChange(callback) {
+        this.addEventListener("change", () => callback(this.getState()));
     }
 }
 StubegruToggle.loadCss();
