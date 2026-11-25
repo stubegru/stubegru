@@ -2,7 +2,7 @@ import Stubegru from "../stubegru_core/logic/stubegru.js";
 export default class StubegruToggle {
     elem;
     static loadCss() {
-        Stubegru.dom.loadCss("components/stubegru_toggle/bs3_polyfill.css");
+        Stubegru.dom.loadCss("components/stubegru_toggle/stubegru_toggle.css");
     }
     constructor(selector) {
         let elem = Stubegru.dom.querySelectorAsInput(selector);
@@ -17,6 +17,9 @@ export default class StubegruToggle {
         wrapper.appendChild(elem);
         const label = document.createElement('label');
         label.htmlFor = elem.id;
+        if (elem.dataset.width) {
+            label.style.minWidth = elem.dataset.width;
+        }
         wrapper.appendChild(label);
         const onText = elem.dataset.onText ?? 'On';
         const offText = elem.dataset.offText ?? 'Off';
@@ -24,7 +27,7 @@ export default class StubegruToggle {
         const offStyle = elem.dataset.offStyle ?? 'danger';
         function update() {
             const enabled = elem.checked;
-            label.textContent = enabled ? onText : offText;
+            label.innerHTML = enabled ? onText : offText;
             label.className = `btn btn-${enabled ? onStyle : offStyle}`;
         }
         elem.addEventListener('change', update);
@@ -34,7 +37,10 @@ export default class StubegruToggle {
         update();
     }
     setState(state) {
-        this.elem.checked = state;
+        if (this.elem.checked !== state) {
+            this.elem.checked = state;
+            this.elem.dispatchEvent(new Event('change', { bubbles: true }));
+        }
     }
     getState() {
         return this.elem.checked;

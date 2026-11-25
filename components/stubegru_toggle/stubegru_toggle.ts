@@ -4,7 +4,7 @@ export default class StubegruToggle {
     elem: HTMLInputElement;
 
     static loadCss() {
-        Stubegru.dom.loadCss("components/stubegru_toggle/bs3_polyfill.css");
+        Stubegru.dom.loadCss("components/stubegru_toggle/stubegru_toggle.css");
     }
 
     constructor(selector: string) {
@@ -21,8 +21,10 @@ export default class StubegruToggle {
         elem.parentNode?.insertBefore(wrapper, elem);
         wrapper.appendChild(elem);
 
+
         const label = document.createElement('label');
         label.htmlFor = elem.id;
+        if (elem.dataset.width) { label.style.minWidth = elem.dataset.width; }
         wrapper.appendChild(label);
 
         const onText = elem.dataset.onText ?? 'On';
@@ -34,7 +36,7 @@ export default class StubegruToggle {
         function update(): void {
             const enabled = elem.checked;
 
-            label.textContent = enabled ? onText : offText;
+            label.innerHTML = enabled ? onText : offText;
             label.className = `btn btn-${enabled ? onStyle : offStyle}`;
         }
 
@@ -48,7 +50,10 @@ export default class StubegruToggle {
     }
 
     setState(state: boolean) {
-        this.elem.checked = state;
+        if (this.elem.checked !== state) {
+            this.elem.checked = state;
+            this.elem.dispatchEvent(new Event('change', { bubbles: true }));
+        }
     }
 
     getState(): boolean {
