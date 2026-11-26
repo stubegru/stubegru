@@ -18,13 +18,7 @@
                     </div>
                     <div class="col-sm-6 text-right">
                         <div class="form-group">
-                            <input type="checkbox" id="absence_modal_view_future_toggle"
-                            data-on-text="<i class='fas fa-check-double'></i> Alle anzeigen"
-                            data-off-text="<i class='far fa-clock'></i> Nur Aktuelle anzeigen"
-                            data-on-style="primary"
-                            data-off-style="default"
-                            data-width="250px"
-                            >
+                            <input type="checkbox" id="absence_modal_view_future_toggle" data-on-text="<i class='fas fa-check-double'></i> Alle anzeigen" data-off-text="<i class='far fa-clock'></i> Nur Aktuelle anzeigen" data-on-style="primary" data-off-style="default" data-width="220px">
                         </div>
                     </div>
                 </div>
@@ -39,7 +33,7 @@
                                 <th>Bis</th>
                                 <th></th>
                                 <th class="permission-ABSENCE_WRITE permission-required"></th>
-                                <th class="permission-ABSENCE_WRITEpermission-required"></th>
+                                <th class="permission-ABSENCE_WRITE permission-required"></th>
                             </tr>
                         </thead>
                         <tbody id="absence_table_present">
@@ -95,11 +89,7 @@
                             <div class='col-sm-3'>
                                 <div class="form-group">
                                     <label>Art</label><br>
-                                    <div class="toggle-switch toggle-success">
-                                        <input type="checkbox" id="absence_modal_form_whole_day_toggle" checked />
-                                        <label><i class='fas fa-clock'></i>&nbsp; Mit Uhrzeit</label>
-                                        <label><i class='far fa-calendar-alt'></i>&nbsp; Ohne Uhrzeit</label>
-                                    </div>
+                                    <input type="checkbox" id="absence_modal_form_whole_day_toggle" data-off-text="<i class='fas fa-clock'></i> Mit Uhrzeit" data-on-text="<i class='far fa-calendar-alt'></i> Ganztägig" data-on-style="primary" data-off-style="default" data-width="170px">
                                 </div>
                             </div>
 
@@ -142,11 +132,7 @@
                             <div class='col-sm-3'>
                                 <div class="form-group">
                                     <label>Wiederholung</label><br>
-                                    <div class="toggle-switch toggle-success">
-                                        <input type="checkbox" id="absence_modal_form_recurring_toggle" checked />
-                                        <label><i class='fas fa-redo-alt'></i>&nbsp; Wiederkehrend</label>
-                                        <label><i class='fas fa-bolt'></i>&nbsp; Einmalig</label>
-                                    </div>
+                                    <input type="checkbox" id="absence_modal_form_recurring_toggle" data-on-text="<i class='fas fa-redo-alt'></i> Wiederkehrend" data-off-text="<i class='fas fa-bolt'></i> Einmalig" data-on-style="primary" data-off-style="default" data-width="170px">
                                 </div>
                             </div>
 
@@ -155,7 +141,7 @@
                                 <div class='col-sm-3'>
                                     <div class="form-group">
                                         <label>Rhythmus</label>
-                                        <select class="form-control" id="absence_modal_form_recurring">
+                                        <select class="form-control" id="absence_modal_form_recurring_rhythm">
                                             <option value="daily">täglich</option>
                                             <option value="weekly">wöchentlich</option>
                                         </select>
@@ -175,19 +161,18 @@
                     <div class="modal-footer">
                         <div class="row">
                             <div class="col-sm-6 text-left">
-                                <div class="toggle-switch toggle-success">
-                                    <input type="checkbox" id="absence_modal_notification_toggle" checked />
-                                    <label><i class='fas fa-bell'></i>&nbsp; Mit Info</label>
-                                    <label><i class='far far fa-bell-slash'></i>&nbsp; Ohne Info</label>
-                                </div>
+
+                                <input type="checkbox" id="absence_modal_notification_toggle" data-on-text="<i class='fas fa-bell'></i> Mit Info" data-off-text="<i class='far far fa-bell-slash'></i> Ohne Info" data-on-style="primary" data-off-style="default" data-width="170px">
+
                                 &nbsp;
                                 <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="Wähle aus, ob eine Benachrichtigung erstellt werden soll um über diese Änderung zu informieren. Die Benachrichtigung wird nur Personen angezeigt, die Benachrichtigungen für 'Abwesenheiten' abonniert haben." style="color:#4fafd3; cursor:help"></i>
+
                             </div>
                             <div class="col-sm-6 text-rigth">
                                 <button data-dismiss="modal" class="btn btn-default" type="button">
                                     <i class="fas fa-times"></i> Abbrechen
                                 </button>
-                                <button class="btn btn-primary" type="submit" id="absence_modal_submit_button">
+                                <button class="btn btn-success" type="submit" id="absence_modal_submit_button">
                                     <i class="far fa-save"></i> Eintrag speichern
                                 </button>
                             </div>

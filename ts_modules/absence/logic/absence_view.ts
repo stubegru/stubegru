@@ -16,6 +16,8 @@ export default class AbsenceView {
     notificationToggle: StubegruToggle;
 
     recurringDayLabel: HTMLElement;
+    recurringRhythmSelect: HTMLSelectElement;
+    startDateInput: HTMLInputElement;
 
     static DAY_NAMES = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
@@ -28,6 +30,21 @@ export default class AbsenceView {
         Stubegru.dom.querySelector("#absence_create_button").addEventListener("click", AbsenceModule.controller.showAbsenceModalForCreate);
 
         this.recurringDayLabel = Stubegru.dom.querySelector("#absence_modal_form_recurring_label");
+        this.recurringRhythmSelect = Stubegru.dom.querySelector("#absence_modal_form_recurring_rhythm") as HTMLSelectElement;
+        this.recurringRhythmSelect.addEventListener("change", () => {
+            const value = this.recurringRhythmSelect.value as AbsenceRecurringString;
+            Stubegru.dom.setVisibility("#absence_modal_form_recurring_label", (value == "weekly"));
+        });
+        this.startDateInput = Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_date");
+        this.startDateInput.addEventListener("change", () => {
+            const value = this.startDateInput.value;
+            if (!value || value.length < 1) { this.recurringDayLabel.innerHTML = "Bitte Datum wählen..."; }
+            else {
+                let dayIndex = new Date(value).getDay();
+                let dayName = AbsenceView.DAY_NAMES[dayIndex];
+                this.recurringDayLabel.innerHTML = `Wiederholung jeden <b class="text-primary">${dayName}</b>`;
+            }
+        });
 
         this.viewFutureToggle = new StubegruToggle("#absence_modal_view_future_toggle");
         this.viewFutureToggle.onChange((state) => { Stubegru.dom.setVisibility("#absence_table_future", state) });
@@ -54,49 +71,17 @@ export default class AbsenceView {
 
         this.resetModalForm();
 
-        //TODO: Init toggel event listner
-        //TODO: Init recurring select > label event listner
-        /*
-       
-
-
-//Show/hide Elements on toggle change in modal
-
-
-$("#absence_recurring_rhythm").on("change", function () {
-    switch ($(this).val()) {
-        case "daily":
-            $("#absence_recurring_day_label").hide();
-            break;
-        case "weekly":
-            $("#absence_recurring_day_label").show();
-            break;
-    }
-});
-
-//show recurring day of the week
-$("#absence_date").on("change", function () {
-    const input = $(this).val();
-    if (input == "") {
-        $("#absence_recurring_day_label").html("Bitte Datum wählen...");
-    } else {
-        let dayIndex = new Date(input).getDay();
-        let weekDay = dayNames[dayIndex];
-        $("#absence_recurring_day_label").html(`Wiederholung jeden <b class="text-primary">${weekDay}</b>`);
-    }
-});
-        */
-
-        // TODO: $('[data-toggle="tooltip"]').tooltip();
+        //@ts-expect-error TODO: Do this without jQuery
+        $('[data-toggle="tooltip"]').tooltip();
     }
 
 
     onWholeDayToggleChange(state: boolean) {
-        Stubegru.dom.setVisibility(".absence-time-inputs", state);
-        Stubegru.dom.setVisibility(".absence-whole-day-inputs", !state);
-        Stubegru.dom.querySelectorAsInput("#absence_end_date").required = !state;
-        Stubegru.dom.querySelectorAsInput("#absence_start_time").required = state;
-        Stubegru.dom.querySelectorAsInput("#absence_end_time").required = state;
+        Stubegru.dom.setVisibility(".absence-time-inputs", !state);
+        Stubegru.dom.setVisibility(".absence-whole-day-inputs", state);
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_date").required = state;
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_time").required = !state;
+        Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_time").required = !state;
     }
 
     resetModalForm = () => {
@@ -131,16 +116,17 @@ $("#absence_date").on("change", function () {
         };
 
         Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_date").value = absenceFormatDate(start);
+        this.startDateInput.dispatchEvent(new Event("change"));
         Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_date").value = absenceFormatDate(end);
         Stubegru.dom.querySelectorAsInput("#absence_modal_form_start_time").value = absenceFormatTime(start);
         Stubegru.dom.querySelectorAsInput("#absence_modal_form_end_time").value = absenceFormatTime(end);
 
         const recurringValue = absence.recurring;
-        const isRecurring = recurringValue != null;
+        const isRecurring = recurringValue && recurringValue.length > 0;
         this.recurringToggle.setState(isRecurring);
         if (isRecurring) {
-            Stubegru.dom.querySelectorAsInput("#absence_modal_form_recurring").value = recurringValue;
-            this.recurringDayLabel.innerHTML = recurringValue; //TODO: Set pretty text
+            this.recurringRhythmSelect.value = recurringValue;
+            this.recurringRhythmSelect.dispatchEvent(new Event("change"));
         }
 
     }
@@ -160,13 +146,13 @@ $("#absence_date").on("change", function () {
         } else {
             //Use date and time
             startString = startDate + " " + startTime;
-            endString = endDate + " " + endTime;
+            endString = endDate + " " + endTime; //TEST: Use startdate here...?
         }
         startString = new Date(startString).toISOString();
         endString = new Date(endString).toISOString();
 
         const isRecurring = this.recurringToggle.getState();
-        const recurringValue = isRecurring ? Stubegru.dom.querySelectorAsInput("#absence_modal_form_recurring").value as AbsenceRecurringString : null;
+        const recurringValue = isRecurring ? Stubegru.dom.querySelectorAsInput("#absence_modal_form_recurring_rhythm").value as AbsenceRecurringString : "";
 
         const sendNotification = this.notificationToggle.getState();
 

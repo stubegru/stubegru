@@ -12,6 +12,7 @@ $resultList = $selectStatement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($resultList as $index => $resultItem) {
     $resultList[$index]["start"] .= "Z"; //Add trailing "Z" to match ISO UTC Strings
     $resultList[$index]["end"] .= "Z"; //Add trailing "Z" to match ISO UTC Strings
+    $resultList[$index]["wholeDay"] = $resultItem["wholeDay"] == 1; // 1|0 to true|false
 }
 
 echo json_encode($resultList);
